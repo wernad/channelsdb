@@ -212,6 +212,8 @@ var ChannelsDB;
                                 React.createElement("li", null,
                                     React.createElement("a", { href: "#" }, "MOLE")),
                                 React.createElement("li", null,
+                                    React.createElement("a", { href: "#" }, "About")),
+                                React.createElement("li", null,
                                     React.createElement("a", { href: "#" }, "Contribute")))))),
                 React.createElement(MainView, __assign({}, this.props)),
                 React.createElement("hr", { className: "featurette-divider" }),
@@ -327,10 +329,10 @@ var ChannelsDB;
         __extends(SearchGroup, _super);
         function SearchGroup() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.state = { expanded: false, docs: [], isLoading: false, entries: void 0 };
+            _this.state = { isExpanded: false, docs: [], isLoading: false, entries: void 0 };
             _this.toggle = function (e) {
                 e.preventDefault();
-                _this.setState({ expanded: !_this.state.expanded });
+                _this.setState({ isExpanded: !_this.state.isExpanded });
             };
             _this.showEntries = function (e) {
                 e.preventDefault();
@@ -375,21 +377,21 @@ var ChannelsDB;
             return React.createElement("div", { style: { marginBottom: '10px' } },
                 React.createElement("div", { className: 'group-header' },
                     React.createElement("button", { className: 'btn btn-default btn-block', onClick: this.toggle },
-                        React.createElement("span", { className: "glyphicon glyphicon-" + (this.state.expanded ? 'minus' : 'plus'), "aria-hidden": "true" }),
+                        React.createElement("span", { className: "glyphicon glyphicon-" + (this.state.isExpanded ? 'minus' : 'plus'), "aria-hidden": "true" }),
                         " ",
                         React.createElement("span", null, g.groupValue),
                         " (",
                         g.doclist.numFound,
                         ")")),
                 React.createElement("div", { className: 'group-list-wrap', style: { display: this.state.entries ? 'none' : 'block' } },
-                    React.createElement("div", { className: 'group-list', style: { display: this.state.expanded ? 'block' : 'none' } },
+                    React.createElement("div", { className: 'group-list', style: { display: this.state.isExpanded ? 'block' : 'none' } },
                         this.state.docs.map(function (d, i) { return _this.entry(d, i); }),
                         this.state.docs.length < g.doclist.numFound
                             ? React.createElement("div", { style: { padding: 0 } },
                                 React.createElement("button", { style: { width: '100%', display: 'block' }, className: 'btn btn-xs btn-primary', disabled: this.state.isLoading ? true : false, onClick: this.loadMore }, this.state.isLoading ? 'Loading...' : 'Show more'))
                             : void 0),
                     React.createElement("div", { style: { clear: 'both' } })),
-                this.state.entries
+                this.state.entries && this.state.isExpanded
                     ? React.createElement("div", { className: 'entry-list-wrap' },
                         React.createElement("button", { className: 'btn btn-block btn-primary', onClick: function () { return _this.setState({ entries: void 0 }); } },
                             React.createElement("span", { className: "glyphicon glyphicon-chevron-left", "aria-hidden": "true" })),

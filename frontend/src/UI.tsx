@@ -140,12 +140,12 @@ namespace ChannelsDB {
         }
     }
 
-    export class SearchGroup extends React.Component<GlobalProps & { group: any }, { expanded: boolean, docs: any[], isLoading: boolean, entries?: { group: string, value: string, var_name: string, count: number } }> {
-        state = { expanded: false, docs: [] as any[], isLoading: false, entries: void 0 as any as { group: string, value: string, var_name: string, count: number } }
+    export class SearchGroup extends React.Component<GlobalProps & { group: any }, { isExpanded: boolean, docs: any[], isLoading: boolean, entries?: { group: string, value: string, var_name: string, count: number } }> {
+        state = { isExpanded: false, docs: [] as any[], isLoading: false, entries: void 0 as any as { group: string, value: string, var_name: string, count: number } }
 
         private toggle = (e: React.MouseEvent<any>) => {
             e.preventDefault();
-            this.setState({ expanded: !this.state.expanded });
+            this.setState({ isExpanded: !this.state.isExpanded });
         }
 
         private showEntries = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -181,9 +181,9 @@ namespace ChannelsDB {
             const g = this.props.group;
 
             return <div style={{ marginBottom: '10px' }}>
-                <div className='group-header'><button className='btn btn-default btn-block' onClick={this.toggle}><span className={`glyphicon glyphicon-${this.state.expanded ? 'minus' : 'plus'}`} aria-hidden="true"></span> <span>{g.groupValue}</span> ({g.doclist.numFound})</button></div>
+                <div className='group-header'><button className='btn btn-default btn-block' onClick={this.toggle}><span className={`glyphicon glyphicon-${this.state.isExpanded ? 'minus' : 'plus'}`} aria-hidden="true"></span> <span>{g.groupValue}</span> ({g.doclist.numFound})</button></div>
                 <div className='group-list-wrap' style={{ display: this.state.entries ? 'none' : 'block' }}>
-                    <div className='group-list' style={{ display: this.state.expanded ? 'block' : 'none' }}>
+                    <div className='group-list' style={{ display: this.state.isExpanded ? 'block' : 'none' }}>
                         {this.state.docs.map((d: any, i: number) => this.entry(d, i)) }
                         {this.state.docs.length < g.doclist.numFound
                             ? <div style={{ padding: 0 }}>
@@ -193,7 +193,7 @@ namespace ChannelsDB {
                     </div>
                     <div style={{ clear: 'both' }} />
                 </div>
-                { this.state.entries 
+                { this.state.entries && this.state.isExpanded
                 ? <div className='entry-list-wrap'>
                     <button className='btn btn-block btn-primary' onClick={() =>this.setState({ entries: void 0 })}><span className={`glyphicon glyphicon-chevron-left`} aria-hidden="true"></span></button>
                     <Entries state={this.props.state} {...this.state.entries!} />
