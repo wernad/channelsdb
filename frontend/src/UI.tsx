@@ -45,6 +45,7 @@ namespace ChannelsDB {
                             </ul>*/}
                             <ul className="nav navbar-nav navbar-right">
                                 <li><a href="#">MOLE</a></li>
+                                <li><a href="#">About</a></li>
                                 <li><a href="#">Contribute</a></li>
                             </ul>
                         </div>
