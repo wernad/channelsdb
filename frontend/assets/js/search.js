@@ -141,32 +141,28 @@ var ChannelsDB;
             .catch(function (err) { s.onError(err); s.onCompleted(); });
         return s;
     }
-    function showPdbEntries(state, var_name, value, group) {
+    function fetchPdbEntries(var_name, value, start, count) {
         return __awaiter(this, void 0, void 0, function () {
-            var searched, data, e_1;
+            var data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        searched = state.viewState;
-                        updateViewState(state, { kind: 'Loading', message: 'Loading entries...' });
-                        console.log(var_name, value, group);
-                        return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&rows=100&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=" + encodeURIComponent(var_name) + ":\"" + encodeURIComponent(value) + "\"&sort=overall_quality+desc&wt=json")];
+                    case 0: return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&rows=" + count + "&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=" + encodeURIComponent(var_name) + ":\"" + encodeURIComponent(value) + "\"&sort=overall_quality+desc&wt=json")];
                     case 1:
                         data = _a.sent();
-                        console.log('pdbentries', data);
-                        updateViewState(state, { kind: "Entries", pageIndex: 0, pageCount: 1, pages: { 0: data }, searched: searched, group: group, value: value });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        e_1 = _a.sent();
-                        updateViewState(state, { kind: 'Error', message: '' + e_1 });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        return [2 /*return*/, data.grouped.pdb_id.groups];
                 }
             });
         });
     }
-    ChannelsDB.showPdbEntries = showPdbEntries;
+    ChannelsDB.fetchPdbEntries = fetchPdbEntries;
+    function loadGroupDocs(var_name, group, offset, count) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, []];
+            });
+        });
+    }
+    ChannelsDB.loadGroupDocs = loadGroupDocs;
 })(ChannelsDB || (ChannelsDB = {}));
 /*
  * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
@@ -207,19 +203,20 @@ var ChannelsDB;
         };
         App.prototype.render = function () {
             return React.createElement("div", { className: 'container' },
-                React.createElement("div", { className: "masthead" },
-                    React.createElement("h3", { className: "text-muted" }, "ChannelsDB"),
-                    React.createElement("nav", null,
-                        React.createElement("ul", { className: "nav nav-justified" },
-                            React.createElement("li", { className: "active" },
-                                React.createElement("a", { href: "#" }, "DB")),
-                            React.createElement("li", null,
-                                React.createElement("a", { href: "#" }, "MOLE")),
-                            React.createElement("li", null,
-                                React.createElement("a", { href: "#" }, "Contribute")),
-                            React.createElement("li", null,
-                                React.createElement("a", { href: "#" }, "About"))))),
-                React.createElement(MainView, __assign({}, this.props)));
+                React.createElement("nav", { className: "navbar navbar-default" },
+                    React.createElement("div", { className: "container-fluid" },
+                        React.createElement("div", { className: "navbar-header" },
+                            React.createElement("a", { className: "navbar-brand", href: "#" }, "ChannelsDB")),
+                        React.createElement("div", { id: "navbar", className: "navbar-collapse collapse" },
+                            React.createElement("ul", { className: "nav navbar-nav navbar-right" },
+                                React.createElement("li", null,
+                                    React.createElement("a", { href: "#" }, "MOLE")),
+                                React.createElement("li", null,
+                                    React.createElement("a", { href: "#" }, "Contribute")))))),
+                React.createElement(MainView, __assign({}, this.props)),
+                React.createElement("hr", { className: "featurette-divider" }),
+                React.createElement("footer", null,
+                    React.createElement("p", { className: 'pull-right', style: { color: '#999' } }, "\u00A9 2017 Luk\u00E1\u0161 Pravda & David Sehnal")));
         };
         return App;
     }(React.Component));
@@ -257,7 +254,6 @@ var ChannelsDB;
                     case 'Info': return React.createElement(Info, null);
                     case 'Loading': return React.createElement("div", null, state.message);
                     case 'Searched': return React.createElement(SearchResults, __assign({}, this.props));
-                    case 'Entries': return React.createElement(Entries, __assign({}, this.props));
                     case 'Error': return React.createElement("div", null,
                         "Error: ",
                         state.message);
@@ -282,7 +278,7 @@ var ChannelsDB;
             var _this = this;
             return React.createElement("form", null,
                 React.createElement("div", { className: "form-group form-group-lg" },
-                    React.createElement("input", { type: 'text', className: "form-control", placeholder: "Search...", onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); } })));
+                    React.createElement("input", { type: 'text', className: "form-control", style: { fontWeight: 'bold' }, placeholder: "Search...", onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); } })));
         };
         return SearchBox;
     }(React.Component));
@@ -310,7 +306,7 @@ var ChannelsDB;
             var _this = this;
             var data = this.props.state.viewState.data;
             var groups = data.grouped.category.groups;
-            return groups.map(function (g) { return React.createElement(SearchGroup, __assign({ key: g.groupValue }, _this.props, { group: g })); });
+            return groups.map(function (g, i) { return React.createElement(SearchGroup, __assign({ key: g.groupValue + '--' + i }, _this.props, { group: g })); });
         };
         SearchResults.prototype.render = function () {
             try {
@@ -331,7 +327,7 @@ var ChannelsDB;
         __extends(SearchGroup, _super);
         function SearchGroup() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.state = { expanded: false };
+            _this.state = { expanded: false, docs: [], isLoading: false, entries: void 0 };
             _this.toggle = function (e) {
                 e.preventDefault();
                 _this.setState({ expanded: !_this.state.expanded });
@@ -340,31 +336,64 @@ var ChannelsDB;
                 e.preventDefault();
                 var value = e.target.getAttribute('data-value');
                 var var_name = e.target.getAttribute('data-var');
-                ChannelsDB.showPdbEntries(_this.props.state, var_name, value, _this.props.group.groupValue);
+                var count = +e.target.getAttribute('data-count');
+                _this.setState({ entries: { group: _this.props.group.groupValue, value: value, var_name: var_name, count: count } });
             };
+            _this.loadMore = function () { return __awaiter(_this, void 0, void 0, function () {
+                var data, e_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            this.setState({ isLoading: true });
+                            return [4 /*yield*/, ChannelsDB.loadGroupDocs('', '', this.state.docs.length, 25)];
+                        case 1:
+                            data = _a.sent();
+                            this.setState({ isLoading: false, docs: this.state.docs.concat(data) });
+                            return [3 /*break*/, 3];
+                        case 2:
+                            e_1 = _a.sent();
+                            this.setState({ isLoading: false });
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            }); };
             return _this;
         }
+        SearchGroup.prototype.componentDidMount = function () {
+            this.setState({ docs: this.props.group.doclist.docs });
+        };
+        SearchGroup.prototype.entry = function (d, i) {
+            return React.createElement("div", { key: d.value + d.var_name + '--' + i },
+                React.createElement("a", { href: '#', "data-value": d.value, "data-var": d.var_name, "data-count": d.num_pdb_entries, onClick: this.showEntries, title: "" + d.value }, d.value),
+                React.createElement("div", { className: 'count' }, d.num_pdb_entries));
+        };
         SearchGroup.prototype.render = function () {
             var _this = this;
             var g = this.props.group;
-            return React.createElement("div", null,
-                React.createElement("h4", null,
-                    React.createElement("button", { className: 'btn btn-link', onClick: this.toggle },
-                        React.createElement("span", { className: "glyphicon glyphicon-" + (this.state.expanded ? 'minus' : 'plus'), "aria-hidden": "true" })),
-                    " ",
-                    g.groupValue,
-                    " ",
-                    React.createElement("small", null,
-                        "(",
+            return React.createElement("div", { style: { marginBottom: '10px' } },
+                React.createElement("div", { className: 'group-header' },
+                    React.createElement("button", { className: 'btn btn-default btn-block', onClick: this.toggle },
+                        React.createElement("span", { className: "glyphicon glyphicon-" + (this.state.expanded ? 'minus' : 'plus'), "aria-hidden": "true" }),
+                        " ",
+                        React.createElement("span", null, g.groupValue),
+                        " (",
                         g.doclist.numFound,
                         ")")),
-                this.state.expanded
-                    ? React.createElement("div", { className: 'group-list' }, g.doclist.docs.map(function (d) { return React.createElement("div", { key: d.value },
-                        React.createElement("a", { href: '#', "data-value": d.value, "data-var": d.var_name, onClick: _this.showEntries },
-                            d.value,
-                            " (",
-                            d.num_pdb_entries,
-                            ")")); }))
+                React.createElement("div", { className: 'group-list-wrap', style: { display: this.state.entries ? 'none' : 'block' } },
+                    React.createElement("div", { className: 'group-list', style: { display: this.state.expanded ? 'block' : 'none' } },
+                        this.state.docs.map(function (d, i) { return _this.entry(d, i); }),
+                        this.state.docs.length < g.doclist.numFound
+                            ? React.createElement("div", { style: { padding: 0 } },
+                                React.createElement("button", { style: { width: '100%', display: 'block' }, className: 'btn btn-xs btn-primary', disabled: this.state.isLoading ? true : false, onClick: this.loadMore }, this.state.isLoading ? 'Loading...' : 'Show more'))
+                            : void 0),
+                    React.createElement("div", { style: { clear: 'both' } })),
+                this.state.entries
+                    ? React.createElement("div", { className: 'entry-list-wrap' },
+                        React.createElement("button", { className: 'btn btn-block btn-primary', onClick: function () { return _this.setState({ entries: void 0 }); } },
+                            React.createElement("span", { className: "glyphicon glyphicon-chevron-left", "aria-hidden": "true" })),
+                        React.createElement(Entries, __assign({ state: this.props.state }, this.state.entries)))
                     : void 0);
         };
         return SearchGroup;
@@ -373,17 +402,36 @@ var ChannelsDB;
     var Entries = (function (_super) {
         __extends(Entries, _super);
         function Entries() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.state = { isLoading: false, entries: [] };
+            _this.fetch = function () { return __awaiter(_this, void 0, void 0, function () {
+                var data, e_2;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            this.setState({ isLoading: true });
+                            return [4 /*yield*/, ChannelsDB.fetchPdbEntries(this.props.var_name, this.props.value, this.state.entries.length, 5)];
+                        case 1:
+                            data = _a.sent();
+                            this.setState({ isLoading: false, entries: this.state.entries.concat(data) });
+                            return [3 /*break*/, 3];
+                        case 2:
+                            e_2 = _a.sent();
+                            this.setState({ isLoading: false });
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            }); };
+            return _this;
         }
-        // private showEntries = (e: React.MouseEvent<HTMLAnchorElement>) => {
-        //     e.preventDefault();
-        //     const value = (e.target as HTMLAnchorElement).getAttribute('data-value')!;
-        //     const var_name = (e.target as HTMLAnchorElement).getAttribute('data-var')!;
-        //     //showPdbEntries(this.props.state, var_name, value);
-        // }
-        Entries.prototype.entry = function (e) {
+        Entries.prototype.componentDidMount = function () {
+            this.fetch();
+        };
+        Entries.prototype.entry = function (e, i) {
             var docs = e.doclist.docs[0];
-            return React.createElement("div", { key: e.groupValue, className: 'well' },
+            return React.createElement("div", { key: docs.pdb_id + '--' + i, className: 'well' },
                 React.createElement("ul", null,
                     React.createElement("li", null,
                         "PDB ID: ",
@@ -402,16 +450,22 @@ var ChannelsDB;
         };
         Entries.prototype.render = function () {
             var _this = this;
-            var data = this.props.state.viewState;
-            var page = data.pages[data.pageIndex];
-            var groups = page.grouped.pdb_id.groups;
+            var groups = this.state.entries;
             return React.createElement("div", null,
-                React.createElement("button", { className: 'btn btn-lg btn-block btn-primary', onClick: function () { return ChannelsDB.updateViewState(_this.props.state, data.searched); } }, "Back"),
-                React.createElement("h2", null,
-                    React.createElement("b", null, data.group),
+                React.createElement("h4", null,
+                    React.createElement("b", null, this.props.group),
                     ": ",
-                    data.value),
-                React.createElement("div", { style: { marginTop: '15px' } }, groups.map(function (g) { return _this.entry(g); })));
+                    this.props.value,
+                    " ",
+                    React.createElement("small", null,
+                        "(",
+                        this.props.count,
+                        ")")),
+                React.createElement("div", { style: { marginTop: '15px' } },
+                    groups.map(function (g, i) { return _this.entry(g, i); }),
+                    this.state.entries.length < this.props.count
+                        ? React.createElement("button", { className: 'btn btn-sm btn-primary btn-block', disabled: this.state.isLoading ? true : false, onClick: this.fetch }, this.state.isLoading ? 'Loading...' : 'Show more')
+                        : void 0));
         };
         return Entries;
     }(React.Component));

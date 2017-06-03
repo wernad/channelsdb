@@ -17,13 +17,12 @@ namespace ChannelsDB {
         value: string
     }
 
-    export type ViewState = ViewState.Info | ViewState.Seached | ViewState.Entries | ViewState.Loading | ViewState.Error
+    export type ViewState = ViewState.Info | ViewState.Seached | ViewState.Loading | ViewState.Error
 
     export namespace ViewState {
         export type Info = { kind: 'Info' }
         export type Loading = { kind: 'Loading', message: string }
         export type Seached = { kind: 'Searched', data: any }
-        export type Entries = { kind: 'Entries', pageIndex: number, pageCount: number, pages: { [page: number]: any }, group: string,  value: string, searched: Seached }
         export type Error = { kind: 'Error', message: string }
     }
 
@@ -64,16 +63,12 @@ namespace ChannelsDB {
         return s;
     }
 
-    export async function showPdbEntries(state: State, var_name: string, value: string, group: string) {        
-        try {
-            const searched = state.viewState as ViewState.Seached;
-            updateViewState(state, { kind: 'Loading', message: 'Loading entries...' });
-            console.log(var_name, value, group);
-            const data = await ajaxGetJson(`https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&rows=100&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=${encodeURIComponent(var_name)}:"${encodeURIComponent(value)}"&sort=overall_quality+desc&wt=json`)
-            console.log('pdbentries', data);
-            updateViewState(state, { kind: "Entries", pageIndex: 0, pageCount: 1, pages: { 0: data }, searched, group, value });
-        } catch (e) {
-            updateViewState(state, { kind: 'Error', message: '' + e });
-        }
+    export async function fetchPdbEntries(var_name: string, value: string, start: number, count: number) {        
+        const data = await ajaxGetJson(`https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&rows=${count}&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=${encodeURIComponent(var_name)}:"${encodeURIComponent(value)}"&sort=overall_quality+desc&wt=json`)
+        return (data as any).grouped.pdb_id.groups;
+    }
+
+    export async function loadGroupDocs(var_name: string, group: string, offset: number, count: number): Promise<any[]> {
+        return [];
     }
 }
