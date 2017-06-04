@@ -164,7 +164,7 @@ var ChannelsDB;
                     case 0: return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&start=" + start + "&rows=" + count + "&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=text:\"" + encodeURIComponent(value) + "\"&sort=overall_quality+desc&wt=json")];
                     case 1:
                         data = _a.sent();
-                        return [2 /*return*/, { groups: data.grouped.pdb_id.groups, matches: data.grouped.pdb_id.matches }];
+                        return [2 /*return*/, { groups: data.grouped.pdb_id.groups, matches: data.grouped.pdb_id.ngroups }];
                 }
             });
         });

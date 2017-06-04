@@ -73,7 +73,7 @@ namespace ChannelsDB {
 
     export async function fetchPdbText(value: string, start: number, count: number) {        
         const data = await ajaxGetJson(`https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&start=${start}&rows=${count}&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=text:"${encodeURIComponent(value)}"&sort=overall_quality+desc&wt=json`)
-        return { groups: (data as any).grouped.pdb_id.groups, matches: (data as any).grouped.pdb_id.matches };
+        return { groups: (data as any).grouped.pdb_id.groups, matches: (data as any).grouped.pdb_id.ngroups };
     }
 
     export async function loadGroupDocs(var_name: string, group: string, offset: number, count: number): Promise<any[]> {
