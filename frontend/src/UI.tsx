@@ -209,7 +209,7 @@ namespace ChannelsDB {
         private fetch = async () => {
             try {
                 this.setState({ isLoading: true })
-                const data = await fetchPdbEntries(this.props.var_name, this.props.value, this.state.entries.length, 5);
+                const data = await fetchPdbEntries(this.props.var_name, this.props.value, this.state.entries.length, 6);
                 this.setState({ isLoading: false, entries: this.state.entries.concat(data) });
             } catch (e) {
                 this.setState({ isLoading: false });
@@ -222,13 +222,18 @@ namespace ChannelsDB {
 
         private entry(e: any, i: number) {
             const docs = e.doclist.docs[0];
-            return <div key={docs.pdb_id + '--' + i} className='well'>
+            return <div key={docs.pdb_id + '--' + i} className='well pdb-entry'>
+                <div className='pdb-entry-header'>
+                    <div>{docs.pdb_id}</div>
+                    <div title={docs.title || 'n/a'}>{docs.title || 'n/a'}</div>
+                </div>
                 <ul>
-                    <li>PDB ID: {docs.pdb_id}</li>
-                    <li>Name: {docs.title || 'n/a'}</li>
-                    <li>Experiment Method: {(docs.experimental_method || ['n/a']).join(', ')} | Resolution: {docs.resolution || 'n/a'}</li>
-                    <li>Organism: {(docs.organism_scientific_name || ['n/a']).join(', ')}</li>
+                    <li><b>Experiment Method:</b> {(docs.experimental_method || ['n/a']).join(', ')} | {docs.resolution || 'n/a'} Å</li>
+                    <li><b>Organism:</b> {(docs.organism_scientific_name || ['n/a']).join(', ')}</li>
                 </ul>
+                <div className='pdb-entry-img-wrap'>
+                    <img src={`https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/DHRS7B_homology_model.png/350px-DHRS7B_homology_model.png`} />
+                </div>
             </div>
         }
 
@@ -237,10 +242,11 @@ namespace ChannelsDB {
 
             return <div>
                 <h4><b>{this.props.group}</b>: {this.props.value} <small>({this.props.count})</small></h4>
-                <div style={{ marginTop: '15px' }}>
+                <div style={{ marginTop: '15px', position: 'relative' }}>
                     {groups.map((g: any, i: number) => this.entry(g, i))}
+                    <div style={{ clear: 'both' }} />
                     {this.state.entries.length < this.props.count
-                        ? <button className='btn btn-sm btn-primary btn-block' disabled={this.state.isLoading ? true : false} onClick={this.fetch}>{this.state.isLoading ? 'Loading...' : 'Show more'}</button>
+                        ? <button className='btn btn-sm btn-primary btn-block' disabled={this.state.isLoading ? true : false} onClick={this.fetch}>{this.state.isLoading ? 'Loading...' : `Show more (${this.props.count - this.state.entries.length} remaining)`}</button>
                         : void 0}
                 </div>
             </div>;

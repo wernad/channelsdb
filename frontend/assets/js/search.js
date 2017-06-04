@@ -136,7 +136,7 @@ var ChannelsDB;
     function search(state, term) {
         updateViewState(state, { kind: 'Loading', message: 'Searching...' });
         var s = new Rx.Subject();
-        ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb-autocomplete/select?rows=20000&json.nl=map&group=true&group.field=category&group.limit=25&fl=value,num_pdb_entries,var_name&sort=category+asc,num_pdb_entries+desc&q=value:" + term + "*~10&wt=json")
+        ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb-autocomplete/select?rows=20000&json.nl=map&group=true&group.field=category&group.limit=-1&fl=value,num_pdb_entries,var_name&sort=category+asc,num_pdb_entries+desc&q=value:" + term + "*~10&wt=json")
             .then(function (data) { s.onNext(data); s.onCompleted(); })
             .catch(function (err) { s.onError(err); s.onCompleted(); });
         return s;
@@ -146,7 +146,7 @@ var ChannelsDB;
             var data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&rows=" + count + "&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=" + encodeURIComponent(var_name) + ":\"" + encodeURIComponent(value) + "\"&sort=overall_quality+desc&wt=json")];
+                    case 0: return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&start=" + start + "&rows=" + count + "&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=" + encodeURIComponent(var_name) + ":\"" + encodeURIComponent(value) + "\"&sort=overall_quality+desc&wt=json")];
                     case 1:
                         data = _a.sent();
                         return [2 /*return*/, data.grouped.pdb_id.groups];
@@ -413,7 +413,7 @@ var ChannelsDB;
                         case 0:
                             _a.trys.push([0, 2, , 3]);
                             this.setState({ isLoading: true });
-                            return [4 /*yield*/, ChannelsDB.fetchPdbEntries(this.props.var_name, this.props.value, this.state.entries.length, 5)];
+                            return [4 /*yield*/, ChannelsDB.fetchPdbEntries(this.props.var_name, this.props.value, this.state.entries.length, 6)];
                         case 1:
                             data = _a.sent();
                             this.setState({ isLoading: false, entries: this.state.entries.concat(data) });
@@ -433,22 +433,24 @@ var ChannelsDB;
         };
         Entries.prototype.entry = function (e, i) {
             var docs = e.doclist.docs[0];
-            return React.createElement("div", { key: docs.pdb_id + '--' + i, className: 'well' },
+            return React.createElement("div", { key: docs.pdb_id + '--' + i, className: 'well pdb-entry' },
+                React.createElement("div", { className: 'pdb-entry-header' },
+                    React.createElement("div", null, docs.pdb_id),
+                    React.createElement("div", { title: docs.title || 'n/a' }, docs.title || 'n/a')),
                 React.createElement("ul", null,
                     React.createElement("li", null,
-                        "PDB ID: ",
-                        docs.pdb_id),
-                    React.createElement("li", null,
-                        "Name: ",
-                        docs.title || 'n/a'),
-                    React.createElement("li", null,
-                        "Experiment Method: ",
+                        React.createElement("b", null, "Experiment Method:"),
+                        " ",
                         (docs.experimental_method || ['n/a']).join(', '),
-                        " | Resolution: ",
-                        docs.resolution || 'n/a'),
+                        " | ",
+                        docs.resolution || 'n/a',
+                        " \u00C5"),
                     React.createElement("li", null,
-                        "Organism: ",
-                        (docs.organism_scientific_name || ['n/a']).join(', '))));
+                        React.createElement("b", null, "Organism:"),
+                        " ",
+                        (docs.organism_scientific_name || ['n/a']).join(', '))),
+                React.createElement("div", { className: 'pdb-entry-img-wrap' },
+                    React.createElement("img", { src: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/DHRS7B_homology_model.png/350px-DHRS7B_homology_model.png" })));
         };
         Entries.prototype.render = function () {
             var _this = this;
@@ -463,10 +465,11 @@ var ChannelsDB;
                         "(",
                         this.props.count,
                         ")")),
-                React.createElement("div", { style: { marginTop: '15px' } },
+                React.createElement("div", { style: { marginTop: '15px', position: 'relative' } },
                     groups.map(function (g, i) { return _this.entry(g, i); }),
+                    React.createElement("div", { style: { clear: 'both' } }),
                     this.state.entries.length < this.props.count
-                        ? React.createElement("button", { className: 'btn btn-sm btn-primary btn-block', disabled: this.state.isLoading ? true : false, onClick: this.fetch }, this.state.isLoading ? 'Loading...' : 'Show more')
+                        ? React.createElement("button", { className: 'btn btn-sm btn-primary btn-block', disabled: this.state.isLoading ? true : false, onClick: this.fetch }, this.state.isLoading ? 'Loading...' : "Show more (" + (this.props.count - this.state.entries.length) + " remaining)")
                         : void 0));
         };
         return Entries;

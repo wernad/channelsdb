@@ -56,15 +56,15 @@ namespace ChannelsDB {
 
     function search(state: State, term: string) {
         updateViewState(state, { kind: 'Loading', message: 'Searching...' });
-        const s = new Rx.Subject<object>();
-        ajaxGetJson(`https://www.ebi.ac.uk/pdbe/search/pdb-autocomplete/select?rows=20000&json.nl=map&group=true&group.field=category&group.limit=25&fl=value,num_pdb_entries,var_name&sort=category+asc,num_pdb_entries+desc&q=value:${term}*~10&wt=json`)
+        const s = new Rx.Subject<any>();
+        ajaxGetJson(`https://www.ebi.ac.uk/pdbe/search/pdb-autocomplete/select?rows=20000&json.nl=map&group=true&group.field=category&group.limit=-1&fl=value,num_pdb_entries,var_name&sort=category+asc,num_pdb_entries+desc&q=value:${term}*~10&wt=json`)
             .then(data => { s.onNext(data); s.onCompleted() })
             .catch(err => { s.onError(err); s.onCompleted() })
         return s;
     }
 
     export async function fetchPdbEntries(var_name: string, value: string, start: number, count: number) {        
-        const data = await ajaxGetJson(`https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&rows=${count}&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=${encodeURIComponent(var_name)}:"${encodeURIComponent(value)}"&sort=overall_quality+desc&wt=json`)
+        const data = await ajaxGetJson(`https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&start=${start}&rows=${count}&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=${encodeURIComponent(var_name)}:"${encodeURIComponent(value)}"&sort=overall_quality+desc&wt=json`)
         return (data as any).grouped.pdb_id.groups;
     }
 

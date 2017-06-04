@@ -57,6 +57,67 @@
     padding: 0;
 }
 
+.pdb-entry {
+    float: left;
+    width: 49%;
+    margin: 0px 1% 10px 0px;
+    position: relative;
+    min-height: 120px;
+}
+
+.pdb-entry-img-wrap {
+    position: absolute;
+    height: 100%;
+    width: 25%;
+    max-width: 25%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+
+
+.pdb-entry-img-wrap img {
+    border-right: 1px solid #e3e3e3;    
+    border-bottom: 1px solid #e3e3e3;    
+    width: 100%;
+    height: auto;
+}
+
+.pdb-entry-header {
+    position: absolute;
+    line-height: 30px;
+    background: #ddd;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 30px;
+}
+
+.pdb-entry-header > div:first-child {
+    float: left;
+    margin-left: 25%;
+    padding-left: 10px;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+}
+
+.pdb-entry-header > div:last-child {
+    float: left;
+    margin-left: 10px;
+    max-width: 50%;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pdb-entry > ul {
+    list-style: none;
+    padding: 0;
+    margin-left: 25%;
+    margin-top: 20px;
+}
+
 body {
   padding-top: 40px;
 }
