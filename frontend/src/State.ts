@@ -44,6 +44,7 @@ namespace ChannelsDB {
         state.searchTerm
             .distinctUntilChanged()
             .debounce(250)
+            .filter(t => t.length > 2)
             .forEach(t => {
                 if (t.trim().length > 0) {
                     search(state, t).takeUntil(Rx.Observable.merge(state.searchTerm, state.fullSearch)).subscribe(
