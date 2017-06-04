@@ -232,7 +232,7 @@ namespace ChannelsDB {
                     <li><b>Organism:</b> {(docs.organism_scientific_name || ['n/a']).join(', ')}</li>
                 </ul>
                 <div className='pdb-entry-img-wrap'>
-                    <img src={`https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/DHRS7B_homology_model.png/350px-DHRS7B_homology_model.png`} />
+                    <img src={`https://www.ebi.ac.uk/pdbe/static/entry/${docs.pdb_id.toLowerCase()}_assembly_1_chemically_distinct_molecules_front_image-200x200.png`} />
                 </div>
             </div>
         }
