@@ -90,6 +90,7 @@ namespace ChannelsDB {
                     case 'Info': return <Info />;
                     case 'Loading': return <div>{state.message}</div>;
                     case 'Searched': return <SearchResults {...this.props} />;
+                    case 'Entries': return <Entries {...this.props} mode='Full' value={state.term} />
                     case 'Error': return <div>Error: {state.message}</div>;
                     default: return <div>Should not happen ;)</div>;
                 }
@@ -101,11 +102,15 @@ namespace ChannelsDB {
 
     export class SearchBox extends React.Component<GlobalProps, {}> {
         render() {
-            return <form>
-                <div className="form-group form-group-lg">
-                    <input type='text' className="form-control" style={{ fontWeight: 'bold' }} placeholder="Search..." onChange={e => this.props.state.searchTerm.onNext(e.target.value)} />
-                </div>
-            </form>
+            return <div className="form-group form-group-lg">
+                <input type='text' className="form-control" style={{ fontWeight: 'bold' }} placeholder="Search..." 
+                    onChange={e => this.props.state.searchTerm.onNext(e.target.value)}
+                    onKeyPress={e => {
+                        if (e.key !== 'Enter') return;
+                        this.props.state.fullSearch.onNext(void 0);
+                        updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value })
+                    }} />
+            </div>;
         }
     }
 
@@ -131,7 +136,6 @@ namespace ChannelsDB {
         render() {
             try {
                 const data = (this.props.state.viewState as ViewState.Seached).data;
-                console.log(data);
                 if (!data.grouped.category.groups.length) return this.empty();
                 return <div>{this.groups()}</div>;
             } catch (e) {
@@ -196,27 +200,39 @@ namespace ChannelsDB {
                 { this.state.entries && this.state.isExpanded
                 ? <div className='entry-list-wrap'>
                     <button className='btn btn-block btn-primary' onClick={() =>this.setState({ entries: void 0 })}><span className={`glyphicon glyphicon-chevron-left`} aria-hidden="true"></span></button>
-                    <Entries state={this.props.state} {...this.state.entries!} />
+                    <Entries state={this.props.state} {...this.state.entries!} mode='Embed' />
                   </div> 
                 : void 0 }
             </div>
         }
     }
 
-    export class Entries extends React.Component<GlobalProps & { group: string, value: string, var_name: string, count: number }, { isLoading: boolean, entries: any[] }> {
-        state = { isLoading: false, entries: [] as any[] }
+    export class Entries extends React.Component<GlobalProps & { group?: string, value: string, var_name?: string, count?: number, mode: 'Embed' | 'Full'  }, { isLoading: boolean, entries: any[], count: number }> {
+        state = { isLoading: false, entries: [] as any[], count: -1 }
         
-        private fetch = async () => {
+        private fetchEmbed = async () => {
             try {
                 this.setState({ isLoading: true })
-                const data = await fetchPdbEntries(this.props.var_name, this.props.value, this.state.entries.length, 6);
-                this.setState({ isLoading: false, entries: this.state.entries.concat(data) });
+                const data = await fetchPdbEntries(this.props.var_name!, this.props.value, this.state.entries.length, 6);
+                this.setState({ isLoading: false, entries: this.state.entries.concat(data), count: this.props.count! });
             } catch (e) {
                 this.setState({ isLoading: false });
             }
         }
 
-        componentDidMount() {
+        private fetchFull = async () => {
+            try {
+                this.setState({ isLoading: true })
+                const { groups, matches } = await fetchPdbText(this.props.value, this.state.entries.length, 12);
+                this.setState({ isLoading: false, entries: this.state.entries.concat(groups), count: matches });
+            } catch (e) {
+                this.setState({ isLoading: false });
+            }
+        }
+
+        private fetch = this.props.mode === 'Embed' ? this.fetchEmbed : this.fetchFull;
+
+        componentDidMount() {            
             this.fetch();
         }
 
@@ -241,12 +257,15 @@ namespace ChannelsDB {
             const groups = this.state.entries;
 
             return <div>
-                <h4><b>{this.props.group}</b>: {this.props.value} <small>({this.props.count})</small></h4>
+                {this.props.mode === 'Embed'
+                    ? <h4><b>{this.props.group}</b>: {this.props.value} <small>({this.props.count})</small></h4>
+                    : <h4><b>Search</b>: {this.props.value} <small>({this.state.count >= 0 ? this.state.count : '?'})</small></h4>
+                }
                 <div style={{ marginTop: '15px', position: 'relative' }}>
                     {groups.map((g: any, i: number) => this.entry(g, i))}
                     <div style={{ clear: 'both' }} />
-                    {this.state.entries.length < this.props.count
-                        ? <button className='btn btn-sm btn-primary btn-block' disabled={this.state.isLoading ? true : false} onClick={this.fetch}>{this.state.isLoading ? 'Loading...' : `Show more (${this.props.count - this.state.entries.length} remaining)`}</button>
+                    {this.state.count < 0 || this.state.entries.length < this.state.count
+                        ? <button className='btn btn-sm btn-primary btn-block' disabled={this.state.isLoading ? true : false} onClick={this.fetch}>{this.state.isLoading ? 'Loading...' : `Show more (${this.state.count > 0 ? this.state.count - this.state.entries.length : '?'} remaining)`}</button>
                         : void 0}
                 </div>
             </div>;

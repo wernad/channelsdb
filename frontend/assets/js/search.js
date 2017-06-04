@@ -117,14 +117,15 @@ var ChannelsDB;
         var state = {
             searchTerm: new Rx.Subject(),
             viewState: { kind: 'Info' },
-            stateUpdated: new Rx.Subject()
+            stateUpdated: new Rx.Subject(),
+            fullSearch: new Rx.Subject()
         };
         state.searchTerm
             .distinctUntilChanged()
             .debounce(250)
             .forEach(function (t) {
             if (t.trim().length > 0) {
-                search(state, t).takeUntil(state.searchTerm).subscribe(function (data) { return updateViewState(state, { kind: 'Searched', data: data }); }, function (err) { return updateViewState(state, { kind: 'Error', message: '' + err }); });
+                search(state, t).takeUntil(Rx.Observable.merge(state.searchTerm, state.fullSearch)).subscribe(function (data) { return updateViewState(state, { kind: 'Searched', data: data }); }, function (err) { return updateViewState(state, { kind: 'Error', message: '' + err }); });
             }
             else {
                 updateViewState(state, { kind: 'Info' });
@@ -155,6 +156,20 @@ var ChannelsDB;
         });
     }
     ChannelsDB.fetchPdbEntries = fetchPdbEntries;
+    function fetchPdbText(value, start, count) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&start=" + start + "&rows=" + count + "&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=text:\"" + encodeURIComponent(value) + "\"&sort=overall_quality+desc&wt=json")];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, { groups: data.grouped.pdb_id.groups, matches: data.grouped.pdb_id.matches }];
+                }
+            });
+        });
+    }
+    ChannelsDB.fetchPdbText = fetchPdbText;
     function loadGroupDocs(var_name, group, offset, count) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -256,6 +271,7 @@ var ChannelsDB;
                     case 'Info': return React.createElement(Info, null);
                     case 'Loading': return React.createElement("div", null, state.message);
                     case 'Searched': return React.createElement(SearchResults, __assign({}, this.props));
+                    case 'Entries': return React.createElement(Entries, __assign({}, this.props, { mode: 'Full', value: state.term }));
                     case 'Error': return React.createElement("div", null,
                         "Error: ",
                         state.message);
@@ -278,9 +294,13 @@ var ChannelsDB;
         }
         SearchBox.prototype.render = function () {
             var _this = this;
-            return React.createElement("form", null,
-                React.createElement("div", { className: "form-group form-group-lg" },
-                    React.createElement("input", { type: 'text', className: "form-control", style: { fontWeight: 'bold' }, placeholder: "Search...", onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); } })));
+            return React.createElement("div", { className: "form-group form-group-lg" },
+                React.createElement("input", { type: 'text', className: "form-control", style: { fontWeight: 'bold' }, placeholder: "Search...", onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
+                        if (e.key !== 'Enter')
+                            return;
+                        _this.props.state.fullSearch.onNext(void 0);
+                        ChannelsDB.updateViewState(_this.props.state, { kind: 'Entries', term: e.target.value });
+                    } }));
         };
         return SearchBox;
     }(React.Component));
@@ -313,7 +333,6 @@ var ChannelsDB;
         SearchResults.prototype.render = function () {
             try {
                 var data = this.props.state.viewState.data;
-                console.log(data);
                 if (!data.grouped.category.groups.length)
                     return this.empty();
                 return React.createElement("div", null, this.groups());
@@ -395,7 +414,7 @@ var ChannelsDB;
                     ? React.createElement("div", { className: 'entry-list-wrap' },
                         React.createElement("button", { className: 'btn btn-block btn-primary', onClick: function () { return _this.setState({ entries: void 0 }); } },
                             React.createElement("span", { className: "glyphicon glyphicon-chevron-left", "aria-hidden": "true" })),
-                        React.createElement(Entries, __assign({ state: this.props.state }, this.state.entries)))
+                        React.createElement(Entries, __assign({ state: this.props.state }, this.state.entries, { mode: 'Embed' })))
                     : void 0);
         };
         return SearchGroup;
@@ -405,8 +424,8 @@ var ChannelsDB;
         __extends(Entries, _super);
         function Entries() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.state = { isLoading: false, entries: [] };
-            _this.fetch = function () { return __awaiter(_this, void 0, void 0, function () {
+            _this.state = { isLoading: false, entries: [], count: -1 };
+            _this.fetchEmbed = function () { return __awaiter(_this, void 0, void 0, function () {
                 var data, e_2;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -416,7 +435,7 @@ var ChannelsDB;
                             return [4 /*yield*/, ChannelsDB.fetchPdbEntries(this.props.var_name, this.props.value, this.state.entries.length, 6)];
                         case 1:
                             data = _a.sent();
-                            this.setState({ isLoading: false, entries: this.state.entries.concat(data) });
+                            this.setState({ isLoading: false, entries: this.state.entries.concat(data), count: this.props.count });
                             return [3 /*break*/, 3];
                         case 2:
                             e_2 = _a.sent();
@@ -426,6 +445,27 @@ var ChannelsDB;
                     }
                 });
             }); };
+            _this.fetchFull = function () { return __awaiter(_this, void 0, void 0, function () {
+                var _a, groups, matches, e_3;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _b.trys.push([0, 2, , 3]);
+                            this.setState({ isLoading: true });
+                            return [4 /*yield*/, ChannelsDB.fetchPdbText(this.props.value, this.state.entries.length, 12)];
+                        case 1:
+                            _a = _b.sent(), groups = _a.groups, matches = _a.matches;
+                            this.setState({ isLoading: false, entries: this.state.entries.concat(groups), count: matches });
+                            return [3 /*break*/, 3];
+                        case 2:
+                            e_3 = _b.sent();
+                            this.setState({ isLoading: false });
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            }); };
+            _this.fetch = _this.props.mode === 'Embed' ? _this.fetchEmbed : _this.fetchFull;
             return _this;
         }
         Entries.prototype.componentDidMount = function () {
@@ -456,20 +496,30 @@ var ChannelsDB;
             var _this = this;
             var groups = this.state.entries;
             return React.createElement("div", null,
-                React.createElement("h4", null,
-                    React.createElement("b", null, this.props.group),
-                    ": ",
-                    this.props.value,
-                    " ",
-                    React.createElement("small", null,
-                        "(",
-                        this.props.count,
-                        ")")),
+                this.props.mode === 'Embed'
+                    ? React.createElement("h4", null,
+                        React.createElement("b", null, this.props.group),
+                        ": ",
+                        this.props.value,
+                        " ",
+                        React.createElement("small", null,
+                            "(",
+                            this.props.count,
+                            ")"))
+                    : React.createElement("h4", null,
+                        React.createElement("b", null, "Search"),
+                        ": ",
+                        this.props.value,
+                        " ",
+                        React.createElement("small", null,
+                            "(",
+                            this.state.count >= 0 ? this.state.count : '?',
+                            ")")),
                 React.createElement("div", { style: { marginTop: '15px', position: 'relative' } },
                     groups.map(function (g, i) { return _this.entry(g, i); }),
                     React.createElement("div", { style: { clear: 'both' } }),
-                    this.state.entries.length < this.props.count
-                        ? React.createElement("button", { className: 'btn btn-sm btn-primary btn-block', disabled: this.state.isLoading ? true : false, onClick: this.fetch }, this.state.isLoading ? 'Loading...' : "Show more (" + (this.props.count - this.state.entries.length) + " remaining)")
+                    this.state.count < 0 || this.state.entries.length < this.state.count
+                        ? React.createElement("button", { className: 'btn btn-sm btn-primary btn-block', disabled: this.state.isLoading ? true : false, onClick: this.fetch }, this.state.isLoading ? 'Loading...' : "Show more (" + (this.state.count > 0 ? this.state.count - this.state.entries.length : '?') + " remaining)")
                         : void 0));
         };
         return Entries;

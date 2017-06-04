@@ -7,7 +7,8 @@ namespace ChannelsDB {
     export interface State {
         searchTerm: Rx.Subject<string>,
         viewState: ViewState,
-        stateUpdated: Rx.Subject<undefined>
+        stateUpdated: Rx.Subject<undefined>,
+        fullSearch: Rx.Subject<undefined>
     }
 
     export interface EntryGroup {
@@ -17,12 +18,13 @@ namespace ChannelsDB {
         value: string
     }
 
-    export type ViewState = ViewState.Info | ViewState.Seached | ViewState.Loading | ViewState.Error
+    export type ViewState = ViewState.Info | ViewState.Seached | ViewState.Entries | ViewState.Loading | ViewState.Error
 
     export namespace ViewState {
         export type Info = { kind: 'Info' }
         export type Loading = { kind: 'Loading', message: string }
         export type Seached = { kind: 'Searched', data: any }
+        export type Entries = { kind: 'Entries', term: string }
         export type Error = { kind: 'Error', message: string }
     }
 
@@ -35,7 +37,8 @@ namespace ChannelsDB {
         const state: State = {
             searchTerm: new Rx.Subject<string>(),
             viewState: { kind: 'Info' },
-            stateUpdated: new Rx.Subject<undefined>()
+            stateUpdated: new Rx.Subject<undefined>(),
+            fullSearch: new Rx.Subject<undefined>()
         }
 
         state.searchTerm
@@ -43,7 +46,7 @@ namespace ChannelsDB {
             .debounce(250)
             .forEach(t => {
                 if (t.trim().length > 0) {
-                    search(state, t).takeUntil(state.searchTerm).subscribe(
+                    search(state, t).takeUntil(Rx.Observable.merge(state.searchTerm, state.fullSearch)).subscribe(
                         data => updateViewState(state, { kind: 'Searched', data }), 
                         err => updateViewState(state, { kind: 'Error', message: '' + err }))
                 } else {
@@ -66,6 +69,11 @@ namespace ChannelsDB {
     export async function fetchPdbEntries(var_name: string, value: string, start: number, count: number) {        
         const data = await ajaxGetJson(`https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&start=${start}&rows=${count}&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=${encodeURIComponent(var_name)}:"${encodeURIComponent(value)}"&sort=overall_quality+desc&wt=json`)
         return (data as any).grouped.pdb_id.groups;
+    }
+
+    export async function fetchPdbText(value: string, start: number, count: number) {        
+        const data = await ajaxGetJson(`https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&start=${start}&rows=${count}&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=text:"${encodeURIComponent(value)}"&sort=overall_quality+desc&wt=json`)
+        return { groups: (data as any).grouped.pdb_id.groups, matches: (data as any).grouped.pdb_id.matches };
     }
 
     export async function loadGroupDocs(var_name: string, group: string, offset: number, count: number): Promise<any[]> {
