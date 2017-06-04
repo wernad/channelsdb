@@ -123,9 +123,8 @@ var ChannelsDB;
         state.searchTerm
             .distinctUntilChanged()
             .debounce(250)
-            .filter(function (t) { return t.length > 2; })
             .forEach(function (t) {
-            if (t.trim().length > 0) {
+            if (t.trim().length > 2) {
                 search(state, t).takeUntil(Rx.Observable.merge(state.searchTerm, state.fullSearch)).subscribe(function (data) { return updateViewState(state, { kind: 'Searched', data: data }); }, function (err) { return updateViewState(state, { kind: 'Error', message: '' + err }); });
             }
             else {
