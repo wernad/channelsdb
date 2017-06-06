@@ -115,17 +115,19 @@ var ChannelsDB;
     ChannelsDB.updateViewState = updateViewState;
     function initState() {
         var state = {
+            searchedTerm: '',
             searchTerm: new Rx.Subject(),
             viewState: { kind: 'Info' },
             stateUpdated: new Rx.Subject(),
             fullSearch: new Rx.Subject()
         };
         state.searchTerm
+            .map(function (t) { return t.trim(); })
             .distinctUntilChanged()
             .debounce(250)
             .forEach(function (t) {
-            if (t.trim().length > 2) {
-                search(state, t).takeUntil(Rx.Observable.merge(state.searchTerm, state.fullSearch)).subscribe(function (data) { return updateViewState(state, { kind: 'Searched', data: data }); }, function (err) { return updateViewState(state, { kind: 'Error', message: '' + err }); });
+            if (t.length > 2) {
+                search(state, t).takeUntil(Rx.Observable.merge(state.searchTerm, state.fullSearch)).subscribe(function (data) { state.searchedTerm = t; updateViewState(state, { kind: 'Searched', data: data }); }, function (err) { return updateViewState(state, { kind: 'Error', message: '' + err }); });
             }
             else {
                 updateViewState(state, { kind: 'Info' });
@@ -137,11 +139,25 @@ var ChannelsDB;
     function search(state, term) {
         updateViewState(state, { kind: 'Loading', message: 'Searching...' });
         var s = new Rx.Subject();
-        ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb-autocomplete/select?rows=20000&json.nl=map&group=true&group.field=category&group.limit=-1&fl=value,num_pdb_entries,var_name&sort=category+asc,num_pdb_entries+desc&q=value:" + term + "*~10&wt=json")
+        ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb-autocomplete/select?rows=20000&json.nl=map&group=true&group.field=category&group.limit=28&fl=value,num_pdb_entries,var_name&sort=category+asc,num_pdb_entries+desc&q=value:" + encodeURIComponent("\"" + term + "*\"") + "~10&wt=json")
             .then(function (data) { s.onNext(data); s.onCompleted(); })
             .catch(function (err) { s.onError(err); s.onCompleted(); });
         return s;
     }
+    function searchPdbCategory(term, var_name, start) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb-autocomplete/select?rows=28&start=" + start + "&json.nl=map&group.limit=-1&fl=value,num_pdb_entries,var_name&sort=category+asc,num_pdb_entries+desc&fq=var_name:" + var_name + "&q=value:" + encodeURIComponent("\"" + term + "*\"") + "~10&wt=json")];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.response.docs];
+                }
+            });
+        });
+    }
+    ChannelsDB.searchPdbCategory = searchPdbCategory;
     function fetchPdbEntries(var_name, value, start, count) {
         return __awaiter(this, void 0, void 0, function () {
             var data;
@@ -170,14 +186,6 @@ var ChannelsDB;
         });
     }
     ChannelsDB.fetchPdbText = fetchPdbText;
-    function loadGroupDocs(var_name, group, offset, count) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, []];
-            });
-        });
-    }
-    ChannelsDB.loadGroupDocs = loadGroupDocs;
 })(ChannelsDB || (ChannelsDB = {}));
 /*
  * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
@@ -192,6 +200,66 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var ChannelsDB;
+(function (ChannelsDB) {
+    var Menu = (function (_super) {
+        __extends(Menu, _super);
+        function Menu() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Menu.prototype.render = function () {
+            return React.createElement("nav", { className: "navbar navbar-default" },
+                React.createElement("div", { className: "container-fluid" },
+                    React.createElement("div", { className: "navbar-header" },
+                        React.createElement("a", { className: "navbar-brand", href: "index.html" }, "ChannelsDB")),
+                    React.createElement("div", { id: "navbar", className: "navbar-collapse collapse" },
+                        React.createElement("ul", { className: "nav navbar-nav navbar-right" },
+                            React.createElement("li", null,
+                                React.createElement("a", { href: "http://mole.upol.cz", target: '_blank' }, "MOLE")),
+                            React.createElement("li", null,
+                                React.createElement("a", { href: "about.html" }, "About"))))));
+        };
+        return Menu;
+    }(React.Component));
+    ChannelsDB.Menu = Menu;
+})(ChannelsDB || (ChannelsDB = {}));
+/*
+ * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
+ */
+var ChannelsDB;
+(function (ChannelsDB) {
+    var Info = (function (_super) {
+        __extends(Info, _super);
+        function Info() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Info.prototype.render = function () {
+            return React.createElement("div", null, "Fill me up, Lukas.");
+        };
+        return Info;
+    }(React.Component));
+    ChannelsDB.Info = Info;
+})(ChannelsDB || (ChannelsDB = {}));
+/*
+ * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
+ */
+var ChannelsDB;
+(function (ChannelsDB) {
+    var About = (function (_super) {
+        __extends(About, _super);
+        function About() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        About.prototype.render = function () {
+            return React.createElement("div", null, "Fill me about, Lukas.");
+        };
+        return About;
+    }(React.Component));
+    ChannelsDB.About = About;
+})(ChannelsDB || (ChannelsDB = {}));
+/*
+ * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
+ */
 var __assign = (this && this.__assign) || Object.assign || function(t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
         s = arguments[i];
@@ -202,48 +270,59 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 var ChannelsDB;
 (function (ChannelsDB) {
-    function renderUI(target) {
-        ReactDOM.render(React.createElement(App, { state: ChannelsDB.initState() }), target);
+    function renderUI(target, kind) {
+        if (kind === 'Search') {
+            ReactDOM.render(React.createElement(SearchMain, { state: ChannelsDB.initState() }), target);
+        }
+        else {
+            ReactDOM.render(React.createElement(AboutMain, null), target);
+        }
     }
     ChannelsDB.renderUI = renderUI;
-    var App = (function (_super) {
-        __extends(App, _super);
-        function App() {
+    var SearchMain = (function (_super) {
+        __extends(SearchMain, _super);
+        function SearchMain() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        App.prototype.componentDidMount = function () {
-            this.load();
-        };
-        App.prototype.load = function () {
-        };
-        App.prototype.render = function () {
+        SearchMain.prototype.render = function () {
             return React.createElement("div", { className: 'container' },
-                React.createElement("nav", { className: "navbar navbar-default" },
-                    React.createElement("div", { className: "container-fluid" },
-                        React.createElement("div", { className: "navbar-header" },
-                            React.createElement("a", { className: "navbar-brand", href: "#" }, "ChannelsDB")),
-                        React.createElement("div", { id: "navbar", className: "navbar-collapse collapse" },
-                            React.createElement("ul", { className: "nav navbar-nav navbar-right" },
-                                React.createElement("li", null,
-                                    React.createElement("a", { href: "#" }, "MOLE")),
-                                React.createElement("li", null,
-                                    React.createElement("a", { href: "#" }, "About")),
-                                React.createElement("li", null,
-                                    React.createElement("a", { href: "#" }, "Contribute")))))),
-                React.createElement(MainView, __assign({}, this.props)),
-                React.createElement("hr", { className: "featurette-divider" }),
-                React.createElement("footer", null,
-                    React.createElement("p", { className: 'pull-right', style: { color: '#999' } }, "\u00A9 2017 Luk\u00E1\u0161 Pravda & David Sehnal")));
+                React.createElement(ChannelsDB.Menu, null),
+                React.createElement(SearchView, __assign({}, this.props)),
+                React.createElement(Footer, null));
         };
-        return App;
+        return SearchMain;
     }(React.Component));
-    ChannelsDB.App = App;
-    var MainView = (function (_super) {
-        __extends(MainView, _super);
-        function MainView() {
+    var AboutMain = (function (_super) {
+        __extends(AboutMain, _super);
+        function AboutMain() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        MainView.prototype.render = function () {
+        AboutMain.prototype.render = function () {
+            return React.createElement("div", { className: 'container' },
+                React.createElement(ChannelsDB.Menu, null),
+                React.createElement(ChannelsDB.About, null),
+                React.createElement(Footer, null));
+        };
+        return AboutMain;
+    }(React.Component));
+    var Footer = (function (_super) {
+        __extends(Footer, _super);
+        function Footer() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Footer.prototype.render = function () {
+            return React.createElement("footer", null,
+                React.createElement("hr", { className: "featurette-divider" }),
+                React.createElement("p", { className: 'pull-right', style: { color: '#999', fontSize: 'smaller' } }, "\u00A9 2017 Luk\u00E1\u0161 Pravda & David Sehnal"));
+        };
+        return Footer;
+    }(React.Component));
+    var SearchView = (function (_super) {
+        __extends(SearchView, _super);
+        function SearchView() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        SearchView.prototype.render = function () {
             return React.createElement("div", { style: { marginTop: '35px' } },
                 React.createElement("div", { className: 'row' },
                     React.createElement("div", { className: "col-lg-12" },
@@ -252,9 +331,8 @@ var ChannelsDB;
                     React.createElement("div", { className: "col-lg-12" },
                         React.createElement(StateView, __assign({}, this.props)))));
         };
-        return MainView;
+        return SearchView;
     }(React.Component));
-    ChannelsDB.MainView = MainView;
     var StateView = (function (_super) {
         __extends(StateView, _super);
         function StateView() {
@@ -268,7 +346,7 @@ var ChannelsDB;
             var state = this.props.state.viewState;
             try {
                 switch (state.kind) {
-                    case 'Info': return React.createElement(Info, null);
+                    case 'Info': return React.createElement(ChannelsDB.Info, null);
                     case 'Loading': return React.createElement("div", null, state.message);
                     case 'Searched': return React.createElement(SearchResults, __assign({}, this.props));
                     case 'Entries': return React.createElement(Entries, __assign({}, this.props, { mode: 'Full', value: state.term }));
@@ -286,7 +364,6 @@ var ChannelsDB;
         };
         return StateView;
     }(React.Component));
-    ChannelsDB.StateView = StateView;
     var SearchBox = (function (_super) {
         __extends(SearchBox, _super);
         function SearchBox() {
@@ -304,18 +381,6 @@ var ChannelsDB;
         };
         return SearchBox;
     }(React.Component));
-    ChannelsDB.SearchBox = SearchBox;
-    var Info = (function (_super) {
-        __extends(Info, _super);
-        function Info() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        Info.prototype.render = function () {
-            return React.createElement("div", null, "Examples etc go here.");
-        };
-        return Info;
-    }(React.Component));
-    ChannelsDB.Info = Info;
     var SearchResults = (function (_super) {
         __extends(SearchResults, _super);
         function SearchResults() {
@@ -335,7 +400,10 @@ var ChannelsDB;
                 var data = this.props.state.viewState.data;
                 if (!data.grouped.category.groups.length)
                     return this.empty();
-                return React.createElement("div", null, this.groups());
+                return React.createElement("div", null,
+                    React.createElement("div", { style: { padding: '0 0 15px 0', marginTop: '-15px', fontStyle: 'italic', textAlign: 'right' } },
+                        React.createElement("small", null, "Press 'Enter' for full-text search.")),
+                    React.createElement("div", null, this.groups()));
             }
             catch (e) {
                 return this.empty();
@@ -343,7 +411,6 @@ var ChannelsDB;
         };
         return SearchResults;
     }(React.Component));
-    ChannelsDB.SearchResults = SearchResults;
     var SearchGroup = (function (_super) {
         __extends(SearchGroup, _super);
         function SearchGroup() {
@@ -361,16 +428,17 @@ var ChannelsDB;
                 _this.setState({ entries: { group: _this.props.group.groupValue, value: value, var_name: var_name, count: count } });
             };
             _this.loadMore = function () { return __awaiter(_this, void 0, void 0, function () {
-                var data, e_1;
+                var docs, e_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             _a.trys.push([0, 2, , 3]);
                             this.setState({ isLoading: true });
-                            return [4 /*yield*/, ChannelsDB.loadGroupDocs('', '', this.state.docs.length, 25)];
+                            return [4 /*yield*/, ChannelsDB.searchPdbCategory(this.props.state.searchedTerm, this.state.docs[0].var_name, this.state.docs.length)];
                         case 1:
-                            data = _a.sent();
-                            this.setState({ isLoading: false, docs: this.state.docs.concat(data) });
+                            docs = _a.sent();
+                            console.log(docs);
+                            this.setState({ isLoading: false, docs: this.state.docs.concat(docs) });
                             return [3 /*break*/, 3];
                         case 2:
                             e_1 = _a.sent();
@@ -406,8 +474,8 @@ var ChannelsDB;
                     React.createElement("div", { className: 'group-list', style: { display: this.state.isExpanded ? 'block' : 'none' } },
                         this.state.docs.map(function (d, i) { return _this.entry(d, i); }),
                         this.state.docs.length < g.doclist.numFound
-                            ? React.createElement("div", { style: { padding: 0 } },
-                                React.createElement("button", { style: { width: '100%', display: 'block' }, className: 'btn btn-xs btn-primary', disabled: this.state.isLoading ? true : false, onClick: this.loadMore }, this.state.isLoading ? 'Loading...' : 'Show more'))
+                            ? React.createElement("div", { style: { padding: 0, float: 'none', clear: 'both' } },
+                                React.createElement("button", { style: { width: '100%', display: 'block' }, className: 'btn btn-xs btn-primary btn-block', disabled: this.state.isLoading ? true : false, onClick: this.loadMore }, this.state.isLoading ? 'Loading...' : "More (" + (g.doclist.numFound - this.state.docs.length) + " remaining)"))
                             : void 0),
                     React.createElement("div", { style: { clear: 'both' } })),
                 this.state.entries && this.state.isExpanded
@@ -419,7 +487,6 @@ var ChannelsDB;
         };
         return SearchGroup;
     }(React.Component));
-    ChannelsDB.SearchGroup = SearchGroup;
     var Entries = (function (_super) {
         __extends(Entries, _super);
         function Entries() {
@@ -524,12 +591,4 @@ var ChannelsDB;
         };
         return Entries;
     }(React.Component));
-    ChannelsDB.Entries = Entries;
-})(ChannelsDB || (ChannelsDB = {}));
-/*
- * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
- */
-var ChannelsDB;
-(function (ChannelsDB) {
-    ChannelsDB.renderUI(document.getElementById('app'));
 })(ChannelsDB || (ChannelsDB = {}));

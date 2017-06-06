@@ -19,7 +19,9 @@
   "files": [    
     "src/Utils.ts",
     "src/State.ts",
-    "src/UI.tsx",
-    "src/App.ts"
+    "src/Menu.tsx",
+    "src/Info.tsx",
+    "src/About.tsx",
+    "src/Index.tsx"
   ]
 }

@@ -50,7 +50,7 @@ namespace ChannelsDB {
         }
     }
     
-    export async function ajaxGetJson<T>(url: string): Promise<T>  {
+    export async function ajaxGetJson<T = any>(url: string): Promise<T>  {
         const xhttp = RequestPool.get();                    
         xhttp.open('get', url, true);
         xhttp.responseType = "text";

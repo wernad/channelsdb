@@ -4,66 +4,46 @@
 
 namespace ChannelsDB {
 
-    export function renderUI(target: HTMLElement) {
-        ReactDOM.render(<App state={initState()} />, target);
+    export function renderUI(target: HTMLElement, kind: 'Search' | 'About') {
+        if (kind === 'Search') {
+            ReactDOM.render(<SearchMain state={initState()} />, target);
+        } else {
+            ReactDOM.render(<AboutMain />, target);
+        }
     }
 
     type GlobalProps = { state: State }
 
-    export class App extends React.Component<GlobalProps, {}> {
-
-        componentDidMount() {
-            this.load();
-        }
-
-        load() {
-
-        }
-
+    class SearchMain extends React.Component<GlobalProps, {}> {
         render() {
             return <div className='container'>
-                {/*<div className="masthead">
-                    <h3 className="text-muted">ChannelsDB</h3>
-                    <nav>
-                        <ul className="nav nav-justified">
-                            <li className="active"><a href="#">DB</a></li>
-                            <li><a href="#">MOLE</a></li>
-                            <li><a href="#">Contribute</a></li>
-                            <li><a href="#">About</a></li>
-                        </ul>
-                    </nav>
-                </div>*/}
-
-                <nav className="navbar navbar-default">
-                    <div className="container-fluid">
-                        <div className="navbar-header">
-                            <a className="navbar-brand" href="#">ChannelsDB</a>
-                        </div>
-                        <div id="navbar" className="navbar-collapse collapse">
-                            {/*<ul className="nav navbar-nav">
-                                <li className="active"><a href="#">DB</a></li>
-                            </ul>*/}
-                            <ul className="nav navbar-nav navbar-right">
-                                <li><a href="#">MOLE</a></li>
-                                <li><a href="#">About</a></li>
-                                <li><a href="#">Contribute</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-
-                <MainView {...this.props} />
-
-                <hr className="featurette-divider" />
-
-                <footer>
-                    <p className='pull-right' style={{ color: '#999' }}>&copy; 2017 Lukáš Pravda &amp; David Sehnal</p>
-                </footer>
+                <Menu />
+                <SearchView {...this.props} />
+                <Footer />
             </div>
         }
     }
 
-    export class MainView extends React.Component<GlobalProps, {}> {
+    class AboutMain extends React.Component<{}, {}> {
+        render() {
+            return <div className='container'>
+                <Menu />
+                <About />
+                <Footer />
+            </div>
+        }
+    }
+
+    class Footer extends React.Component<{}, {}> {
+        render() {
+            return <footer>
+                <hr className="featurette-divider" />
+                <p className='pull-right' style={{ color: '#999', fontSize: 'smaller' }}>&copy; 2017 Lukáš Pravda &amp; David Sehnal</p>
+            </footer>
+        }
+    }
+
+    class SearchView extends React.Component<GlobalProps, {}> {
 
         render() {
             return <div style={{ marginTop: '35px' }}>
@@ -77,7 +57,7 @@ namespace ChannelsDB {
         }
     }
 
-    export class StateView extends React.Component<GlobalProps, {}> {
+    class StateView extends React.Component<GlobalProps, {}> {
 
         componentDidMount() {
             this.props.state.stateUpdated.subscribe(() => this.forceUpdate());
@@ -100,7 +80,7 @@ namespace ChannelsDB {
         }
     }
 
-    export class SearchBox extends React.Component<GlobalProps, {}> {
+    class SearchBox extends React.Component<GlobalProps, {}> {
         render() {
             return <div className="form-group form-group-lg">
                 <input type='text' className="form-control" style={{ fontWeight: 'bold' }} placeholder="Search..." 
@@ -114,15 +94,7 @@ namespace ChannelsDB {
         }
     }
 
-    export class Info extends React.Component<{}, {}> {
-        render() {
-            return <div>
-                Examples etc go here.
-            </div>
-        }
-    }
-
-    export class SearchResults extends React.Component<GlobalProps, {}> {
+    class SearchResults extends React.Component<GlobalProps, {}> {
         private empty() {
             return <div>No results</div>;
         }
@@ -137,14 +109,17 @@ namespace ChannelsDB {
             try {
                 const data = (this.props.state.viewState as ViewState.Seached).data;
                 if (!data.grouped.category.groups.length) return this.empty();
-                return <div>{this.groups()}</div>;
+                return <div>
+                    <div style={{ padding: '0 0 15px 0', marginTop: '-15px', fontStyle: 'italic', textAlign: 'right' }}><small>Press 'Enter' for full-text search.</small></div>
+                    <div>{this.groups()}</div>
+                </div>;
             } catch (e) {
                 return this.empty();
             }
         }
     }
 
-    export class SearchGroup extends React.Component<GlobalProps & { group: any }, { isExpanded: boolean, docs: any[], isLoading: boolean, entries?: { group: string, value: string, var_name: string, count: number } }> {
+    class SearchGroup extends React.Component<GlobalProps & { group: any }, { isExpanded: boolean, docs: any[], isLoading: boolean, entries?: { group: string, value: string, var_name: string, count: number } }> {
         state = { isExpanded: false, docs: [] as any[], isLoading: false, entries: void 0 as any as { group: string, value: string, var_name: string, count: number } }
 
         private toggle = (e: React.MouseEvent<any>) => {
@@ -163,8 +138,9 @@ namespace ChannelsDB {
         private loadMore = async () => {
             try {
                 this.setState({ isLoading: true });
-                const data = await loadGroupDocs('', '', this.state.docs.length, 25);
-                this.setState({ isLoading: false, docs: this.state.docs.concat(data) });
+                const docs = await searchPdbCategory(this.props.state.searchedTerm, this.state.docs[0].var_name, this.state.docs.length);
+                console.log(docs);
+                this.setState({ isLoading: false, docs: this.state.docs.concat(docs) });
             } catch (e) {
                 this.setState({ isLoading: false });
             } 
@@ -190,12 +166,12 @@ namespace ChannelsDB {
                     <div className='group-list' style={{ display: this.state.isExpanded ? 'block' : 'none' }}>
                         {this.state.docs.map((d: any, i: number) => this.entry(d, i)) }
                         {this.state.docs.length < g.doclist.numFound
-                            ? <div style={{ padding: 0 }}>
-                                <button style={{ width: '100%', display: 'block' }} className='btn btn-xs btn-primary' disabled={this.state.isLoading ? true : false} onClick={this.loadMore}>{this.state.isLoading ? 'Loading...' : 'Show more'}</button>
+                            ? <div style={{ padding: 0, float: 'none', clear: 'both' }}>
+                                <button style={{ width: '100%', display: 'block' }} className='btn btn-xs btn-primary btn-block' disabled={this.state.isLoading ? true : false} onClick={this.loadMore}>{this.state.isLoading ? 'Loading...' : `More (${g.doclist.numFound - this.state.docs.length} remaining)`}</button>
                             </div>
                             : void 0}
                     </div>
-                    <div style={{ clear: 'both' }} />
+                    <div style={{ clear: 'both' }} />                    
                 </div>
                 { this.state.entries && this.state.isExpanded
                 ? <div className='entry-list-wrap'>
@@ -207,7 +183,7 @@ namespace ChannelsDB {
         }
     }
 
-    export class Entries extends React.Component<GlobalProps & { group?: string, value: string, var_name?: string, count?: number, mode: 'Embed' | 'Full'  }, { isLoading: boolean, entries: any[], count: number }> {
+    class Entries extends React.Component<GlobalProps & { group?: string, value: string, var_name?: string, count?: number, mode: 'Embed' | 'Full'  }, { isLoading: boolean, entries: any[], count: number }> {
         state = { isLoading: false, entries: [] as any[], count: -1 }
         
         private fetchEmbed = async () => {
