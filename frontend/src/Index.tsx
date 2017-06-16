@@ -12,7 +12,7 @@ namespace ChannelsDB {
         }
     }
 
-    type GlobalProps = { state: State }
+    type GlobalProps = { state: State };
 
     class SearchMain extends React.Component<GlobalProps, {}> {
         render() {
@@ -20,7 +20,7 @@ namespace ChannelsDB {
                 <Menu />
                 <SearchView {...this.props} />
                 <Footer />
-            </div>
+            </div>;
         }
     }
 
@@ -30,16 +30,16 @@ namespace ChannelsDB {
                 <Menu />
                 <About />
                 <Footer />
-            </div>
+            </div>;
         }
     }
 
     class Footer extends React.Component<{}, {}> {
         render() {
             return <footer>
-                <hr className="featurette-divider" />
+                <hr className='featurette-divider' />
                 <p className='pull-right' style={{ color: '#999', fontSize: 'smaller' }}>&copy; 2017 Lukáš Pravda &amp; David Sehnal</p>
-            </footer>
+            </footer>;
         }
     }
 
@@ -48,12 +48,12 @@ namespace ChannelsDB {
         render() {
             return <div style={{ marginTop: '35px' }}>
                 <div className='row'>
-                    <div className="col-lg-12"><SearchBox {...this.props} /></div>
+                    <div className='col-lg-12'><SearchBox {...this.props} /></div>
                 </div>
                 <div className='row'>
-                    <div className="col-lg-12"><StateView {...this.props} /></div>
+                    <div className='col-lg-12'><StateView {...this.props} /></div>
                 </div>
-            </div>
+            </div>;
         }
     }
 
@@ -70,7 +70,7 @@ namespace ChannelsDB {
                     case 'Info': return <Info />;
                     case 'Loading': return <div>{state.message}</div>;
                     case 'Searched': return <SearchResults {...this.props} />;
-                    case 'Entries': return <Entries {...this.props} mode='Full' value={state.term} />
+                    case 'Entries': return <Entries {...this.props} mode='Full' value={state.term} />;
                     case 'Error': return <div>Error: {state.message}</div>;
                     default: return <div>Should not happen ;)</div>;
                 }
@@ -82,13 +82,13 @@ namespace ChannelsDB {
 
     class SearchBox extends React.Component<GlobalProps, {}> {
         render() {
-            return <div className="form-group form-group-lg">
-                <input type='text' className="form-control" style={{ fontWeight: 'bold' }} placeholder="Search..." 
-                    onChange={e => this.props.state.searchTerm.onNext(e.target.value)}
-                    onKeyPress={e => {
+            return <div className='form-group form-group-lg'>
+                <input type='text' className='form-control' style={{ fontWeight: 'bold' }} placeholder='Search...'
+                    onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
+                    onKeyPress={(e) => {
                         if (e.key !== 'Enter') return;
                         this.props.state.fullSearch.onNext(void 0);
-                        updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value })
+                        updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
                     }} />
             </div>;
         }
@@ -120,7 +120,7 @@ namespace ChannelsDB {
     }
 
     class SearchGroup extends React.Component<GlobalProps & { group: any }, { isExpanded: boolean, docs: any[], isLoading: boolean, entries?: { group: string, value: string, var_name: string, count: number } }> {
-        state = { isExpanded: false, docs: [] as any[], isLoading: false, entries: void 0 as any as { group: string, value: string, var_name: string, count: number } }
+        state = { isExpanded: false, docs: [] as any[], isLoading: false, entries: void 0 as any as { group: string, value: string, var_name: string, count: number } };
 
         private toggle = (e: React.MouseEvent<any>) => {
             e.preventDefault();
@@ -143,25 +143,25 @@ namespace ChannelsDB {
                 this.setState({ isLoading: false, docs: this.state.docs.concat(docs) });
             } catch (e) {
                 this.setState({ isLoading: false });
-            } 
+            }
         }
 
         componentDidMount() {
-            this.setState({ docs: this.props.group.doclist.docs })
+            this.setState({ docs: this.props.group.doclist.docs });
         }
 
         private entry(d: any, i: any) {
             return <div key={d.value + d.var_name + '--' + i}>
                 <a href='#' data-value={d.value} data-var={d.var_name} data-count={d.num_pdb_entries} onClick={this.showEntries} title={`${d.value}`}>{d.value}</a> 
                 <div className='count'>{d.num_pdb_entries}</div>
-            </div>
+            </div>;
         }
 
         render() {
             const g = this.props.group;
 
             return <div style={{ marginBottom: '10px' }}>
-                <div className='group-header'><button className='btn btn-default btn-block' onClick={this.toggle}><span className={`glyphicon glyphicon-${this.state.isExpanded ? 'minus' : 'plus'}`} aria-hidden="true"></span> <span>{g.groupValue}</span> ({g.doclist.numFound})</button></div>
+                <div className='group-header'><button className='btn btn-default btn-block' onClick={this.toggle}><span className={`glyphicon glyphicon-${this.state.isExpanded ? 'minus' : 'plus'}`} aria-hidden='true'></span> <span>{g.groupValue}</span> ({g.doclist.numFound})</button></div>
                 <div className='group-list-wrap' style={{ display: this.state.entries ? 'none' : 'block' }}>
                     <div className='group-list' style={{ display: this.state.isExpanded ? 'block' : 'none' }}>
                         {this.state.docs.map((d: any, i: number) => this.entry(d, i)) }
@@ -175,20 +175,20 @@ namespace ChannelsDB {
                 </div>
                 { this.state.entries && this.state.isExpanded
                 ? <div className='entry-list-wrap'>
-                    <button className='btn btn-block btn-primary' onClick={() =>this.setState({ entries: void 0 })}><span className={`glyphicon glyphicon-chevron-left`} aria-hidden="true"></span></button>
+                    <button className='btn btn-block btn-primary' onClick={() => this.setState({ entries: void 0 })}><span className={`glyphicon glyphicon-chevron-left`} aria-hidden='true'></span></button>
                     <Entries state={this.props.state} {...this.state.entries!} mode='Embed' />
-                  </div> 
+                  </div>
                 : void 0 }
-            </div>
+            </div>;
         }
     }
 
     class Entries extends React.Component<GlobalProps & { group?: string, value: string, var_name?: string, count?: number, mode: 'Embed' | 'Full'  }, { isLoading: boolean, entries: any[], count: number }> {
-        state = { isLoading: false, entries: [] as any[], count: -1 }
-        
+        state = { isLoading: false, entries: [] as any[], count: -1 };
+
         private fetchEmbed = async () => {
             try {
-                this.setState({ isLoading: true })
+                this.setState({ isLoading: true });
                 const data = await fetchPdbEntries(this.props.var_name!, this.props.value, this.state.entries.length, 6);
                 this.setState({ isLoading: false, entries: this.state.entries.concat(data), count: this.props.count! });
             } catch (e) {
@@ -198,7 +198,7 @@ namespace ChannelsDB {
 
         private fetchFull = async () => {
             try {
-                this.setState({ isLoading: true })
+                this.setState({ isLoading: true });
                 const { groups, matches } = await fetchPdbText(this.props.value, this.state.entries.length, 12);
                 this.setState({ isLoading: false, entries: this.state.entries.concat(groups), count: matches });
             } catch (e) {
@@ -208,7 +208,7 @@ namespace ChannelsDB {
 
         private fetch = this.props.mode === 'Embed' ? this.fetchEmbed : this.fetchFull;
 
-        componentDidMount() {            
+        componentDidMount() {
             this.fetch();
         }
 
@@ -226,7 +226,7 @@ namespace ChannelsDB {
                 <div className='pdb-entry-img-wrap'>
                     <img src={`https://www.ebi.ac.uk/pdbe/static/entry/${docs.pdb_id.toLowerCase()}_assembly_1_chemically_distinct_molecules_front_image-200x200.png`} />
                 </div>
-            </div>
+            </div>;
         }
 
         render() {

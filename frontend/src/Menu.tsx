@@ -5,20 +5,20 @@
 namespace ChannelsDB {
     export class Menu extends React.Component<{}, {}> {
         render() {
-            return <nav className="navbar navbar-default">
-                <div className="container-fluid">
-                    <div className="navbar-header">
-                        <a className="navbar-brand" href="index.html">ChannelsDB</a>
+            return <nav className='navbar navbar-default'>
+                <div className='container-fluid'>
+                    <div className='navbar-header'>
+                        <a className='navbar-brand' href='index.html'>ChannelsDB</a>
                     </div>
-                    <div id="navbar" className="navbar-collapse collapse">
-                        <ul className="nav navbar-nav navbar-right">
-                            <li><a href="http://mole.upol.cz" target='_blank'>MOLE</a></li>
-                            <li><a href="about.html">About</a></li>
-                            {/*<li><a href="#">Contribute</a></li>*/}
+                    <div id='navbar' className='navbar-collapse collapse'>
+                        <ul className='nav navbar-nav navbar-right'>
+                            <li><a href='http://mole.upol.cz' target='_blank'>MOLE</a></li>
+                            <li><a href='about.html'>About</a></li>
+                            {/*<li><a href='#'>Contribute</a></li>*/}
                         </ul>
                     </div>
                 </div>
-            </nav>
+            </nav>;
         }
     }
 }
