@@ -119,15 +119,16 @@ var ChannelsDB;
             searchTerm: new Rx.Subject(),
             viewState: { kind: 'Info' },
             stateUpdated: new Rx.Subject(),
-            fullSearch: new Rx.Subject()
+            fullSearch: new Rx.Subject(),
         };
+        var interrupt = Rx.Observable.merge(state.searchTerm, state.fullSearch);
         state.searchTerm
             .map(function (t) { return t.trim(); })
             .distinctUntilChanged()
-            .debounce(250)
+            .concatMap(function (t) { return Rx.Observable.timer(250).takeUntil(interrupt).map(function (_) { return t; }); })
             .forEach(function (t) {
             if (t.length > 2) {
-                search(state, t).takeUntil(Rx.Observable.merge(state.searchTerm, state.fullSearch)).subscribe(function (data) { state.searchedTerm = t; updateViewState(state, { kind: 'Searched', data: data }); }, function (err) { return updateViewState(state, { kind: 'Error', message: '' + err }); });
+                search(state, t).takeUntil(interrupt).subscribe(function (data) { state.searchedTerm = t; updateViewState(state, { kind: 'Searched', data: data }); }, function (err) { return updateViewState(state, { kind: 'Error', message: '' + err }); });
             }
             else {
                 updateViewState(state, { kind: 'Info' });
@@ -208,16 +209,16 @@ var ChannelsDB;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         Menu.prototype.render = function () {
-            return React.createElement("nav", { className: "navbar navbar-default" },
-                React.createElement("div", { className: "container-fluid" },
-                    React.createElement("div", { className: "navbar-header" },
-                        React.createElement("a", { className: "navbar-brand", href: "index.html" }, "ChannelsDB")),
-                    React.createElement("div", { id: "navbar", className: "navbar-collapse collapse" },
-                        React.createElement("ul", { className: "nav navbar-nav navbar-right" },
+            return React.createElement("nav", { className: 'navbar navbar-default' },
+                React.createElement("div", { className: 'container-fluid' },
+                    React.createElement("div", { className: 'navbar-header' },
+                        React.createElement("a", { className: 'navbar-brand', href: 'index.html', style: { fontWeight: 'bold' } }, "ChannelsDB")),
+                    React.createElement("div", { id: 'navbar', className: 'navbar-collapse collapse' },
+                        React.createElement("ul", { className: 'nav navbar-nav navbar-right' },
                             React.createElement("li", null,
-                                React.createElement("a", { href: "http://mole.upol.cz", target: '_blank' }, "MOLE")),
+                                React.createElement("a", { href: 'http://mole.upol.cz', target: '_blank' }, "MOLE")),
                             React.createElement("li", null,
-                                React.createElement("a", { href: "about.html" }, "About"))))));
+                                React.createElement("a", { href: 'about.html' }, "About"))))));
         };
         return Menu;
     }(React.Component));
@@ -228,13 +229,104 @@ var ChannelsDB;
  */
 var ChannelsDB;
 (function (ChannelsDB) {
+    var Intro = (function (_super) {
+        __extends(Intro, _super);
+        function Intro() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Intro.prototype.render = function () {
+            return React.createElement("div", { style: { textAlign: 'center', margin: '60px 0' } }, "Enter general info.");
+        };
+        return Intro;
+    }(React.Component));
+    ChannelsDB.Intro = Intro;
     var Info = (function (_super) {
         __extends(Info, _super);
         function Info() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         Info.prototype.render = function () {
-            return React.createElement("div", null, "Fill me up, Lukas.");
+            var centerStyle = {
+                display: 'block',
+                margin: '0 auto',
+                marginTop: 30,
+            };
+            var justify = {
+                textAlign: 'justify',
+                textJustify: 'inter-word',
+            };
+            var pdbIdMargin = {
+                marginLeft: 50,
+            };
+            var reference = {
+                borderLeft: '2px solid #AAA',
+                paddingLeft: 6,
+            };
+            return React.createElement("div", null,
+                React.createElement("h1", { style: { marginTop: 50, textAlign: 'center' } }, "Examples"),
+                React.createElement("div", { className: 'row' },
+                    React.createElement("div", { className: 'col-lg-4' },
+                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1ymg_detail.png', alt: '1ymg channel detail', width: '140', height: '140' }),
+                        React.createElement("h2", null, "Water channel architecture"),
+                        React.createElement("p", null, "The channel architecture of Aquaporin 0 at 2.2\u212B resolution highlights residues critical for water permeation regulation."),
+                        React.createElement("p", null,
+                            React.createElement("a", { className: 'btn btn-default', href: '#ex-1ymg', role: 'button' }, "View details \u00BB"))),
+                    React.createElement("div", { className: 'col-lg-4' },
+                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1jj2_detail.png', alt: '1jj2 channel detail', width: '140', height: '140' }),
+                        React.createElement("h2", null, "Ribosomal polypeptide exit tunnel"),
+                        React.createElement("p", null, "Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome."),
+                        React.createElement("p", null,
+                            React.createElement("a", { className: 'btn btn-default', href: '#ex-1jj2', role: 'button' }, "View details \u00BB"))),
+                    React.createElement("div", { className: 'col-lg-4' },
+                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', alt: 'Generic placeholder image', width: '140', height: '140' }),
+                        React.createElement("h2", null, "Cytochrome P450 2D6 substrate tunnel"),
+                        React.createElement("p", null, "Fill me Karel!"),
+                        React.createElement("p", null,
+                            React.createElement("a", { className: 'btn btn-default', href: '#ex-p450', role: 'button' }, "View details \u00BB")))),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement("div", { className: 'row featurette' },
+                    React.createElement("a", { name: "ex-1ymg" }),
+                    React.createElement("div", { className: 'col-md-7' },
+                        React.createElement("h2", { className: 'featurette-heading' },
+                            "Aquaporin 0",
+                            React.createElement("a", { style: pdbIdMargin, className: 'text-muted', href: 'http://channelsdb.dominiktousek.eu/ChannelsDB/detail/1ymg' }, "1ymg")),
+                        React.createElement("p", { className: 'lead' }, "The channel architecture of Aquaporin O at 2.2\u212B resolution highlights residues critical for water permeation regulation."),
+                        React.createElement("p", { style: justify }, "The channel is ~ 30\u212B long and highlights with some of the residues crucial for its proper function. Selectivity filter (ar/R), which allows water molecules passage through the membrane in a single file (green sticks). Residues providing canonical AQP hydrogen bond acceptor that align watters through the channel in balls and stick model. Finally, Tyr-149 important for channel gating in orange."),
+                        React.createElement("p", { style: reference },
+                            React.createElement("small", null,
+                                React.createElement("a", { target: '_blank', href: 'https://dx.doi.org/10.1073/pnas.0405274101' },
+                                    "Harries, W. E. C., et. al. ",
+                                    React.createElement("span", { style: { fontStyle: 'italic' } }, "The channel architecture of aquaporin 0 at a 2.2\u212B resolution"),
+                                    ". Proc. Natl. Acad. Sci. 101, 14045\u201314050 (2004)")))),
+                    React.createElement("div", { className: 'col-md-5' },
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1ymg.png', width: '500', height: '500', alt: '1ymg detailed channel view' }))),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement("div", { className: 'row featurette' },
+                    React.createElement("a", { name: "ex-1jj2" }),
+                    React.createElement("div", { className: 'col-md-7 col-md-push-5' },
+                        React.createElement("h2", { className: 'featurette-heading' },
+                            "Large Ribosomal Subunit ",
+                            React.createElement("a", { style: pdbIdMargin, className: 'text-muted', href: 'http://channelsdb.dominiktousek.eu/ChannelsDB/detail/1jj2' }, "1jj2")),
+                        React.createElement("p", { className: 'lead' }, "The ribosomal polypeptide tunnel provides an insight into the release of a nascent polypeptide chain out of the ribosomal complex."),
+                        React.createElement("p", { style: justify }, "The exit tunnel is surrounded by arginine side chains (stick model), bearing positive charges as well as RNA backbone phosphate groups (spheres), thus providing fragmental charge along the tunnel, which is necessary to prevent the nasccent peptide from sticking to the channel wall inside the ribosome. Subunits L4, L22 and L39e interacting with the exit tunnel are highlighted in yellow, green and magenta respectivelly."),
+                        React.createElement("p", { style: reference },
+                            React.createElement("small", null,
+                                React.createElement("a", { target: '_blank', href: 'https://dx.doi.org/10.1016/j.jmb.2006.05.023' },
+                                    "Voss, N. R., et. al. ",
+                                    React.createElement("span", { style: { fontStyle: 'italic' } }, "The geometry of the ribosomal polypeptide exit tunnel."),
+                                    ". J. Mol. Biol. 360, 893\u2013906 (2006)")))),
+                    React.createElement("div", { className: 'col-md-5 col-md-pull-7' },
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1jj2.png', alt: 'Generic placeholder image' }))),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement("div", { className: 'row featurette' },
+                    React.createElement("a", { name: "ex-p450" }),
+                    React.createElement("div", { className: 'col-md-7' },
+                        React.createElement("h2", { className: 'featurette-heading' },
+                            "Cytochrome P450 2D6",
+                            React.createElement("a", { style: pdbIdMargin, className: 'text-muted', href: 'http://channelsdb.dominiktousek.eu/ChannelsDB/detail/1tqn' }, "Fill Me")),
+                        React.createElement("p", { className: 'lead' }, "Some cool description with reference @Karel")),
+                    React.createElement("div", { className: 'col-md-5' },
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', "data-src": 'holder.js/500x500/auto', alt: 'Generic placeholder image' }))));
         };
         return Info;
     }(React.Component));
@@ -251,7 +343,7 @@ var ChannelsDB;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         About.prototype.render = function () {
-            return React.createElement("div", null, "Fill me about, Lukas.");
+            return React.createElement("div", null, "Filling stugg");
         };
         return About;
     }(React.Component));
@@ -287,6 +379,7 @@ var ChannelsDB;
         SearchMain.prototype.render = function () {
             return React.createElement("div", { className: 'container' },
                 React.createElement(ChannelsDB.Menu, null),
+                React.createElement(ChannelsDB.Intro, null),
                 React.createElement(SearchView, __assign({}, this.props)),
                 React.createElement(Footer, null));
         };
@@ -312,8 +405,8 @@ var ChannelsDB;
         }
         Footer.prototype.render = function () {
             return React.createElement("footer", null,
-                React.createElement("hr", { className: "featurette-divider" }),
-                React.createElement("p", { className: 'pull-right', style: { color: '#999', fontSize: 'smaller' } }, "\u00A9 2017 Luk\u00E1\u0161 Pravda & David Sehnal"));
+                React.createElement("hr", { className: 'featurette-divider' }),
+                React.createElement("p", { className: 'pull-right', style: { color: '#999', fontSize: 'smaller', marginBottom: '30px' } }, "\u00A9 2017 Luk\u00E1\u0161 Pravda & David Sehnal"));
         };
         return Footer;
     }(React.Component));
@@ -325,10 +418,10 @@ var ChannelsDB;
         SearchView.prototype.render = function () {
             return React.createElement("div", { style: { marginTop: '35px' } },
                 React.createElement("div", { className: 'row' },
-                    React.createElement("div", { className: "col-lg-12" },
+                    React.createElement("div", { className: 'col-lg-12' },
                         React.createElement(SearchBox, __assign({}, this.props)))),
                 React.createElement("div", { className: 'row' },
-                    React.createElement("div", { className: "col-lg-12" },
+                    React.createElement("div", { className: 'col-lg-12' },
                         React.createElement(StateView, __assign({}, this.props)))));
         };
         return SearchView;
@@ -371,8 +464,8 @@ var ChannelsDB;
         }
         SearchBox.prototype.render = function () {
             var _this = this;
-            return React.createElement("div", { className: "form-group form-group-lg" },
-                React.createElement("input", { type: 'text', className: "form-control", style: { fontWeight: 'bold' }, placeholder: "Search...", onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
+            return React.createElement("div", { className: 'form-group form-group-lg' },
+                React.createElement("input", { type: 'text', className: 'form-control', style: { fontWeight: 'bold' }, placeholder: 'Search (e.g., cytochrome p450) ...', onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
                         if (e.key !== 'Enter')
                             return;
                         _this.props.state.fullSearch.onNext(void 0);
@@ -464,7 +557,7 @@ var ChannelsDB;
             return React.createElement("div", { style: { marginBottom: '10px' } },
                 React.createElement("div", { className: 'group-header' },
                     React.createElement("button", { className: 'btn btn-default btn-block', onClick: this.toggle },
-                        React.createElement("span", { className: "glyphicon glyphicon-" + (this.state.isExpanded ? 'minus' : 'plus'), "aria-hidden": "true" }),
+                        React.createElement("span", { className: "glyphicon glyphicon-" + (this.state.isExpanded ? 'minus' : 'plus'), "aria-hidden": 'true' }),
                         " ",
                         React.createElement("span", null, g.groupValue),
                         " (",
@@ -481,7 +574,7 @@ var ChannelsDB;
                 this.state.entries && this.state.isExpanded
                     ? React.createElement("div", { className: 'entry-list-wrap' },
                         React.createElement("button", { className: 'btn btn-block btn-primary', onClick: function () { return _this.setState({ entries: void 0 }); } },
-                            React.createElement("span", { className: "glyphicon glyphicon-chevron-left", "aria-hidden": "true" })),
+                            React.createElement("span", { className: "glyphicon glyphicon-chevron-left", "aria-hidden": 'true' })),
                         React.createElement(Entries, __assign({ state: this.props.state }, this.state.entries, { mode: 'Embed' })))
                     : void 0);
         };

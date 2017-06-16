@@ -8,7 +8,7 @@ namespace ChannelsDB {
             return <nav className='navbar navbar-default'>
                 <div className='container-fluid'>
                     <div className='navbar-header'>
-                        <a className='navbar-brand' href='index.html'>ChannelsDB</a>
+                        <a className='navbar-brand' href='index.html' style={{ fontWeight: 'bold' }}>ChannelsDB</a>
                     </div>
                     <div id='navbar' className='navbar-collapse collapse'>
                         <ul className='nav navbar-nav navbar-right'>

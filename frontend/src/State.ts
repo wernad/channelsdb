@@ -43,13 +43,16 @@ namespace ChannelsDB {
             fullSearch: new Rx.Subject<undefined>(),
         };
 
+        const interrupt = Rx.Observable.merge(state.searchTerm, state.fullSearch);
+
         state.searchTerm
             .map((t) => t.trim())
             .distinctUntilChanged()
-            .debounce(250)
+            .concatMap(t => Rx.Observable.timer(250).takeUntil(interrupt).map(_ => t))
+            //.debounce(250)
             .forEach((t) => {
                 if (t.length > 2) {
-                    search(state, t).takeUntil(Rx.Observable.merge(state.searchTerm, state.fullSearch)).subscribe(
+                    search(state, t).takeUntil(interrupt).subscribe(
                         (data) => { state.searchedTerm = t; updateViewState(state, { kind: 'Searched', data }); },
                         (err) => updateViewState(state, { kind: 'Error', message: '' + err }));
                 } else {

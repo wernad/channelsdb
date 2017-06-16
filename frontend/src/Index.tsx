@@ -18,6 +18,7 @@ namespace ChannelsDB {
         render() {
             return <div className='container'>
                 <Menu />
+                <Intro />
                 <SearchView {...this.props} />
                 <Footer />
             </div>;
@@ -38,7 +39,7 @@ namespace ChannelsDB {
         render() {
             return <footer>
                 <hr className='featurette-divider' />
-                <p className='pull-right' style={{ color: '#999', fontSize: 'smaller' }}>&copy; 2017 Lukáš Pravda &amp; David Sehnal</p>
+                <p className='pull-right' style={{ color: '#999', fontSize: 'smaller', marginBottom: '30px' }}>&copy; 2017 Lukáš Pravda &amp; David Sehnal</p>
             </footer>;
         }
     }
@@ -83,7 +84,7 @@ namespace ChannelsDB {
     class SearchBox extends React.Component<GlobalProps, {}> {
         render() {
             return <div className='form-group form-group-lg'>
-                <input type='text' className='form-control' style={{ fontWeight: 'bold' }} placeholder='Search...'
+                <input type='text' className='form-control' style={{ fontWeight: 'bold' }} placeholder='Search (e.g., cytochrome p450) ...'
                     onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
                     onKeyPress={(e) => {
                         if (e.key !== 'Enter') return;
