@@ -8,7 +8,7 @@ namespace ChannelsDB {
     export class Intro extends React.Component<{}, {}> { 
         render() {
             return <div style={{ textAlign: 'center', margin: '60px 0' }}>
-                Enter general info.
+                <p>ChannelsDB general info</p>
             </div>;
         }
     }

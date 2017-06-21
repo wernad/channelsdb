@@ -215,17 +215,19 @@ namespace ChannelsDB {
 
         private entry(e: any, i: number) {
             const docs = e.doclist.docs[0];
-            return <div key={docs.pdb_id + '--' + i} className='well pdb-entry'>
-                <div className='pdb-entry-header'>
-                    <div>{docs.pdb_id}</div>
-                    <div title={docs.title || 'n/a'}>{docs.title || 'n/a'}</div>
-                </div>
+            return <div key={docs.pdb_id + '--' + i} className='well pdb-entry'>             
+                <a href={`http://channelsdb.dominiktousek.eu/ChannelsDB/detail/${docs.pdb_id}`} >
+                    <div className='pdb-entry-header'>  
+                        <div>{docs.pdb_id}</div>
+                        <div title={docs.title || 'n/a'}>{docs.title || 'n/a'}</div>                    
+                    </div>
+                </a>
                 <ul>
                     <li><b>Experiment Method:</b> {(docs.experimental_method || ['n/a']).join(', ')} | {docs.resolution || 'n/a'} Å</li>
-                    <li><b>Organism:</b> {(docs.organism_scientific_name || ['n/a']).join(', ')}</li>
+                    <li><b>Organism:</b> <i>{(docs.organism_scientific_name || ['n/a']).join(', ')}</i></li>
                 </ul>
                 <div className='pdb-entry-img-wrap'>
-                    <img src={`https://www.ebi.ac.uk/pdbe/static/entry/${docs.pdb_id.toLowerCase()}_assembly_1_chemically_distinct_molecules_front_image-200x200.png`} />
+                    <img src={`https://webchem.ncbr.muni.cz/API/ChannelsDB/Download/${docs.pdb_id.toLowerCase()}?type=figure`}/>
                 </div>
             </div>;
         }
