@@ -59,7 +59,6 @@ namespace ChannelsDB {
     }
 
     class StateView extends React.Component<GlobalProps, {}> {
-
         componentDidMount() {
             this.props.state.stateUpdated.subscribe(() => this.forceUpdate());
         }
@@ -81,16 +80,25 @@ namespace ChannelsDB {
         }
     }
 
-    class SearchBox extends React.Component<GlobalProps, {}> {
+    class SearchBox extends React.Component<GlobalProps, { isAvailable: boolean }> {
+        state = { isAvailable: false }
+
+        componentDidMount() {
+            this.props.state.dbContentAvailable.subscribe((isAvailable) => this.setState({ isAvailable }));
+        }
+
         render() {
             return <div className='form-group form-group-lg'>
-                <input type='text' className='form-control' style={{ fontWeight: 'bold' }} placeholder='Search (e.g., cytochrome p450) ...'
-                    onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
-                    onKeyPress={(e) => {
-                        if (e.key !== 'Enter') return;
-                        this.props.state.fullSearch.onNext(void 0);
-                        updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
-                    }} />
+                {this.state.isAvailable
+                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold' }} placeholder='Search (e.g., cytochrome p450) ...'
+                        onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
+                        onKeyPress={(e) => {
+                            if (e.key !== 'Enter') return;
+                            this.props.state.fullSearch.onNext(void 0);
+                            updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
+                        }} />
+                    : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'center' }} disabled={true}
+                        value='Initializing search...'  />}
             </div>;
         }
     }
@@ -140,7 +148,6 @@ namespace ChannelsDB {
             try {
                 this.setState({ isLoading: true });
                 const docs = await searchPdbCategory(this.props.state.searchedTerm, this.state.docs[0].var_name, this.state.docs.length);
-                console.log(docs);
                 this.setState({ isLoading: false, docs: this.state.docs.concat(docs) });
             } catch (e) {
                 this.setState({ isLoading: false });
@@ -184,14 +191,42 @@ namespace ChannelsDB {
         }
     }
 
-    class Entries extends React.Component<GlobalProps & { group?: string, value: string, var_name?: string, count?: number, mode: 'Embed' | 'Full'  }, { isLoading: boolean, entries: any[], count: number }> {
-        state = { isLoading: false, entries: [] as any[], count: -1 };
+    class Entry extends React.Component<GlobalProps & { docs: any }, { }> {
+        render() {
+            const docs = this.props.docs;
+            const entry = this.props.state.dbContent.entries[toLower(docs.pdb_id)];
+            const numChannels = entry ? (entry.counts as number[]).reduce((a, b) => a + b, 0) : -1;
+
+            return <div className='well pdb-entry'>
+                <a href={`http://channelsdb.dominiktousek.eu/ChannelsDB/detail/${docs.pdb_id}`} target='_blank'>
+                    <div className='pdb-entry-header' style={{ background: entry ? '#dfd' : '#ddd' }}>
+                        <div>{docs.pdb_id}</div>
+                        <div title={docs.title || 'n/a'}>{docs.title || 'n/a'}</div>
+                    </div>
+                </a>
+                <ul>
+                    <li><b>Experiment Method:</b> {(docs.experimental_method || ['n/a']).join(', ')} | {docs.resolution || 'n/a'} Å</li>
+                    <li><b>Organism:</b> <i>{(docs.organism_scientific_name || ['n/a']).join(', ')}</i></li>
+                    { numChannels > 0
+                        ? <li><i>{`${numChannels} channel${numChannels !== 1 ? 's' : ''} (${entry.counts.length} computation${entry.counts.length !== 1 ? 's' : ''})`}</i></li>
+                        : void 0
+                    }
+                </ul>
+                <div className='pdb-entry-img-wrap'>
+                    <img src={`https://webchem.ncbr.muni.cz/API/ChannelsDB/Download/${docs.pdb_id.toLowerCase()}?type=figure`}/>
+                </div>
+            </div>;
+        }
+    }
+
+    class Entries extends React.Component<GlobalProps & { group?: string, value: string, var_name?: string, count?: number, mode: 'Embed' | 'Full'  }, { isLoading: boolean, entries: any[], count: number, withCount: number, withoutCount: number, showing: number }> {
+        state = { isLoading: false, entries: [] as any[], count: -1, showing: 0, withCount: -1, withoutCount: -1 };
 
         private fetchEmbed = async () => {
             try {
                 this.setState({ isLoading: true });
-                const data = await fetchPdbEntries(this.props.var_name!, this.props.value, this.state.entries.length, 6);
-                this.setState({ isLoading: false, entries: this.state.entries.concat(data), count: this.props.count! });
+                const { entries, withCount, withoutCount } = await fetchPdbEntries(this.props.state, this.props.var_name!, this.props.value);
+                this.setState({ isLoading: false, entries, count: withCount + withoutCount, withCount, withoutCount, showing: this.growFactor });
             } catch (e) {
                 this.setState({ isLoading: false });
             }
@@ -200,51 +235,43 @@ namespace ChannelsDB {
         private fetchFull = async () => {
             try {
                 this.setState({ isLoading: true });
-                const { groups, matches } = await fetchPdbText(this.props.value, this.state.entries.length, 12);
-                this.setState({ isLoading: false, entries: this.state.entries.concat(groups), count: matches });
+                const { entries, withCount, withoutCount } = await fetchPdbText(this.props.state, this.props.value);
+                this.setState({ isLoading: false, entries, count: withCount + withoutCount, withCount, withoutCount, showing: this.growFactor });
             } catch (e) {
                 this.setState({ isLoading: false });
             }
         }
 
+        private loadMore = () => this.setState({ showing: this.state.showing + this.growFactor });
+
+        private growFactor = this.props.mode === 'Embed' ? 6 : 12;
         private fetch = this.props.mode === 'Embed' ? this.fetchEmbed : this.fetchFull;
 
         componentDidMount() {
             this.fetch();
         }
 
-        private entry(e: any, i: number) {
-            const docs = e.doclist.docs[0];
-            return <div key={docs.pdb_id + '--' + i} className='well pdb-entry'>             
-                <a href={`http://channelsdb.dominiktousek.eu/ChannelsDB/detail/${docs.pdb_id}`} >
-                    <div className='pdb-entry-header'>  
-                        <div>{docs.pdb_id}</div>
-                        <div title={docs.title || 'n/a'}>{docs.title || 'n/a'}</div>                    
-                    </div>
-                </a>
-                <ul>
-                    <li><b>Experiment Method:</b> {(docs.experimental_method || ['n/a']).join(', ')} | {docs.resolution || 'n/a'} Å</li>
-                    <li><b>Organism:</b> <i>{(docs.organism_scientific_name || ['n/a']).join(', ')}</i></li>
-                </ul>
-                <div className='pdb-entry-img-wrap'>
-                    <img src={`https://webchem.ncbr.muni.cz/API/ChannelsDB/Download/${docs.pdb_id.toLowerCase()}?type=figure`}/>
-                </div>
-            </div>;
-        }
-
         render() {
             const groups = this.state.entries;
+
+            const entries = [];
+            for (let i = 0, _b = Math.min(this.state.showing, this.state.entries.length); i < _b; i++) {
+                entries.push(<Entry key={i} state={this.props.state} docs={groups[i].doclist.docs[0]} />)
+            }
 
             return <div>
                 {this.props.mode === 'Embed'
                     ? <h4><b>{this.props.group}</b>: {this.props.value} <small>({this.props.count})</small></h4>
-                    : <h4><b>Search</b>: {this.props.value} <small>({this.state.count >= 0 ? this.state.count : '?'})</small></h4>
+                    : <h4><b>Search</b>: {this.props.value} <small>({this.state.count >= 0 ? `${this.state.count}; ${this.state.withCount} with channels` : '?'})</small></h4>
+                }
+                {
+                    this.state.isLoading ? <div>Loading...</div> : void 0
                 }
                 <div style={{ marginTop: '15px', position: 'relative' }}>
-                    {groups.map((g: any, i: number) => this.entry(g, i))}
+                    {entries}
                     <div style={{ clear: 'both' }} />
-                    {this.state.count < 0 || this.state.entries.length < this.state.count
-                        ? <button className='btn btn-sm btn-primary btn-block' disabled={this.state.isLoading ? true : false} onClick={this.fetch}>{this.state.isLoading ? 'Loading...' : `Show more (${this.state.count > 0 ? this.state.count - this.state.entries.length : '?'} remaining)`}</button>
+                    {this.state.showing < this.state.count
+                        ? <button className='btn btn-sm btn-primary btn-block' disabled={this.state.isLoading ? true : false} onClick={this.loadMore}>{this.state.isLoading ? 'Loading...' : `Show more (${this.state.count > 0 ? this.state.count - this.state.showing: '?'} remaining; ${Math.max(this.state.withCount - this.state.showing, 0)} with channels)`}</button>
                         : void 0}
                 </div>
             </div>;

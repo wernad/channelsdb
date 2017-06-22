@@ -11,20 +11,51 @@ namespace ChannelsDB {
                 let error = (<FileReader>e.target).error;
                 reject(error ? error : 'Failed.');
             };   
+            data.onabort = () => reject('Aborted');
             data.onload = e => resolve(e);
         });
     }
 
-    class RequestPool {
+    export class RequestPool {
         private static pool: XMLHttpRequest[] = [];
         private static poolSize = 15;
 
-        static get() {
-            if (this.pool.length) return this.pool.pop()!;
-            return new XMLHttpRequest();
+        private static pending: { [key: string]: XMLHttpRequest[] } = {};
+
+        static get(key?: string) {
+            const ret = this.pool.length ? this.pool.pop()! : new XMLHttpRequest();
+            const arr = (this.pending[key || '__empty__'] || []);
+            arr.push(ret);
+            this.pending[key || '__empty__'] = arr;
+            return ret;
         }
 
-        static emptyFunc() { } 
+        static abort(key: string) {
+            const arr = this.pending[key];
+            if (!arr) return;
+            for (const a of arr) {
+                try { a.abort(); }
+                catch (e) { }
+            }
+        }
+
+        static emptyFunc() { }
+
+        private static removePending(req: XMLHttpRequest) {
+            for (const p of Object.getOwnPropertyNames(this.pending)) {
+                const arr = this.pending[p];
+                if (!arr) continue;
+                let idx = 0;
+                for (const a of arr) {
+                    if (a === req) {
+                        arr[idx] = arr[arr.length - 1];
+                        arr.pop();
+                        return;
+                    }
+                    idx++;
+                }
+            }
+        }
 
         static deposit(req: XMLHttpRequest) {
             if (this.pool.length < this.poolSize) {
@@ -32,7 +63,8 @@ namespace ChannelsDB {
                 req.onerror = RequestPool.emptyFunc;
                 req.onload = RequestPool.emptyFunc;
                 req.onprogress = RequestPool.emptyFunc;
-                this.pool.push();
+                this.removePending(req);
+                this.pool.push(req);
             }
         }
     }
@@ -50,11 +82,11 @@ namespace ChannelsDB {
         }
     }
     
-    export async function ajaxGetJson<T = any>(url: string): Promise<T>  {
-        const xhttp = RequestPool.get();                    
+    export async function ajaxGetJson<T = any>(url: string, key?: string): Promise<T>  {
+        const xhttp = RequestPool.get(key);
         xhttp.open('get', url, true);
         xhttp.responseType = "text";
-        xhttp.send();        
+        xhttp.send();
         const e = await readData(xhttp);
         return processAjax(e);
     } 

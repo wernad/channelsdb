@@ -86,12 +86,12 @@
 .pdb-entry-header {
     position: absolute;
     line-height: 30px;
-    background: #ddd;
     left: 0;
     top: 0;
     right: 0;
     height: 30px;
 }
+
 
 .pdb-entry-header > div:first-child {
     float: left;

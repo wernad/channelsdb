@@ -45,31 +45,67 @@ var ChannelsDB;
                 var error = e.target.error;
                 reject(error ? error : 'Failed.');
             };
+            data.onabort = function () { return reject('Aborted'); };
             data.onload = function (e) { return resolve(e); };
         });
     }
     var RequestPool = (function () {
         function RequestPool() {
         }
-        RequestPool.get = function () {
-            if (this.pool.length)
-                return this.pool.pop();
-            return new XMLHttpRequest();
+        RequestPool.get = function (key) {
+            var ret = this.pool.length ? this.pool.pop() : new XMLHttpRequest();
+            var arr = (this.pending[key || '__empty__'] || []);
+            arr.push(ret);
+            this.pending[key || '__empty__'] = arr;
+            return ret;
+        };
+        RequestPool.abort = function (key) {
+            var arr = this.pending[key];
+            if (!arr)
+                return;
+            for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
+                var a = arr_1[_i];
+                try {
+                    a.abort();
+                }
+                catch (e) { }
+            }
         };
         RequestPool.emptyFunc = function () { };
+        RequestPool.removePending = function (req) {
+            for (var _i = 0, _a = Object.getOwnPropertyNames(this.pending); _i < _a.length; _i++) {
+                var p = _a[_i];
+                var arr = this.pending[p];
+                if (!arr)
+                    continue;
+                var idx = 0;
+                for (var _b = 0, arr_2 = arr; _b < arr_2.length; _b++) {
+                    var a = arr_2[_b];
+                    if (a === req) {
+                        arr[idx] = arr[arr.length - 1];
+                        arr.pop();
+                        return;
+                    }
+                    idx++;
+                }
+            }
+        };
         RequestPool.deposit = function (req) {
             if (this.pool.length < this.poolSize) {
                 req.onabort = RequestPool.emptyFunc;
                 req.onerror = RequestPool.emptyFunc;
                 req.onload = RequestPool.emptyFunc;
                 req.onprogress = RequestPool.emptyFunc;
-                this.pool.push();
+                this.removePending(req);
+                this.pool.push(req);
             }
         };
         return RequestPool;
     }());
     RequestPool.pool = [];
     RequestPool.poolSize = 15;
+    RequestPool.pending = {};
+    ChannelsDB.RequestPool = RequestPool;
     function processAjax(e) {
         var req = e.target;
         if (req.status >= 200 && req.status < 400) {
@@ -83,13 +119,13 @@ var ChannelsDB;
             throw status_1;
         }
     }
-    function ajaxGetJson(url) {
+    function ajaxGetJson(url, key) {
         return __awaiter(this, void 0, void 0, function () {
             var xhttp, e;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        xhttp = RequestPool.get();
+                        xhttp = RequestPool.get(key);
                         xhttp.open('get', url, true);
                         xhttp.responseType = "text";
                         xhttp.send();
@@ -115,6 +151,8 @@ var ChannelsDB;
     ChannelsDB.updateViewState = updateViewState;
     function initState() {
         var state = {
+            dbContent: void 0,
+            dbContentAvailable: new Rx.BehaviorSubject(false),
             searchedTerm: '',
             searchTerm: new Rx.Subject(),
             viewState: { kind: 'Info' },
@@ -123,24 +161,52 @@ var ChannelsDB;
         };
         var interrupt = Rx.Observable.merge(state.searchTerm, state.fullSearch);
         state.searchTerm
+            .do(function () { return ChannelsDB.RequestPool.abort('data'); })
             .map(function (t) { return t.trim(); })
             .distinctUntilChanged()
             .concatMap(function (t) { return Rx.Observable.timer(250).takeUntil(interrupt).map(function (_) { return t; }); })
             .forEach(function (t) {
             if (t.length > 2) {
-                search(state, t).takeUntil(interrupt).subscribe(function (data) { state.searchedTerm = t; updateViewState(state, { kind: 'Searched', data: data }); }, function (err) { return updateViewState(state, { kind: 'Error', message: '' + err }); });
+                search(state, t).takeUntil(interrupt).subscribe(function (data) { state.searchedTerm = t; updateViewState(state, { kind: 'Searched', data: data }); }, function (err) { if (err !== 'Aborted')
+                    updateViewState(state, { kind: 'Error', message: '' + err }); });
             }
             else {
                 updateViewState(state, { kind: 'Info' });
             }
         });
+        initSearch(state);
         return state;
     }
     ChannelsDB.initState = initState;
+    function initSearch(state) {
+        return __awaiter(this, void 0, void 0, function () {
+            var content, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, ChannelsDB.ajaxGetJson('https://webchem.ncbr.muni.cz/API/ChannelsDB/Content')];
+                    case 1:
+                        content = _a.sent();
+                        state.dbContent = { entries: content };
+                        state.dbContentAvailable.onNext(true);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        e_1 = _a.sent();
+                        setTimeout(function () { return initSearch(state); }, 2000);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    }
+    function sortSearchData(state, data) {
+    }
     function search(state, term) {
+        ChannelsDB.RequestPool.abort('data');
         updateViewState(state, { kind: 'Loading', message: 'Searching...' });
         var s = new Rx.Subject();
-        ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb-autocomplete/select?rows=20000&json.nl=map&group=true&group.field=category&group.limit=28&fl=value,num_pdb_entries,var_name&sort=category+asc,num_pdb_entries+desc&q=value:" + encodeURIComponent("\"" + term + "*\"") + "~10&wt=json")
+        ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb-autocomplete/select?rows=1000000&json.nl=map&group=true&group.field=category&group.limit=28&fl=value,num_pdb_entries,var_name&sort=category+asc,num_pdb_entries+desc&q=value:" + encodeURIComponent("\"" + term + "*\"") + "~10&wt=json", 'data')
             .then(function (data) { s.onNext(data); s.onCompleted(); })
             .catch(function (err) { s.onError(err); s.onCompleted(); });
         return s;
@@ -150,7 +216,9 @@ var ChannelsDB;
             var data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb-autocomplete/select?rows=28&start=" + start + "&json.nl=map&group.limit=-1&fl=value,num_pdb_entries,var_name&sort=category+asc,num_pdb_entries+desc&fq=var_name:" + var_name + "&q=value:" + encodeURIComponent("\"" + term + "*\"") + "~10&wt=json")];
+                    case 0:
+                        ChannelsDB.RequestPool.abort('data');
+                        return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb-autocomplete/select?rows=28&start=" + start + "&json.nl=map&group.limit=-1&fl=value,num_pdb_entries,var_name&sort=category+asc,num_pdb_entries+desc&fq=var_name:" + var_name + "&q=value:" + encodeURIComponent("\"" + term + "*\"") + "~10&wt=json", 'data')];
                     case 1:
                         data = _a.sent();
                         return [2 /*return*/, data.response.docs];
@@ -159,29 +227,54 @@ var ChannelsDB;
         });
     }
     ChannelsDB.searchPdbCategory = searchPdbCategory;
-    function fetchPdbEntries(var_name, value, start, count) {
+    var ROW_COUNT = 1000000;
+    var toLowerCache = {};
+    function toLower(str) {
+        var ret = toLowerCache[str];
+        if (ret)
+            return ret;
+        ret = str.toLowerCase();
+        toLowerCache[str] = ret;
+        return ret;
+    }
+    ChannelsDB.toLower = toLower;
+    function sortGroups(state, groups) {
+        var withChannels = [], withoutChannels = [];
+        var content = state.dbContent.entries;
+        for (var _i = 0, groups_1 = groups; _i < groups_1.length; _i++) {
+            var group = groups_1[_i];
+            if (content[toLower(group.doclist.docs[0].pdb_id)])
+                withChannels.push(group);
+            else
+                withoutChannels.push(group);
+        }
+        return { entries: withChannels.concat(withoutChannels), withCount: withChannels.length, withoutCount: withoutChannels.length };
+    }
+    function fetchPdbEntries(state, var_name, value) {
         return __awaiter(this, void 0, void 0, function () {
             var data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&start=" + start + "&rows=" + count + "&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=" + encodeURIComponent(var_name) + ":\"" + encodeURIComponent(value) + "\"&sort=overall_quality+desc&wt=json")];
+                    case 0: return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&start=" + 0 + "&rows=" + ROW_COUNT + "&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=" + encodeURIComponent(var_name) + ":\"" + encodeURIComponent(value) + "\"&sort=overall_quality+desc&wt=json", 'data')];
                     case 1:
                         data = _a.sent();
-                        return [2 /*return*/, data.grouped.pdb_id.groups];
+                        return [2 /*return*/, sortGroups(state, data.grouped.pdb_id.groups)];
                 }
             });
         });
     }
     ChannelsDB.fetchPdbEntries = fetchPdbEntries;
-    function fetchPdbText(value, start, count) {
+    function fetchPdbText(state, value) {
         return __awaiter(this, void 0, void 0, function () {
             var data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&start=" + start + "&rows=" + count + "&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=text:\"" + encodeURIComponent(value) + "\"&sort=overall_quality+desc&wt=json")];
+                    case 0:
+                        ChannelsDB.RequestPool.abort('data');
+                        return [4 /*yield*/, ChannelsDB.ajaxGetJson("https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&start=" + 0 + "&rows=" + ROW_COUNT + "&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=text:\"" + encodeURIComponent(value) + "\"&sort=overall_quality+desc&wt=json", 'data')];
                     case 1:
                         data = _a.sent();
-                        return [2 /*return*/, { groups: data.grouped.pdb_id.groups, matches: data.grouped.pdb_id.ngroups }];
+                        return [2 /*return*/, sortGroups(state, data.grouped.pdb_id.groups)];
                 }
             });
         });
@@ -235,7 +328,8 @@ var ChannelsDB;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         Intro.prototype.render = function () {
-            return React.createElement("div", { style: { textAlign: 'center', margin: '60px 0' } }, "Enter general info.");
+            return React.createElement("div", { style: { textAlign: 'center', margin: '60px 0' } },
+                React.createElement("p", null, "ChannelsDB general info"));
         };
         return Intro;
     }(React.Component));
@@ -272,23 +366,23 @@ var ChannelsDB;
                         React.createElement("p", null,
                             React.createElement("a", { className: 'btn btn-default', href: '#ex-1ymg', role: 'button' }, "View details \u00BB"))),
                     React.createElement("div", { className: 'col-lg-4' },
+                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/3tbg_detail.png', alt: '3tbg channel detail', width: '140', height: '140' }),
+                        React.createElement("h2", null, "Cytochrome P450 2D6 substrate tunnel"),
+                        React.createElement("p", null, "Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways."),
+                        React.createElement("p", null,
+                            React.createElement("a", { className: 'btn btn-default', href: '#ex-p450', role: 'button' }, "View details \u00BB"))),
+                    React.createElement("div", { className: 'col-lg-4' },
                         React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1jj2_detail.png', alt: '1jj2 channel detail', width: '140', height: '140' }),
                         React.createElement("h2", null, "Ribosomal polypeptide exit tunnel"),
                         React.createElement("p", null, "Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome."),
                         React.createElement("p", null,
-                            React.createElement("a", { className: 'btn btn-default', href: '#ex-1jj2', role: 'button' }, "View details \u00BB"))),
-                    React.createElement("div", { className: 'col-lg-4' },
-                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', alt: 'Generic placeholder image', width: '140', height: '140' }),
-                        React.createElement("h2", null, "Cytochrome P450 2D6 substrate tunnel"),
-                        React.createElement("p", null, "Fill me Karel!"),
-                        React.createElement("p", null,
-                            React.createElement("a", { className: 'btn btn-default', href: '#ex-p450', role: 'button' }, "View details \u00BB")))),
+                            React.createElement("a", { className: 'btn btn-default', href: '#ex-1jj2', role: 'button' }, "View details \u00BB")))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
-                    React.createElement("a", { name: "ex-1ymg" }),
+                    React.createElement("a", { name: 'ex-1ymg' }),
                     React.createElement("div", { className: 'col-md-7' },
                         React.createElement("h2", { className: 'featurette-heading' },
-                            "Aquaporin 0",
+                            "Aquaporin O",
                             React.createElement("a", { style: pdbIdMargin, className: 'text-muted', href: 'http://channelsdb.dominiktousek.eu/ChannelsDB/detail/1ymg' }, "1ymg")),
                         React.createElement("p", { className: 'lead' }, "The channel architecture of Aquaporin O at 2.2\u212B resolution highlights residues critical for water permeation regulation."),
                         React.createElement("p", { style: justify }, "The channel is ~ 30\u212B long and highlights with some of the residues crucial for its proper function. Selectivity filter (ar/R), which allows water molecules passage through the membrane in a single file (green sticks). Residues providing canonical AQP hydrogen bond acceptor that align watters through the channel in balls and stick model. Finally, Tyr-149 important for channel gating in orange."),
@@ -302,8 +396,28 @@ var ChannelsDB;
                         React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1ymg.png', width: '500', height: '500', alt: '1ymg detailed channel view' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
-                    React.createElement("a", { name: "ex-1jj2" }),
+                    React.createElement("a", { name: 'ex-p450' }),
                     React.createElement("div", { className: 'col-md-7 col-md-push-5' },
+                        React.createElement("h2", { className: 'featurette-heading' },
+                            "Cytochrome P450 2D6 ",
+                            React.createElement("a", { style: pdbIdMargin, className: 'text-muted', href: 'http://channelsdb.dominiktousek.eu/ChannelsDB/detail/3tbg' }, "3tbg")),
+                        React.createElement("p", { className: 'lead' }, "Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways."),
+                        React.createElement("p", { style: justify },
+                            "Cytochrome  P450  2D6  contributes  significantly  to  the  metabolism  of  >15%  of  the  200  most marketed drugs. Cytochrome P450 2D6 structure shows a second molecule of thioridazine bound in an expanded substrate access channel (channel  2a according to Cojocaru et  al. ",
+                            React.createElement("a", { href: 'https://doi.org/10.1016/j.bbagen.2006.07.005', target: '_blank' }, "classification"),
+                            "  antechamber  with  its  piperidine  moiety  forming  a charge-stabilized hydrogen bond with Glu-222."),
+                        React.createElement("p", { style: reference },
+                            React.createElement("small", null,
+                                React.createElement("a", { target: '_blank', href: 'https://dx.doi.org/10.1074/jbc.M114.627661' },
+                                    "Wang, A., et al. ",
+                                    React.createElement("span", { style: { fontStyle: 'italic' } }, "Contributions of Ionic Interactions and Protein Dynamics to Cytochrome P450 2D6 (CYP2D6) Substrate and Inhibitor Binding"),
+                                    " J.Biol.Chem. 290: 5092-5104 (2015)")))),
+                    React.createElement("div", { className: 'col-md-5 col-md-pull-7' },
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/3tbg.png', alt: 'Cytochrome P450 substrate channel details' }))),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement("div", { className: 'row featurette' },
+                    React.createElement("a", { name: 'ex-1jj2' }),
+                    React.createElement("div", { className: 'col-md-7 ' },
                         React.createElement("h2", { className: 'featurette-heading' },
                             "Large Ribosomal Subunit ",
                             React.createElement("a", { style: pdbIdMargin, className: 'text-muted', href: 'http://channelsdb.dominiktousek.eu/ChannelsDB/detail/1jj2' }, "1jj2")),
@@ -315,18 +429,8 @@ var ChannelsDB;
                                     "Voss, N. R., et. al. ",
                                     React.createElement("span", { style: { fontStyle: 'italic' } }, "The geometry of the ribosomal polypeptide exit tunnel."),
                                     ". J. Mol. Biol. 360, 893\u2013906 (2006)")))),
-                    React.createElement("div", { className: 'col-md-5 col-md-pull-7' },
-                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1jj2.png', alt: 'Generic placeholder image' }))),
-                React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
-                React.createElement("div", { className: 'row featurette' },
-                    React.createElement("a", { name: "ex-p450" }),
-                    React.createElement("div", { className: 'col-md-7' },
-                        React.createElement("h2", { className: 'featurette-heading' },
-                            "Cytochrome P450 2D6",
-                            React.createElement("a", { style: pdbIdMargin, className: 'text-muted', href: 'http://channelsdb.dominiktousek.eu/ChannelsDB/detail/1tqn' }, "Fill Me")),
-                        React.createElement("p", { className: 'lead' }, "Some cool description with reference @Karel")),
-                    React.createElement("div", { className: 'col-md-5' },
-                        React.createElement("img", { className: 'featurette-image img-responsive center-block', "data-src": 'holder.js/500x500/auto', alt: 'Generic placeholder image' }))));
+                    React.createElement("div", { className: 'col-md-5 ' },
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1jj2.png', alt: 'Polypeptide exit tunnel' }))));
         };
         return Info;
     }(React.Component));
@@ -460,17 +564,24 @@ var ChannelsDB;
     var SearchBox = (function (_super) {
         __extends(SearchBox, _super);
         function SearchBox() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.state = { isAvailable: false };
+            return _this;
         }
+        SearchBox.prototype.componentDidMount = function () {
+            var _this = this;
+            this.props.state.dbContentAvailable.subscribe(function (isAvailable) { return _this.setState({ isAvailable: isAvailable }); });
+        };
         SearchBox.prototype.render = function () {
             var _this = this;
-            return React.createElement("div", { className: 'form-group form-group-lg' },
-                React.createElement("input", { type: 'text', className: 'form-control', style: { fontWeight: 'bold' }, placeholder: 'Search (e.g., cytochrome p450) ...', onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
+            return React.createElement("div", { className: 'form-group form-group-lg' }, this.state.isAvailable
+                ? React.createElement("input", { key: 'fullsearch', type: 'text', className: 'form-control', style: { fontWeight: 'bold' }, placeholder: 'Search (e.g., cytochrome p450) ...', onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
                         if (e.key !== 'Enter')
                             return;
                         _this.props.state.fullSearch.onNext(void 0);
                         ChannelsDB.updateViewState(_this.props.state, { kind: 'Entries', term: e.target.value });
-                    } }));
+                    } })
+                : React.createElement("input", { key: 'placeholder', type: 'text', className: 'form-control', style: { fontWeight: 'bold', textAlign: 'center' }, disabled: true, value: 'Initializing search...' }));
         };
         return SearchBox;
     }(React.Component));
@@ -521,7 +632,7 @@ var ChannelsDB;
                 _this.setState({ entries: { group: _this.props.group.groupValue, value: value, var_name: var_name, count: count } });
             };
             _this.loadMore = function () { return __awaiter(_this, void 0, void 0, function () {
-                var docs, e_1;
+                var docs, e_2;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -530,11 +641,10 @@ var ChannelsDB;
                             return [4 /*yield*/, ChannelsDB.searchPdbCategory(this.props.state.searchedTerm, this.state.docs[0].var_name, this.state.docs.length)];
                         case 1:
                             docs = _a.sent();
-                            console.log(docs);
                             this.setState({ isLoading: false, docs: this.state.docs.concat(docs) });
                             return [3 /*break*/, 3];
                         case 2:
-                            e_1 = _a.sent();
+                            e_2 = _a.sent();
                             this.setState({ isLoading: false });
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
@@ -580,63 +690,20 @@ var ChannelsDB;
         };
         return SearchGroup;
     }(React.Component));
-    var Entries = (function (_super) {
-        __extends(Entries, _super);
-        function Entries() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.state = { isLoading: false, entries: [], count: -1 };
-            _this.fetchEmbed = function () { return __awaiter(_this, void 0, void 0, function () {
-                var data, e_2;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            _a.trys.push([0, 2, , 3]);
-                            this.setState({ isLoading: true });
-                            return [4 /*yield*/, ChannelsDB.fetchPdbEntries(this.props.var_name, this.props.value, this.state.entries.length, 6)];
-                        case 1:
-                            data = _a.sent();
-                            this.setState({ isLoading: false, entries: this.state.entries.concat(data), count: this.props.count });
-                            return [3 /*break*/, 3];
-                        case 2:
-                            e_2 = _a.sent();
-                            this.setState({ isLoading: false });
-                            return [3 /*break*/, 3];
-                        case 3: return [2 /*return*/];
-                    }
-                });
-            }); };
-            _this.fetchFull = function () { return __awaiter(_this, void 0, void 0, function () {
-                var _a, groups, matches, e_3;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
-                        case 0:
-                            _b.trys.push([0, 2, , 3]);
-                            this.setState({ isLoading: true });
-                            return [4 /*yield*/, ChannelsDB.fetchPdbText(this.props.value, this.state.entries.length, 12)];
-                        case 1:
-                            _a = _b.sent(), groups = _a.groups, matches = _a.matches;
-                            this.setState({ isLoading: false, entries: this.state.entries.concat(groups), count: matches });
-                            return [3 /*break*/, 3];
-                        case 2:
-                            e_3 = _b.sent();
-                            this.setState({ isLoading: false });
-                            return [3 /*break*/, 3];
-                        case 3: return [2 /*return*/];
-                    }
-                });
-            }); };
-            _this.fetch = _this.props.mode === 'Embed' ? _this.fetchEmbed : _this.fetchFull;
-            return _this;
+    var Entry = (function (_super) {
+        __extends(Entry, _super);
+        function Entry() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
-        Entries.prototype.componentDidMount = function () {
-            this.fetch();
-        };
-        Entries.prototype.entry = function (e, i) {
-            var docs = e.doclist.docs[0];
-            return React.createElement("div", { key: docs.pdb_id + '--' + i, className: 'well pdb-entry' },
-                React.createElement("div", { className: 'pdb-entry-header' },
-                    React.createElement("div", null, docs.pdb_id),
-                    React.createElement("div", { title: docs.title || 'n/a' }, docs.title || 'n/a')),
+        Entry.prototype.render = function () {
+            var docs = this.props.docs;
+            var entry = this.props.state.dbContent.entries[ChannelsDB.toLower(docs.pdb_id)];
+            var numChannels = entry ? entry.counts.reduce(function (a, b) { return a + b; }, 0) : -1;
+            return React.createElement("div", { className: 'well pdb-entry' },
+                React.createElement("a", { href: "http://channelsdb.dominiktousek.eu/ChannelsDB/detail/" + docs.pdb_id, target: '_blank' },
+                    React.createElement("div", { className: 'pdb-entry-header', style: { background: entry ? '#dfd' : '#ddd' } },
+                        React.createElement("div", null, docs.pdb_id),
+                        React.createElement("div", { title: docs.title || 'n/a' }, docs.title || 'n/a'))),
                 React.createElement("ul", null,
                     React.createElement("li", null,
                         React.createElement("b", null, "Experiment Method:"),
@@ -648,13 +715,75 @@ var ChannelsDB;
                     React.createElement("li", null,
                         React.createElement("b", null, "Organism:"),
                         " ",
-                        (docs.organism_scientific_name || ['n/a']).join(', '))),
+                        React.createElement("i", null, (docs.organism_scientific_name || ['n/a']).join(', '))),
+                    numChannels > 0
+                        ? React.createElement("li", null,
+                            React.createElement("i", null, numChannels + " channel" + (numChannels !== 1 ? 's' : '') + " (" + entry.counts.length + " computation" + (entry.counts.length !== 1 ? 's' : '') + ")"))
+                        : void 0),
                 React.createElement("div", { className: 'pdb-entry-img-wrap' },
-                    React.createElement("img", { src: "https://www.ebi.ac.uk/pdbe/static/entry/" + docs.pdb_id.toLowerCase() + "_assembly_1_chemically_distinct_molecules_front_image-200x200.png" })));
+                    React.createElement("img", { src: "https://webchem.ncbr.muni.cz/API/ChannelsDB/Download/" + docs.pdb_id.toLowerCase() + "?type=figure" })));
+        };
+        return Entry;
+    }(React.Component));
+    var Entries = (function (_super) {
+        __extends(Entries, _super);
+        function Entries() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.state = { isLoading: false, entries: [], count: -1, showing: 0, withCount: -1, withoutCount: -1 };
+            _this.fetchEmbed = function () { return __awaiter(_this, void 0, void 0, function () {
+                var _a, entries, withCount, withoutCount, e_3;
+                return __generator(this, function (_c) {
+                    switch (_c.label) {
+                        case 0:
+                            _c.trys.push([0, 2, , 3]);
+                            this.setState({ isLoading: true });
+                            return [4 /*yield*/, ChannelsDB.fetchPdbEntries(this.props.state, this.props.var_name, this.props.value)];
+                        case 1:
+                            _a = _c.sent(), entries = _a.entries, withCount = _a.withCount, withoutCount = _a.withoutCount;
+                            this.setState({ isLoading: false, entries: entries, count: withCount + withoutCount, withCount: withCount, withoutCount: withoutCount, showing: this.growFactor });
+                            return [3 /*break*/, 3];
+                        case 2:
+                            e_3 = _c.sent();
+                            this.setState({ isLoading: false });
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            }); };
+            _this.fetchFull = function () { return __awaiter(_this, void 0, void 0, function () {
+                var _a, entries, withCount, withoutCount, e_4;
+                return __generator(this, function (_c) {
+                    switch (_c.label) {
+                        case 0:
+                            _c.trys.push([0, 2, , 3]);
+                            this.setState({ isLoading: true });
+                            return [4 /*yield*/, ChannelsDB.fetchPdbText(this.props.state, this.props.value)];
+                        case 1:
+                            _a = _c.sent(), entries = _a.entries, withCount = _a.withCount, withoutCount = _a.withoutCount;
+                            this.setState({ isLoading: false, entries: entries, count: withCount + withoutCount, withCount: withCount, withoutCount: withoutCount, showing: this.growFactor });
+                            return [3 /*break*/, 3];
+                        case 2:
+                            e_4 = _c.sent();
+                            this.setState({ isLoading: false });
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            }); };
+            _this.loadMore = function () { return _this.setState({ showing: _this.state.showing + _this.growFactor }); };
+            _this.growFactor = _this.props.mode === 'Embed' ? 6 : 12;
+            _this.fetch = _this.props.mode === 'Embed' ? _this.fetchEmbed : _this.fetchFull;
+            return _this;
+        }
+        Entries.prototype.componentDidMount = function () {
+            this.fetch();
         };
         Entries.prototype.render = function () {
-            var _this = this;
             var groups = this.state.entries;
+            var entries = [];
+            for (var i = 0, _b = Math.min(this.state.showing, this.state.entries.length); i < _b; i++) {
+                entries.push(React.createElement(Entry, { key: i, state: this.props.state, docs: groups[i].doclist.docs[0] }));
+            }
             return React.createElement("div", null,
                 this.props.mode === 'Embed'
                     ? React.createElement("h4", null,
@@ -673,13 +802,14 @@ var ChannelsDB;
                         " ",
                         React.createElement("small", null,
                             "(",
-                            this.state.count >= 0 ? this.state.count : '?',
+                            this.state.count >= 0 ? this.state.count + "; " + this.state.withCount + " with channels" : '?',
                             ")")),
+                this.state.isLoading ? React.createElement("div", null, "Loading...") : void 0,
                 React.createElement("div", { style: { marginTop: '15px', position: 'relative' } },
-                    groups.map(function (g, i) { return _this.entry(g, i); }),
+                    entries,
                     React.createElement("div", { style: { clear: 'both' } }),
-                    this.state.count < 0 || this.state.entries.length < this.state.count
-                        ? React.createElement("button", { className: 'btn btn-sm btn-primary btn-block', disabled: this.state.isLoading ? true : false, onClick: this.fetch }, this.state.isLoading ? 'Loading...' : "Show more (" + (this.state.count > 0 ? this.state.count - this.state.entries.length : '?') + " remaining)")
+                    this.state.showing < this.state.count
+                        ? React.createElement("button", { className: 'btn btn-sm btn-primary btn-block', disabled: this.state.isLoading ? true : false, onClick: this.loadMore }, this.state.isLoading ? 'Loading...' : "Show more (" + (this.state.count > 0 ? this.state.count - this.state.showing : '?') + " remaining; " + Math.max(this.state.withCount - this.state.showing, 0) + " with channels)")
                         : void 0));
         };
         return Entries;
