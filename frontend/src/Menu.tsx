@@ -12,8 +12,9 @@ namespace ChannelsDB {
                     </div>
                     <div id='navbar' className='navbar-collapse collapse'>
                         <ul className='nav navbar-nav navbar-right'>
-                            <li><a href='http://mole.upol.cz' target='_blank'>MOLE</a></li>
-                            <li><a href='about.html'>About</a></li>
+                            <li><a href='methods.html'>Methods</a></li>
+                            <li><a href='documentation.html'>Documentation</a></li>
+                            <li><a href='http://mole.upol.cz' target='_blank'>MOLE</a></li>                            
                             {/*<li><a href='#'>Contribute</a></li>*/}
                         </ul>
                     </div>

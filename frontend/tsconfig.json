@@ -21,7 +21,8 @@
     "src/State.ts",
     "src/Menu.tsx",
     "src/Info.tsx",
-    "src/About.tsx",
+    "src/Methods.tsx",
+    "src/Documentation.tsx",
     "src/Index.tsx"
   ]
 }

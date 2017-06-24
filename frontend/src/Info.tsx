@@ -5,10 +5,16 @@
 namespace ChannelsDB {
 
 
-    export class Intro extends React.Component<{}, {}> { 
+    export class Intro extends React.Component<{}, {}> {
         render() {
-            return <div style={{ textAlign: 'center', margin: '60px 0' }}>
-                <p>ChannelsDB general info</p>
+            return <div style={{ margin: '60px 0 0 20px', textAlign: 'justify', textJustify: 'inter-word' }}>
+                <p className='lead'>ChannelsDB is a comprehensive and regulary updated resource of channels, pores and tunnels found in biomacromolecules deposited in the
+                    <a target='_blank' href='http://www.ebi.ac.uk/pdbe/'> Protein Data Bank</a>. As such, it is a unique service for a channel-related analyses.</p>
+                <p className='text-justify'>                  
+                   The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with the UniProt database 
+                   a comprehensive high-quality resource of protein function information. Last but not least, all the results displayed in a clear interactive manner further facilitating data interpretation.
+                </p>
+                <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us!</a>. The application allowing for online annotation will be available later this year.</p>
             </div>;
         }
     }

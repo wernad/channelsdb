@@ -4,11 +4,17 @@
 
 namespace ChannelsDB {
 
-    export function renderUI(target: HTMLElement, kind: 'Search' | 'About') {
-        if (kind === 'Search') {
-            ReactDOM.render(<SearchMain state={initState()} />, target);
-        } else {
-            ReactDOM.render(<AboutMain />, target);
+    export function renderUI(target: HTMLElement, kind: 'Search' | 'Methods' | 'Documentation') {
+        switch (kind){
+            case 'Search':
+                ReactDOM.render(<SearchMain state={initState()} />, target);
+                break;
+            case 'Methods':
+                ReactDOM.render(<MethodsMain />, target);
+                break;
+            case 'Documentation':
+                ReactDOM.render(<DocumentationMain />, target);
+                break;
         }
     }
 
@@ -25,11 +31,21 @@ namespace ChannelsDB {
         }
     }
 
-    class AboutMain extends React.Component<{}, {}> {
+    class MethodsMain extends React.Component<{}, {}> {
         render() {
             return <div className='container'>
                 <Menu />
-                <About />
+                <Methods />
+                <Footer />
+            </div>;
+        }
+    }
+
+    class DocumentationMain extends React.Component<{}, {}> {
+        render() {
+            return <div className='container'>
+                <Menu />
+                <Documentation />
                 <Footer />
             </div>;
         }
@@ -81,7 +97,7 @@ namespace ChannelsDB {
     }
 
     class SearchBox extends React.Component<GlobalProps, { isAvailable: boolean }> {
-        state = { isAvailable: false }
+        state = { isAvailable: false };
 
         componentDidMount() {
             this.props.state.dbContentAvailable.subscribe((isAvailable) => this.setState({ isAvailable }));
@@ -90,7 +106,7 @@ namespace ChannelsDB {
         render() {
             return <div className='form-group form-group-lg'>
                 {this.state.isAvailable
-                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold' }} placeholder='Search (e.g., cytochrome p450) ...'
+                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold' }} placeholder='Search ChannelsDB (e.g., cytochrome p450) ...'
                         onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
                         onKeyPress={(e) => {
                             if (e.key !== 'Enter') return;
@@ -256,12 +272,12 @@ namespace ChannelsDB {
 
             const entries = [];
             for (let i = 0, _b = Math.min(this.state.showing, this.state.entries.length); i < _b; i++) {
-                entries.push(<Entry key={i} state={this.props.state} docs={groups[i].doclist.docs[0]} />)
+                entries.push(<Entry key={i} state={this.props.state} docs={groups[i].doclist.docs[0]} />);
             }
 
             return <div>
                 {this.props.mode === 'Embed'
-                    ? <h4><b>{this.props.group}</b>: {this.props.value} <small>({this.props.count})</small></h4>
+                    ? <h4><b>{this.props.group}</b>: {this.props.value} <small>({this.state.withCount === 0 ? `No systems with channels!` : `${this.state.count}; ${this.state.withCount} with channels`})</small></h4>
                     : <h4><b>Search</b>: {this.props.value} <small>({this.state.count >= 0 ? `${this.state.count}; ${this.state.withCount} with channels` : '?'})</small></h4>
                 }
                 {
@@ -271,7 +287,7 @@ namespace ChannelsDB {
                     {entries}
                     <div style={{ clear: 'both' }} />
                     {this.state.showing < this.state.count
-                        ? <button className='btn btn-sm btn-primary btn-block' disabled={this.state.isLoading ? true : false} onClick={this.loadMore}>{this.state.isLoading ? 'Loading...' : `Show more (${this.state.count > 0 ? this.state.count - this.state.showing: '?'} remaining; ${Math.max(this.state.withCount - this.state.showing, 0)} with channels)`}</button>
+                        ? <button className='btn btn-sm btn-primary btn-block' disabled={this.state.isLoading ? true : false} onClick={this.loadMore}>{this.state.isLoading ? 'Loading...' : `Show more (${this.state.count > 0 ? this.state.count - this.state.showing : '?'} remaining; ${Math.max(this.state.withCount - this.state.showing, 0)} with channels)`}</button>
                         : void 0}
                 </div>
             </div>;

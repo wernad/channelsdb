@@ -3,16 +3,16 @@
  */
 
 namespace ChannelsDB {
-    "use strict";
+    'use strict';
 
     function readData(data: XMLHttpRequest): Promise<any> {
-        return new Promise<any>((resolve, reject) => {           
-            data.onerror = e => {
+        return new Promise<any>((resolve, reject) => {
+            data.onerror = (e) => {
                 let error = (<FileReader>e.target).error;
                 reject(error ? error : 'Failed.');
-            };   
+            };
             data.onabort = () => reject('Aborted');
-            data.onload = e => resolve(e);
+            data.onload = (e) => resolve(e);
         });
     }
 
@@ -68,7 +68,7 @@ namespace ChannelsDB {
             }
         }
     }
-    
+
     function processAjax(e: any) {
         const req = (e.target as XMLHttpRequest);
         if (req.status >= 200 && req.status < 400) {
@@ -76,18 +76,18 @@ namespace ChannelsDB {
             RequestPool.deposit(e.target);
             return text;
         } else {
-            const status = req.statusText;        
+            const status = req.statusText;
             RequestPool.deposit(e.target);
-            throw status;            
+            throw status;
         }
     }
-    
+
     export async function ajaxGetJson<T = any>(url: string, key?: string): Promise<T>  {
         const xhttp = RequestPool.get(key);
         xhttp.open('get', url, true);
-        xhttp.responseType = "text";
+        xhttp.responseType = 'text';
         xhttp.send();
         const e = await readData(xhttp);
         return processAjax(e);
-    } 
+    }
 }

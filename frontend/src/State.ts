@@ -75,7 +75,7 @@ namespace ChannelsDB {
 
     async function initSearch(state: State) {
         try {
-            const content = await ajaxGetJson('https://webchem.ncbr.muni.cz/API/ChannelsDB/Content')
+            const content = await ajaxGetJson('https://webchem.ncbr.muni.cz/API/ChannelsDB/Content');
             state.dbContent = { entries: content };
             state.dbContentAvailable.onNext(true);
         } catch (e) {
