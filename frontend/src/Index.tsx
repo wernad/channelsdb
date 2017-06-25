@@ -106,7 +106,7 @@ namespace ChannelsDB {
         render() {
             return <div className='form-group form-group-lg'>
                 {this.state.isAvailable
-                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold' }} placeholder='Search ChannelsDB (e.g., cytochrome p450, 5an8, KcsA) ...'
+                    ? <input key={'fullsearch'} type='text' className='form-control text-center' style={{ fontWeight: 'bold' }} placeholder='Search ChannelsDB (e.g., cytochrome p450, 5an8, KcsA) ...'
                         onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
                         onKeyPress={(e) => {
                             if (e.key !== 'Enter') return;

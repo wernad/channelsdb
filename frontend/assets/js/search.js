@@ -909,7 +909,7 @@ var ChannelsDB;
         SearchBox.prototype.render = function () {
             var _this = this;
             return React.createElement("div", { className: 'form-group form-group-lg' }, this.state.isAvailable
-                ? React.createElement("input", { key: 'fullsearch', type: 'text', className: 'form-control', style: { fontWeight: 'bold' }, placeholder: 'Search ChannelsDB (e.g., cytochrome p450, 5an8, KcsA) ...', onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
+                ? React.createElement("input", { key: 'fullsearch', type: 'text', className: 'form-control text-center', style: { fontWeight: 'bold' }, placeholder: 'Search ChannelsDB (e.g., cytochrome p450, 5an8, KcsA) ...', onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
                         if (e.key !== 'Enter')
                             return;
                         _this.props.state.fullSearch.onNext(void 0);
