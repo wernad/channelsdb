@@ -101,17 +101,17 @@ namespace ChannelsDB {
                                 is available in the <a href='https://webchem.ncbr.muni.cz/Wiki/LiteMol:UserManual' target='_blank'>LiteMol documentation</a>.
                               </li>
                               <li>
-                                 Right next to the visualization pane a list of all channels identified for the particular PDB entry is displayed. Channels are grouped to the respective categories
+                                 Right next to the visualization pane is a list of all channels identified for the particular PDB entry displayed. All channels are grouped to respective categories.
                               </li>
                               <li>
-                                Directly below the visualization pane you can fin an interactive visualilization of a channel profile. All the physicochemical properties are mapped on the
-                                channel profile, so the user can select deemed type of visualization. Export to a publication quality image is available as well.
+                                Directly below the visualization pane you can find an interactive visualization of a channel profile. All the physicochemical properties are mapped on the
+                                channel profile. User can select deemed type of property to visualize, change the radius being mesured to the closest atom or to the backbone. ON the top of that to a publication quality image is available for export as well.
                               </li>
                               <li>
-                                  Next to the 2D channel visualization is a panel with details for individual regions of the channel so called layers. Additional level of information is provided
-                                  as a residue level annotations with respective reference.
+                                  Next to the 2D channel visualization is a list with details for individual regions of a channel so called layers. Additional level of information is provided
+                                  as a residue level annotations with the respective reference.
                              </li>
-                             <li> Protein annotatio from the UniProt resource</li>
+                             <li> Protein annotatios from the UniProt resource.</li>
                           </ol>
                             
                         </div>                    

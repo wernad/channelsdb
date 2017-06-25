@@ -16,6 +16,9 @@ namespace ChannelsDB {
             };
 
             return <div style={{ margin: '60px 0 0 20px' }}>
+
+                <h1 className='text-center'>Methods</h1>
+
                 <div className='row'>
                     <div className='col-md-7'>
                         <h2 className='featurette-heading'>Channels</h2>
@@ -25,12 +28,14 @@ namespace ChannelsDB {
                             Pores represent a pathway passing through the whole biomacromolecular structure, typically facilitating transport of ions or molecules through cellular biomembranes.                    
                         </p>
                         <p style={justify}>
-                            Channel walls are made from surrounding amino acids making up for a <a href='http://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >specific micro-environment</a>, which influence to a great extent specificity and selectivity of plethora
-                            biologically important processes. Their constitution is especially important in channel's constriction sites such as local minimas and bottlenecks, which can function as gatekeepers.
+                            Channel walls are made from surrounding amino acids making up for a <a href='http://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >specific micro-environment</a>,
+                            which influence to a great extent specificity and selectivity of plethora biologically important processes. Their constitution is especially important in channel's
+                            constriction sites such as local minimas and bottlenecks, which can function as gatekeepers.
                         </p>
                         <p style={justify}>
-                            In the database a channel is represented by its centerline and a radius towards the closest protein atom. All the channel lining residues are reported altogether with the physicochemical
-                            properties.
+                            In the database a channel is represented by its centerline and a radius towards the closest protein atom. Channel profile is decomposed into discrete regions
+                            called layers. Each layer is defined by the residues lining it. A new layer starts whenever there is a change in residues lining it along its length. 
+                            These size and composition of these layers is in turn used for estimating channel's physicochemical properties.
                         </p>
                     </div>
                     <div className='col-md-5'>
