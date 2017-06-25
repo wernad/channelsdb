@@ -11,6 +11,9 @@ namespace ChannelsDB {
             };
 
             return <div style={{ margin: '60px 0 0 20px' }}>
+
+                <h1 className='text-center'>Documentation</h1>                
+
                 <div className='row'>
                     <div className='col-md-8'>
                         <h2 className='featurette-heading'>Database content</h2>
