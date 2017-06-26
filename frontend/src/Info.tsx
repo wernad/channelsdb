@@ -5,27 +5,58 @@
 namespace ChannelsDB {
 
 
-    export class Intro extends React.Component<{}, {}> {
-        render() {
-            return <div style={{ margin: '60px 0 0 20px', textAlign: 'justify', textJustify: 'inter-word' }}>
+    export class Intro extends React.Component<{ state: State }, { statistics: any }> {
+        private sub: Rx.IDisposable | undefined = void 0;
+        state = { statistics: this.props.state.statistics };
 
-                <p className='lead'>ChannelsDB is a comprehensive and regulary updated resource of channels, pores and tunnels found in biomacromolecules deposited in the
+        componentDidMount() {
+            if (!this.state.statistics) {
+                this.sub = this.props.state.statisticsAvailable.subscribe((statistics) => this.setState({ statistics }));
+            }
+        }
+
+        componentWillUnmount() {
+            if (this.sub) {
+                this.sub.dispose();
+                this.sub = void 0;
+            }
+        }
+
+        render() {
+            const stats = this.state.statistics;
+            return <div>
+                <div className='row' >
+                    <div className='col-lg-12'>
+                        <div className='well well-sm text-center' style={{ marginTop: '0', marginBottom: '40px' }}>
+                            Database last updated <b>{stats ? stats.Date : 'n/a'}</b>:
+                            &nbsp;<b>{stats ? stats.Reviewed : 'n/a'}</b> <small>reviewed entries |</small>
+                            &nbsp;<b>{stats ? stats.CSA : 'n/a'}</b> <small>entries with <abbr title='Catalytic Site Atlas'>CSA</abbr> annotation |</small>
+                            &nbsp;<b>{stats ? stats.Cofactors : 'n/a'}</b> <small>transmembrane pore entries |</small>
+                            &nbsp;<b>{stats ? stats.Pores : 'n/a'}</b> <small>cofactor entries</small>
+                        </div>
+                        <div style={{ textAlign: 'left', textJustify: 'inter-word', padding: '0' }}>
+
+                            <p className='lead'>ChannelsDB is a comprehensive and regulary updated resource of channels, pores and tunnels found in biomacromolecules deposited in the
                     <a target='_blank' href='http://www.ebi.ac.uk/pdbe/'> Protein Data Bank</a>. As such, it is a unique service for a channel-related analyses.</p>
-                <p className='text-justify'>                  
-                   The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with the UniProt database 
+                            <p className='text-justify'>
+                                The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with the UniProt database
                    a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in a clear interactive manner further facilitating data interpretation.
                 </p>
-                <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us!</a>. The application allowing for online annotation will be available later this year.</p>
+                            <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us!</a>. The application allowing for online annotation will be available later this year.</p>
+                        </div>
+                    </div>
+                </div>
             </div>;
         }
     }
 
-    export class Info extends React.Component<{}, { apiCallResult: any }> {
+    export class Info extends React.Component<{ state: State }, {}> {
+
         render() {
             let centerStyle = {
                 display: 'block',
                 margin: '0 auto',
-                marginTop: 30,
+                marginTop: 0,
             };
 
             let justify = {
@@ -38,41 +69,45 @@ namespace ChannelsDB {
                 paddingLeft: 6,
             };
 
-            return <div>
-
-            <div className='alert alert-info alert-dismissable fade in col-md-offset-1 col-md-10 text-center'>
-                    Database last updated <b>22/6/2017</b>:
-                    <b>n/a</b> <small>reviewed entries;</small>
-                    <b>n/a</b> <small>entries with <abbr title='Catalytic Site Atlas'>CSA</abbr> annotation;</small>
-                    <b>n/a</b> <small>transmembrane pore entries;</small>
-                    <b>n/a</b> <small>cofactor entries</small>
-            </div>
-
-                <h1 style={{ marginTop: 50, textAlign: 'center' }}>Examples</h1>
-                <div className='row'>
-                    <div className='col-lg-4'>
-                        <img style={centerStyle} className='img-circle' src={'assets/img/1ymg_detail.png'} alt='1ymg channel detail' width='140' height='140' />
-                        <h2>Aquaporin water channel</h2>
-                        <p>The channel architecture of Aquaporin 0 at 2.2&#8491; resolution highlights residues critical for water permeation regulation.</p>
-                        <p><a className='btn btn-default' href='#ex-1ymg' role='button'>View details &raquo;</a></p>
-                    </div>
-                    <div className='col-lg-4'>
-                        <img style={centerStyle} className='img-circle' src={'assets/img/3tbg_detail.png'} alt='3tbg channel detail' width='140' height='140' />
-                        <h2>Cytochrome P450 2D6 substrate tunnel</h2>
-                        <p>Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.</p>
-                        <p><a className='btn btn-default' href='#ex-p450' role='button'>View details &raquo;</a></p>
-                    </div>
-                    <div className='col-lg-4'>
-                        <img style={centerStyle} className='img-circle' src={'assets/img/1jj2_detail.png'} alt='1jj2 channel detail' width='140' height='140' />
-                        <h2>Ribosomal polypeptide exit tunnel</h2>
-                        <p>Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome.</p>
-                        <p><a className='btn btn-default' href='#ex-1jj2' role='button'>View details &raquo;</a></p>
+            return <div style={{ marginTop: '0px' }}>
+                <Intro state={this.props.state} />
+                <div className='row' style={{ marginTop: '30px' }}>
+                    <div className='col-lg-12'>
+                            <h2 style={{ textAlign: 'center', margin: '0 0 20px 0', fontWeight: 'bold' }}>Examples</h2>
+                        <div className='well'>
+                            <div className='row'>
+                                <div className='col-lg-4'>
+                                    <img style={centerStyle} className='img-circle' src={'assets/img/1ymg_detail.png'} alt='1ymg channel detail' width='140' height='140' />
+                                    <h2>Aquaporin water channel</h2>
+                                    <p>The channel architecture of Aquaporin 0 at 2.2&#8491; resolution highlights residues critical for water permeation regulation.</p>
+                                </div>
+                                <div className='col-lg-4'>
+                                    <img style={centerStyle} className='img-circle' src={'assets/img/3tbg_detail.png'} alt='3tbg channel detail' width='140' height='140' />
+                                    <h2>Cytochrome P450 2D6 substrate tunnel</h2>
+                                    <p>Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.</p>
+                                </div>
+                                <div className='col-lg-4'>
+                                    <img style={centerStyle} className='img-circle' src={'assets/img/1jj2_detail.png'} alt='1jj2 channel detail' width='140' height='140' />
+                                    <h2>Ribosomal polypeptide exit tunnel</h2>
+                                    <p>Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome.</p>
+                                </div>
+                            </div>
+                            <div className='row'>
+                                <div className='col-lg-4'>
+                                    <a className='btn btn-block btn-default' href='#ex-1ymg' role='button'>View details &raquo;</a>
+                                </div>
+                                <div className='col-lg-4'>
+                                    <a className='btn btn-block btn-default' href='#ex-p450' role='button'>View details &raquo;</a>
+                                </div>
+                                <div className='col-lg-4'>
+                                    <a className='btn btn-block btn-default' href='#ex-1jj2' role='button'>View details &raquo;</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <hr className='featurette-divider' style={{ margin: '50px 0' }} />
-
-                <div className='row featurette'>
+                <div className='row featurette' style={{ marginTop: '40px' }}>
                     <a name='ex-1ymg' />
                     <div className='col-md-7'>
                         <a href='http://channelsdb.dominiktousek.eu/ChannelsDB/detail/1ymg'><h2 className='featurette-heading'>Aquaporin O <span className='text-muted'>(1ymg)</span></h2></a>
@@ -86,24 +121,24 @@ namespace ChannelsDB {
                     </div>
                 </div>
 
-                <hr className='featurette-divider' style={{ margin: '50px 0' }} />
+                <hr className='featurette-divider' style={{ margin: '40px 0' }} />
 
 
                 <div className='row featurette'>
                     <a name='ex-p450' />
                     <div className='col-md-7 col-md-push-5'>
                         <a href='http://channelsdb.dominiktousek.eu/ChannelsDB/detail/3tbg'><h2 className='featurette-heading'>Cytochrome P450 2D6 <span className='text-muted'>(3tbg)</span></h2></a>
-                        <p className='lead'>Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.</p>                        
+                        <p className='lead'>Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.</p>
                         <p style={justify}>Cytochrome  P450  2D6  contributes  significantly  to  the  metabolism  of  >15%  of  the  200  most marketed drugs. Cytochrome P450 2D6 structure shows a second molecule of thioridazine bound in an expanded substrate access channel (channel  2a according to <a href='https://doi.org/10.1016/j.bbagen.2006.07.005' target='_blank'>Cojocaru et  al. classification</a>  antechamber  with  its  piperidine  moiety  forming  a charge-stabilized hydrogen bond with Glu-222.</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1074/jbc.M114.627661'>
-                            Wang, A., et al. <span style={{ fontStyle: 'italic' }}>Contributions of Ionic Interactions and Protein Dynamics to Cytochrome P450 2D6 (CYP2D6) Substrate and Inhibitor Binding</span> J.Biol.Chem. 290: 5092-5104 (2015)</a></small></p>  
+                            Wang, A., et al. <span style={{ fontStyle: 'italic' }}>Contributions of Ionic Interactions and Protein Dynamics to Cytochrome P450 2D6 (CYP2D6) Substrate and Inhibitor Binding</span> J.Biol.Chem. 290: 5092-5104 (2015)</a></small></p>
                     </div>
                     <div className='col-md-5 col-md-pull-7'>
                         <img className='featurette-image img-responsive center-block' src={'assets/img/3tbg.png'} alt='Cytochrome P450 substrate channel details' />
                     </div>
                 </div>
 
-                <hr className='featurette-divider' style={{ margin: '50px 0' }} />
+                <hr className='featurette-divider' style={{ margin: '40px 0' }} />
 
                 <div className='row featurette'>
                     <a name='ex-1jj2' />

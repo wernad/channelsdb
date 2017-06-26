@@ -11,7 +11,8 @@ namespace ChannelsDB {
     export interface State {
         dbContent: DBContent;
         dbContentAvailable: Rx.BehaviorSubject<boolean>;
-        apiCallResult: Rx.BehaviorSubject<any>;
+        statistics: any;
+        statisticsAvailable: Rx.BehaviorSubject<any>;
         searchedTerm: string;
         searchTerm: Rx.Subject<string>;
         viewState: ViewState;
@@ -45,7 +46,8 @@ namespace ChannelsDB {
         const state: State = {
             dbContent: void 0 as any,
             dbContentAvailable: new Rx.BehaviorSubject<boolean>(false),
-            apiCallResult: new Rx.BehaviorSubject<boolean>(false),
+            statistics: void 0 as any,
+            statisticsAvailable: new Rx.BehaviorSubject<any>(void 0),
             searchedTerm: '',
             searchTerm: new Rx.Subject<string>(),
             viewState: { kind: 'Info' },
@@ -71,7 +73,7 @@ namespace ChannelsDB {
             });
 
         initSearch(state);
-        doApiCall(state);
+        getStatistics(state);
 
         return state;
     }
@@ -86,12 +88,17 @@ namespace ChannelsDB {
         }
     }
 
-    async function doApiCall(state: State) {
+    async function getStatistics(state: State) {
         try {
-            const content = await ajaxGetJson('https://webchem.ncbr.muni.cz/API/ChannelsDB/Content');
-            state.apiCallResult.onNext(content);
+            if (state.statistics) {
+                state.statisticsAvailable.onNext(state.statistics);
+                return;
+            }
+            const content = await ajaxGetJson('https://webchem.ncbr.muni.cz/API/ChannelsDB/Statistics');
+            state.statistics = content;
+            state.statisticsAvailable.onNext(content);
         } catch (e) {
-            setTimeout(() => doApiCall(state), 2000);
+            setTimeout(() => getStatistics(state), 2000);
         }
     }
 

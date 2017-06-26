@@ -24,8 +24,9 @@ namespace ChannelsDB {
         render() {
             return <div className='container'>
                 <Menu />
-                <Intro />
-                <SearchView {...this.props} />
+                <div className='container-fluid' style={{ padding: '0 15px '}}>
+                    <SearchView {...this.props} />
+                </div>
                 <Footer />
             </div>;
         }
@@ -63,7 +64,7 @@ namespace ChannelsDB {
     class SearchView extends React.Component<GlobalProps, {}> {
 
         render() {
-            return <div style={{ marginTop: '35px' }}>
+            return <div style={{ marginTop: '20px' }}>
                 <div className='row'>
                     <div className='col-lg-12'><SearchBox {...this.props} /></div>
                 </div>
@@ -83,7 +84,7 @@ namespace ChannelsDB {
             const state = this.props.state.viewState;
             try {
                 switch (state.kind) {
-                    case 'Info': return <Info />;
+                    case 'Info': return <Info state={this.props.state} />;
                     case 'Loading': return <div>{state.message}</div>;
                     case 'Searched': return <SearchResults {...this.props} />;
                     case 'Entries': return <Entries {...this.props} mode='Full' value={state.term} />;
@@ -106,14 +107,14 @@ namespace ChannelsDB {
         render() {
             return <div className='form-group form-group-lg'>
                 {this.state.isAvailable
-                    ? <input key={'fullsearch'} type='text' className='form-control text-center' style={{ fontWeight: 'bold' }} placeholder='Search ChannelsDB (e.g., cytochrome p450, 5an8, KcsA) ...'
+                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB (e.g., cytochrome p450, 5an8, KcsA) ...'
                         onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
                         onKeyPress={(e) => {
                             if (e.key !== 'Enter') return;
                             this.props.state.fullSearch.onNext(void 0);
                             updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
                         }} />
-                    : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'center' }} disabled={true}
+                    : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }} disabled={true}
                         value='Initializing search...'  />}
             </div>;
         }

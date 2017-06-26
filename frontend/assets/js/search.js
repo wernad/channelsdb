@@ -153,6 +153,8 @@ var ChannelsDB;
         var state = {
             dbContent: void 0,
             dbContentAvailable: new Rx.BehaviorSubject(false),
+            statistics: void 0,
+            statisticsAvailable: new Rx.BehaviorSubject(void 0),
             searchedTerm: '',
             searchTerm: new Rx.Subject(),
             viewState: { kind: 'Info' },
@@ -175,6 +177,7 @@ var ChannelsDB;
             }
         });
         initSearch(state);
+        getStatistics(state);
         return state;
     }
     ChannelsDB.initState = initState;
@@ -194,6 +197,32 @@ var ChannelsDB;
                     case 2:
                         e_1 = _a.sent();
                         setTimeout(function () { return initSearch(state); }, 2000);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    }
+    function getStatistics(state) {
+        return __awaiter(this, void 0, void 0, function () {
+            var content, e_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        if (state.statistics) {
+                            state.statisticsAvailable.onNext(state.statistics);
+                            return [2 /*return*/];
+                        }
+                        return [4 /*yield*/, ChannelsDB.ajaxGetJson('https://webchem.ncbr.muni.cz/API/ChannelsDB/Statistics')];
+                    case 1:
+                        content = _a.sent();
+                        state.statistics = content;
+                        state.statisticsAvailable.onNext(content);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        e_2 = _a.sent();
+                        setTimeout(function () { return getStatistics(state); }, 2000);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -309,6 +338,8 @@ var ChannelsDB;
                     React.createElement("div", { id: 'navbar', className: 'navbar-collapse collapse' },
                         React.createElement("ul", { className: 'nav navbar-nav navbar-right' },
                             React.createElement("li", null,
+                                React.createElement("a", { href: 'index.html' }, "Search")),
+                            React.createElement("li", null,
                                 React.createElement("a", { href: 'methods.html' }, "Methods")),
                             React.createElement("li", null,
                                 React.createElement("a", { href: 'documentation.html' }, "Documentation")),
@@ -327,19 +358,60 @@ var ChannelsDB;
     var Intro = (function (_super) {
         __extends(Intro, _super);
         function Intro() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.sub = void 0;
+            _this.state = { statistics: _this.props.state.statistics };
+            return _this;
         }
+        Intro.prototype.componentDidMount = function () {
+            var _this = this;
+            if (!this.state.statistics) {
+                this.sub = this.props.state.statisticsAvailable.subscribe(function (statistics) { return _this.setState({ statistics: statistics }); });
+            }
+        };
+        Intro.prototype.componentWillUnmount = function () {
+            if (this.sub) {
+                this.sub.dispose();
+                this.sub = void 0;
+            }
+        };
         Intro.prototype.render = function () {
-            return React.createElement("div", { style: { margin: '60px 0 0 20px', textAlign: 'justify', textJustify: 'inter-word' } },
-                React.createElement("p", { className: 'lead' },
-                    "ChannelsDB is a comprehensive and regulary updated resource of channels, pores and tunnels found in biomacromolecules deposited in the",
-                    React.createElement("a", { target: '_blank', href: 'http://www.ebi.ac.uk/pdbe/' }, " Protein Data Bank"),
-                    ". As such, it is a unique service for a channel-related analyses."),
-                React.createElement("p", { className: 'text-justify' }, "The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with the UniProt database a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in a clear interactive manner further facilitating data interpretation."),
-                React.createElement("p", null,
-                    "If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. ",
-                    React.createElement("a", { href: 'mailto:webchemistryhelp@gmail.com' }, "Get in touch with us!"),
-                    ". The application allowing for online annotation will be available later this year."));
+            var stats = this.state.statistics;
+            return React.createElement("div", null,
+                React.createElement("div", { className: 'row' },
+                    React.createElement("div", { className: 'col-lg-12' },
+                        React.createElement("div", { className: 'well well-sm text-center', style: { marginTop: '0', marginBottom: '40px' } },
+                            "Database last updated ",
+                            React.createElement("b", null, stats ? stats.Date : 'n/a'),
+                            ": \u00A0",
+                            React.createElement("b", null, stats ? stats.Reviewed : 'n/a'),
+                            " ",
+                            React.createElement("small", null, "reviewed entries |"),
+                            "\u00A0",
+                            React.createElement("b", null, stats ? stats.CSA : 'n/a'),
+                            " ",
+                            React.createElement("small", null,
+                                "entries with ",
+                                React.createElement("abbr", { title: 'Catalytic Site Atlas' }, "CSA"),
+                                " annotation |"),
+                            "\u00A0",
+                            React.createElement("b", null, stats ? stats.Cofactors : 'n/a'),
+                            " ",
+                            React.createElement("small", null, "transmembrane pore entries |"),
+                            "\u00A0",
+                            React.createElement("b", null, stats ? stats.Pores : 'n/a'),
+                            " ",
+                            React.createElement("small", null, "cofactor entries")),
+                        React.createElement("div", { style: { textAlign: 'left', textJustify: 'inter-word', padding: '0' } },
+                            React.createElement("p", { className: 'lead' },
+                                "ChannelsDB is a comprehensive and regulary updated resource of channels, pores and tunnels found in biomacromolecules deposited in the",
+                                React.createElement("a", { target: '_blank', href: 'http://www.ebi.ac.uk/pdbe/' }, " Protein Data Bank"),
+                                ". As such, it is a unique service for a channel-related analyses."),
+                            React.createElement("p", { className: 'text-justify' }, "The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with the UniProt database a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in a clear interactive manner further facilitating data interpretation."),
+                            React.createElement("p", null,
+                                "If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. ",
+                                React.createElement("a", { href: 'mailto:webchemistryhelp@gmail.com' }, "Get in touch with us!"),
+                                ". The application allowing for online annotation will be available later this year.")))));
         };
         return Intro;
     }(React.Component));
@@ -353,7 +425,7 @@ var ChannelsDB;
             var centerStyle = {
                 display: 'block',
                 margin: '0 auto',
-                marginTop: 30,
+                marginTop: 0,
             };
             var justify = {
                 textAlign: 'justify',
@@ -363,48 +435,33 @@ var ChannelsDB;
                 borderLeft: '2px solid #AAA',
                 paddingLeft: 6,
             };
-            return React.createElement("div", null,
-                React.createElement("div", { className: 'alert alert-info alert-dismissable fade in col-md-offset-1 col-md-10 text-center' },
-                    "Database last updated ",
-                    React.createElement("b", null, "22/6/2017"),
-                    ":",
-                    React.createElement("b", null, "n/a"),
-                    " ",
-                    React.createElement("small", null, "reviewed entries;"),
-                    React.createElement("b", null, "n/a"),
-                    " ",
-                    React.createElement("small", null,
-                        "entries with ",
-                        React.createElement("abbr", { title: 'Catalytic Site Atlas' }, "CSA"),
-                        " annotation;"),
-                    React.createElement("b", null, "n/a"),
-                    " ",
-                    React.createElement("small", null, "transmembrane pore entries;"),
-                    React.createElement("b", null, "n/a"),
-                    " ",
-                    React.createElement("small", null, "cofactor entries")),
-                React.createElement("h1", { style: { marginTop: 50, textAlign: 'center' } }, "Examples"),
-                React.createElement("div", { className: 'row' },
-                    React.createElement("div", { className: 'col-lg-4' },
-                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1ymg_detail.png', alt: '1ymg channel detail', width: '140', height: '140' }),
-                        React.createElement("h2", null, "Aquaporin water channel"),
-                        React.createElement("p", null, "The channel architecture of Aquaporin 0 at 2.2\u212B resolution highlights residues critical for water permeation regulation."),
-                        React.createElement("p", null,
-                            React.createElement("a", { className: 'btn btn-default', href: '#ex-1ymg', role: 'button' }, "View details \u00BB"))),
-                    React.createElement("div", { className: 'col-lg-4' },
-                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/3tbg_detail.png', alt: '3tbg channel detail', width: '140', height: '140' }),
-                        React.createElement("h2", null, "Cytochrome P450 2D6 substrate tunnel"),
-                        React.createElement("p", null, "Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways."),
-                        React.createElement("p", null,
-                            React.createElement("a", { className: 'btn btn-default', href: '#ex-p450', role: 'button' }, "View details \u00BB"))),
-                    React.createElement("div", { className: 'col-lg-4' },
-                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1jj2_detail.png', alt: '1jj2 channel detail', width: '140', height: '140' }),
-                        React.createElement("h2", null, "Ribosomal polypeptide exit tunnel"),
-                        React.createElement("p", null, "Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome."),
-                        React.createElement("p", null,
-                            React.createElement("a", { className: 'btn btn-default', href: '#ex-1jj2', role: 'button' }, "View details \u00BB")))),
-                React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
-                React.createElement("div", { className: 'row featurette' },
+            return React.createElement("div", { style: { marginTop: '0px' } },
+                React.createElement(Intro, { state: this.props.state }),
+                React.createElement("div", { className: 'row', style: { marginTop: '30px' } },
+                    React.createElement("div", { className: 'col-lg-12' },
+                        React.createElement("h2", { style: { textAlign: 'center', margin: '0 0 20px 0', fontWeight: 'bold' } }, "Examples"),
+                        React.createElement("div", { className: 'well' },
+                            React.createElement("div", { className: 'row' },
+                                React.createElement("div", { className: 'col-lg-4' },
+                                    React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1ymg_detail.png', alt: '1ymg channel detail', width: '140', height: '140' }),
+                                    React.createElement("h2", null, "Aquaporin water channel"),
+                                    React.createElement("p", null, "The channel architecture of Aquaporin 0 at 2.2\u212B resolution highlights residues critical for water permeation regulation.")),
+                                React.createElement("div", { className: 'col-lg-4' },
+                                    React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/3tbg_detail.png', alt: '3tbg channel detail', width: '140', height: '140' }),
+                                    React.createElement("h2", null, "Cytochrome P450 2D6 substrate tunnel"),
+                                    React.createElement("p", null, "Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.")),
+                                React.createElement("div", { className: 'col-lg-4' },
+                                    React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1jj2_detail.png', alt: '1jj2 channel detail', width: '140', height: '140' }),
+                                    React.createElement("h2", null, "Ribosomal polypeptide exit tunnel"),
+                                    React.createElement("p", null, "Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome."))),
+                            React.createElement("div", { className: 'row' },
+                                React.createElement("div", { className: 'col-lg-4' },
+                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-1ymg', role: 'button' }, "View details \u00BB")),
+                                React.createElement("div", { className: 'col-lg-4' },
+                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-p450', role: 'button' }, "View details \u00BB")),
+                                React.createElement("div", { className: 'col-lg-4' },
+                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-1jj2', role: 'button' }, "View details \u00BB")))))),
+                React.createElement("div", { className: 'row featurette', style: { marginTop: '40px' } },
                     React.createElement("a", { name: 'ex-1ymg' }),
                     React.createElement("div", { className: 'col-md-7' },
                         React.createElement("a", { href: 'http://channelsdb.dominiktousek.eu/ChannelsDB/detail/1ymg' },
@@ -421,7 +478,7 @@ var ChannelsDB;
                                     ". Proc. Natl. Acad. Sci. 101, 14045\u201314050 (2004)")))),
                     React.createElement("div", { className: 'col-md-5' },
                         React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1ymg.png', width: '500', height: '500', alt: '1ymg detailed channel view' }))),
-                React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
                     React.createElement("a", { name: 'ex-p450' }),
                     React.createElement("div", { className: 'col-md-7 col-md-push-5' },
@@ -442,7 +499,7 @@ var ChannelsDB;
                                     " J.Biol.Chem. 290: 5092-5104 (2015)")))),
                     React.createElement("div", { className: 'col-md-5 col-md-pull-7' },
                         React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/3tbg.png', alt: 'Cytochrome P450 substrate channel details' }))),
-                React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
                     React.createElement("a", { name: 'ex-1jj2' }),
                     React.createElement("div", { className: 'col-md-7 ' },
@@ -824,8 +881,8 @@ var ChannelsDB;
         SearchMain.prototype.render = function () {
             return React.createElement("div", { className: 'container' },
                 React.createElement(ChannelsDB.Menu, null),
-                React.createElement(ChannelsDB.Intro, null),
-                React.createElement(SearchView, __assign({}, this.props)),
+                React.createElement("div", { className: 'container-fluid', style: { padding: '0 15px ' } },
+                    React.createElement(SearchView, __assign({}, this.props))),
                 React.createElement(Footer, null));
         };
         return SearchMain;
@@ -874,7 +931,7 @@ var ChannelsDB;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         SearchView.prototype.render = function () {
-            return React.createElement("div", { style: { marginTop: '35px' } },
+            return React.createElement("div", { style: { marginTop: '20px' } },
                 React.createElement("div", { className: 'row' },
                     React.createElement("div", { className: 'col-lg-12' },
                         React.createElement(SearchBox, __assign({}, this.props)))),
@@ -897,7 +954,7 @@ var ChannelsDB;
             var state = this.props.state.viewState;
             try {
                 switch (state.kind) {
-                    case 'Info': return React.createElement(ChannelsDB.Info, null);
+                    case 'Info': return React.createElement(ChannelsDB.Info, { state: this.props.state });
                     case 'Loading': return React.createElement("div", null, state.message);
                     case 'Searched': return React.createElement(SearchResults, __assign({}, this.props));
                     case 'Entries': return React.createElement(Entries, __assign({}, this.props, { mode: 'Full', value: state.term }));
@@ -929,13 +986,13 @@ var ChannelsDB;
         SearchBox.prototype.render = function () {
             var _this = this;
             return React.createElement("div", { className: 'form-group form-group-lg' }, this.state.isAvailable
-                ? React.createElement("input", { key: 'fullsearch', type: 'text', className: 'form-control text-center', style: { fontWeight: 'bold' }, placeholder: 'Search ChannelsDB (e.g., cytochrome p450, 5an8, KcsA) ...', onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
+                ? React.createElement("input", { key: 'fullsearch', type: 'text', className: 'form-control', style: { fontWeight: 'bold', borderColor: 'darkgreen' }, placeholder: 'Search ChannelsDB (e.g., cytochrome p450, 5an8, KcsA) ...', onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
                         if (e.key !== 'Enter')
                             return;
                         _this.props.state.fullSearch.onNext(void 0);
                         ChannelsDB.updateViewState(_this.props.state, { kind: 'Entries', term: e.target.value });
                     } })
-                : React.createElement("input", { key: 'placeholder', type: 'text', className: 'form-control', style: { fontWeight: 'bold', textAlign: 'center' }, disabled: true, value: 'Initializing search...' }));
+                : React.createElement("input", { key: 'placeholder', type: 'text', className: 'form-control', style: { fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }, disabled: true, value: 'Initializing search...' }));
         };
         return SearchBox;
     }(React.Component));
@@ -986,7 +1043,7 @@ var ChannelsDB;
                 _this.setState({ entries: { group: _this.props.group.groupValue, value: value, var_name: var_name, count: count } });
             };
             _this.loadMore = function () { return __awaiter(_this, void 0, void 0, function () {
-                var docs, e_2;
+                var docs, e_3;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -998,7 +1055,7 @@ var ChannelsDB;
                             this.setState({ isLoading: false, docs: this.state.docs.concat(docs) });
                             return [3 /*break*/, 3];
                         case 2:
-                            e_2 = _a.sent();
+                            e_3 = _a.sent();
                             this.setState({ isLoading: false });
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
@@ -1085,7 +1142,7 @@ var ChannelsDB;
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.state = { isLoading: false, entries: [], count: -1, showing: 0, withCount: -1, withoutCount: -1 };
             _this.fetchEmbed = function () { return __awaiter(_this, void 0, void 0, function () {
-                var _a, entries, withCount, withoutCount, e_3;
+                var _a, entries, withCount, withoutCount, e_4;
                 return __generator(this, function (_c) {
                     switch (_c.label) {
                         case 0:
@@ -1097,7 +1154,7 @@ var ChannelsDB;
                             this.setState({ isLoading: false, entries: entries, count: withCount + withoutCount, withCount: withCount, withoutCount: withoutCount, showing: this.growFactor });
                             return [3 /*break*/, 3];
                         case 2:
-                            e_3 = _c.sent();
+                            e_4 = _c.sent();
                             this.setState({ isLoading: false });
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
@@ -1105,7 +1162,7 @@ var ChannelsDB;
                 });
             }); };
             _this.fetchFull = function () { return __awaiter(_this, void 0, void 0, function () {
-                var _a, entries, withCount, withoutCount, e_4;
+                var _a, entries, withCount, withoutCount, e_5;
                 return __generator(this, function (_c) {
                     switch (_c.label) {
                         case 0:
@@ -1117,7 +1174,7 @@ var ChannelsDB;
                             this.setState({ isLoading: false, entries: entries, count: withCount + withoutCount, withCount: withCount, withoutCount: withoutCount, showing: this.growFactor });
                             return [3 /*break*/, 3];
                         case 2:
-                            e_4 = _c.sent();
+                            e_5 = _c.sent();
                             this.setState({ isLoading: false });
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
