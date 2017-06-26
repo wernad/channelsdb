@@ -35,7 +35,7 @@ namespace ChannelsDB {
                         <p style={justify}>
                             In the database a channel is represented by its centerline and a radius towards the closest protein atom. Channel profile is decomposed into discrete regions
                             called layers. Each layer is defined by the residues lining it. A new layer starts whenever there is a change in residues lining it along its length. 
-                            These size and composition of these layers is in turn used for estimating channel's physicochemical properties.
+                            Their size and composition is in turn used for estimating channel's physicochemical properties.
                         </p>
                     </div>
                     <div className='col-md-5'>

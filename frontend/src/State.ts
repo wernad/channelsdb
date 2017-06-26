@@ -11,6 +11,7 @@ namespace ChannelsDB {
     export interface State {
         dbContent: DBContent;
         dbContentAvailable: Rx.BehaviorSubject<boolean>;
+        apiCallResult: Rx.BehaviorSubject<any>;
         searchedTerm: string;
         searchTerm: Rx.Subject<string>;
         viewState: ViewState;
@@ -44,6 +45,7 @@ namespace ChannelsDB {
         const state: State = {
             dbContent: void 0 as any,
             dbContentAvailable: new Rx.BehaviorSubject<boolean>(false),
+            apiCallResult: new Rx.BehaviorSubject<boolean>(false),
             searchedTerm: '',
             searchTerm: new Rx.Subject<string>(),
             viewState: { kind: 'Info' },
@@ -69,6 +71,7 @@ namespace ChannelsDB {
             });
 
         initSearch(state);
+        doApiCall(state);
 
         return state;
     }
@@ -80,6 +83,15 @@ namespace ChannelsDB {
             state.dbContentAvailable.onNext(true);
         } catch (e) {
             setTimeout(() => initSearch(state), 2000);
+        }
+    }
+
+    async function doApiCall(state: State) {
+        try {
+            const content = await ajaxGetJson('https://webchem.ncbr.muni.cz/API/ChannelsDB/Content');
+            state.apiCallResult.onNext(content);
+        } catch (e) {
+            setTimeout(() => doApiCall(state), 2000);
         }
     }
 

@@ -8,6 +8,7 @@ namespace ChannelsDB {
     export class Intro extends React.Component<{}, {}> {
         render() {
             return <div style={{ margin: '60px 0 0 20px', textAlign: 'justify', textJustify: 'inter-word' }}>
+
                 <p className='lead'>ChannelsDB is a comprehensive and regulary updated resource of channels, pores and tunnels found in biomacromolecules deposited in the
                     <a target='_blank' href='http://www.ebi.ac.uk/pdbe/'> Protein Data Bank</a>. As such, it is a unique service for a channel-related analyses.</p>
                 <p className='text-justify'>                  
@@ -19,7 +20,7 @@ namespace ChannelsDB {
         }
     }
 
-    export class Info extends React.Component<{}, {}> {
+    export class Info extends React.Component<{}, { apiCallResult: any }> {
         render() {
             let centerStyle = {
                 display: 'block',
@@ -38,6 +39,15 @@ namespace ChannelsDB {
             };
 
             return <div>
+
+            <div className='alert alert-info alert-dismissable fade in col-md-offset-1 col-md-10 text-center'>
+                    Database last updated <b>22/6/2017</b>:
+                    <b>n/a</b> <small>reviewed entries;</small>
+                    <b>n/a</b> <small>entries with <abbr title='Catalytic Site Atlas'>CSA</abbr> annotation;</small>
+                    <b>n/a</b> <small>transmembrane pore entries;</small>
+                    <b>n/a</b> <small>cofactor entries</small>
+            </div>
+
                 <h1 style={{ marginTop: 50, textAlign: 'center' }}>Examples</h1>
                 <div className='row'>
                     <div className='col-lg-4'>
