@@ -32,8 +32,7 @@ namespace ChannelsDB {
                         <img className='featurette-image img-responsive center-block' src={'assets/img/pretty_channel.png'} width='500' height='500' alt='Channel details' />
                     </div>
                 </div>
-
-                <hr className='featurette-divider' style={{ margin: '50px 0' }} />
+                <hr className='featurette-divider' style={{ margin: '50px 0' }} />                
 
                 <div className='row'>
                         <h2 className='featurette-heading'>Channel nomenclature</h2>
@@ -61,13 +60,9 @@ namespace ChannelsDB {
                                     <td>Generic term for a channel spanning across a lipid bilayer</td>
                                 </tr>
                                 <tr>
-                                    <td>Solvent channel</td>
+                                    <td>Solvent tunnel</td>
                                     <td>Channel transporting water molecules, which are consumed/egressed during a chemical reaction</td>
-                                </tr>
-                                <tr>
-                                    <td>Water channel</td>
-                                    <td>Transports water molecules; mainly found in aquaporins.</td>
-                                </tr>
+                                </tr>                               
                                 <tr>
                                     <td>Substrate tunnel</td>
                                     <td>Channel transporting various chemical species consumed in a chemical reaction</td>
@@ -77,6 +72,10 @@ namespace ChannelsDB {
                                     <td>Transports chemical species that are an outcome of chemical reaction</td>
                                 </tr>
                                 <tr>
+                                    <td>Water channel</td>
+                                    <td>Transports water molecules; mainly found in aquaporins.</td>
+                                </tr>                                
+                                <tr>
                                     <td>Ion channel</td>
                                     <td>Provides pathways for ion and other charged chemical species to pass through lipid bilayer</td>
                                 </tr>                          
@@ -84,6 +83,171 @@ namespace ChannelsDB {
                                     <td>Hydrophobic channel</td>
                                     <td>Provides pathways for apolar chemical species to pass through lipid bilayer</td>
                                 </tr>
+                            </tbody>                        
+                        </table>    
+                    </div>
+                </div>
+
+                <hr className='featurette-divider' style={{ margin: '50px 0' }} />
+
+                <div className='row'>
+                    <h2 className='featurette-heading'>MOLE settings</h2>
+                    <p style={justify}>Throughout the ChannelsDB the folowing settings of the MOLE algorithm has been used for the CSA and cofactor tunnels. For reviewed channels,
+                        each calculation has been independently adjusted, in order to extract deemed channel.</p>
+                    <div className='row table-responsive col-md-4 col-md-offset-1'>
+                        <h2 className='featurette-heading'>CSA tunnels</h2>
+                        <table className='table table-condensed active'>
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i>ProbeRadius</i></td>
+                                    <td>5.0</td>
+                                </tr>
+                                <tr>
+                                    <td><i>InteriorThreshold</i></td>
+                                    <td>1.1</td>
+                                </tr>
+                                <tr>
+                                    <td><i>MinTunnelLength</i></td>
+                                    <td>15.0</td>
+                                </tr>
+                                <tr>
+                                    <td><i>BottleneckRadius</i></td>
+                                    <td>1.25</td>
+                                </tr>
+                                <tr>
+                                    <td><i>BottleneckTolerance</i></td>
+                                    <td>3.0</td>
+                                </tr>
+                                <tr>
+                                    <td><i>MaxTunnelSimilarity</i></td>
+                                    <td>0.7</td>
+                                </tr>                                                                                                
+                                <tr>
+                                    <td><i>NonActiveParts</i></td>
+                                    <td data-toggle='tooltip' title='HetResidues().Filter(lambda m: m.IsNotConnectedTo(AminoAcids()))'>Query</td>
+                                </tr>                                                                                                
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className='row table-responsive col-md-4 col-md-push-2'>
+                        <h2 className='featurette-heading'>Cofactor tunnels</h2>
+                        <table className='table table-condensed active'>
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i>ProbeRadius</i></td>
+                                    <td>5.0</td>
+                                </tr>
+                                <tr>
+                                    <td><i>InteriorThreshold</i></td>
+                                    <td>1.4</td>
+                                </tr>
+                                <tr>
+                                    <td><i>IgnoreHetResidues</i></td>
+                                    <td>True</td>
+                                </tr>
+                                <tr>
+                                    <td><i>MinTunnelLength</i></td>
+                                    <td>15.0</td>
+                                </tr>
+                                <tr>
+                                    <td><i>BottleneckRadius</i></td>
+                                    <td>1.25</td>
+                                </tr>
+                                <tr>
+                                    <td><i>BottleneckTolerance</i></td>
+                                    <td>1.0</td>
+                                </tr>
+                                <tr>
+                                    <td><i>MaxTunnelSimilarity</i></td>
+                                    <td>0.7</td>
+                                </tr>                                                                                                
+                                <tr>
+                                    <td><i>NonActiveParts</i></td>
+                                    <td data-toggle='tooltip' title='Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))'>Query</td>
+                                </tr>                                                                                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr className='featurette-divider' style={{ margin: '50px 0' }} />
+
+                <div className='row'>
+                        <h2 className='featurette-heading'>Cofactors list</h2>
+                        <p>Following well-known cofactors, which are often burried within a protein structure have been selected for channel prediction. </p>
+                        <div className='row table-responsive col-md-8 col-md-offset-2'>
+                            <table className='table table-condensed active'>
+                            <thead>
+                            <tr>
+                                <th>Group</th>
+                                <th>Origin</th>
+                                <th>Ligand list</th>                                
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Hems</td>
+                                    <td>Fe (<i>type_symbol</i>)</td>
+                                    <td><i>HEA, HEM, HEC</i></td>
+                                </tr>
+                                <tr>
+                                    <td>Flavins</td>
+                                    <td>N5 (<i>auth_atom_id</i>)</td>
+                                    <td><i>FAD, FMN</i></td>
+                                </tr>
+                                <tr>
+                                    <td>Nicotinadenins</td>
+                                    <td>N1N (<i>auth_atom_id</i>)</td>
+                                    <td><i>NAD, NAP, NDP, NAI</i></td>
+                                </tr>
+                                <tr>
+                                    <td>Nucleotides</td>
+                                    <td>PA atom (<i>auth_atom_id</i>)</td>
+                                    <td><i>ATP, CTP, UTP, GTP, TTP, ADP, CDP, UDP, GDP, TDP, AMP, CMP, ANP</i></td>
+                                </tr>                               
+                                <tr>
+                                    <td>Vitamin B2</td>
+                                    <td>N5 (<i>auth_atom_id</i>)</td>
+                                    <td><i>RBF</i></td>
+                                </tr>
+                                <tr>
+                                    <td>Vitamin B6</td>
+                                    <td>C4A (<i>auth_atom_id</i>)</td>
+                                    <td><i>PLP</i></td>
+                                </tr>
+                                <tr>
+                                    <td>Vitamin B12</td>
+                                    <td>CO (<i>auth_atom_id</i>)</td>
+                                    <td><i>B12</i></td>
+                                </tr>         
+                                <tr>
+                                    <td>Biotin</td>
+                                    <td>C3 (<i>auth_atom_id</i>)</td>
+                                    <td><i>BTN</i></td>
+                                </tr>                                                                
+                                <tr>
+                                    <td>Coenzym</td>
+                                    <td>S1P (<i>auth_atom_id</i>)</td>
+                                    <td><i>COA, ACO</i></td>
+                                </tr>                                
+                                <tr>
+                                    <td>Glutathione</td>
+                                    <td>SG2 (<i>auth_atom_id</i>)</td>
+                                    <td><i>GSH, GDS</i></td>
+                                </tr>                          
                             </tbody>                        
                         </table>    
                     </div>

@@ -230,7 +230,7 @@ namespace ChannelsDB {
                     }
                 </ul>
                 <div className='pdb-entry-img-wrap'>
-                    <img src={`https://webchem.ncbr.muni.cz/API/ChannelsDB/Download/${docs.pdb_id.toLowerCase()}?type=figure`}/>
+                    <img src={`https://webchem.ncbr.muni.cz/API/ChannelsDB/Download/${docs.pdb_id.toLowerCase()}?type=png`}/>
                 </div>
             </div>;
         }

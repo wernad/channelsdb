@@ -79,7 +79,7 @@ namespace ChannelsDB {
                                 <div className='col-lg-4'>
                                     <img style={centerStyle} className='img-circle' src={'assets/img/1ymg_detail.png'} alt='1ymg channel detail' width='140' height='140' />
                                     <h2>Aquaporin water channel</h2>
-                                    <p>The channel architecture of Aquaporin 0 at 2.2&#8491; resolution highlights residues critical for water permeation regulation.</p>
+                                    <p>The pore architecture of Aquaporin 0 at 2.2&#8491; resolution highlights residues critical for water permeation regulation.</p>
                                 </div>
                                 <div className='col-lg-4'>
                                     <img style={centerStyle} className='img-circle' src={'assets/img/3tbg_detail.png'} alt='3tbg channel detail' width='140' height='140' />
@@ -111,7 +111,7 @@ namespace ChannelsDB {
                     <a name='ex-1ymg' />
                     <div className='col-md-7'>
                         <a href='http://channelsdb.dominiktousek.eu/ChannelsDB/detail/1ymg'><h2 className='featurette-heading'>Aquaporin O <span className='text-muted'>(1ymg)</span></h2></a>
-                        <p className='lead'>The channel architecture of Aquaporin O at 2.2&#8491; resolution highlights residues critical for water permeation regulation.</p>
+                        <p className='lead'>The pore architecture of Aquaporin O at 2.2&#8491; resolution highlights residues critical for water permeation regulation.</p>
                         <p style={justify}>The channel is ~ 30&#8491; long and highlights with some of the residues crucial for its proper function. Selectivity filter (ar/R), which allows water molecules passage through the membrane in a single file (green sticks). Residues providing canonical AQP hydrogen bond acceptor that align watters through the channel in balls and stick model. Finally, Tyr-149 important for channel gating in orange.</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1073/pnas.0405274101'>
                             Harries, W. E. C., et. al. <span style={{ fontStyle: 'italic' }}>The channel architecture of aquaporin 0 at a 2.2&#8491; resolution</span>. Proc. Natl. Acad. Sci. 101, 14045–14050 (2004)</a></small></p>
