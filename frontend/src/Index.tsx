@@ -215,7 +215,7 @@ namespace ChannelsDB {
             const numChannels = entry ? (entry.counts as number[]).reduce((a, b) => a + b, 0) : -1;
 
             return <div className='well pdb-entry'>
-                <a href={`http://channelsdb.dominiktousek.eu/ChannelsDB/detail/${docs.pdb_id}`} target='_blank'>
+                <a href={`/ChannelsDB/detail/${docs.pdb_id}`} target='_blank'>
                     <div className='pdb-entry-header' style={{ background: entry ? '#dfd' : '#ddd' }}>
                         <div>{docs.pdb_id}</div>
                         <div title={docs.title || 'n/a'}>{docs.title || 'n/a'}</div>

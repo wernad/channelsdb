@@ -1283,7 +1283,7 @@ var ChannelsDB;
             var entry = this.props.state.dbContent.entries[ChannelsDB.toLower(docs.pdb_id)];
             var numChannels = entry ? entry.counts.reduce(function (a, b) { return a + b; }, 0) : -1;
             return React.createElement("div", { className: 'well pdb-entry' },
-                React.createElement("a", { href: "http://channelsdb.dominiktousek.eu/ChannelsDB/detail/" + docs.pdb_id, target: '_blank' },
+                React.createElement("a", { href: "/ChannelsDB/detail/" + docs.pdb_id, target: '_blank' },
                     React.createElement("div", { className: 'pdb-entry-header', style: { background: entry ? '#dfd' : '#ddd' } },
                         React.createElement("div", null, docs.pdb_id),
                         React.createElement("div", { title: docs.title || 'n/a' }, docs.title || 'n/a'))),
