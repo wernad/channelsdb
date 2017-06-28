@@ -110,7 +110,7 @@ namespace ChannelsDB {
                 <div className='row featurette' style={{ marginTop: '40px' }}>
                     <a name='ex-1ymg' />
                     <div className='col-md-7'>
-                        <a href='http://channelsdb.dominiktousek.eu/ChannelsDB/detail/1ymg'><h2 className='featurette-heading'>Aquaporin O <span className='text-muted'>(1ymg)</span></h2></a>
+                        <a href='/ChannelsDB/detail/1ymg'><h2 className='featurette-heading'>Aquaporin O <span className='text-muted'>(1ymg)</span></h2></a>
                         <p className='lead'>The pore architecture of Aquaporin O at 2.2&#8491; resolution highlights residues critical for water permeation regulation.</p>
                         <p style={justify}>The channel is ~ 30&#8491; long and highlights with some of the residues crucial for its proper function. Selectivity filter (ar/R), which allows water molecules passage through the membrane in a single file (green sticks). Residues providing canonical AQP hydrogen bond acceptor that align watters through the channel in balls and stick model. Finally, Tyr-149 important for channel gating in orange.</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1073/pnas.0405274101'>
@@ -127,7 +127,7 @@ namespace ChannelsDB {
                 <div className='row featurette'>
                     <a name='ex-p450' />
                     <div className='col-md-7 col-md-push-5'>
-                        <a href='http://channelsdb.dominiktousek.eu/ChannelsDB/detail/3tbg'><h2 className='featurette-heading'>Cytochrome P450 2D6 <span className='text-muted'>(3tbg)</span></h2></a>
+                        <a href='/ChannelsDB/detail/3tbg'><h2 className='featurette-heading'>Cytochrome P450 2D6 <span className='text-muted'>(3tbg)</span></h2></a>
                         <p className='lead'>Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.</p>
                         <p style={justify}>Cytochrome  P450  2D6  contributes  significantly  to  the  metabolism  of  >15%  of  the  200  most marketed drugs. Cytochrome P450 2D6 structure shows a second molecule of thioridazine bound in an expanded substrate access channel (channel  2a according to <a href='https://doi.org/10.1016/j.bbagen.2006.07.005' target='_blank'>Cojocaru et  al. classification</a>  antechamber  with  its  piperidine  moiety  forming  a charge-stabilized hydrogen bond with Glu-222.</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1074/jbc.M114.627661'>
@@ -143,7 +143,7 @@ namespace ChannelsDB {
                 <div className='row featurette'>
                     <a name='ex-1jj2' />
                     <div className='col-md-7 '>
-                        <a href='http://channelsdb.dominiktousek.eu/ChannelsDB/detail/1jj2'><h2 className='featurette-heading'>Large Ribosomal Subunit <span className='text-muted'>(1jj2)</span></h2></a>
+                        <a href='/ChannelsDB/detail/1jj2'><h2 className='featurette-heading'>Large Ribosomal Subunit <span className='text-muted'>(1jj2)</span></h2></a>
                         <p className='lead'>The ribosomal polypeptide tunnel provides an insight into the release of a nascent polypeptide chain out of the ribosomal complex.</p>
                         <p style={justify}>The exit tunnel is surrounded by arginine side chains (stick model), bearing positive charges as well as RNA backbone phosphate groups (spheres), thus providing fragmental charge along the tunnel, which is necessary to prevent the nasccent peptide from sticking to the channel wall inside the ribosome. Subunits L4, L22 and L39e interacting with the exit tunnel are highlighted in yellow, green and magenta respectivelly.</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1016/j.jmb.2006.05.023'>
