@@ -61,7 +61,7 @@ namespace ChannelsDB {
             .do(() => RequestPool.abort('data'))
             .map((t) => t.trim())
             .distinctUntilChanged()
-            .concatMap(t => Rx.Observable.timer(250).takeUntil(interrupt).map(_ => t))
+            .concatMap((t) => Rx.Observable.timer(250).takeUntil(interrupt).map((_) => t))
             .forEach((t) => {
                 if (t.length > 2) {
                     search(state, t).takeUntil(interrupt).subscribe(

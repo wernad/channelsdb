@@ -211,8 +211,11 @@ namespace ChannelsDB {
     class Entry extends React.Component<GlobalProps & { docs: any }, { }> {
         render() {
             const docs = this.props.docs;
+            const dbContentMap = new Array('Reviewed', 'CSA', 'Pores', 'Cofactors');
             const entry = this.props.state.dbContent.entries[toLower(docs.pdb_id)];
             const numChannels = entry ? (entry.counts as number[]).reduce((a, b) => a + b, 0) : -1;
+            let entryContent = numChannels > 0 ? (entry.counts as number[]).map((el, index) => el > 0 ? dbContentMap[index] + ' (' + el + ')' : '') : new Array();
+            const msg = numChannels > 0 ? entryContent.filter((a) => a.length > 0).reduce((a, b) => a + ', ' + b) : '';
 
             return <div className='well pdb-entry'>
                 <a href={`/ChannelsDB/detail/${docs.pdb_id}`} target='_blank'>
@@ -225,7 +228,7 @@ namespace ChannelsDB {
                     <li><b>Experiment Method:</b> {(docs.experimental_method || ['n/a']).join(', ')} | {docs.resolution || 'n/a'} Å</li>
                     <li><b>Organism:</b> <i>{(docs.organism_scientific_name || ['n/a']).join(', ')}</i></li>
                     { numChannels > 0
-                        ? <li><i>{`${numChannels} channel${numChannels !== 1 ? 's' : ''} (${entry.counts.length} computation${entry.counts.length !== 1 ? 's' : ''})`}</i></li>
+                        ? <li><i>{`${numChannels} channel${numChannels !== 1 ? 's' : ''}; ${msg}`}</i></li>
                         : void 0
                     }
                 </ul>

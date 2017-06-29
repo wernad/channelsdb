@@ -28,21 +28,24 @@ namespace ChannelsDB {
                 <div className='row' >
                     <div className='col-lg-12'>
                         <div className='well well-sm text-center' style={{ marginTop: '0', marginBottom: '40px' }}>
-                            Database last updated <b>{stats ? stats.Date : 'n/a'}</b>:
-                            &nbsp;<b>{stats ? stats.Reviewed : 'n/a'}</b> <small>reviewed entries |</small>
-                            &nbsp;<b>{stats ? stats.CSA : 'n/a'}</b> <small>entries with <abbr title='Catalytic Site Atlas'>CSA</abbr> annotation |</small>
-                            &nbsp;<b>{stats ? stats.Cofactors : 'n/a'}</b> <small>transmembrane pore entries |</small>
-                            &nbsp;<b>{stats ? stats.Pores : 'n/a'}</b> <small>cofactor entries</small>
+                            ChannelsDB last update on <b>{stats ? stats.Date : 'n/a'}</b>
+                            &nbsp;<small>contains:</small><b> {stats ? stats.Total : 'n/a'}</b> entries 
+                            &nbsp;(<b>{stats ? stats.Reviewed : 'n/a'}</b> <small>reviewed |</small>
+                            &nbsp;<b>{stats ? stats.CSA : 'n/a'}</b> <small>with <abbr title='Catalytic Site Atlas'>CSA</abbr> annotation |</small>
+                            &nbsp;<b>{stats ? stats.Cofactors : 'n/a'}</b> <small>with cofactors |</small>
+                            &nbsp;<b>{stats ? stats.Pores : 'n/a'}</b> <small>transmembrane pores</small>)
                         </div>
                         <div style={{ textAlign: 'left', textJustify: 'inter-word', padding: '0' }}>
 
                             <p className='lead'>ChannelsDB is a comprehensive and regulary updated resource of channels, pores and tunnels found in biomacromolecules deposited in the
-                    <a target='_blank' href='http://www.ebi.ac.uk/pdbe/'> Protein Data Bank</a>. As such, it is a unique service for a channel-related analyses.</p>
+                                <a target='_blank' href='http://www.ebi.ac.uk/pdbe/'> Protein Data Bank</a>. As such, it is a unique service for a channel-related analyses.</p>
+                            
                             <p className='text-justify'>
-                                The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with the UniProt database
-                   a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in a clear interactive manner further facilitating data interpretation.
-                </p>
+                                The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with
+                                the UniProt database a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in
+                                a clear interactive manner further facilitating data interpretation. </p>
                             <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us!</a>. The application allowing for online annotation will be available later this year.</p>
+
                         </div>
                     </div>
                 </div>

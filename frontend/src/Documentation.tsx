@@ -68,6 +68,10 @@ namespace ChannelsDB {
                                     <td>Channel transporting various chemical species consumed in a chemical reaction</td>
                                 </tr>
                                 <tr>
+                                    <td>Substrate/Product tunnel</td>
+                                    <td>Single tunnel facilitating transport of all chemical species to/from the catalytic site.</td>
+                                </tr>                                
+                                <tr>
                                     <td>Product tunnel</td>
                                     <td>Transports chemical species that are an outcome of chemical reaction</td>
                                 </tr>
@@ -130,7 +134,7 @@ namespace ChannelsDB {
                                 </tr>                                                                                                
                                 <tr>
                                     <td><i>NonActiveParts</i></td>
-                                    <td data-toggle='tooltip' title='HetResidues().Filter(lambda m: m.IsNotConnectedTo(AminoAcids()))'>Query</td>
+                                    <td data-toggle='tooltip' data-placement='bottom' title='HetResidues().Filter(lambda m: m.IsNotConnectedTo(AminoAcids()))'>Query</td>
                                 </tr>                                                                                                
                             </tbody>
                         </table>
@@ -176,7 +180,7 @@ namespace ChannelsDB {
                                 </tr>                                                                                                
                                 <tr>
                                     <td><i>NonActiveParts</i></td>
-                                    <td data-toggle='tooltip' title='Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))'>Query</td>
+                                    <td data-toggle='tooltip' data-placement='bottom' title='Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))'>Query</td>
                                 </tr>                                                                                                
                             </tbody>
                         </table>

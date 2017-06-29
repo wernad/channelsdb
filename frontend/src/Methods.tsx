@@ -58,6 +58,9 @@ namespace ChannelsDB {
                             in the respective <a href='http://dx.doi.org/10.1186/1758-2946-5-39' target='_blank'>paper</a>. Finally, user structures can be analysed using the <a href='http://mole.upol.cz' target='_blank'>
                             online</a> as well as with the <a href='https://webchem.ncbr.muni.cz/Platform/App/Mole' target='_blank'>command-line</a> version of MOLE.
                         </p>
+                        <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1186/1758-2946-5-39'>
+                                Sehnal,D., Svobodová Vařeková,R., Berka,K., Pravda,L., Navrátilová,V., Banáš,P., Ionescu,C.-M., Otyepka,M. and Koča,J. <span style={{ fontStyle: 'italic' }}>MOLE 2.0: advanced approach for analysis of biomacromolecular channels.</span>
+                                 J. Cheminform., 5, 39. (2013)</a></small></p>  
                     </div>
                      <div className='col-md-5 col-md-pull-7'>
                         <img className='featurette-image img-responsive center-block' src={'assets/img/alg_outline.jpg'} width='500' height='500' alt='Channel details' />
