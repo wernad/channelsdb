@@ -20,10 +20,10 @@ namespace ChannelsDB {
                         <p>
                             <b>The entire database is composed out of the following content:</b>
                                 <ul>
-                                    <li>Hand currated channel annotations from literature extracted entries</li>
-                                    <li>Ligad-accessible tunnels to the catalytic sites annotated in the <a target='_blank' href='http://www.ebi.ac.uk/thornton-srv/databases/CSA/'>Catalytic Site Atlas</a></li>
-                                    <li>Pores in transmembrane proteins enabling flow of ions and small molecules across the lipid bilayer for proteins deposited in the <a target='_blank' href='http://opm.phar.umich.edu/' >OPM</a> database</li>
+                                    <li>Manually curated channel annotations from literature extracted entries</li>
+                                    <li>Ligand-accessible tunnels to the catalytic sites annotated in the <a target='_blank' href='http://www.ebi.ac.uk/thornton-srv/databases/CSA/'>Catalytic Site Atlas</a></li>
                                     <li>Product/substrate tunnels leading towards the well-known enzyme cofactors such as <abbr className='abbr initialism' title='HEME (Protoporhpyrin IX containing Fe)'>HEM</abbr> or <abbr className='abbr initialism' title='Flavin-adenine dinucleotide'>FAD</abbr></li>
+                                    <li>Pores in transmembrane proteins enabling flow of ions and small molecules across the lipid bilayer for proteins deposited in the <a target='_blank' href='http://opm.phar.umich.edu/' >OPM</a> database</li>                                    
                                 </ul>
                             All the channels have been extracted from biological assemblies as identified by the Protein Data Bank in Europe.
                         </p>
@@ -57,15 +57,15 @@ namespace ChannelsDB {
                                 </tr>
                                 <tr>
                                     <td>Pore</td>
-                                    <td>Generic term for a channel spanning across a lipid bilayer</td>
+                                    <td>Generic term for a channel spanning across a biomacromolecule</td>
                                 </tr>
                                 <tr>
                                     <td>Solvent tunnel</td>
-                                    <td>Channel transporting water molecules, which are consumed/egressed during a chemical reaction</td>
+                                    <td>Tunnel transporting water molecules, which are consumed/egressed during a chemical reaction</td>
                                 </tr>                               
                                 <tr>
                                     <td>Substrate tunnel</td>
-                                    <td>Channel transporting various chemical species consumed in a chemical reaction</td>
+                                    <td>Tunnel transporting various chemical species consumed in a chemical reaction</td>
                                 </tr>
                                 <tr>
                                     <td>Substrate/Product tunnel</td>
@@ -73,19 +73,19 @@ namespace ChannelsDB {
                                 </tr>                                
                                 <tr>
                                     <td>Product tunnel</td>
-                                    <td>Transports chemical species that are an outcome of chemical reaction</td>
+                                    <td>Tunnel transporting chemical species that are an outcome of chemical reaction</td>
                                 </tr>
                                 <tr>
                                     <td>Water channel</td>
-                                    <td>Transports water molecules; mainly found in aquaporins.</td>
+                                    <td>Tunnel transporting water molecules; mainly found in aquaporins.</td>
                                 </tr>                                
                                 <tr>
                                     <td>Ion channel</td>
-                                    <td>Provides pathways for ion and other charged chemical species to pass through lipid bilayer</td>
+                                    <td>Pore providing a pathway for ion and other charged chemical species to pass through lipid bilayer</td>
                                 </tr>                          
                                 <tr>  
                                     <td>Hydrophobic channel</td>
-                                    <td>Provides pathways for apolar chemical species to pass through lipid bilayer</td>
+                                    <td>Pore providing a pathway for apolar chemical species to pass through lipid bilayer</td>
                                 </tr>
                             </tbody>                        
                         </table>    
@@ -96,8 +96,9 @@ namespace ChannelsDB {
 
                 <div className='row'>
                     <h2 className='featurette-heading'>MOLE settings</h2>
-                    <p style={justify}>Throughout the ChannelsDB the folowing settings of the MOLE algorithm has been used for the CSA and cofactor tunnels. For reviewed channels,
-                        each calculation has been independently adjusted, in order to extract deemed channel.</p>
+                    <p style={justify}>Throughout the ChannelsDB the folowing settings of the MOLE algorithm has been used for individual types of channels.</p>
+                    <h4 className='featurette-heading'>Reviewed channels</h4>
+                    <p style={justify}>Each calculation has been independently adjusted, in order to extract deemed channels.</p>                        
                     <div className='row table-responsive col-md-4 col-md-offset-1'>
                         <h2 className='featurette-heading'>CSA tunnels</h2>
                         <table className='table table-condensed active'>
@@ -191,7 +192,7 @@ namespace ChannelsDB {
 
                 <div className='row'>
                         <h2 className='featurette-heading'>Cofactors list</h2>
-                        <p>Following well-known cofactors, which are often burried within a protein structure have been selected for channel prediction. </p>
+                        <p>Following well-known biologically important cofactors, which are often buried within a protein structure have been selected for channel extraction.</p>
                         <div className='row table-responsive col-md-8 col-md-offset-2'>
                             <table className='table table-condensed active'>
                             <thead>
@@ -273,13 +274,13 @@ namespace ChannelsDB {
                               </li>
                               <li>
                                 Directly below the visualization pane you can find an interactive visualization of a channel profile. All the physicochemical properties are mapped on the
-                                channel profile. User can select deemed type of property to visualize, change the radius being mesured to the closest atom or to the backbone. ON the top of that to a publication quality image is available for export as well.
+                                channel profile. User can select deemed type of property to visualize, change the radius being measured to the closest atom or to the backbone. On the top of that to a publication quality image is available for export as well.
                               </li>
                               <li>
-                                  Next to the 2D channel visualization is a list with details for individual regions of a channel so called layers. Additional level of information is provided
+                                  Next to the 2D channel visualization is a list with details for individual regions of a channel (so called layers). Additional level of information is provided
                                   as a residue level annotations with the respective reference.
                              </li>
-                             <li> Protein annotatios from the UniProt resource.</li>
+                             <li> Protein annotations from the UniProt resource.</li>
                           </ol>
                             
                         </div>                    

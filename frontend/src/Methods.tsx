@@ -23,23 +23,27 @@ namespace ChannelsDB {
                     <div className='col-md-7'>
                         <h2 className='featurette-heading'>Channels</h2>
                         <p style={justify}>
-                            Channels and pores are important regions of proteins and other biomacromolecules. They connect internal spaces of biomacromolecules with exterior enabling, e.g.,
-                            substrates/product transport towards enzymes’ active sites, nascent synthetized proteins to leave ribosomal proteosynthetic center via ribosomal exit channel, etc. 
-                            Pores represent a pathway passing through the whole biomacromolecular structure, typically facilitating transport of ions or molecules through cellular biomembranes.                    
+                            Channels (tunnels and pores) are highly important structural pathways within proteins and other biomacromolecules. Tunnels connect internal spaces of 
+                            biomacromolecules with exterior enabling, e.g., substrates/product transport towards enzymes’ active sites, nascent synthetized proteins to leave
+                             ribosomal proteosynthetic center via ribosomal exit tunnel, etc. Pores are channels passing through the whole biomacromolecular structure, typically
+                             facilitating transport of ions or molecules through cellular biomembranes.                    
                         </p>
                         <p style={justify}>
-                            Channel walls are made from surrounding amino acids making up for a <a href='http://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >specific micro-environment</a>,
+                            Channel walls are made from surrounding amino acids making up for a specific micro-environment (see e.g. <a href='http://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >(1)</a>),
                             which influence to a great extent specificity and selectivity of plethora biologically important processes. Their constitution is especially important in channel's
                             constriction sites such as local minimas and bottlenecks, which can function as gatekeepers.
                         </p>
                         <p style={justify}>
-                            In the database a channel is represented by its centerline and a radius towards the closest protein atom. Channel profile is decomposed into discrete regions
-                            called layers. Each layer is defined by the residues lining it. A new layer starts whenever there is a change in residues lining it along its length. 
-                            Their size and composition is in turn used for estimating channel's physicochemical properties.
+                            In the database a channel is represented by its centerline (3D natural spline of a given volume), physicochemical properties and lining residues. Channel volume
+                            is formed by the distance to the closest protein atom and decomposed into discrete regions called layers. Each layer is defined by the residues lining it.
+                            A new layer starts whenever there is a change in residues lining it along its length. Their size and composition is in turn used for estimating channel's 
+                            physicochemical properties. These are especially important for local minima and a bottleneck (the narrowest part of the channel).
                         </p>
+                        <p style={reference}><small><a href='http://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >
+                          1. Pravda,L. and Berka,K. et al. <i>Anatomy of enzyme channels</i>. BMC Bioinformatics, 15, 379. (2014)</a></small></p>
                     </div>
                     <div className='col-md-5'>
-                        <img className='featurette-image img-responsive center-block' src={'assets/img/channel_detail.png'} width='500' height='500' alt='Channel details' />
+                        <img style={{margin: '60px 0'}} className='featurette-image img-responsive center-block' src={'assets/img/channel_detail.png'} width='500' height='500' alt='Channel details' />
                     </div>
                 </div>
 
@@ -48,19 +52,22 @@ namespace ChannelsDB {
                 <div className='row featurette'>
                     <h2 className='featurette-heading'>MOLE</h2>
                     <div className='col-md-7 col-md-push-5'>
-                        <p>MOLE is a software tool used for channel identification throughout the database. First, the algorithm calculates Delaunay triangulation/Voronoi diagram of the atomic centers (1).
-                            Next, regions suitable for channel indentification are calculated using a set of predefined parameters (2,3). Channel starting and end poinst are identified on these cavity diagrams (4,5)
-                            and the most favourable channels are identified among a set of point end points (6). 
+                        <p style={justify}>MOLE is a software tool used for channel identification throughout the ChannelsDB. First, the algorithm calculates Delaunay triangulation/Voronoi diagram of the atomic centers
+                            (see step (1) in the figure). Next, regions suitable for channel identification are calculated using a set of predefined parameters (2,3). Channel starting and end points
+                            are identified on these cavity diagrams (4,5) and the most favourable channels are identified among a set of point end points (6). 
                         </p> 
-                        <p>
+                        <p style={justify}>
                             Once the channels have been identified a unique set of residues surrounding channel volume is retrieved. Given this set of residues, a physicochemical properties such as Hydropathy
                             are computed for each channel and its parts. Individual steps of the algorithm are highlighted at the picture below  and more details on the channel identification can be found
                             in the respective <a href='http://dx.doi.org/10.1186/1758-2946-5-39' target='_blank'>paper</a>. Finally, user structures can be analysed using the <a href='http://mole.upol.cz' target='_blank'>
                             online</a> as well as with the <a href='https://webchem.ncbr.muni.cz/Platform/App/Mole' target='_blank'>command-line</a> version of MOLE.
                         </p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1186/1758-2946-5-39'>
-                                Sehnal,D., Svobodová Vařeková,R., Berka,K., Pravda,L., Navrátilová,V., Banáš,P., Ionescu,C.-M., Otyepka,M. and Koča,J. <span style={{ fontStyle: 'italic' }}>MOLE 2.0: advanced approach for analysis of biomacromolecular channels.</span>
+                                Sehnal,D., et al. <span style={{ fontStyle: 'italic' }}>MOLE 2.0: advanced approach for analysis of biomacromolecular channels.</span>
                                  J. Cheminform., 5, 39. (2013)</a></small></p>  
+                        <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1093/nar/gks363'>
+                        Berka,K. et al. <i>MOLEonline 2.0: interactive web-based analysis of biomacromolecular channels</i>.
+                        Nucleic Acids Res., 40, W222-7. (2012)</a></small></p>
                     </div>
                      <div className='col-md-5 col-md-pull-7'>
                         <img className='featurette-image img-responsive center-block' src={'assets/img/alg_outline.jpg'} width='500' height='500' alt='Channel details' />
@@ -70,17 +77,18 @@ namespace ChannelsDB {
                 <hr className='featurette-divider' style={{ margin: '50px 0' }} />                
 
                 <div className='row'>
-                    <div className='col-md-12'>
-                        <h2 className='featurette-heading'>Physicochemical properties</h2>
-                        <p>Altogether with the position and radius of a channel a set of unique residues constituting the channel walls is reported. This set is in turn used for estimation 
-                         of a various chemicophysical properties.
-                        </p>
+                    <h2 className='featurette-heading'>Physicochemical properties</h2>
+                    <p>Altogether with the position and radius of a channel a set of unique residues constituting the channel walls is reported. This set is in turn used for estimation 
+                       of a various physicochemical properties.
+                    </p>
+                </div>
+                    <div className='row'>
                         <div className='col-md-6'>
                             <h2 className='featurette-heading'>Hydropathy</h2>
                             <p style={justify}>Hydrophobicity and hydrophilicity are two extremes of a spectrum, commonly referred to as Hydropathy, and relate to the tendency of a molecule to interact
                                 with water. Several hydropathy scales have been developed in order to grasp the overall character of proteins or their parts. Kyte-Doolittle scale is a widely applied
                                  measure for expressing the hydrophobicity of amino acids residues. Regions with values above 0 are considered hydrophobic in character.</p>
-                                 <p>The scale is symethrical in interval from -4.5 (Arg) to 4.5 (Ile).</p>
+                                 <p>The scale is symmetrical in interval from -4.5 (Arg) to 4.5 (Ile).</p>
                             <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1016/0022-2836(82)90515-0'>
                                 Kyte, J. &amp; Doolittle, R. F. <span style={{ fontStyle: 'italic' }}>A simple method for displaying the hydropathic character of a protein.</span>
                                  J. Mol. Biol. 157, 105–132 (1982)</a></small></p>  
@@ -96,7 +104,6 @@ namespace ChannelsDB {
                                     J. Theor. Biol. 21, 170–201 (1968).</a></small></p>  
                         </div>                      
                     </div>                              
-                </div>
                 <div className='row'>
                     <div className='col-md-6'>
                         <h2 className='featurette-heading'>Mutability</h2>
@@ -121,7 +128,7 @@ namespace ChannelsDB {
                             <tr>
                                 <th>Residue</th>
                                 <th>Charge</th>
-                                <th>Hydrpathy</th>
+                                <th>Hydropathy</th>
                                 <th>Polarity</th>
                                 <th>Mutability</th>
                             </tr>
