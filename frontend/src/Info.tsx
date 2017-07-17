@@ -43,9 +43,11 @@ namespace ChannelsDB {
                             <p className='text-justify'>
                                 The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with
                                 the UniProt database a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in
-                                a clear interactive manner further facilitating data interpretation. </p>
-                            <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us!</a>. The application allowing for online annotation will be available later this year.</p>
+                                a clear interactive manner further facilitating data interpretation. </p>                            
 
+                            <hr className='featurette-divider' style={{ margin: '10px 0' }} />
+
+                            <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us!</a>. The application allowing for online annotation will be available later this year.</p>
                         </div>
                     </div>
                 </div>
@@ -80,18 +82,24 @@ namespace ChannelsDB {
                         <div className='well'>
                             <div className='row'>
                                 <div className='col-lg-4'>
-                                    <img style={centerStyle} className='img-circle' src={'assets/img/1ymg_detail.png'} alt='1ymg channel detail' width='140' height='140' />
-                                    <h2>Aquaporin water channel</h2>
+                                    <a href='/ChannelsDB/detail/1ymg'>
+                                        <img style={centerStyle} className='img-circle' src={'assets/img/1ymg_detail.png'} alt='1ymg channel detail' width='140' height='140' />
+                                    </a>
+                                    <a href='#ex-1ymg' role='button'><h2>Aquaporin water channel</h2></a>
                                     <p>The pore architecture of Aquaporin 0 at 2.2&#8491; resolution highlights residues critical for water permeation regulation.</p>
                                 </div>
                                 <div className='col-lg-4'>
-                                    <img style={centerStyle} className='img-circle' src={'assets/img/3tbg_detail.png'} alt='3tbg channel detail' width='140' height='140' />
-                                    <h2>Cytochrome P450 2D6 substrate tunnel</h2>
+                                    <a href='/ChannelsDB/detail/3tbg'>
+                                        <img style={centerStyle} className='img-circle' src={'assets/img/3tbg_detail.png'} alt='3tbg channel detail' width='140' height='140' />
+                                    </a>
+                                    <a href='#ex-3tbg' role='button'><h2>Cytochrome P450 2D6 substrate tunnel</h2></a>
                                     <p>Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.</p>
                                 </div>
                                 <div className='col-lg-4'>
-                                    <img style={centerStyle} className='img-circle' src={'assets/img/1jj2_detail.png'} alt='1jj2 channel detail' width='140' height='140' />
-                                    <h2>Ribosomal polypeptide exit tunnel</h2>
+                                    <a href='/ChannelsDB/detail/1jj2'>
+                                        <img style={centerStyle} className='img-circle' src={'assets/img/1jj2_detail.png'} alt='1jj2 channel detail' width='140' height='140' />
+                                    </a>
+                                    <a href='#ex-1jj2' role='button'><h2>Ribosomal polypeptide exit tunnel</h2></a>
                                     <p>Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome.</p>
                                 </div>
                             </div>
@@ -157,6 +165,13 @@ namespace ChannelsDB {
                     </div>
                 </div>
 
+                <hr className='featurette-divider' style={{ margin: '40px 0' }} />
+
+                <img className='row featurette col-md-offset-6' src={'assets/img/elixirlogo.png'} alt="ELIXIR logo" height='70' />
+                <small className='row featurette'>
+                     ChannelsDB is a part of services provided by <a href="https://www.elixir-czech.cz/" target="_blank">ELIXIR</a> &ndash;
+                     European research infrastructure for biological information. For other services provided by ELIXIR's Czech Republic Node visit <a href="https://www.elixir-czech.cz/services" target="_blank">www.elixir-czech.cz/services</a>.
+                </small>
             </div>;
         }
     }

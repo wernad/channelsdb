@@ -4,7 +4,7 @@
 
 namespace ChannelsDB {
 
-    export function renderUI(target: HTMLElement, kind: 'Search' | 'Methods' | 'Documentation') {
+    export function renderUI(target: HTMLElement, kind: 'Search' | 'Methods' | 'Documentation' | 'Contribute') {
         switch (kind){
             case 'Search':
                 ReactDOM.render(<SearchMain state={initState()} />, target);
@@ -14,6 +14,9 @@ namespace ChannelsDB {
                 break;
             case 'Documentation':
                 ReactDOM.render(<DocumentationMain />, target);
+                break;
+            case 'Contribute':
+                ReactDOM.render(<ContributeMain />, target);
                 break;
         }
     }
@@ -47,6 +50,16 @@ namespace ChannelsDB {
             return <div className='container'>
                 <Menu />
                 <Documentation />
+                <Footer />
+            </div>;
+        }
+    }
+
+    class ContributeMain extends React.Component<{}, {}> {
+        render() {
+            return <div className='container'>
+                <Menu />
+                <Contribute />
                 <Footer />
             </div>;
         }
@@ -107,7 +120,7 @@ namespace ChannelsDB {
         render() {
             return <div className='form-group form-group-lg'>
                 {this.state.isAvailable
-                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB (e.g., cytochrome p450, 5an8, KcsA) ...'
+                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB (e.g., cytochrome p450, 5ebl, KcsA) ...'
                         onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
                         onKeyPress={(e) => {
                             if (e.key !== 'Enter') return;

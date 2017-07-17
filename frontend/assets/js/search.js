@@ -344,7 +344,9 @@ var ChannelsDB;
                             React.createElement("li", null,
                                 React.createElement("a", { href: 'documentation.html' }, "Documentation")),
                             React.createElement("li", null,
-                                React.createElement("a", { href: 'http://mole.chemi.muni.cz', target: '_blank' }, "MOLE"))))));
+                                React.createElement("a", { href: 'http://mole.chemi.muni.cz', target: '_blank' }, "MOLE")),
+                            React.createElement("li", null,
+                                React.createElement("a", { href: 'contribute.html' }, "Contribute"))))));
         };
         return Menu;
     }(React.Component));
@@ -414,6 +416,7 @@ var ChannelsDB;
                                 React.createElement("a", { target: '_blank', href: 'http://www.ebi.ac.uk/pdbe/' }, " Protein Data Bank"),
                                 ". As such, it is a unique service for a channel-related analyses."),
                             React.createElement("p", { className: 'text-justify' }, "The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with the UniProt database a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in a clear interactive manner further facilitating data interpretation. "),
+                            React.createElement("hr", { className: 'featurette-divider', style: { margin: '10px 0' } }),
                             React.createElement("p", null,
                                 "If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. ",
                                 React.createElement("a", { href: 'mailto:webchemistryhelp@gmail.com' }, "Get in touch with us!"),
@@ -449,16 +452,22 @@ var ChannelsDB;
                         React.createElement("div", { className: 'well' },
                             React.createElement("div", { className: 'row' },
                                 React.createElement("div", { className: 'col-lg-4' },
-                                    React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1ymg_detail.png', alt: '1ymg channel detail', width: '140', height: '140' }),
-                                    React.createElement("h2", null, "Aquaporin water channel"),
+                                    React.createElement("a", { href: '/ChannelsDB/detail/1ymg' },
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1ymg_detail.png', alt: '1ymg channel detail', width: '140', height: '140' })),
+                                    React.createElement("a", { href: '#ex-1ymg', role: 'button' },
+                                        React.createElement("h2", null, "Aquaporin water channel")),
                                     React.createElement("p", null, "The pore architecture of Aquaporin 0 at 2.2\u212B resolution highlights residues critical for water permeation regulation.")),
                                 React.createElement("div", { className: 'col-lg-4' },
-                                    React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/3tbg_detail.png', alt: '3tbg channel detail', width: '140', height: '140' }),
-                                    React.createElement("h2", null, "Cytochrome P450 2D6 substrate tunnel"),
+                                    React.createElement("a", { href: '/ChannelsDB/detail/3tbg' },
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/3tbg_detail.png', alt: '3tbg channel detail', width: '140', height: '140' })),
+                                    React.createElement("a", { href: '#ex-3tbg', role: 'button' },
+                                        React.createElement("h2", null, "Cytochrome P450 2D6 substrate tunnel")),
                                     React.createElement("p", null, "Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.")),
                                 React.createElement("div", { className: 'col-lg-4' },
-                                    React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1jj2_detail.png', alt: '1jj2 channel detail', width: '140', height: '140' }),
-                                    React.createElement("h2", null, "Ribosomal polypeptide exit tunnel"),
+                                    React.createElement("a", { href: '/ChannelsDB/detail/1jj2' },
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1jj2_detail.png', alt: '1jj2 channel detail', width: '140', height: '140' })),
+                                    React.createElement("a", { href: '#ex-1jj2', role: 'button' },
+                                        React.createElement("h2", null, "Ribosomal polypeptide exit tunnel")),
                                     React.createElement("p", null, "Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome."))),
                             React.createElement("div", { className: 'row' },
                                 React.createElement("div", { className: 'col-lg-4' },
@@ -522,7 +531,15 @@ var ChannelsDB;
                                     React.createElement("span", { style: { fontStyle: 'italic' } }, "The geometry of the ribosomal polypeptide exit tunnel."),
                                     ". J. Mol. Biol. 360, 893\u2013906 (2006)")))),
                     React.createElement("div", { className: 'col-md-5 ' },
-                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1jj2.png', alt: 'Polypeptide exit tunnel' }))));
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1jj2.png', alt: 'Polypeptide exit tunnel' }))),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
+                React.createElement("img", { className: 'row featurette col-md-offset-6', src: 'assets/img/elixirlogo.png', alt: "ELIXIR logo", height: '70' }),
+                React.createElement("small", { className: 'row featurette' },
+                    "ChannelsDB is a part of services provided by ",
+                    React.createElement("a", { href: "https://www.elixir-czech.cz/", target: "_blank" }, "ELIXIR"),
+                    " \u2013 European research infrastructure for biological information. For other services provided by ELIXIR's Czech Republic Node visit ",
+                    React.createElement("a", { href: "https://www.elixir-czech.cz/services", target: "_blank" }, "www.elixir-czech.cz/services"),
+                    "."));
         };
         return Info;
     }(React.Component));
@@ -1050,6 +1067,29 @@ var ChannelsDB;
 /*
  * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
  */
+var ChannelsDB;
+(function (ChannelsDB) {
+    var Contribute = (function (_super) {
+        __extends(Contribute, _super);
+        function Contribute() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Contribute.prototype.render = function () {
+            var justify = {
+                textAlign: 'justify',
+                textJustify: 'inter-word',
+            };
+            return React.createElement("div", { style: { margin: '60px 0 0 20px' } },
+                React.createElement("h1", { className: 'text-center' }, "Contacts"),
+                React.createElement("div", { className: 'row' }, "TODO"));
+        };
+        return Contribute;
+    }(React.Component));
+    ChannelsDB.Contribute = Contribute;
+})(ChannelsDB || (ChannelsDB = {}));
+/*
+ * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
+ */
 var __assign = (this && this.__assign) || Object.assign || function(t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
         s = arguments[i];
@@ -1070,6 +1110,9 @@ var ChannelsDB;
                 break;
             case 'Documentation':
                 ReactDOM.render(React.createElement(DocumentationMain, null), target);
+                break;
+            case 'Contribute':
+                ReactDOM.render(React.createElement(ContributeMain, null), target);
                 break;
         }
     }
@@ -1113,6 +1156,19 @@ var ChannelsDB;
                 React.createElement(Footer, null));
         };
         return DocumentationMain;
+    }(React.Component));
+    var ContributeMain = (function (_super) {
+        __extends(ContributeMain, _super);
+        function ContributeMain() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        ContributeMain.prototype.render = function () {
+            return React.createElement("div", { className: 'container' },
+                React.createElement(ChannelsDB.Menu, null),
+                React.createElement(ChannelsDB.Contribute, null),
+                React.createElement(Footer, null));
+        };
+        return ContributeMain;
     }(React.Component));
     var Footer = (function (_super) {
         __extends(Footer, _super);
@@ -1187,7 +1243,7 @@ var ChannelsDB;
         SearchBox.prototype.render = function () {
             var _this = this;
             return React.createElement("div", { className: 'form-group form-group-lg' }, this.state.isAvailable
-                ? React.createElement("input", { key: 'fullsearch', type: 'text', className: 'form-control', style: { fontWeight: 'bold', borderColor: 'darkgreen' }, placeholder: 'Search ChannelsDB (e.g., cytochrome p450, 5an8, KcsA) ...', onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
+                ? React.createElement("input", { key: 'fullsearch', type: 'text', className: 'form-control', style: { fontWeight: 'bold', borderColor: 'darkgreen' }, placeholder: 'Search ChannelsDB (e.g., cytochrome p450, 5ebl, KcsA) ...', onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
                         if (e.key !== 'Enter')
                             return;
                         _this.props.state.fullSearch.onNext(void 0);

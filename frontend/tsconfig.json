@@ -23,6 +23,7 @@
     "src/Info.tsx",
     "src/Methods.tsx",
     "src/Documentation.tsx",
+    "src/Contribute.tsx",
     "src/Index.tsx"
   ]
 }
