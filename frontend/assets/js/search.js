@@ -412,15 +412,18 @@ var ChannelsDB;
                             ")"),
                         React.createElement("div", { style: { textAlign: 'left', textJustify: 'inter-word', padding: '0' } },
                             React.createElement("p", { className: 'lead' },
-                                "ChannelsDB is a comprehensive and regulary updated resource of channels, pores and tunnels found in biomacromolecules deposited in the",
+                                "ChannelsDB is a comprehensive and regularly updated resource of channels, pores and tunnels found in biomacromolecules deposited in the",
                                 React.createElement("a", { target: '_blank', href: 'http://www.ebi.ac.uk/pdbe/' }, " Protein Data Bank"),
                                 ". As such, it is a unique service for a channel-related analyses."),
-                            React.createElement("p", { className: 'text-justify' }, "The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with the UniProt database a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in a clear interactive manner further facilitating data interpretation. "),
+                            React.createElement("p", { className: 'text-justify' },
+                                "The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with the ",
+                                React.createElement("a", { href: 'www.uniprot.org', target: '_blank' }, "UniProt database"),
+                                " a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in a clear interactive manner further facilitating data interpretation. "),
                             React.createElement("hr", { className: 'featurette-divider', style: { margin: '10px 0' } }),
                             React.createElement("p", null,
                                 "If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. ",
                                 React.createElement("a", { href: 'mailto:webchemistryhelp@gmail.com' }, "Get in touch with us!"),
-                                ". The application allowing for online annotation will be available later this year.")))));
+                                ".")))));
         };
         return Intro;
     }(React.Component));
@@ -453,29 +456,47 @@ var ChannelsDB;
                             React.createElement("div", { className: 'row' },
                                 React.createElement("div", { className: 'col-lg-4' },
                                     React.createElement("a", { href: '/ChannelsDB/detail/1ymg' },
-                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1ymg_detail.png', alt: '1ymg channel detail', width: '140', height: '140' })),
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1ymg.png', alt: '1ymg channel detail', width: '140', height: '140' })),
                                     React.createElement("a", { href: '#ex-1ymg', role: 'button' },
-                                        React.createElement("h2", null, "Aquaporin water channel")),
-                                    React.createElement("p", null, "The pore architecture of Aquaporin 0 at 2.2\u212B resolution highlights residues critical for water permeation regulation.")),
+                                        React.createElement("h3", null, "Aquaporin water channel")),
+                                    React.createElement("p", { style: justify }, "The pore architecture of Aquaporin O at 2.2\u212B resolution highlights residues critical for water permeation regulation.")),
                                 React.createElement("div", { className: 'col-lg-4' },
-                                    React.createElement("a", { href: '/ChannelsDB/detail/3tbg' },
-                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/3tbg_detail.png', alt: '3tbg channel detail', width: '140', height: '140' })),
-                                    React.createElement("a", { href: '#ex-3tbg', role: 'button' },
-                                        React.createElement("h2", null, "Cytochrome P450 2D6 substrate tunnel")),
-                                    React.createElement("p", null, "Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.")),
+                                    React.createElement("a", { href: '/ChannelsDB/detail/4nm9' },
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/4nm9.png', alt: '4nm9 channel detail', width: '140', height: '140' })),
+                                    React.createElement("a", { href: '#ex-4nm9', role: 'button' },
+                                        React.createElement("h3", null, "Substrate channeling system")),
+                                    React.createElement("p", { style: justify }, "Proline utilization A protein contains two active sites separated by ~75\u212B long channeling system accompanied by a complex network of channels.")),
                                 React.createElement("div", { className: 'col-lg-4' },
                                     React.createElement("a", { href: '/ChannelsDB/detail/1jj2' },
-                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1jj2_detail.png', alt: '1jj2 channel detail', width: '140', height: '140' })),
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1jj2.png', alt: '1jj2 channel detail', width: '140', height: '140' })),
                                     React.createElement("a", { href: '#ex-1jj2', role: 'button' },
-                                        React.createElement("h2", null, "Ribosomal polypeptide exit tunnel")),
-                                    React.createElement("p", null, "Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome."))),
-                            React.createElement("div", { className: 'row' },
+                                        React.createElement("h3", null, "Ribosomal polypeptide exit tunnel")),
+                                    React.createElement("p", { style: justify }, "Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome."))),
+                            React.createElement("div", { className: 'row', style: { margin: '20px 0' } },
                                 React.createElement("div", { className: 'col-lg-4' },
                                     React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-1ymg', role: 'button' }, "View details \u00BB")),
                                 React.createElement("div", { className: 'col-lg-4' },
-                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-p450', role: 'button' }, "View details \u00BB")),
+                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-4nm9', role: 'button' }, "View details \u00BB")),
                                 React.createElement("div", { className: 'col-lg-4' },
-                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-1jj2', role: 'button' }, "View details \u00BB")))))),
+                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-1jj2', role: 'button' }, "View details \u00BB"))),
+                            React.createElement("div", { className: 'row' },
+                                React.createElement("div", { className: 'col-lg-6' },
+                                    React.createElement("a", { href: '/ChannelsDB/detail/3tbg' },
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/3tbg.png', alt: '3tbg channel detail', width: '140', height: '140' })),
+                                    React.createElement("a", { href: '#ex-3tbg', role: 'button' },
+                                        React.createElement("h3", null, "Cytochrome P450 2D6 substrate tunnel")),
+                                    React.createElement("p", { style: justify }, "Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.")),
+                                React.createElement("div", { className: 'col-lg-6' },
+                                    React.createElement("a", { href: '/ChannelsDB/detail/5mrw' },
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/5mrw.png', alt: '4nm9 channel detail', width: '140', height: '140' })),
+                                    React.createElement("a", { href: '#ex-5mrw', role: 'button' },
+                                        React.createElement("h3", null, "Charge transfer coupling tunnel in potassium-importing KdpFABC membrane complex")),
+                                    React.createElement("p", { style: justify }, "KdpFABC membrane complex has one ion channel-like subunit (KdpA) and pump-like subunit (KdpB). Coupling between these two subunits is provided by the charge transfer tunnel present in the membrane parts of these subunits."))),
+                            React.createElement("div", { className: 'row', style: { margin: '20px 0' } },
+                                React.createElement("div", { className: 'col-lg-6' },
+                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-p450', role: 'button' }, "View details \u00BB")),
+                                React.createElement("div", { className: 'col-lg-6' },
+                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-5mrw', role: 'button' }, "View details \u00BB")))))),
                 React.createElement("div", { className: 'row featurette', style: { marginTop: '40px' } },
                     React.createElement("a", { name: 'ex-1ymg' }),
                     React.createElement("div", { className: 'col-md-7' },
@@ -483,7 +504,7 @@ var ChannelsDB;
                             React.createElement("h2", { className: 'featurette-heading' },
                                 "Aquaporin O ",
                                 React.createElement("span", { className: 'text-muted' }, "(1ymg)"))),
-                        React.createElement("p", { className: 'lead' }, "The pore architecture of Aquaporin O at 2.2\u212B resolution highlights residues critical for water permeation regulation."),
+                        React.createElement("p", { style: justify, className: 'lead' }, "The pore architecture of Aquaporin O at 2.2\u212B resolution highlights residues critical for water permeation regulation."),
                         React.createElement("p", { style: justify }, "The channel is ~ 30\u212B long and highlights with some of the residues crucial for its proper function. Selectivity filter (ar/R), which allows water molecules passage through the membrane in a single file (green sticks). Residues providing canonical AQP hydrogen bond acceptor that align watters through the channel in balls and stick model. Finally, Tyr-149 important for channel gating in orange."),
                         React.createElement("p", { style: reference },
                             React.createElement("small", null,
@@ -492,7 +513,7 @@ var ChannelsDB;
                                     React.createElement("span", { style: { fontStyle: 'italic' } }, "The channel architecture of aquaporin 0 at a 2.2\u212B resolution"),
                                     ". Proc. Natl. Acad. Sci. 101, 14045\u201314050 (2004)")))),
                     React.createElement("div", { className: 'col-md-5' },
-                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1ymg.png', width: '500', height: '500', alt: '1ymg detailed channel view' }))),
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1ymg_detail.png', width: '500', height: '500', alt: '1ymg detailed channel view' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
                     React.createElement("a", { name: 'ex-p450' }),
@@ -501,7 +522,7 @@ var ChannelsDB;
                             React.createElement("h2", { className: 'featurette-heading' },
                                 "Cytochrome P450 2D6 ",
                                 React.createElement("span", { className: 'text-muted' }, "(3tbg)"))),
-                        React.createElement("p", { className: 'lead' }, "Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways."),
+                        React.createElement("p", { style: justify, className: 'lead' }, "Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways."),
                         React.createElement("p", { style: justify },
                             "Cytochrome  P450  2D6  contributes  significantly  to  the  metabolism  of  >15%  of  the  200  most marketed drugs. Cytochrome P450 2D6 structure shows a second molecule of thioridazine bound in an expanded substrate access channel (channel 2f according to ",
                             React.createElement("a", { href: 'https://doi.org/10.1016/j.bbagen.2006.07.005', target: '_blank' }, "Cojocaru et al. classification"),
@@ -513,7 +534,7 @@ var ChannelsDB;
                                     React.createElement("span", { style: { fontStyle: 'italic' } }, "Contributions of Ionic Interactions and Protein Dynamics to Cytochrome P450 2D6 (CYP2D6) Substrate and Inhibitor Binding"),
                                     " J.Biol.Chem. 290: 5092-5104 (2015)")))),
                     React.createElement("div", { className: 'col-md-5 col-md-pull-7' },
-                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/3tbg.png', alt: 'Cytochrome P450 substrate channel details' }))),
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/3tbg_detail.png', alt: 'Cytochrome P450 substrate channel details' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
                     React.createElement("a", { name: 'ex-1jj2' }),
@@ -522,7 +543,7 @@ var ChannelsDB;
                             React.createElement("h2", { className: 'featurette-heading' },
                                 "Large Ribosomal Subunit ",
                                 React.createElement("span", { className: 'text-muted' }, "(1jj2)"))),
-                        React.createElement("p", { className: 'lead' }, "The ribosomal polypeptide tunnel provides an insight into the release of a nascent polypeptide chain out of the ribosomal complex."),
+                        React.createElement("p", { style: justify, className: 'lead' }, "The ribosomal polypeptide tunnel provides an insight into the release of a nascent polypeptide chain out of the ribosomal complex."),
                         React.createElement("p", { style: justify }, "The exit tunnel is surrounded by arginine side chains (stick model), bearing positive charges as well as RNA backbone phosphate groups (spheres), thus providing fragmental charge along the tunnel, which is necessary to prevent the nasccent peptide from sticking to the channel wall inside the ribosome. Subunits L4, L22 and L39e interacting with the exit tunnel are highlighted in yellow, green and magenta respectivelly."),
                         React.createElement("p", { style: reference },
                             React.createElement("small", null,
@@ -531,15 +552,59 @@ var ChannelsDB;
                                     React.createElement("span", { style: { fontStyle: 'italic' } }, "The geometry of the ribosomal polypeptide exit tunnel."),
                                     ". J. Mol. Biol. 360, 893\u2013906 (2006)")))),
                     React.createElement("div", { className: 'col-md-5 ' },
-                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1jj2.png', alt: 'Polypeptide exit tunnel' }))),
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1jj2_detail.png', alt: 'Polypeptide exit tunnel' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
-                React.createElement("img", { className: 'row featurette col-md-offset-6', src: 'assets/img/elixirlogo.png', alt: "ELIXIR logo", height: '70' }),
-                React.createElement("small", { className: 'row featurette' },
+                React.createElement("div", { className: 'row featurette' },
+                    React.createElement("a", { name: 'ex-4nm9' }),
+                    React.createElement("div", { className: 'col-md-7 col-md-push-5' },
+                        React.createElement("a", { href: '/ChannelsDB/detail/4nm9' },
+                            React.createElement("h2", { className: 'featurette-heading' },
+                                "PutA channeling system ",
+                                React.createElement("span", { className: 'text-muted' }, "(4nm9)"))),
+                        React.createElement("p", { style: justify, className: 'lead' }, "Substrate channeling is a process of passing intermediate metabolic product from one reaction site to another through intramolecular tunnel."),
+                        React.createElement("p", { style: justify }, "In Gram-negativ bacteria a proline catabolism is excerted by a single protein combining two different enzymes commonly known as Proline utilization A protein (PutA). The active sites of flavoenzyme proline dehydrogenase (PRODH) and \u2206-1-pyrroline-5-carboxylate dehydrogenase (P5CDH) are connected by ~75\u212B long channel throughout the hydrolysis cavity. Both active sites are supplied by a network of channels for substrate, water consumed by hydrolysis and egress channel for the product - L-glutamate "),
+                        React.createElement("p", { style: reference },
+                            React.createElement("small", null,
+                                React.createElement("a", { target: '_blank', href: 'https://dx.doi.org/10.1074/jbc.M114.627661' },
+                                    "Singh,H., et al. ",
+                                    React.createElement("span", { style: { fontStyle: 'italic' } }, "Structures of the PutA peripheral membrane flavoenzyme reveal a dynamic substrate-channeling tunnel and the quinone-binding site"),
+                                    " Proc. Natl. Acad. Sci., 111, 3389\u20133394. (2014)")))),
+                    React.createElement("div", { className: 'col-md-5 col-md-pull-7' },
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/4nm9_detail.png', alt: 'PutA channel system' }))),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
+                React.createElement("div", { className: 'row featurette' },
+                    React.createElement("a", { name: 'ex-5mrw' }),
+                    React.createElement("div", { className: 'col-md-7 ' },
+                        React.createElement("a", { href: '/ChannelsDB/detail/5mrw' },
+                            React.createElement("h2", { className: 'featurette-heading' },
+                                "Potassium-importing KdpFABC membrane complex ",
+                                React.createElement("span", { className: 'text-muted' }, "(5mrw)"))),
+                        React.createElement("p", { style: justify, className: 'lead' }, "KdpFABC membrane complex has one ion channel-like subunit (KdpA) and pump-like subunit (KdpB). Coupling between these two subunits is provided by the charge transfer tunnel present in the membrane parts of these subunits."),
+                        React.createElement("p", { style: justify },
+                            "KdpFABC serves as an potassium-importing pump, which uses two subunits - channel-like one (KdpA) and pump-like one (KdpB) which undertake phosphorylation. The cycle is initiated by K",
+                            React.createElement("sup", null, "+"),
+                            " binding to the E1 state of KdpA from the periplasm (gray channel). The presence of K",
+                            React.createElement("sup", null, "+"),
+                            " within the selectivity filter of KdpA leads to charge transfer to water molecules through the tunnel to the transmembrane domain of KdpB (red channel). The presence of charge at the canonical site in KdpB triggers phosphorylation through a conserved P-type ATPase mechanism. The transition to the E2P state in P-type ATPases involves inclination of the P domain away from KdpA, which will pull the D3 coupling helix of KdpA. This movement opens the cytoplasmic gate, thereby allowing K",
+                            React.createElement("sup", null, "+"),
+                            " release to the cytosol."),
+                        React.createElement("p", { style: reference },
+                            React.createElement("small", null,
+                                React.createElement("a", { target: '_blank', href: 'https://dx.doi.org/10.1038/nature22970' },
+                                    "Huang, C.-S. et. al. ",
+                                    React.createElement("span", { style: { fontStyle: 'italic' } }, "Crystal structure of the potassium-importing KdpFABC membrane complex."),
+                                    ". Nature 546, 681-685 (2017)")))),
+                    React.createElement("div", { className: 'col-md-5', style: { width: '475px', margin: 'auto' } },
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/5mrw_detail.png', alt: 'Potassium-importing complex' }))),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
+                React.createElement("img", { className: 'row featurette col-md-offset-6', src: 'assets/img/elixirlogo.png', alt: 'ELIXIR logo', height: '70' }),
+                React.createElement("div", { className: 'row well well-sm featurette text-center', style: { marginTop: '10px' } },
                     "ChannelsDB is a part of services provided by ",
-                    React.createElement("a", { href: "https://www.elixir-czech.cz/", target: "_blank" }, "ELIXIR"),
-                    " \u2013 European research infrastructure for biological information. For other services provided by ELIXIR's Czech Republic Node visit ",
-                    React.createElement("a", { href: "https://www.elixir-czech.cz/services", target: "_blank" }, "www.elixir-czech.cz/services"),
-                    "."));
+                    React.createElement("a", { href: 'https://www.elixir-czech.cz/', target: '_blank' }, "ELIXIR"),
+                    " \u2013 European research infrastructure for biological information. This work was supported by ELIXIR CZ research infrastructure project (MEYS Grant No: LM2015047) including access to computing and storage facilities. For other services provided by ELIXIR's Czech Republic Node visit ",
+                    React.createElement("a", { href: 'https://www.elixir-czech.cz/services', target: '_blank' }, "www.elixir-czech.cz/services"),
+                    "."),
+                React.createElement(ChannelsDB.ScrollButton, { scrollStepInPx: '50', delayInMs: '10' }));
         };
         return Info;
     }(React.Component));
@@ -778,7 +843,8 @@ var ChannelsDB;
                                     React.createElement("td", null, "0"),
                                     React.createElement("td", null, "4.2"),
                                     React.createElement("td", null, "0.13"),
-                                    React.createElement("td", null, "98")))))));
+                                    React.createElement("td", null, "98")))))),
+                React.createElement(ChannelsDB.ScrollButton, { scrollStepInPx: '50', delayInMs: '10' }));
         };
         return Methods;
     }(React.Component));
@@ -801,6 +867,28 @@ var ChannelsDB;
             };
             return React.createElement("div", { style: { margin: '60px 0 0 20px' } },
                 React.createElement("h1", { className: 'text-center' }, "Documentation"),
+                React.createElement("h2", null, "Table of content"),
+                React.createElement("div", { className: 'list-group well-sm' },
+                    React.createElement("a", { href: '#db-content', className: 'list-group-item' },
+                        React.createElement("h4", { className: 'list-group-item-heading' }, "Database content"),
+                        React.createElement("p", { className: 'list-group-item-text' }, "What you can find in the database?")),
+                    React.createElement("a", { href: '#db-nomenclature', className: 'list-group-item' },
+                        React.createElement("h4", { className: 'list-group-item-heading' }, "Channels nomenclature "),
+                        React.createElement("p", { className: 'list-group-item-text' }, "Nomenclature used for channel naming.")),
+                    React.createElement("a", { href: '#db-mole', className: 'list-group-item' },
+                        React.createElement("h4", { className: 'list-group-item-heading' }, "MOLE settings"),
+                        React.createElement("p", { className: 'list-group-item-text' }, "Settings used for channel extraction.")),
+                    React.createElement("a", { href: '#db-cofactors', className: 'list-group-item' },
+                        React.createElement("h4", { className: 'list-group-item-heading' }, "Cofactors"),
+                        React.createElement("p", { className: 'list-group-item-text' }, "List of cofactors used for channel determination.")),
+                    React.createElement("a", { href: '#db-results', className: 'list-group-item' },
+                        React.createElement("h4", { className: 'list-group-item-heading' }, "Results view"),
+                        React.createElement("p", { className: 'list-group-item-text' }, "Description how to read the resuls page.")),
+                    React.createElement("a", { href: '#db-api', className: 'list-group-item' },
+                        React.createElement("h4", { className: 'list-group-item-heading' }, "REST API"),
+                        React.createElement("p", { className: 'list-group-item-text' }, "How to access content of the database programatically."))),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement("a", { name: 'db-content' }),
                 React.createElement("div", { className: 'row' },
                     React.createElement("div", { className: 'col-md-8' },
                         React.createElement("h2", { className: 'featurette-heading' }, "Database content"),
@@ -824,6 +912,7 @@ var ChannelsDB;
                     React.createElement("div", { className: 'col-md-4' },
                         React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/pretty_channel.png', width: '500', height: '500', alt: 'Channel details' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement("a", { name: 'db-nomenclature' }),
                 React.createElement("div", { className: 'row' },
                     React.createElement("h2", { className: 'featurette-heading' }, "Channel nomenclature"),
                     React.createElement("p", null,
@@ -868,6 +957,7 @@ var ChannelsDB;
                                     React.createElement("td", null, "Hydrophobic channel"),
                                     React.createElement("td", null, "Pore providing a pathway for apolar chemical species to pass through lipid bilayer")))))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement("a", { name: 'db-mole' }),
                 React.createElement("div", { className: 'row' },
                     React.createElement("h2", { className: 'featurette-heading' }, "MOLE settings"),
                     React.createElement("p", { style: justify }, "Throughout the ChannelsDB the folowing settings of the MOLE algorithm has been used for individual types of channels."),
@@ -950,6 +1040,7 @@ var ChannelsDB;
                                         React.createElement("i", null, "NonActiveParts")),
                                     React.createElement("td", { "data-toggle": 'tooltip', "data-placement": 'bottom', title: 'Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))' }, "Query")))))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement("a", { name: 'db-cofactors' }),
                 React.createElement("div", { className: 'row' },
                     React.createElement("h2", { className: 'featurette-heading' }, "Cofactors list"),
                     React.createElement("p", null, "Following well-known biologically important cofactors, which are often buried within a protein structure have been selected for channel extraction."),
@@ -1042,6 +1133,7 @@ var ChannelsDB;
                                     React.createElement("td", null,
                                         React.createElement("i", null, "GSH, GDS"))))))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement("a", { name: 'db-results' }),
                 React.createElement("div", { className: 'row featurette' },
                     React.createElement("h2", { className: 'featurette-heading' }, "Results interpretation"),
                     React.createElement("div", { className: 'col-md-5' },
@@ -1058,7 +1150,36 @@ var ChannelsDB;
                     React.createElement("div", { className: 'col-md-7' },
                         React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/web-fig1.png', width: '500', height: '500', alt: 'Result window detail' }))),
                 React.createElement("div", { style: { margin: '50px 0' }, className: 'row featurette col-md-12' },
-                    React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/web-fig2.png', width: '800', alt: '2D detailed channel view' })));
+                    React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/web-fig2.png', width: '800', alt: '2D detailed channel view' })),
+                React.createElement("a", { name: 'db-api' }),
+                React.createElement("div", { className: 'channelsdb-api-docs' },
+                    React.createElement("h2", { className: 'featurette-heading' }, "REST API "),
+                    React.createElement("p", null,
+                        " The entire database is powered by the REST API running at the ",
+                        React.createElement("a", { href: 'https://webchem.ncbr.muni.cz', target: '_blank' }, "webchem server"),
+                        ". Therefore, all the channel-related information can be programatically retrieved and used for further processing. The returned content is ",
+                        React.createElement("i", null, "application/json"),
+                        " object and all the properties are self-explanatory. Should you have further questions or comments, do not hesitate to ",
+                        React.createElement("a", { href: 'mailto:webchemistryhelp@gmail.com?subject=REST API' }, "contact us")),
+                    React.createElement("h4", null,
+                        "Channel position information ",
+                        React.createElement("span", null, "/PDB/<PDB id>"),
+                        React.createElement("br", null),
+                        React.createElement("small", null, "Retrieves channels identified in the PDB entry.")),
+                    React.createElement("h5", null, "Examples"),
+                    React.createElement("a", { href: 'https://webchem.ncbr.muni.cz/API/ChannelsDB/PDB/3tbg', target: '_blank' }, "/API/ChannelsDB/PDB/3tbg"),
+                    React.createElement("br", null),
+                    React.createElement("a", { href: 'https://webchem.ncbr.muni.cz/API/ChannelsDB/PDB/5an8', target: '_blank' }, "/API/ChannelsDB/PDB/5an8"),
+                    React.createElement("h4", null,
+                        "Additional annotations ",
+                        React.createElement("span", null, "/Annotations/<PDB id>"),
+                        React.createElement("br", null),
+                        React.createElement("small", null, "Retrieves PDB level information (name, function, catalyzed reactions) and important residues annotations.")),
+                    React.createElement("h5", null, "Examples"),
+                    React.createElement("a", { href: 'https://webchem.ncbr.muni.cz/API/ChannelsDB/Annotations/3tbg', target: '_blank' }, "/API/ChannelsDB/Annotations/3tbg"),
+                    React.createElement("br", null),
+                    React.createElement("a", { href: 'https://webchem.ncbr.muni.cz/API/ChannelsDB/Annotations/1ymg', target: '_blank' }, "/API/ChannelsDB/Annotations/1ymg")),
+                React.createElement(ChannelsDB.ScrollButton, { scrollStepInPx: '50', delayInMs: '10' }));
         };
         return Documentation;
     }(React.Component));
@@ -1075,13 +1196,36 @@ var ChannelsDB;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         Contribute.prototype.render = function () {
-            var justify = {
-                textAlign: 'justify',
-                textJustify: 'inter-word',
-            };
             return React.createElement("div", { style: { margin: '60px 0 0 20px' } },
-                React.createElement("h1", { className: 'text-center' }, "Contacts"),
-                React.createElement("div", { className: 'row' }, "TODO"));
+                React.createElement("h1", { className: 'text-center' }, "Contribute"),
+                React.createElement("p", null, "If you would like to contribute to the ChannelsDB or point out not yet annotated systems with known channels, please use the form below:"),
+                React.createElement("p", null, "TODO form "),
+                React.createElement("h1", { className: 'text-center' }, "References"),
+                React.createElement("div", { className: 'tab-pane' },
+                    React.createElement("p", null, "The ChannelsDB is build a over the top of the following services. Data annotations are taken from scientific literature, which is properly linked."),
+                    React.createElement("dl", { className: 'publications-list' },
+                        React.createElement("dt", null, "MOLE"),
+                        React.createElement("dd", null,
+                            React.createElement("p", null,
+                                "Sehnal,D., Svobodov\u00E1 Va\u0159ekov\u00E1,R., Berka,K., Pravda,L., Navr\u00E1tilov\u00E1,V., Ban\u00E1\u0161,P., Ionescu,C.-M., Otyepka,M. and Ko\u010Da,J. (2013) ",
+                                React.createElement("a", { href: 'https://dx.doi.org/10.1186/1758-2946-5-39', target: '_blank' }, "MOLE 2.0: advanced approach for analysis of biomacromolecular channels"),
+                                ". J. Cheminform., 5, 39.")),
+                        React.createElement("dt", null, "LiteMol suite"),
+                        React.createElement("dd", null,
+                            React.createElement("p", null,
+                                React.createElement("a", { href: 'https:/litemol.org', target: '_blank' }, "LiteMol suite"))),
+                        React.createElement("dt", null, "UniProt API"),
+                        React.createElement("dd", null,
+                            React.createElement("p", null,
+                                "Nightingale,A., Antunes,R., Alpi,E., Bursteinas,B., Gonzales,L., Liu,W., Luo,J., Qi,G., Turner,E. and Martin,M. (2017) ",
+                                React.createElement("a", { href: 'https://dx.doi.org/10.1093/nar/gkx237', target: '_blank' }, "The Proteins API: accessing key integrated protein and genome information"),
+                                ". Nucleic Acids Res., 45, W539\u2013W544.")),
+                        React.createElement("dt", null, "Protein Data Bank in Europe"),
+                        React.createElement("dd", null,
+                            React.createElement("p", null,
+                                "Velankar,S., van Ginkel,G., Alhroub,Y., Battle,G.M., Berrisford,J.M., Conroy,M.J., Dana,J.M., Gore,S.P., Gutmanas,A., Haslam,P., et al. (2016) ",
+                                React.createElement("a", { href: 'https://dx.doi.org/10.1093/nar/gkv1047', target: '_blank' }, "PDBe: improved accessibility of macromolecular structure data from PDB and EMDB"),
+                                ". Nucleic Acids Res., 44, D385\u2013D395.")))));
         };
         return Contribute;
     }(React.Component));
@@ -1485,4 +1629,47 @@ var ChannelsDB;
         };
         return Entries;
     }(React.Component));
+})(ChannelsDB || (ChannelsDB = {}));
+var ChannelsDB;
+(function (ChannelsDB) {
+    var ScrollButton = (function (_super) {
+        __extends(ScrollButton, _super);
+        function ScrollButton() {
+            var _this = _super.call(this) || this;
+            _this.state = {
+                intervalId: 0,
+                showArrow: false,
+            };
+            _this.state = {
+                intervalId: 0,
+                showArrow: false,
+            };
+            return _this;
+        }
+        ScrollButton.prototype.componentDidMount = function () {
+            var _this = this;
+            var subj = new Rx.BehaviorSubject(false);
+            var onscroll = function () { return subj.onNext(window.scrollY > 0); };
+            window.onscroll = onscroll;
+            document.onscroll = onscroll;
+            subj.debounce(250).subscribe(function (showArrow) { return _this.setState({ showArrow: showArrow }); });
+        };
+        ScrollButton.prototype.scrollStep = function () {
+            if (window.pageYOffset === 0) {
+                clearInterval(this.state.intervalId);
+            }
+            window.scroll(0, window.pageYOffset - this.props.scrollStepInPx);
+        };
+        ScrollButton.prototype.scrollToTop = function () {
+            var intervalId = setInterval(this.scrollStep.bind(this), this.props.delayInMs);
+            this.setState({ intervalId: intervalId });
+        };
+        ScrollButton.prototype.render = function () {
+            var _this = this;
+            return React.createElement("button", { title: 'Back to top', className: 'bloc-button btn btn-d btnScrollToTop', style: { display: this.state.showArrow ? 'block' : 'none' }, onClick: function () { _this.scrollToTop(); } },
+                React.createElement("span", { className: 'glyphicon glyphicon-chevron-up' }));
+        };
+        return ScrollButton;
+    }(React.Component));
+    ChannelsDB.ScrollButton = ScrollButton;
 })(ChannelsDB || (ChannelsDB = {}));

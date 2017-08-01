@@ -157,7 +157,8 @@ namespace ChannelsDB {
                             </tbody>                        
                         </table>      
                      </div>              
-                </div>                              
+                </div>    
+                <ScrollButton scrollStepInPx='50' delayInMs='10'/>                                          
             </div>;
         }
     }

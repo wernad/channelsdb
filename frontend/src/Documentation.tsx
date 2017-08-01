@@ -14,6 +14,37 @@ namespace ChannelsDB {
 
                 <h1 className='text-center'>Documentation</h1>                
 
+                <h2>Table of content</h2>
+                <div className='list-group well-sm'>
+                    <a href='#db-content' className='list-group-item'>
+                        <h4 className='list-group-item-heading'>Database content</h4>
+                        <p className='list-group-item-text'>What you can find in the database?</p>
+                    </a>
+                    <a href='#db-nomenclature' className='list-group-item'>
+                        <h4 className='list-group-item-heading'>Channels nomenclature </h4>
+                        <p className='list-group-item-text'>Nomenclature used for channel naming.</p>
+                    </a>
+                    <a href='#db-mole' className='list-group-item'>
+                        <h4 className='list-group-item-heading'>MOLE settings</h4>
+                        <p className='list-group-item-text'>Settings used for channel extraction.</p>
+                    </a>
+                    <a href='#db-cofactors' className='list-group-item'>
+                        <h4 className='list-group-item-heading'>Cofactors</h4>
+                        <p className='list-group-item-text'>List of cofactors used for channel determination.</p>
+                    </a>                    
+                    <a href='#db-results' className='list-group-item'>
+                        <h4 className='list-group-item-heading'>Results view</h4>
+                        <p className='list-group-item-text'>Description how to read the resuls page.</p>
+                    </a>                    
+                    <a href='#db-api' className='list-group-item'>
+                        <h4 className='list-group-item-heading'>REST API</h4>
+                        <p className='list-group-item-text'>How to access content of the database programatically.</p>
+                    </a>                                        
+                </div>
+
+                <hr className='featurette-divider' style={{ margin: '50px 0' }} />
+
+                <a name='db-content' />
                 <div className='row'>
                     <div className='col-md-8'>
                         <h2 className='featurette-heading'>Database content</h2>
@@ -32,8 +63,10 @@ namespace ChannelsDB {
                         <img className='featurette-image img-responsive center-block' src={'assets/img/pretty_channel.png'} width='500' height='500' alt='Channel details' />
                     </div>
                 </div>
+
                 <hr className='featurette-divider' style={{ margin: '50px 0' }} />                
 
+                <a name='db-nomenclature' />
                 <div className='row'>
                         <h2 className='featurette-heading'>Channel nomenclature</h2>
                         <p>Unless the channel has been given a particular name in literature, which is the case e.g. for a group of <a href='https://dx/doi.org/10.1016/j.bbagen.2006.07.005' target='_blank'>cytorchome P450s</a>, names are given to according to 
@@ -94,6 +127,7 @@ namespace ChannelsDB {
 
                 <hr className='featurette-divider' style={{ margin: '50px 0' }} />
 
+                <a name='db-mole' />
                 <div className='row'>
                     <h2 className='featurette-heading'>MOLE settings</h2>
                     <p style={justify}>Throughout the ChannelsDB the folowing settings of the MOLE algorithm has been used for individual types of channels.</p>
@@ -190,6 +224,7 @@ namespace ChannelsDB {
 
                 <hr className='featurette-divider' style={{ margin: '50px 0' }} />
 
+                <a name='db-cofactors' />
                 <div className='row'>
                         <h2 className='featurette-heading'>Cofactors list</h2>
                         <p>Following well-known biologically important cofactors, which are often buried within a protein structure have been selected for channel extraction.</p>
@@ -260,6 +295,7 @@ namespace ChannelsDB {
 
                 <hr className='featurette-divider' style={{ margin: '50px 0' }} />                
 
+                <a name='db-results' />
                 <div className='row featurette'>
                         <h2 className='featurette-heading'>Results interpretation</h2>
                         <div className='col-md-5'>
@@ -292,6 +328,31 @@ namespace ChannelsDB {
                 <div style={{ margin: '50px 0' }} className='row featurette col-md-12'>
                         <img className='featurette-image img-responsive center-block' src={'assets/img/web-fig2.png'} width='800' alt='2D detailed channel view' />
                 </div>  
+
+                <a name='db-api' />
+                <div className='channelsdb-api-docs'>
+                        <h2 className='featurette-heading'>REST API </h2>
+                        <p> The entire database is powered by the REST API running at the <a href='https://webchem.ncbr.muni.cz' target='_blank'>webchem server</a>. 
+                        Therefore, all the channel-related information can be programatically retrieved and used for further processing. The returned content is <i>application/json</i> object
+                        and all the properties are self-explanatory. Should you have further questions or comments, do not hesitate to <a href='mailto:webchemistryhelp@gmail.com?subject=REST API'>contact us</a></p>
+                        
+                        <h4>Channel position information <span>/PDB/&lt;PDB id&gt;</span><br />
+                            <small>Retrieves channels identified in the PDB entry.</small>
+                        </h4>
+                        <h5>Examples</h5>
+                            <a href='https://webchem.ncbr.muni.cz/API/ChannelsDB/PDB/3tbg' target='_blank'>/API/ChannelsDB/PDB/3tbg</a><br />
+                            <a href='https://webchem.ncbr.muni.cz/API/ChannelsDB/PDB/5an8' target='_blank'>/API/ChannelsDB/PDB/5an8</a>
+
+                        <h4>Additional annotations <span>/Annotations/&lt;PDB id&gt;</span><br />
+                            <small>Retrieves PDB level information (name, function, catalyzed reactions) and important residues annotations.</small>
+                        </h4>
+                        <h5>Examples</h5>
+                            <a href='https://webchem.ncbr.muni.cz/API/ChannelsDB/Annotations/3tbg' target='_blank'>/API/ChannelsDB/Annotations/3tbg</a><br />
+                            <a href='https://webchem.ncbr.muni.cz/API/ChannelsDB/Annotations/1ymg' target='_blank'>/API/ChannelsDB/Annotations/1ymg</a>
+                </div>
+
+                <ScrollButton scrollStepInPx='50' delayInMs='10'/>
+
             </div>;
         }
     }

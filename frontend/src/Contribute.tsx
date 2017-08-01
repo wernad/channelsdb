@@ -5,16 +5,38 @@
 namespace ChannelsDB {
     export class Contribute extends React.Component<{}, {}> {
         render() {
-            let justify = {
-                textAlign: 'justify',
-                textJustify: 'inter-word',
-            };
-
             return <div style={{ margin: '60px 0 0 20px' }}>
 
-                <h1 className='text-center'>Contacts</h1>                
+                <h1 className='text-center'>Contribute</h1>                
+                    <p>If you would like to contribute to the ChannelsDB or point out not yet annotated systems with known channels, please use the form below:</p>
+                    <p>TODO form </p>
 
-                <div className='row'>TODO</div>
+                <h1 className='text-center'>References</h1>   
+                    <div className='tab-pane'>
+                        <p>The ChannelsDB is build a over the top of the following services. Data annotations are taken from scientific literature, which is properly linked.</p>
+                        <dl className='publications-list'>
+                            <dt>MOLE</dt>
+                            <dd>
+                                <p>Sehnal,D., Svobodová Vařeková,R., Berka,K., Pravda,L., Navrátilová,V., Banáš,P., Ionescu,C.-M., Otyepka,M. and Koča,J. (2013) <a href='https://dx.doi.org/10.1186/1758-2946-5-39' target='_blank'>MOLE 2.0: advanced approach for analysis of biomacromolecular channels</a>.
+                                      J. Cheminform., 5, 39.</p>
+                            </dd>
+                            <dt>LiteMol suite</dt>
+                            <dd>
+                                <p><a href='https:/litemol.org' target='_blank'>LiteMol suite</a></p>
+                            </dd>      
+                            <dt>UniProt API</dt>
+                            <dd>
+                                <p>Nightingale,A., Antunes,R., Alpi,E., Bursteinas,B., Gonzales,L., Liu,W., Luo,J., Qi,G., Turner,E. and Martin,M. (2017) <a href='https://dx.doi.org/10.1093/nar/gkx237' target='_blank'>The Proteins API: accessing key integrated protein and genome information</a>.
+                                      Nucleic Acids Res., 45, W539–W544.</p>
+                            </dd>
+                            <dt>Protein Data Bank in Europe</dt>
+                            <dd>
+                                <p>Velankar,S., van Ginkel,G., Alhroub,Y., Battle,G.M., Berrisford,J.M., Conroy,M.J., Dana,J.M., Gore,S.P., Gutmanas,A., Haslam,P., et al. (2016) <a href='https://dx.doi.org/10.1093/nar/gkv1047' target='_blank'>PDBe: improved accessibility of macromolecular structure data from PDB and EMDB</a>.
+                                      Nucleic Acids Res., 44, D385–D395.</p>
+                            </dd>                                                                              
+                        </dl>
+                    </div>
+                             
             </div>;
         }
     }

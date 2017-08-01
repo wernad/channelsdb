@@ -2,6 +2,75 @@
     box-sizing: border-box;
 }
 
+.publications-list, .author-list {
+        margin-top: 0;
+    }
+
+        .publications-list dt {
+            margin-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .publications-list dd {
+            margin-left: 1px;
+        }
+
+            .publications-list dd:not(:last-child) {
+                margin-bottom: 20px;
+            }
+
+            .publications-list dd p {
+                border-left: 2px solid #AAA;
+                padding-left: 6px;
+            }
+
+                .publications-list dd p:hover {
+                    border-left: 4px solid #08C;
+                }
+
+.channelsdb-api-docs {
+            padding: 24px 0;
+            border-bottom: 1px solid #eee
+        }
+
+            .channelsdb-api-docs > h4 {
+                margin-top: 24px;
+                color: black;
+            }
+
+                .channelsdb-api-docs > h4 > span {
+                    color: #DE4D4E;
+                    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+                    font-size: 90%
+                }
+
+                channelsdb-api-docs > h4:hover, .channelsdb-api-docs > h4:hover > small, .channelsdb-api-docs > h4:hover > span {
+                    color: #DE4D4E;
+                }
+
+
+.btnScrollToTop{
+	width: 40px;
+	height: 40px;
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	opacity: 0.4;
+	z-index: 500;
+	transition: all .3s ease-in-out;
+}
+.btnScrollToTop span{
+	margin-top: 6px;
+}
+
+.btnScrollToTop:hover{
+  opacity: 1
+}
+.btn-showScrollTop{
+	font-size: 14px;
+	opacity: 1;
+}
+
 .group-list {
     padding-top: 10px;
     position: relative;
