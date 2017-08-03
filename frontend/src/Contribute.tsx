@@ -29,9 +29,17 @@ namespace ChannelsDB {
     class EditableRow extends React.Component<TableSpec<any> & { add: (e: Entry<any>) => void }, { value: { [name: string]: string } }> {
         state = { value: Object.create(null) };
 
+        first: HTMLElement;
+
         add() {
+            const spec = this.props.spec;
+            const cols = Object.keys(spec);
+            const curr = this.state.value;
+            const canAdd = Object.keys(curr).every(k => typeof curr[k] === 'string' && curr[k].trim().length > 0) && Object.keys(curr).length === cols.length;
+            if (!canAdd) return;
             this.props.add({ ...this.state.value });
             this.setState({ value: Object.create(null) });
+            if (this.first) this.first.focus();
         }
 
         private update(e: HTMLInputElement) {
@@ -45,12 +53,10 @@ namespace ChannelsDB {
             const canAdd = Object.keys(curr).every(k => typeof curr[k] === 'string' && curr[k].trim().length > 0) && Object.keys(curr).length === cols.length;
             return <tr>
                 {cols.map(c => <td key={c} style={{ width: spec[c].width }} className='form-group'>
-                    <input name={c} className='form-control' type='text' placeholder={spec[c].placeholder} onChange={e => this.update(e.target)} value={curr[c] || ''} />
+                    <input ref={r => c === cols[0] ? this.first = r! : void 0} name={c} className='form-control' type='text' placeholder={spec[c].placeholder} onChange={e => this.update(e.target)} value={curr[c] || ''} onKeyPress={ e => e.key === 'Enter' ? this.add() : void 0 } />
                 </td>)}
                 <td key='actions'>
-                    <button className='btn btn-success' disabled={!canAdd} onClick={() => {
-                        if (canAdd) this.add();
-                    }}><span className='glyphicon glyphicon-plus' aria-hidden='true'></span></button>
+                    <button className='btn btn-success' disabled={!canAdd} onClick={() => this.add()}><span className='glyphicon glyphicon-plus' aria-hidden='true'></span></button>
                 </td>
             </tr>;
         }

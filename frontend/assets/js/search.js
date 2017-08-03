@@ -1207,8 +1207,16 @@ var ChannelsDB;
             return _this;
         }
         EditableRow.prototype.add = function () {
+            var spec = this.props.spec;
+            var cols = Object.keys(spec);
+            var curr = this.state.value;
+            var canAdd = Object.keys(curr).every(function (k) { return typeof curr[k] === 'string' && curr[k].trim().length > 0; }) && Object.keys(curr).length === cols.length;
+            if (!canAdd)
+                return;
             this.props.add(__assign({}, this.state.value));
             this.setState({ value: Object.create(null) });
+            if (this.first)
+                this.first.focus();
         };
         EditableRow.prototype.update = function (e) {
             this.setState({ value: __assign({}, this.state.value, (_a = {}, _a[e.name] = e.value, _a)) });
@@ -1222,12 +1230,9 @@ var ChannelsDB;
             var canAdd = Object.keys(curr).every(function (k) { return typeof curr[k] === 'string' && curr[k].trim().length > 0; }) && Object.keys(curr).length === cols.length;
             return React.createElement("tr", null,
                 cols.map(function (c) { return React.createElement("td", { key: c, style: { width: spec[c].width }, className: 'form-group' },
-                    React.createElement("input", { name: c, className: 'form-control', type: 'text', placeholder: spec[c].placeholder, onChange: function (e) { return _this.update(e.target); }, value: curr[c] || '' })); }),
+                    React.createElement("input", { ref: function (r) { return c === cols[0] ? _this.first = r : void 0; }, name: c, className: 'form-control', type: 'text', placeholder: spec[c].placeholder, onChange: function (e) { return _this.update(e.target); }, value: curr[c] || '', onKeyPress: function (e) { return e.key === 'Enter' ? _this.add() : void 0; } })); }),
                 React.createElement("td", { key: 'actions' },
-                    React.createElement("button", { className: 'btn btn-success', disabled: !canAdd, onClick: function () {
-                            if (canAdd)
-                                _this.add();
-                        } },
+                    React.createElement("button", { className: 'btn btn-success', disabled: !canAdd, onClick: function () { return _this.add(); } },
                         React.createElement("span", { className: 'glyphicon glyphicon-plus', "aria-hidden": 'true' }))));
         };
         return EditableRow;
