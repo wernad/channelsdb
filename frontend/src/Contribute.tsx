@@ -4,16 +4,59 @@
 
 namespace ChannelsDB {
     export class Contribute extends React.Component<{}, {}> {
+        submitAnnotation(){
+            alert("Clicked, yay")
+        };
+        
         render() {
             return <div style={{ margin: '60px 0 0 20px' }}>
 
                 <h1 className='text-center'>Contribute</h1>                
-                    <p>If you would like to contribute to the ChannelsDB or point out not yet annotated systems with known channels, please use the form below:</p>
-                    <p>TODO form </p>
+                    <p>If you would like to contribute to the ChannelsDB or point out not yet annotated systems with known channels, please use the form below, until the online annotation tool is ready by the end of 2017:</p>
+                    <form className='form-horizontal'>
+                        <div className='form-group'>
+                            <label className='control-label col-sm-2' htmlFor='pdbId'>PDB identifier</label>
+                            <div className='col-sm-10'>
+                                <input type='text' className='form-control' id='pdbId' placeholder='1tqn' />                            
+                            </div>
+                        </div>
+                        <div className='form-group'>
+                            <label className='control-label col-sm-2' htmlFor='litReference'>Literature reference</label>
+                            <div className='col-sm-10'>
+                                <input type='text' className='form-control' id='litReference' placeholder='Doi or Pubmed ID (e.g. 10.1021/acs.jctc.6b00075 or  PMID: 26967371)' />                            
+                            </div>
+                        </div>
+                        <div className='form-group'>
+                            <label className='control-label col-sm-2' htmlFor='email'>E-mail</label>
+                            <div className='col-sm-10'>
+                                <input type='text' className='form-control' id='email' placeholder='(optional) jon.snow@uni.ac.uk' />                            
+                            </div>
+                        </div>
+                        <div className='form-group'>
+                            <label className='control-label col-sm-2' htmlFor='annotation'>Annotation</label>
+                            <textarea style={{width: '97.5%', marginLeft: '15px', marginTop: '35px'}} className='form-control' rows={7} id='annotation' placeholder='Tunnel 30.5Å. - Substrate channel\n\nTYR 23 A - Constriction region\nASN 1 B A part of NPA motif that orient the key central water molecule'></textarea>
+                        </div>
+                        <div className='input-group'>
+                            <label className='input-group-btn'>
+                                <span className='btn btn-default'>Select channels&hellip; <input type='file' style={{display: 'none'}} multiple /></span>
+                            </label>
+                            <input type='text' className='form-control' readOnly/>
+                        </div><br/>
+                        
+                        
+                        <button
+                            className='btn btn-primary btn-block g-recaptcha'
+                            data-sitekey='6LfccisUAAAAAH5uJXH3J-9KKc6ItSKS2luiXUFZ'
+                            onClick={this.submitAnnotation}>
+                            Submit
+                        </button>
+                    </form>
+
+                <hr className='featurette-divider' style={{ margin: '50px 0' }} />
 
                 <h1 className='text-center'>References</h1>   
                     <div className='tab-pane'>
-                        <p>The ChannelsDB is build a over the top of the following services. Data annotations are taken from scientific literature, which is properly linked.</p>
+                        <p>The ChannelsDB is build a over the top of the following services. Data annotations are taken from scientific literature, which is properly linked with the given entry.</p>
                         <dl className='publications-list'>
                             <dt>MOLE</dt>
                             <dd>

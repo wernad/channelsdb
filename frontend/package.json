@@ -17,5 +17,8 @@
     "react-dom": "^15.5.4",
     "rx": "^4.1.0",
     "typescript": "^2.3.4"
+  },
+  "dependencies": {
+    "gsap": "^1.20.2"
   }
 }
