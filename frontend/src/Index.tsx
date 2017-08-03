@@ -3,7 +3,6 @@
  */
 
 namespace ChannelsDB {
-
     export function renderUI(target: HTMLElement, kind: 'Search' | 'Methods' | 'Documentation' | 'Contribute') {
         switch (kind){
             case 'Search':

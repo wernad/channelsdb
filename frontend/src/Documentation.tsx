@@ -44,7 +44,8 @@ namespace ChannelsDB {
 
                 <hr className='featurette-divider' style={{ margin: '50px 0' }} />
 
-                <a name='db-content' />
+                {React.createElement('a' as any, { 'name': 'db-content' })}
+                {/* <a name='db-content' /> */}
                 <div className='row'>
                     <div className='col-md-8'>
                         <h2 className='featurette-heading'>Database content</h2>
@@ -66,7 +67,7 @@ namespace ChannelsDB {
 
                 <hr className='featurette-divider' style={{ margin: '50px 0' }} />                
 
-                <a name='db-nomenclature' />
+                {React.createElement('a' as any, { 'name': 'db-nomenclature' })}
                 <div className='row'>
                         <h2 className='featurette-heading'>Channel nomenclature</h2>
                         <p>Unless the channel has been given a particular name in literature, which is the case e.g. for a group of <a href='https://dx/doi.org/10.1016/j.bbagen.2006.07.005' target='_blank'>cytorchome P450s</a>, names are given to according to 
@@ -127,7 +128,7 @@ namespace ChannelsDB {
 
                 <hr className='featurette-divider' style={{ margin: '50px 0' }} />
 
-                <a name='db-mole' />
+                {React.createElement('a' as any, { 'name': 'db-mole' })}
                 <div className='row'>
                     <h2 className='featurette-heading'>MOLE settings</h2>
                     <p style={justify}>Throughout the ChannelsDB the folowing settings of the MOLE algorithm has been used for individual types of channels.</p>
@@ -224,7 +225,7 @@ namespace ChannelsDB {
 
                 <hr className='featurette-divider' style={{ margin: '50px 0' }} />
 
-                <a name='db-cofactors' />
+                {React.createElement('a' as any, { 'name': 'db-cofactors' })}
                 <div className='row'>
                         <h2 className='featurette-heading'>Cofactors list</h2>
                         <p>Following well-known biologically important cofactors, which are often buried within a protein structure have been selected for channel extraction.</p>
@@ -295,7 +296,7 @@ namespace ChannelsDB {
 
                 <hr className='featurette-divider' style={{ margin: '50px 0' }} />                
 
-                <a name='db-results' />
+                {React.createElement('a' as any, { 'name': 'db-results' })}
                 <div className='row featurette'>
                         <h2 className='featurette-heading'>Results interpretation</h2>
                         <div className='col-md-5'>
@@ -329,7 +330,7 @@ namespace ChannelsDB {
                         <img className='featurette-image img-responsive center-block' src={'assets/img/web-fig2.png'} width='800' alt='2D detailed channel view' />
                 </div>  
 
-                <a name='db-api' />
+                {React.createElement('a' as any, { 'name': 'db-api' })}
                 <div className='channelsdb-api-docs'>
                         <h2 className='featurette-heading'>REST API </h2>
                         <p> The entire database is powered by the REST API running at the <a href='https://webchem.ncbr.muni.cz' target='_blank'>webchem server</a>. 

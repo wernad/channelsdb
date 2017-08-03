@@ -55,7 +55,7 @@ namespace ChannelsDB {
             fullSearch: new Rx.Subject<undefined>(),
         };
 
-        const interrupt = Rx.Observable.merge(state.searchTerm, state.fullSearch);
+        const interrupt = Rx.Observable.merge(state.searchTerm as Rx.Observable<any>, state.fullSearch as Rx.Observable<any>);
 
         state.searchTerm
             .do(() => RequestPool.abort('data'))

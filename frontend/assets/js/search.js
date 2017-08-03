@@ -100,11 +100,11 @@ var ChannelsDB;
                 this.pool.push(req);
             }
         };
+        RequestPool.pool = [];
+        RequestPool.poolSize = 15;
+        RequestPool.pending = {};
         return RequestPool;
     }());
-    RequestPool.pool = [];
-    RequestPool.poolSize = 15;
-    RequestPool.pending = {};
     ChannelsDB.RequestPool = RequestPool;
     function processAjax(e) {
         var req = e.target;
@@ -498,7 +498,7 @@ var ChannelsDB;
                                 React.createElement("div", { className: 'col-lg-6' },
                                     React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-5mrw', role: 'button' }, "View details \u00BB")))))),
                 React.createElement("div", { className: 'row featurette', style: { marginTop: '40px' } },
-                    React.createElement("a", { name: 'ex-1ymg' }),
+                    React.createElement('a', { 'name': 'ex-1ymg' }),
                     React.createElement("div", { className: 'col-md-7' },
                         React.createElement("a", { href: '/ChannelsDB/detail/1ymg' },
                             React.createElement("h2", { className: 'featurette-heading' },
@@ -516,7 +516,7 @@ var ChannelsDB;
                         React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1ymg_detail.png', width: '500', height: '500', alt: '1ymg detailed channel view' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
-                    React.createElement("a", { name: 'ex-p450' }),
+                    React.createElement('a', { 'name': 'ex-p450' }),
                     React.createElement("div", { className: 'col-md-7 col-md-push-5' },
                         React.createElement("a", { href: '/ChannelsDB/detail/3tbg' },
                             React.createElement("h2", { className: 'featurette-heading' },
@@ -537,7 +537,7 @@ var ChannelsDB;
                         React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/3tbg_detail.png', alt: 'Cytochrome P450 substrate channel details' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
-                    React.createElement("a", { name: 'ex-1jj2' }),
+                    React.createElement('a', { 'name': 'ex-1jj2' }),
                     React.createElement("div", { className: 'col-md-7 ' },
                         React.createElement("a", { href: '/ChannelsDB/detail/1jj2' },
                             React.createElement("h2", { className: 'featurette-heading' },
@@ -555,7 +555,7 @@ var ChannelsDB;
                         React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1jj2_detail.png', alt: 'Polypeptide exit tunnel' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
-                    React.createElement("a", { name: 'ex-4nm9' }),
+                    React.createElement('a', { 'name': 'ex-4nm9' }),
                     React.createElement("div", { className: 'col-md-7 col-md-push-5' },
                         React.createElement("a", { href: '/ChannelsDB/detail/4nm9' },
                             React.createElement("h2", { className: 'featurette-heading' },
@@ -573,7 +573,7 @@ var ChannelsDB;
                         React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/4nm9_detail.png', alt: 'PutA channel system' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
-                    React.createElement("a", { name: 'ex-5mrw' }),
+                    React.createElement('a', { 'name': 'ex-5mrw' }),
                     React.createElement("div", { className: 'col-md-7 ' },
                         React.createElement("a", { href: '/ChannelsDB/detail/5mrw' },
                             React.createElement("h2", { className: 'featurette-heading' },
@@ -888,7 +888,7 @@ var ChannelsDB;
                         React.createElement("h4", { className: 'list-group-item-heading' }, "REST API"),
                         React.createElement("p", { className: 'list-group-item-text' }, "How to access content of the database programatically."))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
-                React.createElement("a", { name: 'db-content' }),
+                React.createElement('a', { 'name': 'db-content' }),
                 React.createElement("div", { className: 'row' },
                     React.createElement("div", { className: 'col-md-8' },
                         React.createElement("h2", { className: 'featurette-heading' }, "Database content"),
@@ -912,7 +912,7 @@ var ChannelsDB;
                     React.createElement("div", { className: 'col-md-4' },
                         React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/pretty_channel.png', width: '500', height: '500', alt: 'Channel details' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
-                React.createElement("a", { name: 'db-nomenclature' }),
+                React.createElement('a', { 'name': 'db-nomenclature' }),
                 React.createElement("div", { className: 'row' },
                     React.createElement("h2", { className: 'featurette-heading' }, "Channel nomenclature"),
                     React.createElement("p", null,
@@ -957,7 +957,7 @@ var ChannelsDB;
                                     React.createElement("td", null, "Hydrophobic channel"),
                                     React.createElement("td", null, "Pore providing a pathway for apolar chemical species to pass through lipid bilayer")))))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
-                React.createElement("a", { name: 'db-mole' }),
+                React.createElement('a', { 'name': 'db-mole' }),
                 React.createElement("div", { className: 'row' },
                     React.createElement("h2", { className: 'featurette-heading' }, "MOLE settings"),
                     React.createElement("p", { style: justify }, "Throughout the ChannelsDB the folowing settings of the MOLE algorithm has been used for individual types of channels."),
@@ -1040,7 +1040,7 @@ var ChannelsDB;
                                         React.createElement("i", null, "NonActiveParts")),
                                     React.createElement("td", { "data-toggle": 'tooltip', "data-placement": 'bottom', title: 'Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))' }, "Query")))))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
-                React.createElement("a", { name: 'db-cofactors' }),
+                React.createElement('a', { 'name': 'db-cofactors' }),
                 React.createElement("div", { className: 'row' },
                     React.createElement("h2", { className: 'featurette-heading' }, "Cofactors list"),
                     React.createElement("p", null, "Following well-known biologically important cofactors, which are often buried within a protein structure have been selected for channel extraction."),
@@ -1133,7 +1133,7 @@ var ChannelsDB;
                                     React.createElement("td", null,
                                         React.createElement("i", null, "GSH, GDS"))))))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
-                React.createElement("a", { name: 'db-results' }),
+                React.createElement('a', { 'name': 'db-results' }),
                 React.createElement("div", { className: 'row featurette' },
                     React.createElement("h2", { className: 'featurette-heading' }, "Results interpretation"),
                     React.createElement("div", { className: 'col-md-5' },
@@ -1151,7 +1151,7 @@ var ChannelsDB;
                         React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/web-fig1.png', width: '500', height: '500', alt: 'Result window detail' }))),
                 React.createElement("div", { style: { margin: '50px 0' }, className: 'row featurette col-md-12' },
                     React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/web-fig2.png', width: '800', alt: '2D detailed channel view' })),
-                React.createElement("a", { name: 'db-api' }),
+                React.createElement('a', { 'name': 'db-api' }),
                 React.createElement("div", { className: 'channelsdb-api-docs' },
                     React.createElement("h2", { className: 'featurette-heading' }, "REST API "),
                     React.createElement("p", null,
@@ -1188,45 +1188,336 @@ var ChannelsDB;
 /*
  * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
  */
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var ChannelsDB;
 (function (ChannelsDB) {
+    var SUBMIT_URL = 'URL';
+    var EditableRow = (function (_super) {
+        __extends(EditableRow, _super);
+        function EditableRow() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.state = { value: Object.create(null) };
+            return _this;
+        }
+        EditableRow.prototype.add = function () {
+            this.props.add(__assign({}, this.state.value));
+            this.setState({ value: Object.create(null) });
+        };
+        EditableRow.prototype.update = function (e) {
+            this.setState({ value: __assign({}, this.state.value, (_a = {}, _a[e.name] = e.value, _a)) });
+            var _a;
+        };
+        EditableRow.prototype.render = function () {
+            var _this = this;
+            var spec = this.props.spec;
+            var cols = Object.keys(spec);
+            var curr = this.state.value;
+            var canAdd = Object.keys(curr).every(function (k) { return typeof curr[k] === 'string' && curr[k].trim().length > 0; }) && Object.keys(curr).length === cols.length;
+            return React.createElement("tr", null,
+                cols.map(function (c) { return React.createElement("td", { key: c, style: { width: spec[c].width }, className: 'form-group' },
+                    React.createElement("input", { name: c, className: 'form-control', type: 'text', placeholder: spec[c].placeholder, onChange: function (e) { return _this.update(e.target); }, value: curr[c] || '' })); }),
+                React.createElement("td", { key: 'actions' },
+                    React.createElement("button", { className: 'btn btn-success', disabled: !canAdd, onClick: function () {
+                            if (canAdd)
+                                _this.add();
+                        } },
+                        React.createElement("span", { className: 'glyphicon glyphicon-plus', "aria-hidden": 'true' }))));
+        };
+        return EditableRow;
+    }(React.Component));
+    var EditableTable = (function (_super) {
+        __extends(EditableTable, _super);
+        function EditableTable() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.state = { entries: [] };
+            _this.id = 0;
+            return _this;
+        }
+        EditableTable.prototype.add = function (e) {
+            this.props.entries.push(e);
+            e._id = this.id++;
+            this.setState({ entries: this.props.entries.slice() });
+            this.props.updated();
+        };
+        EditableTable.prototype.remove = function (e) {
+            var entries = this.props.entries;
+            var idx = entries.indexOf(e);
+            if (idx < 0)
+                return;
+            for (var i = idx; i < entries.length - 1; i++) {
+                entries[i] = entries[i + 1];
+            }
+            entries.pop();
+            this.setState({ entries: this.props.entries.slice() });
+            this.props.updated();
+        };
+        EditableTable.prototype.componentWillReceiveProps = function (nextProps) {
+            this.setState({ entries: nextProps.entries });
+        };
+        EditableTable.prototype.componentDidMount = function () {
+            this.setState({ entries: this.props.entries });
+        };
+        EditableTable.prototype.render = function () {
+            var _this = this;
+            var spec = this.props.spec;
+            var cols = Object.keys(spec);
+            return React.createElement("table", { className: 'table table-striped table-bordered' },
+                React.createElement("thead", null,
+                    React.createElement("tr", null,
+                        cols.map(function (c) { return React.createElement("th", { key: c, style: { width: spec[c].width } }, spec[c].header); }),
+                        React.createElement("th", { style: { width: '50px' } }))),
+                React.createElement("tbody", null,
+                    React.createElement(EditableRow, __assign({}, this.props, { add: function (e) { return _this.add(e); } })),
+                    this.state.entries.map(function (e) { return React.createElement("tr", { key: e._id },
+                        cols.map(function (c) { return React.createElement("td", { key: c, style: { width: spec[c].width, verticalAlign: 'middle', padding: '0 15px' } }, e[c]); }),
+                        React.createElement("td", { key: 'actions' },
+                            React.createElement("button", { className: 'btn btn-danger', onClick: function () { return _this.remove(e); } },
+                                React.createElement("span", { className: 'glyphicon glyphicon-remove', "aria-hidden": 'true' })))); })));
+        };
+        return EditableTable;
+    }(React.Component));
+    function FormState() {
+        return { pdbId: '', reference: '', email: '', channels: [], residues: [], files: [] };
+    }
+    function makeFormData(data) {
+        var inputs = [];
+        var fd = new FormData();
+        fd.append('pdbId', data.pdbId);
+        inputs.push('pdbId');
+        fd.append('reference', data.reference);
+        inputs.push('reference');
+        fd.append('email', data.email || '');
+        inputs.push('email');
+        fd.append('channels', JSON.stringify(data.channels));
+        inputs.push('channels');
+        fd.append('residues', JSON.stringify(data.residues));
+        inputs.push('residues');
+        var index = 0;
+        for (var _i = 0, _a = data.files; _i < _a.length; _i++) {
+            var file = _a[_i];
+            fd.append("file[" + index++ + "]", file);
+            inputs.push(file.name);
+        }
+        var hint = "annotations: " + inputs.join(', ');
+        return { data: fd, hint: hint };
+    }
+    function uploadAjaxFormData(formData, actionUrl, options) {
+        options = options || {};
+        var onProgress = options['onProgress'] || function () { };
+        function uploadFile() {
+            var xhr = new XMLHttpRequest();
+            xhr.upload.addEventListener('progress', uploadProgress, false);
+            xhr.addEventListener('load', uploadComplete, false);
+            xhr.addEventListener('error', uploadFailed, false);
+            xhr.open('POST', actionUrl);
+            xhr.send(formData);
+            return xhr;
+        }
+        function uploadProgress(evt) {
+            if (evt.lengthComputable) {
+                onProgress(evt.loaded, evt.total);
+            }
+            else {
+                onProgress();
+            }
+        }
+        function uploadComplete(evt) {
+            var response = JSON.parse(evt.target.responseText);
+            if (options['onComplete'] !== undefined)
+                options.onComplete(response);
+        }
+        function uploadFailed(evt) {
+            if (options['onFailed'] !== undefined)
+                options.onFailed();
+        }
+        return uploadFile();
+    }
+    function submit(data) {
+        var subj = new Rx.Subject();
+        var progress = 0;
+        uploadAjaxFormData(makeFormData(data).data, SUBMIT_URL, {
+            onComplete: function (response) {
+                if (response.status && response.status === 'ok') {
+                    subj.onCompleted();
+                }
+                else {
+                    subj.onError(response.message || 'Unknown error.');
+                }
+            },
+            onProgress: function (current, total) {
+                if (current !== undefined && total !== undefined) {
+                    var percentComplete = Math.round(current * 1000 / total) / 10;
+                    subj.onNext("" + percentComplete);
+                }
+                else {
+                    subj.onNext("");
+                }
+            },
+            onFailed: function () {
+                subj.onError('Unknown error.');
+            }
+        });
+        return subj;
+    }
     var Contribute = (function (_super) {
         __extends(Contribute, _super);
         function Contribute() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.state = { state: 'editing', formState: FormState(), submitProgress: '' };
+            _this.errorMsg = '';
+            _this.submitProgress = void 0;
+            _this.channelsSpec = {
+                id: { header: 'Channel Id', width: '200px', placeholder: '30.5A' },
+                name: { header: 'Name', width: '200px', placeholder: 'bla' },
+                description: { header: 'Description', width: 'auto', placeholder: 'this is something' },
+                reference: { header: 'Reference', width: '300px', placeholder: 'doi' }
+            };
+            _this.residuesSpec = {
+                id: { header: 'Residue Id', width: '200px', placeholder: 'ALA 10 A' },
+                annotation: { header: 'Annotation', width: 'auto', placeholder: 'this is something' },
+                reference: { header: 'Reference', width: '300px', placeholder: 'doi' }
+            };
+            _this._submit = void 0;
+            return _this;
         }
-        Contribute.prototype.submitAnnotation = function () {
-            alert("Clicked, yay");
+        Contribute.prototype.updatedAnnotations = function () {
+            var state = __assign({}, this.state.formState);
+            this.setState({ formState: state });
         };
-        ;
+        Contribute.prototype.update = function (input) {
+            var state = __assign({}, this.state.formState, (_a = {}, _a[input.name] = input.value, _a));
+            this.setState({ formState: state });
+            var _a;
+        };
+        Contribute.prototype.setFiles = function (input) {
+            var files = [];
+            var len = (input.files && input.files.length) || 0;
+            for (var i = 0; i < len; i++)
+                files.push(input.files[i]);
+            var state = __assign({}, this.state.formState, { files: files });
+            this.setState({ formState: state });
+        };
+        Contribute.prototype.getIssues = function () {
+            var fs = this.state.formState;
+            var issues = [];
+            if (fs.pdbId.trim().length < 4)
+                issues.push('PDB id must be at least 4 characters.');
+            if (fs.reference.trim().length === 0)
+                issues.push('Enter reference.');
+            if (!fs.residues.length && !fs.channels.length)
+                issues.push('Enter at least one residue or channel annotation.');
+            if (!fs.files.length)
+                issues.push('Add at least one file with annotations.');
+            return issues;
+        };
+        Contribute.prototype.submitStart = function () {
+            var _this = this;
+            this.setState({ state: 'submitting' });
+            if (this._submit) {
+                this._submit.dispose();
+                this._submit = void 0;
+            }
+            this.submitProgress = submit(this.state.formState);
+            this._submit = this.submitProgress.subscribe(function (p) { return _this.setState({ submitProgress: p }); }, function (e) { return _this.submitDone(e); }, function () { return _this.submitDone(); });
+        };
+        Contribute.prototype.submitDone = function (err) {
+            if (this._submit) {
+                this._submit.dispose();
+                this._submit = void 0;
+            }
+            if (err) {
+                this.errorMsg = '' + err;
+                this.setState({ state: 'error' });
+            }
+            else {
+                this.setState({ state: 'thank-you', formState: FormState() });
+            }
+        };
+        Contribute.prototype.thankYou = function () {
+            var _this = this;
+            return React.createElement("div", null,
+                React.createElement("h2", { style: { textAlign: 'center' } }, "Thank you for submitting your data."),
+                React.createElement("button", { className: 'btn btn-primary btn-block', onClick: function () { return _this.setState({ state: 'editing' }); } }, "Submit another..."));
+        };
+        Contribute.prototype.submitting = function () {
+            return React.createElement("h3", null,
+                "Your data is being submitted... ",
+                this.state.submitProgress);
+        };
+        Contribute.prototype.error = function () {
+            var _this = this;
+            return React.createElement("div", null,
+                React.createElement("h3", null, "Error submitting your data"),
+                React.createElement("div", { style: { color: 'red' } }, this.errorMsg),
+                React.createElement("button", { className: 'btn', onClick: function () { return _this.submitStart(); } }, "Try submit again"),
+                React.createElement("button", { className: 'btn', onClick: function () { return _this.setState({ state: 'editing' }); } }, "Edit data"));
+        };
+        Contribute.prototype.edit = function () {
+            var _this = this;
+            var fs = this.state.formState;
+            var issues = this.getIssues();
+            return React.createElement("div", null,
+                React.createElement("p", null, "If you would like to contribute to the ChannelsDB or point out not yet annotated systems with known channels, please use the form below, until the online annotation tool is ready by the end of 2017:"),
+                React.createElement("div", { className: 'form-horizontal' },
+                    React.createElement("div", null,
+                        React.createElement("div", { className: 'form-group' },
+                            React.createElement("label", { className: 'control-label col-sm-2', htmlFor: 'pdbId' }, "PDB identifier"),
+                            React.createElement("div", { className: 'col-sm-10' },
+                                React.createElement("input", { type: 'text', className: 'form-control', placeholder: '1tqn', name: 'pdbId', value: fs.pdbId, onChange: function (e) { return _this.update(e.target); } }))),
+                        React.createElement("div", { className: 'form-group' },
+                            React.createElement("label", { className: 'control-label col-sm-2', htmlFor: 'litReference' }, "Literature reference"),
+                            React.createElement("div", { className: 'col-sm-10' },
+                                React.createElement("input", { type: 'text', className: 'form-control', placeholder: 'Doi or Pubmed ID (e.g. 10.1021/acs.jctc.6b00075 or  PMID: 26967371)', name: 'reference', onChange: function (e) { return _this.update(e.target); }, value: fs.reference }))),
+                        React.createElement("div", { className: 'form-group' },
+                            React.createElement("label", { className: 'control-label col-sm-2', htmlFor: 'email' }, "E-mail"),
+                            React.createElement("div", { className: 'col-sm-10' },
+                                React.createElement("input", { type: 'text', className: 'form-control', name: 'email', placeholder: '(optional) jon.snow@uni.ac.uk', onChange: function (e) { return _this.update(e.target); }, value: fs.email }))),
+                        React.createElement("h2", null, "Channel Annotations"),
+                        React.createElement(EditableTable, { key: 'channels-annotations', entries: fs.channels, spec: this.channelsSpec, updated: function () { return _this.updatedAnnotations(); } }),
+                        React.createElement("h2", null, "Residue Annotations"),
+                        React.createElement(EditableTable, { key: 'residue-annotations', entries: fs.residues, spec: this.residuesSpec, updated: function () { return _this.updatedAnnotations(); } }),
+                        React.createElement("hr", { className: 'featurette-divider', style: { margin: '20px 0' } }),
+                        React.createElement("div", { className: 'input-group' },
+                            React.createElement("label", { className: 'input-group-btn' },
+                                React.createElement("span", { className: 'btn btn-default' },
+                                    "Select channels\u2026 ",
+                                    React.createElement("input", { type: 'file', style: { display: 'none' }, multiple: true, onChange: function (e) { return _this.setFiles(e.target); } }))),
+                            React.createElement("input", { type: 'text', className: 'form-control', readOnly: true, value: fs.files.map(function (f) { return f.name; }).join(', ') })),
+                        React.createElement("br", null)),
+                    issues.length > 0
+                        ? React.createElement("div", null,
+                            React.createElement("ul", { style: { color: 'red' } }, issues.map(function (i) { return React.createElement("li", null, i); })))
+                        : React.createElement("button", { className: 'btn btn-block btn-primary', onClick: function () { return _this.submitStart(); } }, "Submit")));
+        };
         Contribute.prototype.render = function () {
+            var _this = this;
+            var fs = this.state.formState;
+            var issues = this.getIssues();
+            var ui;
+            switch (this.state.state) {
+                case 'editing':
+                    ui = function () { return _this.edit(); };
+                    break;
+                case 'error':
+                    ui = function () { return _this.error(); };
+                    break;
+                case 'thank-you':
+                    ui = function () { return _this.thankYou(); };
+                    break;
+                case 'submitting':
+                    ui = function () { return _this.submitting(); };
+                    break;
+            }
             return React.createElement("div", { style: { margin: '60px 0 0 20px' } },
                 React.createElement("h1", { className: 'text-center' }, "Contribute"),
-                React.createElement("p", null, "If you would like to contribute to the ChannelsDB or point out not yet annotated systems with known channels, please use the form below, until the online annotation tool is ready by the end of 2017:"),
-                React.createElement("form", { className: 'form-horizontal' },
-                    React.createElement("div", { className: 'form-group' },
-                        React.createElement("label", { className: 'control-label col-sm-2', htmlFor: 'pdbId' }, "PDB identifier"),
-                        React.createElement("div", { className: 'col-sm-10' },
-                            React.createElement("input", { type: 'text', className: 'form-control', id: 'pdbId', placeholder: '1tqn' }))),
-                    React.createElement("div", { className: 'form-group' },
-                        React.createElement("label", { className: 'control-label col-sm-2', htmlFor: 'litReference' }, "Literature reference"),
-                        React.createElement("div", { className: 'col-sm-10' },
-                            React.createElement("input", { type: 'text', className: 'form-control', id: 'litReference', placeholder: 'Doi or Pubmed ID (e.g. 10.1021/acs.jctc.6b00075 or  PMID: 26967371)' }))),
-                    React.createElement("div", { className: 'form-group' },
-                        React.createElement("label", { className: 'control-label col-sm-2', htmlFor: 'email' }, "E-mail"),
-                        React.createElement("div", { className: 'col-sm-10' },
-                            React.createElement("input", { type: 'text', className: 'form-control', id: 'email', placeholder: '(optional) jon.snow@uni.ac.uk' }))),
-                    React.createElement("div", { className: 'form-group' },
-                        React.createElement("label", { className: 'control-label col-sm-2', htmlFor: 'annotation' }, "Annotation"),
-                        React.createElement("textarea", { style: { width: '97.5%', marginLeft: '15px', marginTop: '35px' }, className: 'form-control', rows: 7, id: 'annotation', placeholder: 'Tunnel 30.5Å. - Substrate channel\n\nTYR 23 A - Constriction region\nASN 1 B A part of NPA motif that orient the key central water molecule' })),
-                    React.createElement("div", { className: 'input-group' },
-                        React.createElement("label", { className: 'input-group-btn' },
-                            React.createElement("span", { className: 'btn btn-default' },
-                                "Select channels\u2026 ",
-                                React.createElement("input", { type: 'file', style: { display: 'none' }, multiple: true }))),
-                        React.createElement("input", { type: 'text', className: 'form-control', readOnly: true })),
-                    React.createElement("br", null),
-                    React.createElement("button", { className: 'btn btn-primary btn-block g-recaptcha', "data-sitekey": '6LfccisUAAAAAH5uJXH3J-9KKc6ItSKS2luiXUFZ', onClick: this.submitAnnotation }, "Submit")),
+                ui(),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
                 React.createElement("h1", { className: 'text-center' }, "References"),
                 React.createElement("div", { className: 'tab-pane' },
@@ -1262,14 +1553,6 @@ var ChannelsDB;
 /*
  * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
  */
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 var ChannelsDB;
 (function (ChannelsDB) {
     function renderUI(target, kind) {

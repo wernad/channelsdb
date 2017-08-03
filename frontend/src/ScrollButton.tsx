@@ -22,8 +22,6 @@ namespace ChannelsDB {
             };
         }
 
-
-
         scrollStep() {
             if (window.pageYOffset === 0) {
                 clearInterval(this.state.intervalId);
