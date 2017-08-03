@@ -1198,7 +1198,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 var ChannelsDB;
 (function (ChannelsDB) {
-    var SUBMIT_URL = 'URL';
+    var SUBMIT_URL = 'https://webchem.ncbr.muni.cz/API/ChannelsDB/Upload/';
     var EditableRow = (function (_super) {
         __extends(EditableRow, _super);
         function EditableRow() {
@@ -1286,27 +1286,30 @@ var ChannelsDB;
     function FormState() {
         return { pdbId: '', reference: '', email: '', channels: [], residues: [], files: [] };
     }
+    function formatEntries(xs) {
+        var ret = [];
+        for (var _i = 0, xs_1 = xs; _i < xs_1.length; _i++) {
+            var x = xs_1[_i];
+            var e = __assign({}, x);
+            delete e._id;
+            ret.push(e);
+        }
+        return JSON.stringify(ret);
+    }
     function makeFormData(data) {
-        var inputs = [];
         var fd = new FormData();
         fd.append('pdbId', data.pdbId);
-        inputs.push('pdbId');
         fd.append('reference', data.reference);
-        inputs.push('reference');
         fd.append('email', data.email || '');
-        inputs.push('email');
-        fd.append('channels', JSON.stringify(data.channels));
-        inputs.push('channels');
-        fd.append('residues', JSON.stringify(data.residues));
-        inputs.push('residues');
+        fd.append('channels', formatEntries(data.channels));
+        fd.append('residues', formatEntries(data.residues));
         var index = 0;
+        fd.append('fileCount', '' + data.files.length);
         for (var _i = 0, _a = data.files; _i < _a.length; _i++) {
             var file = _a[_i];
             fd.append("file[" + index++ + "]", file);
-            inputs.push(file.name);
         }
-        var hint = "annotations: " + inputs.join(', ');
-        return { data: fd, hint: hint };
+        return fd;
     }
     function uploadAjaxFormData(formData, actionUrl, options) {
         options = options || {};
@@ -1342,19 +1345,19 @@ var ChannelsDB;
     function submit(data) {
         var subj = new Rx.Subject();
         var progress = 0;
-        uploadAjaxFormData(makeFormData(data).data, SUBMIT_URL, {
+        uploadAjaxFormData(makeFormData(data), SUBMIT_URL, {
             onComplete: function (response) {
-                if (response.status && response.status === 'ok') {
+                if (response.Status && response.Status === 'OK') {
                     subj.onCompleted();
                 }
                 else {
-                    subj.onError(response.message || 'Unknown error.');
+                    subj.onError(response.Msg || 'Unknown error.');
                 }
             },
             onProgress: function (current, total) {
                 if (current !== undefined && total !== undefined) {
                     var percentComplete = Math.round(current * 1000 / total) / 10;
-                    subj.onNext("" + percentComplete);
+                    subj.onNext(percentComplete + "%");
                 }
                 else {
                     subj.onNext("");
@@ -1493,7 +1496,7 @@ var ChannelsDB;
                         React.createElement("br", null)),
                     issues.length > 0
                         ? React.createElement("div", null,
-                            React.createElement("ul", { style: { color: 'red' } }, issues.map(function (i) { return React.createElement("li", null, i); })))
+                            React.createElement("ul", { style: { color: 'red' } }, issues.map(function (i) { return React.createElement("li", { key: i }, i); })))
                         : React.createElement("button", { className: 'btn btn-block btn-primary', onClick: function () { return _this.submitStart(); } }, "Submit")));
         };
         Contribute.prototype.render = function () {

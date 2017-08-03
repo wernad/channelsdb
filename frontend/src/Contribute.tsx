@@ -4,7 +4,7 @@
 
 namespace ChannelsDB {
 
-    const SUBMIT_URL = 'URL'
+    const SUBMIT_URL = 'https://webchem.ncbr.muni.cz/API/ChannelsDB/Upload/';
 
     interface ChannelEntry {
         id: string,
@@ -130,15 +130,25 @@ namespace ChannelsDB {
         progress: Rx.Subject<number>;
     }
 
+    function formatEntries(xs: any[]) {
+        const ret: any[] = [];
+        for (const x of xs) {
+            const e = {...x};
+            delete e._id;
+            ret.push(e);
+        }
+        return JSON.stringify(ret);
+    }
+
     function makeFormData(data: FormState) {
         const fd = new FormData();
         fd.append('pdbId', data.pdbId);
         fd.append('reference', data.reference);
         fd.append('email', data.email || '');
-        fd.append('channels', JSON.stringify(data.channels));
-        fd.append('residues', JSON.stringify(data.residues));
+        fd.append('channels', formatEntries(data.channels));
+        fd.append('residues', formatEntries(data.residues));
         let index = 0;
-        fd.append('fileCount', ''+ data.files.length);
+        fd.append('fileCount', '' + data.files.length);
         for (const file of data.files) {
             fd.append(`file[${index++}]`, file);
         }
@@ -184,23 +194,23 @@ namespace ChannelsDB {
         const subj = new Rx.Subject<string>();
         let progress = 0;
 
-        uploadAjaxFormData(makeFormData(data).data, SUBMIT_URL, {
-            onComplete: function (response) {
-                if (response.status && response.status === 'ok') {
+        uploadAjaxFormData(makeFormData(data), SUBMIT_URL, {
+            onComplete(response) {
+                if (response.Status && response.Status === 'OK') {
                     subj.onCompleted();
                 } else {
-                    subj.onError(response.message || 'Unknown error.');
+                    subj.onError(response.Msg || 'Unknown error.');
                 }
             },
-            onProgress: function (current, total) {
+            onProgress(current, total) {
                 if (current !== undefined && total !== undefined) {
                     const percentComplete = Math.round(current * 1000 / total) / 10;
-                    subj.onNext(`${percentComplete}`);
+                    subj.onNext(`${percentComplete}%`);
                 } else {
                     subj.onNext(``);
                 }
             },
-            onFailed: function () {
+            onFailed() {
                 subj.onError('Unknown error.');
             }
         });
@@ -351,7 +361,7 @@ namespace ChannelsDB {
                      {issues.length > 0
                         ? <div>
                             <ul style={{ color: 'red' }}>
-                                {issues.map(i => <li>{i}</li>)}
+                                {issues.map(i => <li key={i}>{i}</li>)}
                             </ul>
                         </div>
                         : <button className='btn btn-block btn-primary' onClick={() => this.submitStart()}>
