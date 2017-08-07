@@ -1198,7 +1198,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 var ChannelsDB;
 (function (ChannelsDB) {
-    var SUBMIT_URL = 'https://webchem.ncbr.muni.cz/API/ChannelsDB/Upload/';
+    var SUBMIT_URL = 'https://webchem.ncbr.muni.cz/API/ChannelsDB/UploadAnnotations/';
     var EditableRow = (function (_super) {
         __extends(EditableRow, _super);
         function EditableRow() {
@@ -1289,7 +1289,7 @@ var ChannelsDB;
         return EditableTable;
     }(React.Component));
     function FormState() {
-        return { pdbId: '', reference: '', email: '', channels: [], residues: [], files: [] };
+        return { pdbId: '', email: '', channels: [], residues: [], files: [] };
     }
     function formatEntries(xs) {
         var ret = [];
@@ -1304,7 +1304,6 @@ var ChannelsDB;
     function makeFormData(data) {
         var fd = new FormData();
         fd.append('pdbId', data.pdbId);
-        fd.append('reference', data.reference);
         fd.append('email', data.email || '');
         fd.append('channels', formatEntries(data.channels));
         fd.append('residues', formatEntries(data.residues));
@@ -1349,7 +1348,6 @@ var ChannelsDB;
     }
     function submit(data) {
         var subj = new Rx.Subject();
-        var progress = 0;
         uploadAjaxFormData(makeFormData(data), SUBMIT_URL, {
             onComplete: function (response) {
                 if (response.Status && response.Status === 'OK') {
@@ -1370,7 +1368,7 @@ var ChannelsDB;
             },
             onFailed: function () {
                 subj.onError('Unknown error.');
-            }
+            },
         });
         return subj;
     }
@@ -1382,15 +1380,15 @@ var ChannelsDB;
             _this.errorMsg = '';
             _this.submitProgress = void 0;
             _this.channelsSpec = {
-                id: { header: 'Channel Id', width: '200px', placeholder: '30.5A' },
-                name: { header: 'Name', width: '200px', placeholder: 'bla' },
-                description: { header: 'Description', width: 'auto', placeholder: 'this is something' },
-                reference: { header: 'Reference', width: '300px', placeholder: 'doi' }
+                id: { header: 'Channel Id', width: '200px', placeholder: 'Identificaton (eg. 1)' },
+                name: { header: 'Name', width: '200px', placeholder: 'Suggested name' },
+                description: { header: 'Description', width: 'auto', placeholder: 'Detailed description of channel\'s function' },
+                reference: { header: 'Reference', width: '300px', placeholder: 'DOI or Pubmed ID.' },
             };
             _this.residuesSpec = {
                 id: { header: 'Residue Id', width: '200px', placeholder: 'ALA 10 A' },
-                annotation: { header: 'Annotation', width: 'auto', placeholder: 'this is something' },
-                reference: { header: 'Reference', width: '300px', placeholder: 'doi' }
+                text: { header: 'Annotation', width: 'auto', placeholder: 'Detailed description of residue\'s function.' },
+                reference: { header: 'Reference', width: '300px', placeholder: 'DOI or Pubmed ID.' },
             };
             _this._submit = void 0;
             return _this;
@@ -1415,14 +1413,12 @@ var ChannelsDB;
         Contribute.prototype.getIssues = function () {
             var fs = this.state.formState;
             var issues = [];
-            if (fs.pdbId.trim().length < 4)
-                issues.push('PDB id must be at least 4 characters.');
-            if (fs.reference.trim().length === 0)
-                issues.push('Enter reference.');
+            if (fs.pdbId.trim().length !== 4)
+                issues.push('PDB id must be 4 characters long.');
             if (!fs.residues.length && !fs.channels.length)
                 issues.push('Enter at least one residue or channel annotation.');
             if (!fs.files.length)
-                issues.push('Add at least one file with annotations.');
+                issues.push('Add at least one file with computed channels.');
             return issues;
         };
         Contribute.prototype.submitStart = function () {
@@ -1478,15 +1474,11 @@ var ChannelsDB;
                         React.createElement("div", { className: 'form-group' },
                             React.createElement("label", { className: 'control-label col-sm-2', htmlFor: 'pdbId' }, "PDB identifier"),
                             React.createElement("div", { className: 'col-sm-10' },
-                                React.createElement("input", { type: 'text', className: 'form-control', placeholder: '1tqn', name: 'pdbId', value: fs.pdbId, onChange: function (e) { return _this.update(e.target); } }))),
-                        React.createElement("div", { className: 'form-group' },
-                            React.createElement("label", { className: 'control-label col-sm-2', htmlFor: 'litReference' }, "Literature reference"),
-                            React.createElement("div", { className: 'col-sm-10' },
-                                React.createElement("input", { type: 'text', className: 'form-control', placeholder: 'Doi or Pubmed ID (e.g. 10.1021/acs.jctc.6b00075 or  PMID: 26967371)', name: 'reference', onChange: function (e) { return _this.update(e.target); }, value: fs.reference }))),
+                                React.createElement("input", { type: 'text', className: 'form-control', "data-tip": 'hi :)!', placeholder: '1tqn', name: 'pdbId', value: fs.pdbId, onChange: function (e) { return _this.update(e.target); } }))),
                         React.createElement("div", { className: 'form-group' },
                             React.createElement("label", { className: 'control-label col-sm-2', htmlFor: 'email' }, "E-mail"),
                             React.createElement("div", { className: 'col-sm-10' },
-                                React.createElement("input", { type: 'text', className: 'form-control', name: 'email', placeholder: '(optional) jon.snow@uni.ac.uk', onChange: function (e) { return _this.update(e.target); }, value: fs.email }))),
+                                React.createElement("input", { type: 'text', className: 'form-control', name: 'email', placeholder: '(optional for further contact) jon.snow@uni.ac.uk', onChange: function (e) { return _this.update(e.target); }, value: fs.email }))),
                         React.createElement("h2", null, "Channel Annotations"),
                         React.createElement(EditableTable, { key: 'channels-annotations', entries: fs.channels, spec: this.channelsSpec, updated: function () { return _this.updatedAnnotations(); } }),
                         React.createElement("h2", null, "Residue Annotations"),
@@ -1506,8 +1498,8 @@ var ChannelsDB;
         };
         Contribute.prototype.render = function () {
             var _this = this;
-            var fs = this.state.formState;
-            var issues = this.getIssues();
+            // const fs = this.state.formState;
+            // const issues = this.getIssues();
             var ui;
             switch (this.state.state) {
                 case 'editing':
@@ -1529,7 +1521,7 @@ var ChannelsDB;
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
                 React.createElement("h1", { className: 'text-center' }, "References"),
                 React.createElement("div", { className: 'tab-pane' },
-                    React.createElement("p", null, "The ChannelsDB is build a over the top of the following services. Data annotations are taken from scientific literature, which is properly linked with the given entry."),
+                    React.createElement("p", null, "Data annotations are taken from scientific literature, which is properly linked with a given entry. Other than that the ChannelsDB following services: "),
                     React.createElement("dl", { className: 'publications-list' },
                         React.createElement("dt", null, "MOLE"),
                         React.createElement("dd", null,
@@ -1552,7 +1544,13 @@ var ChannelsDB;
                             React.createElement("p", null,
                                 "Velankar,S., van Ginkel,G., Alhroub,Y., Battle,G.M., Berrisford,J.M., Conroy,M.J., Dana,J.M., Gore,S.P., Gutmanas,A., Haslam,P., et al. (2016) ",
                                 React.createElement("a", { href: 'https://dx.doi.org/10.1093/nar/gkv1047', target: '_blank' }, "PDBe: improved accessibility of macromolecular structure data from PDB and EMDB"),
-                                ". Nucleic Acids Res., 44, D385\u2013D395.")))));
+                                ". Nucleic Acids Res., 44, D385\u2013D395.")),
+                        React.createElement("dt", null, "SIFTS"),
+                        React.createElement("dd", null,
+                            React.createElement("p", null,
+                                "Velankar,S., Dana,J.M., Jacobsen,J., van Ginkel,G., Gane,P.J., Luo,J., Oldfield,T.J., O\u2019Donovan,C., Martin,M.-J. and Kleywegt,G.J. (2013) ",
+                                React.createElement("a", { href: 'https://dx.doi.org/10.1093/nar/gks1258', target: '_blank' }, " SIFTS: Structure Integration with Function, Taxonomy and Sequences resource"),
+                                ". Nucleic Acids Res., 41, D483\u2013D489.")))));
         };
         return Contribute;
     }(React.Component));

@@ -4,26 +4,26 @@
 
 namespace ChannelsDB {
 
-    const SUBMIT_URL = 'https://webchem.ncbr.muni.cz/API/ChannelsDB/Upload/';
+    const SUBMIT_URL = 'https://webchem.ncbr.muni.cz/API/ChannelsDB/UploadAnnotations/';
 
     interface ChannelEntry {
-        id: string,
-        name: string,
-        description: string,
-        reference: string
+        id: string;
+        name: string;
+        description: string;
+        reference: string;
     }
 
     interface ResidueEntry {
-        id: string,
-        annotation: string,
-        reference: string
+        id: string;
+        text: string;
+        reference: string;
     }
 
-    type Entry<T> = {[K in keyof T]: T[K]}
+    type Entry<T> = {[K in keyof T]: T[K]};
 
     interface TableSpec<T> {
-        entries: Entry<T>[],
-        spec: {[K in keyof T]: { header: string, width: string, placeholder: string } }
+        entries: Array<Entry<T>>;
+        spec: {[K in keyof T]: { header: string, width: string, placeholder: string } };
     }
 
     class EditableRow extends React.Component<TableSpec<any> & { add: (e: Entry<any>) => void }, { value: { [name: string]: string } }> {
@@ -35,7 +35,7 @@ namespace ChannelsDB {
             const spec = this.props.spec;
             const cols = Object.keys(spec);
             const curr = this.state.value;
-            const canAdd = Object.keys(curr).every(k => typeof curr[k] === 'string' && curr[k].trim().length > 0) && Object.keys(curr).length === cols.length;
+            const canAdd = Object.keys(curr).every((k) => typeof curr[k] === 'string' && curr[k].trim().length > 0) && Object.keys(curr).length === cols.length;
             if (!canAdd) return;
             this.props.add({ ...this.state.value });
             this.setState({ value: Object.create(null) });
@@ -50,10 +50,10 @@ namespace ChannelsDB {
             const spec = this.props.spec;
             const cols = Object.keys(spec);
             const curr = this.state.value;
-            const canAdd = Object.keys(curr).every(k => typeof curr[k] === 'string' && curr[k].trim().length > 0) && Object.keys(curr).length === cols.length;
+            const canAdd = Object.keys(curr).every((k) => typeof curr[k] === 'string' && curr[k].trim().length > 0) && Object.keys(curr).length === cols.length;
             return <tr>
-                {cols.map(c => <td key={c} style={{ width: spec[c].width }} className='form-group'>
-                    <input ref={r => c === cols[0] ? this.first = r! : void 0} name={c} className='form-control' type='text' placeholder={spec[c].placeholder} onChange={e => this.update(e.target)} value={curr[c] || ''} onKeyPress={ e => e.key === 'Enter' ? this.add() : void 0 } />
+                {cols.map((c) => <td key={c} style={{ width: spec[c].width }} className='form-group'>
+                    <input ref={(r) => c === cols[0] ? this.first = r! : void 0} name={c} className='form-control' type='text' placeholder={spec[c].placeholder} onChange={(e) => this.update(e.target)} value={curr[c] || ''} onKeyPress={ (e) => e.key === 'Enter' ? this.add() : void 0 } />
                 </td>)}
                 <td key='actions'>
                     <button className='btn btn-success' disabled={!canAdd} onClick={() => this.add()}><span className='glyphicon glyphicon-plus' aria-hidden='true'></span></button>
@@ -62,8 +62,8 @@ namespace ChannelsDB {
         }
     }
 
-    class EditableTable<T> extends React.Component<TableSpec<T> & { updated: () => void }, { entries: Entry<T>[] }> {
-        state = { entries: [] }
+    class EditableTable<T> extends React.Component<TableSpec<T> & { updated: () => void }, { entries: Array<Entry<T>> }> {
+        state = { entries: [] };
 
         id = 0;
 
@@ -87,7 +87,7 @@ namespace ChannelsDB {
         }
 
         componentWillReceiveProps(nextProps: TableSpec<T>) {
-            this.setState({ entries: nextProps.entries })
+            this.setState({ entries: nextProps.entries });
         }
 
         componentDidMount() {
@@ -100,36 +100,35 @@ namespace ChannelsDB {
             return <table className='table table-striped table-bordered'>
                 <thead>
                     <tr>
-                        {cols.map(c => <th key={c} style={{ width: spec[c].width }}>{spec[c].header}</th>)}
+                        {cols.map((c) => <th key={c} style={{ width: spec[c].width }}>{spec[c].header}</th>)}
                         <th style={{ width: '50px' }}></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <EditableRow {...this.props} add={e => this.add(e)} />
+                    <EditableRow {...this.props} add={(e) => this.add(e)} />
                     {
-                        this.state.entries.map(e => <tr key={(e as any)._id}>
-                            {cols.map(c => <td key={c} style={{ width: spec[c].width, verticalAlign: 'middle', padding: '0 15px' }}>{(e as any)[c]}</td>)}
+                        this.state.entries.map((e) => <tr key={(e as any)._id}>
+                            {cols.map((c) => <td key={c} style={{ width: spec[c].width, verticalAlign: 'middle', padding: '0 15px' }}>{(e as any)[c]}</td>)}
                             <td key='actions'>
                                 <button className='btn btn-danger' onClick={() => this.remove(e)}><span className='glyphicon glyphicon-remove' aria-hidden='true'></span></button>
                             </td>
                         </tr>)
                     }
                 </tbody>
-            </table>
+            </table>;
         }
     }
 
     interface FormState {
-        pdbId: string,
-        reference: string,
-        email?: string,
-        channels: ChannelEntry[],
-        residues: ResidueEntry[],
-        files: File[]
+        pdbId: string;
+        email?: string;
+        channels: ChannelEntry[];
+        residues: ResidueEntry[];
+        files: File[];
     }
 
     function FormState(): FormState {
-        return { pdbId: '', reference: '', email: '', channels: [], residues: [], files: [] };
+        return { pdbId: '', email: '', channels: [], residues: [], files: [] };
     }
 
     interface SubmitState {
@@ -149,7 +148,6 @@ namespace ChannelsDB {
     function makeFormData(data: FormState) {
         const fd = new FormData();
         fd.append('pdbId', data.pdbId);
-        fd.append('reference', data.reference);
         fd.append('email', data.email || '');
         fd.append('channels', formatEntries(data.channels));
         fd.append('residues', formatEntries(data.residues));
@@ -198,7 +196,6 @@ namespace ChannelsDB {
 
     function submit(data: FormState): Rx.Subject<string> {
         const subj = new Rx.Subject<string>();
-        let progress = 0;
 
         uploadAjaxFormData(makeFormData(data), SUBMIT_URL, {
             onComplete(response) {
@@ -218,29 +215,29 @@ namespace ChannelsDB {
             },
             onFailed() {
                 subj.onError('Unknown error.');
-            }
+            },
         });
 
         return subj;
     }
 
     export class Contribute extends React.Component<{}, { state: 'editing' | 'submitting' | 'thank-you' | 'error', submitProgress: string, formState: FormState }> {
-        state = { state: 'editing' as 'editing' | 'submitting' | 'thank-you' | 'error', formState: FormState(), submitProgress: '' }
+        state = { state: 'editing' as 'editing' | 'submitting' | 'thank-you' | 'error', formState: FormState(), submitProgress: '' };
 
         private errorMsg = '';
         private submitProgress: Rx.Observable<string> | undefined = void 0;
 
         private channelsSpec = {
-            id: { header: 'Channel Id', width: '200px', placeholder: '30.5A' },
-            name: { header: 'Name', width: '200px', placeholder: 'bla' },
-            description: { header: 'Description', width: 'auto', placeholder: 'this is something' },
-            reference: { header: 'Reference', width: '300px', placeholder: 'doi' }
+            id: { header: 'Channel Id', width: '200px', placeholder: 'Identificaton (eg. 1)' },
+            name: { header: 'Name', width: '200px', placeholder: 'Suggested name' },
+            description: { header: 'Description', width: 'auto', placeholder: 'Detailed description of channel\'s function' },
+            reference: { header: 'Reference', width: '300px', placeholder: 'DOI or Pubmed ID.' },
         };
 
         private residuesSpec = {
             id: { header: 'Residue Id', width: '200px', placeholder: 'ALA 10 A' },
-            annotation: { header: 'Annotation', width: 'auto', placeholder: 'this is something' },
-            reference: { header: 'Reference', width: '300px', placeholder: 'doi' }
+            text: { header: 'Annotation', width: 'auto', placeholder: 'Detailed description of residue\'s function.' },
+            reference: { header: 'Reference', width: '300px', placeholder: 'DOI or Pubmed ID.' },
         };
 
         updatedAnnotations() {
@@ -255,7 +252,7 @@ namespace ChannelsDB {
 
         setFiles(input: HTMLInputElement) {
             const files: File[] = [];
-            const len = (input.files && input.files.length) || 0
+            const len = (input.files && input.files.length) || 0;
             for (let i = 0; i < len; i++) files.push(input.files![i]);
             const state = { ...this.state.formState, files };
             this.setState({ formState: state });
@@ -264,10 +261,9 @@ namespace ChannelsDB {
         getIssues() {
             const fs = this.state.formState;
             const issues: string[] = [];
-            if (fs.pdbId.trim().length < 4) issues.push('PDB id must be at least 4 characters.');
-            if (fs.reference.trim().length === 0) issues.push('Enter reference.');
+            if (fs.pdbId.trim().length !== 4) issues.push('PDB id must be 4 characters long.');
             if (!fs.residues.length && !fs.channels.length) issues.push('Enter at least one residue or channel annotation.');
-            if (!fs.files.length) issues.push('Add at least one file with annotations.');
+            if (!fs.files.length) issues.push('Add at least one file with computed channels.');
             return issues;
         }
 
@@ -280,7 +276,7 @@ namespace ChannelsDB {
                 this._submit = void 0;
             }
             this.submitProgress = submit(this.state.formState);
-            this._submit = this.submitProgress.subscribe(p => this.setState({ submitProgress: p }), (e) => this.submitDone(e), () => this.submitDone());
+            this._submit = this.submitProgress.subscribe((p) => this.setState({ submitProgress: p }), (e) => this.submitDone(e), () => this.submitDone());
         }
 
         submitDone(err?: any) {
@@ -334,19 +330,13 @@ namespace ChannelsDB {
                         <div className='form-group'>
                             <label className='control-label col-sm-2' htmlFor='pdbId'>PDB identifier</label>
                             <div className='col-sm-10'>
-                                <input type='text' className='form-control' placeholder='1tqn' name='pdbId' value={fs.pdbId} onChange={e => this.update(e.target)} />
-                            </div>
-                        </div>
-                        <div className='form-group'>
-                            <label className='control-label col-sm-2' htmlFor='litReference'>Literature reference</label>
-                            <div className='col-sm-10'>
-                                <input type='text' className='form-control' placeholder='Doi or Pubmed ID (e.g. 10.1021/acs.jctc.6b00075 or  PMID: 26967371)' name='reference' onChange={e => this.update(e.target)} value={fs.reference}  />
+                                <input type='text' className='form-control' data-tip='hi :)!' placeholder='1tqn' name='pdbId' value={fs.pdbId} onChange={(e) => this.update(e.target)} />
                             </div>
                         </div>
                         <div className='form-group'>
                             <label className='control-label col-sm-2' htmlFor='email'>E-mail</label>
                             <div className='col-sm-10'>
-                                <input type='text' className='form-control' name='email' placeholder='(optional) jon.snow@uni.ac.uk' onChange={e => this.update(e.target)} value={fs.email} />
+                                <input type='text' className='form-control' name='email' placeholder='(optional for further contact) jon.snow@uni.ac.uk' onChange={(e) => this.update(e.target)} value={fs.email} />
                             </div>
                         </div>
                         <h2>Channel Annotations</h2>
@@ -359,15 +349,15 @@ namespace ChannelsDB {
 
                         <div className='input-group'>
                             <label className='input-group-btn'>
-                                <span className='btn btn-default'>Select channels&hellip; <input type='file' style={{ display: 'none' }} multiple onChange={e => this.setFiles(e.target)} /></span>
+                                <span className='btn btn-default'>Select channels&hellip; <input type='file' style={{ display: 'none' }} multiple onChange={(e) => this.setFiles(e.target)} /></span>
                             </label>
-                            <input type='text' className='form-control' readOnly value={fs.files.map(f => f.name).join(', ')} />
+                            <input type='text' className='form-control' readOnly value={fs.files.map((f) => f.name).join(', ')} />
                         </div><br />
                     </div>
                      {issues.length > 0
                         ? <div>
                             <ul style={{ color: 'red' }}>
-                                {issues.map(i => <li key={i}>{i}</li>)}
+                                {issues.map((i) => <li key={i}>{i}</li>)}
                             </ul>
                         </div>
                         : <button className='btn btn-block btn-primary' onClick={() => this.submitStart()}>
@@ -378,8 +368,8 @@ namespace ChannelsDB {
         }
 
         render() {
-            const fs = this.state.formState;
-            const issues = this.getIssues();
+            // const fs = this.state.formState;
+            // const issues = this.getIssues();
             let ui: any;
             switch (this.state.state) {
                 case 'editing': ui = () => this.edit(); break;
@@ -396,7 +386,7 @@ namespace ChannelsDB {
 
                 <h1 className='text-center'>References</h1>
                 <div className='tab-pane'>
-                    <p>The ChannelsDB is build a over the top of the following services. Data annotations are taken from scientific literature, which is properly linked with the given entry.</p>
+                    <p>Data annotations are taken from scientific literature, which is properly linked with a given entry. Other than that the ChannelsDB following services: </p>
                     <dl className='publications-list'>
                         <dt>MOLE</dt>
                         <dd>
@@ -416,6 +406,11 @@ namespace ChannelsDB {
                         <dd>
                             <p>Velankar,S., van Ginkel,G., Alhroub,Y., Battle,G.M., Berrisford,J.M., Conroy,M.J., Dana,J.M., Gore,S.P., Gutmanas,A., Haslam,P., et al. (2016) <a href='https://dx.doi.org/10.1093/nar/gkv1047' target='_blank'>PDBe: improved accessibility of macromolecular structure data from PDB and EMDB</a>.
                                       Nucleic Acids Res., 44, D385–D395.</p>
+                        </dd>
+                        <dt>SIFTS</dt>
+                        <dd>
+                            <p>Velankar,S., Dana,J.M., Jacobsen,J., van Ginkel,G., Gane,P.J., Luo,J., Oldfield,T.J., O’Donovan,C., Martin,M.-J. and Kleywegt,G.J. (2013) <a href='https://dx.doi.org/10.1093/nar/gks1258' target='_blank'> SIFTS: Structure Integration with Function, Taxonomy and Sequences resource</a>.
+                             Nucleic Acids Res., 41, D483–D489.</p>
                         </dd>
                     </dl>
                 </div>
