@@ -30,11 +30,11 @@ namespace ChannelsDB {
                     </a>
                     <a href='#db-cofactors' className='list-group-item'>
                         <h4 className='list-group-item-heading'>Cofactors</h4>
-                        <p className='list-group-item-text'>List of cofactors used for channel determination.</p>
+                        <p className='list-group-item-text'>List of cofactors used for channel calculation.</p>
                     </a>                    
                     <a href='#db-results' className='list-group-item'>
                         <h4 className='list-group-item-heading'>Results view</h4>
-                        <p className='list-group-item-text'>Description how to read the resuls page.</p>
+                        <p className='list-group-item-text'>How to read the results page?</p>
                     </a>                    
                     <a href='#db-api' className='list-group-item'>
                         <h4 className='list-group-item-heading'>REST API</h4>
@@ -70,8 +70,8 @@ namespace ChannelsDB {
                 {React.createElement('a' as any, { 'name': 'db-nomenclature' })}
                 <div className='row'>
                         <h2 className='featurette-heading'>Channel nomenclature</h2>
-                        <p>Unless the channel has been given a particular name in literature, which is the case e.g. for a group of <a href='https://dx/doi.org/10.1016/j.bbagen.2006.07.005' target='_blank'>cytorchome P450s</a>, names are given to according to 
-                            the following controlled vocabulary:</p>
+                        <p>Unless the channel has been given a particular name in literature, which is the case e.g. for a group of <a href='https://dx.doi.org/10.1016/j.bbagen.2006.07.005' target='_blank'>cytochrome P450s</a>, 
+                        names are given to accordingly the following controlled vocabulary:</p>
                         <div className='row table-responsive col-md-8 col-md-offset-2'>
                             <table className='table table-condensed active'>
                             <thead>
@@ -131,7 +131,7 @@ namespace ChannelsDB {
                 {React.createElement('a' as any, { 'name': 'db-mole' })}
                 <div className='row'>
                     <h2 className='featurette-heading'>MOLE settings</h2>
-                    <p style={justify}>Throughout the ChannelsDB the folowing settings of the MOLE algorithm has been used for individual types of channels.</p>
+                    <p style={justify}>Throughout the ChannelsDB the following settings of the MOLE algorithm have been used for individual types of channels.</p>
                     <h4 className='featurette-heading'>Reviewed channels</h4>
                     <p style={justify}>Each calculation has been independently adjusted, in order to extract deemed channels.</p>                        
                     <div className='row table-responsive col-md-4 col-md-offset-1'>
@@ -228,7 +228,7 @@ namespace ChannelsDB {
                 {React.createElement('a' as any, { 'name': 'db-cofactors' })}
                 <div className='row'>
                         <h2 className='featurette-heading'>Cofactors list</h2>
-                        <p>Following well-known biologically important cofactors, which are often buried within a protein structure have been selected for channel extraction.</p>
+                        <p>The well-known biologically important cofactors, which are often buried within a protein structure, have been selected for a channel extraction.</p>
                         <div className='row table-responsive col-md-8 col-md-offset-2'>
                             <table className='table table-condensed active'>
                             <thead>
@@ -307,7 +307,7 @@ namespace ChannelsDB {
                                 is available in the <a href='https://webchem.ncbr.muni.cz/Wiki/LiteMol:UserManual' target='_blank'>LiteMol documentation</a>.
                               </li>
                               <li>
-                                 Right next to the visualization pane is a list of all channels identified for the particular PDB entry displayed. All channels are grouped to respective categories.
+                                 Right next to the visualization panel is a list of all channels identified for the particular PDB entry displayed. All channels are grouped to respective categories.
                               </li>
                               <li>
                                 Directly below the visualization pane you can find an interactive visualization of a channel profile. All the physicochemical properties are mapped on the
@@ -333,9 +333,9 @@ namespace ChannelsDB {
                 {React.createElement('a' as any, { 'name': 'db-api' })}
                 <div className='channelsdb-api-docs'>
                         <h2 className='featurette-heading'>REST API </h2>
-                        <p> The entire database is powered by the REST API running at the <a href='https://webchem.ncbr.muni.cz' target='_blank'>webchem server</a>. 
-                        Therefore, all the channel-related information can be programatically retrieved and used for further processing. The returned content is <i>application/json</i> object
-                        and all the properties are self-explanatory. Should you have further questions or comments, do not hesitate to <a href='mailto:webchemistryhelp@gmail.com?subject=REST API'>contact us</a></p>
+                        <p> The entire database is powered by the REST API running on the <a href='https://webchem.ncbr.muni.cz' target='_blank'>webchem server</a>. 
+                        Therefore, all the channel-related information can be programmatically retrieved and used for further processing. The returned content is <i>application/json</i> object
+                        and all the properties are self-explanatory. Should you have further questions or comments, do not hesitate to <a href='mailto:webchemistryhelp@gmail.com?subject=ChannelsDB - REST API'>contact us.</a></p>
                         
                         <h4>Channel position information <span>/PDB/&lt;PDB id&gt;</span><br />
                             <small>Retrieves channels identified in the PDB entry.</small>

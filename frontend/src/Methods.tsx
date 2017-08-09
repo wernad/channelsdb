@@ -24,14 +24,14 @@ namespace ChannelsDB {
                         <h2 className='featurette-heading'>Channels</h2>
                         <p style={justify}>
                             Channels (tunnels and pores) are highly important structural pathways within proteins and other biomacromolecules. Tunnels connect internal spaces of 
-                            biomacromolecules with exterior enabling, e.g., substrates/product transport towards enzymes’ active sites, nascent synthetized proteins to leave
+                            biomacromolecules with exterior enabling, e.g., substrate/product transport towards enzymes’ active sites, nascent synthetized proteins to leave
                              ribosomal proteosynthetic center via ribosomal exit tunnel, etc. Pores are channels passing through the whole biomacromolecular structure, typically
                              facilitating transport of ions or molecules through cellular biomembranes.                    
                         </p>
                         <p style={justify}>
-                            Channel walls are made from surrounding amino acids making up for a specific micro-environment (see e.g. <a href='http://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >(1)</a>),
+                            Channel walls are made from surrounding amino acids making up for a specific micro-environment (see e.g. <a href='http://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >Pravda and Berka et al.</a>),
                             which influence to a great extent specificity and selectivity of plethora biologically important processes. Their constitution is especially important in channel's
-                            constriction sites such as local minimas and bottlenecks, which can function as gatekeepers.
+                            constriction sites such as local minima and bottlenecks, which can function as gatekeepers.
                         </p>
                         <p style={justify}>
                             In the database a channel is represented by its centerline (3D natural spline of a given volume), physicochemical properties and lining residues. Channel volume
@@ -40,7 +40,7 @@ namespace ChannelsDB {
                             physicochemical properties. These are especially important for local minima and a bottleneck (the narrowest part of the channel).
                         </p>
                         <p style={reference}><small><a href='http://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >
-                          1. Pravda,L. and Berka,K. et al. <i>Anatomy of enzyme channels</i>. BMC Bioinformatics, 15, 379. (2014)</a></small></p>
+                          Pravda,L. and Berka,K. et al. <i>Anatomy of enzyme channels</i>. BMC Bioinformatics, 15, 379. (2014)</a></small></p>
                     </div>
                     <div className='col-md-5'>
                         <img style={{margin: '60px 0'}} className='featurette-image img-responsive center-block' src={'assets/img/channel_detail.png'} width='500' height='500' alt='Channel details' />
@@ -54,13 +54,13 @@ namespace ChannelsDB {
                     <div className='col-md-7 col-md-push-5'>
                         <p style={justify}>MOLE is a software tool used for channel identification throughout the ChannelsDB. First, the algorithm calculates Delaunay triangulation/Voronoi diagram of the atomic centers
                             (see step (1) in the figure). Next, regions suitable for channel identification are calculated using a set of predefined parameters (2,3). Channel starting and end points
-                            are identified on these cavity diagrams (4,5) and the most favourable channels are identified among a set of point end points (6). 
+                            are identified in these cavity diagrams (4,5) and the most favourable channels are identified among a set of starting points and ending points (6). 
                         </p> 
                         <p style={justify}>
                             Once the channels have been identified a unique set of residues surrounding channel volume is retrieved. Given this set of residues, a physicochemical properties such as Hydropathy
                             are computed for each channel and its parts. Individual steps of the algorithm are highlighted at the picture below  and more details on the channel identification can be found
                             in the respective <a href='http://dx.doi.org/10.1186/1758-2946-5-39' target='_blank'>paper</a>. Finally, user structures can be analysed using the <a href='http://mole.upol.cz' target='_blank'>
-                            online</a> as well as with the <a href='https://webchem.ncbr.muni.cz/Platform/App/Mole' target='_blank'>command-line</a> version of MOLE.
+                            online</a> as well as the <a href='https://webchem.ncbr.muni.cz/Platform/App/Mole' target='_blank'>command-line</a> version of MOLE.
                         </p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1186/1758-2946-5-39'>
                                 Sehnal,D., et al. <span style={{ fontStyle: 'italic' }}>MOLE 2.0: advanced approach for analysis of biomacromolecular channels.</span>

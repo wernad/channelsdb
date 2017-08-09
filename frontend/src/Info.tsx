@@ -36,11 +36,11 @@ namespace ChannelsDB {
                         <div style={{ textAlign: 'left', textJustify: 'inter-word', padding: '0' }}>
 
                             <p className='lead'>ChannelsDB is a comprehensive and regularly updated resource of channels, pores and tunnels found in biomacromolecules deposited in the
-                                <a target='_blank' href='http://www.ebi.ac.uk/pdbe/'> Protein Data Bank</a>. As such, it is a unique service for a channel-related analyses.</p>
+                                <a target='_blank' href='http://www.ebi.ac.uk/pdbe/'> Protein Data Bank</a>. As such, it is a unique service for channel-related analyses.</p>
 
                             <p className='text-justify'>
                                 The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with
-                                the <a href='www.uniprot.org' target='_blank'>UniProt database</a> a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in
+                                the <a href='http://www.uniprot.org' target='_blank'>UniProt database</a> a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in
                                 a clear interactive manner further facilitating data interpretation. </p>
 
                             <hr className='featurette-divider' style={{ margin: '10px 0' }} />
@@ -113,7 +113,7 @@ namespace ChannelsDB {
                                         <img style={centerStyle} className='img-circle' src={'assets/img/3tbg.png'} alt='3tbg channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-3tbg' role='button'><h3>Cytochrome P450 2D6 substrate tunnel</h3></a>
-                                    <p style={justify}>Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.</p>
+                                    <p style={justify}>Cytochromes P450 are known for complex net of multiple channels leading towards the active site. These channels serve multiple roles in a substrate access, a product release or hydration pathways.</p>
                                 </div>
                                 <div className='col-lg-6'>
                                     <a href='/ChannelsDB/detail/5mrw'>
@@ -136,7 +136,7 @@ namespace ChannelsDB {
                     <div className='col-md-7'>
                         <a href='/ChannelsDB/detail/1ymg'><h2 className='featurette-heading'>Aquaporin O <span className='text-muted'>(1ymg)</span></h2></a>
                         <p style={justify} className='lead'>The pore architecture of Aquaporin O at 2.2&#8491; resolution highlights residues critical for water permeation regulation.</p>
-                        <p style={justify}>The channel is ~ 30&#8491; long and highlights with some of the residues crucial for its proper function. Selectivity filter (ar/R), which allows water molecules passage through the membrane in a single file (green sticks). Residues providing canonical AQP hydrogen bond acceptor that align watters through the channel in balls and stick model. Finally, Tyr-149 important for channel gating in orange.</p>
+                        <p style={justify}>The channel is ~ 30&#8491; long and highlights with some of the residues crucial for its proper function. Selectivity filter (ar/R), which allows water molecules passage through the membrane in a single file (green sticks). Residues providing canonical AQP hydrogen bond acceptor that align waters through the channel in balls and stick model. Finally, Tyr-149 important for channel gating (orange).</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1073/pnas.0405274101'>
                             Harries, W. E. C., et. al. <span style={{ fontStyle: 'italic' }}>The channel architecture of aquaporin 0 at a 2.2&#8491; resolution</span>. Proc. Natl. Acad. Sci. 101, 14045–14050 (2004)</a></small></p>
                     </div>
@@ -169,7 +169,7 @@ namespace ChannelsDB {
                     <div className='col-md-7 '>
                         <a href='/ChannelsDB/detail/1jj2'><h2 className='featurette-heading'>Large Ribosomal Subunit <span className='text-muted'>(1jj2)</span></h2></a>
                         <p style={justify} className='lead'>The ribosomal polypeptide tunnel provides an insight into the release of a nascent polypeptide chain out of the ribosomal complex.</p>
-                        <p style={justify}>The exit tunnel is surrounded by arginine side chains (stick model), bearing positive charges as well as RNA backbone phosphate groups (spheres), thus providing fragmental charge along the tunnel, which is necessary to prevent the nasccent peptide from sticking to the channel wall inside the ribosome. Subunits L4, L22 and L39e interacting with the exit tunnel are highlighted in yellow, green and magenta respectivelly.</p>
+                        <p style={justify}>The exit tunnel is surrounded by arginine side chains (stick model), bearing positive charges as well as RNA backbone phosphate groups (spheres), thus providing fragmental charge along the tunnel, which is necessary to prevent the nascent peptide from sticking to the channel wall inside the ribosome. Subunits L4, L22 and L39e interacting with the exit tunnel are highlighted in yellow, green and magenta respectivelly.</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1016/j.jmb.2006.05.023'>
                             Voss, N. R., et. al. <span style={{ fontStyle: 'italic' }}>The geometry of the ribosomal polypeptide exit tunnel.</span>. J. Mol. Biol. 360, 893–906 (2006)</a></small></p>
                     </div>
@@ -185,10 +185,10 @@ namespace ChannelsDB {
                     <div className='col-md-7 col-md-push-5'>
                         <a href='/ChannelsDB/detail/4nm9'><h2 className='featurette-heading'>PutA channeling system <span className='text-muted'>(4nm9)</span></h2></a>
                         <p style={justify} className='lead'>Substrate channeling is a process of passing intermediate metabolic product from one reaction site to another through intramolecular tunnel.</p>
-                        <p style={justify}>In Gram-negativ bacteria a proline catabolism is excerted by a single protein combining two different enzymes commonly known as Proline utilization A protein (PutA).
+                        <p style={justify}>In Gram-negative bacteria a proline catabolism is exerted by a single protein combining two different enzymes commonly known as Proline utilization A protein (PutA).
                             The active sites of flavoenzyme proline dehydrogenase (PRODH) and ∆-1-pyrroline-5-carboxylate dehydrogenase (P5CDH) are connected by ~75&#8491; long channel throughout the hydrolysis
-                            cavity. Both active sites are supplied by a network of channels for substrate, water consumed by hydrolysis and egress channel for the product - L-glutamate </p>
-                        <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1074/jbc.M114.627661'>
+                            cavity. Both active sites are supplied by a network of channels for substrate, water consumed by hydrolysis and egress channel for the product - L-glutamate.</p>
+                        <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1073/pnas.1321621111'>
                             Singh,H., et al. <span style={{ fontStyle: 'italic' }}>Structures of the PutA peripheral membrane flavoenzyme reveal a dynamic substrate-channeling tunnel and the quinone-binding site</span> Proc. Natl. Acad. Sci., 111, 3389–3394. (2014)</a></small></p>
                     </div>
                     <div className='col-md-5 col-md-pull-7'>

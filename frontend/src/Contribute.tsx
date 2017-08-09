@@ -395,7 +395,7 @@ namespace ChannelsDB {
                         </dd>
                         <dt>LiteMol suite</dt>
                         <dd>
-                            <p><a href='https:/litemol.org' target='_blank'>LiteMol suite</a></p>
+                            <p><a href='https://litemol.org' target='_blank'>LiteMol suite</a></p>
                         </dd>
                         <dt>UniProt API</dt>
                         <dd>
