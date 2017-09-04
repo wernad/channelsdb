@@ -45,7 +45,7 @@ namespace ChannelsDB {
 
                             <hr className='featurette-divider' style={{ margin: '10px 0' }} />
 
-                            <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us!</a>.</p>
+                            <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us</a>, or use the <a href='contribute.html'>annotation API</a>.</p>
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@ namespace ChannelsDB {
                     <div className='col-lg-12'>
                         <h2 style={{ textAlign: 'center', margin: '0 0 20px 0', fontWeight: 'bold' }}>Examples</h2>
                         <div className='well'>
-                            <div className='row'>
+                            <div>
                                 <div className='col-lg-4'>
                                     <a href='/ChannelsDB/detail/1ymg'>
                                         <img style={centerStyle} className='img-circle' src={'assets/img/1ymg.png'} alt='1ymg channel detail' width='140' height='140' />
@@ -102,12 +102,12 @@ namespace ChannelsDB {
                                     <p style={justify}>Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome.</p>
                                 </div>
                             </div>
-                            <div className='row' style={{ margin: '20px 0' }}>
+                            <div style={{ margin: '20px 0' }}>
                                 <div className='col-lg-4'><a className='btn btn-block btn-default' href='#ex-1ymg' role='button'>View details &raquo;</a></div>
                                 <div className='col-lg-4'><a className='btn btn-block btn-default' href='#ex-4nm9' role='button'>View details &raquo;</a></div>
                                 <div className='col-lg-4'><a className='btn btn-block btn-default' href='#ex-1jj2' role='button'>View details &raquo;</a></div>
                             </div>
-                            <div className='row'>
+                            <div>
                                 <div className='col-lg-6'>
                                     <a href='/ChannelsDB/detail/3tbg'>
                                         <img style={centerStyle} className='img-circle' src={'assets/img/3tbg.png'} alt='3tbg channel detail' width='140' height='140' />
@@ -123,7 +123,7 @@ namespace ChannelsDB {
                                     <p style={justify}>KdpFABC membrane complex has one ion channel-like subunit (KdpA) and pump-like subunit (KdpB). Coupling between these two subunits is provided by the charge transfer tunnel present in the membrane parts of these subunits.</p>
                                 </div>
                             </div>
-                            <div className='row' style={{ margin: '20px 0' }}>
+                            <div style={{ margin: '20px 0' }}>
                                 <div className='col-lg-6'><a className='btn btn-block btn-default' href='#ex-p450' role='button'>View details &raquo;</a></div>
                                 <div className='col-lg-6'><a className='btn btn-block btn-default' href='#ex-5mrw' role='button'>View details &raquo;</a></div>
                             </div>
