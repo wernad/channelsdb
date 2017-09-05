@@ -82,27 +82,27 @@ namespace ChannelsDB {
                             <div>
                                 <div className='col-lg-4'>
                                     <a href='/ChannelsDB/detail/1ymg'>
-                                        <img style={centerStyle} className='img-circle' src={'assets/img/1ymg.png'} alt='1ymg channel detail' width='140' height='140' />
+                                        <img style={centerStyle} className='img-circle' src={'assets/img/1ymg.jpg'} alt='1ymg channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-1ymg' role='button'><h3>Aquaporin water channel</h3></a>
                                     <p style={justify}>The pore architecture of Aquaporin O at 2.2&#8491; resolution highlights residues critical for water permeation regulation.</p>
                                 </div>
                                 <div className='col-lg-4'>
                                     <a href='/ChannelsDB/detail/4nm9'>
-                                        <img style={centerStyle} className='img-circle' src={'assets/img/4nm9.png'} alt='4nm9 channel detail' width='140' height='140' />
+                                        <img style={centerStyle} className='img-circle' src={'assets/img/4nm9.jpg'} alt='4nm9 channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-4nm9' role='button'><h3>Substrate channeling system</h3></a>
                                     <p style={justify}>Proline utilization A protein contains two active sites separated by ~75&#8491; long channeling system accompanied by a complex network of channels.</p>
                                 </div>
                                 <div className='col-lg-4'>
                                     <a href='/ChannelsDB/detail/1jj2'>
-                                        <img style={centerStyle} className='img-circle' src={'assets/img/1jj2.png'} alt='1jj2 channel detail' width='140' height='140' />
+                                        <img style={centerStyle} className='img-circle' src={'assets/img/1jj2.jpg'} alt='1jj2 channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-1jj2' role='button'><h3>Ribosomal polypeptide exit tunnel</h3></a>
                                     <p style={justify}>Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome.</p>
                                 </div>
                             </div>
-                            <div style={{ margin: '20px 0' }}>
+                            <div className='row' style={{ margin: '20px 0' }}>
                                 <div className='col-lg-4'><a className='btn btn-block btn-default' href='#ex-1ymg' role='button'>View details &raquo;</a></div>
                                 <div className='col-lg-4'><a className='btn btn-block btn-default' href='#ex-4nm9' role='button'>View details &raquo;</a></div>
                                 <div className='col-lg-4'><a className='btn btn-block btn-default' href='#ex-1jj2' role='button'>View details &raquo;</a></div>
@@ -110,20 +110,20 @@ namespace ChannelsDB {
                             <div>
                                 <div className='col-lg-6'>
                                     <a href='/ChannelsDB/detail/3tbg'>
-                                        <img style={centerStyle} className='img-circle' src={'assets/img/3tbg.png'} alt='3tbg channel detail' width='140' height='140' />
+                                        <img style={centerStyle} className='img-circle' src={'assets/img/3tbg.jpg'} alt='3tbg channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-3tbg' role='button'><h3>Cytochrome P450 2D6 substrate tunnel</h3></a>
                                     <p style={justify}>Cytochromes P450 are known for complex net of multiple channels leading towards the active site. These channels serve multiple roles in a substrate access, a product release or hydration pathways.</p>
                                 </div>
                                 <div className='col-lg-6'>
                                     <a href='/ChannelsDB/detail/5mrw'>
-                                        <img style={centerStyle} className='img-circle' src={'assets/img/5mrw.png'} alt='4nm9 channel detail' width='140' height='140' />
+                                        <img style={centerStyle} className='img-circle' src={'assets/img/5mrw.jpg'} alt='4nm9 channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-5mrw' role='button'><h3>Charge transfer coupling tunnel in potassium-importing KdpFABC membrane complex</h3></a>
                                     <p style={justify}>KdpFABC membrane complex has one ion channel-like subunit (KdpA) and pump-like subunit (KdpB). Coupling between these two subunits is provided by the charge transfer tunnel present in the membrane parts of these subunits.</p>
                                 </div>
                             </div>
-                            <div style={{ margin: '20px 0' }}>
+                            <div className='row' style={{ margin: '20px 0' }}>
                                 <div className='col-lg-6'><a className='btn btn-block btn-default' href='#ex-p450' role='button'>View details &raquo;</a></div>
                                 <div className='col-lg-6'><a className='btn btn-block btn-default' href='#ex-5mrw' role='button'>View details &raquo;</a></div>
                             </div>
@@ -141,7 +141,7 @@ namespace ChannelsDB {
                             Harries, W. E. C., et. al. <span style={{ fontStyle: 'italic' }}>The channel architecture of aquaporin 0 at a 2.2&#8491; resolution</span>. Proc. Natl. Acad. Sci. 101, 14045–14050 (2004)</a></small></p>
                     </div>
                     <div className='col-md-5'>
-                        <img className='featurette-image img-responsive center-block' src={'assets/img/1ymg_detail.png'} width='500' height='500' alt='1ymg detailed channel view' />
+                        <img className='featurette-image img-responsive center-block' src={'assets/img/1ymg_detail.jpg'} width='500' height='500' alt='1ymg detailed channel view' />
                     </div>
                 </div>
 
@@ -149,7 +149,7 @@ namespace ChannelsDB {
 
 
                 <div className='row featurette'>
-                    {React.createElement('a' as any, { 'name': 'ex-p450' })}
+                    {React.createElement('a' as any, { 'name': 'ex-3tbg' })}
                     <div className='col-md-7 col-md-push-5'>
                         <a href='/ChannelsDB/detail/3tbg'><h2 className='featurette-heading'>Cytochrome P450 2D6 <span className='text-muted'>(3tbg)</span></h2></a>
                         <p style={justify} className='lead'>Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.</p>
@@ -158,7 +158,7 @@ namespace ChannelsDB {
                             Wang, A., et al. <span style={{ fontStyle: 'italic' }}>Contributions of Ionic Interactions and Protein Dynamics to Cytochrome P450 2D6 (CYP2D6) Substrate and Inhibitor Binding</span> J.Biol.Chem. 290: 5092-5104 (2015)</a></small></p>
                     </div>
                     <div className='col-md-5 col-md-pull-7'>
-                        <img className='featurette-image img-responsive center-block' src={'assets/img/3tbg_detail.png'} alt='Cytochrome P450 substrate channel details' />
+                        <img className='featurette-image img-responsive center-block' src={'assets/img/3tbg_detail.jpg'} alt='Cytochrome P450 substrate channel details' />
                     </div>
                 </div>
 
@@ -174,7 +174,7 @@ namespace ChannelsDB {
                             Voss, N. R., et. al. <span style={{ fontStyle: 'italic' }}>The geometry of the ribosomal polypeptide exit tunnel.</span>. J. Mol. Biol. 360, 893–906 (2006)</a></small></p>
                     </div>
                     <div className='col-md-5 '>
-                        <img className='featurette-image img-responsive center-block' src={'assets/img/1jj2_detail.png'} alt='Polypeptide exit tunnel' />
+                        <img className='featurette-image img-responsive center-block' src={'assets/img/1jj2_detail.jpg'} alt='Polypeptide exit tunnel' />
                     </div>
                 </div>
 
@@ -192,7 +192,7 @@ namespace ChannelsDB {
                             Singh,H., et al. <span style={{ fontStyle: 'italic' }}>Structures of the PutA peripheral membrane flavoenzyme reveal a dynamic substrate-channeling tunnel and the quinone-binding site</span> Proc. Natl. Acad. Sci., 111, 3389–3394. (2014)</a></small></p>
                     </div>
                     <div className='col-md-5 col-md-pull-7'>
-                        <img className='featurette-image img-responsive center-block' src={'assets/img/4nm9_detail.png'} alt='PutA channel system' />
+                        <img className='featurette-image img-responsive center-block' src={'assets/img/4nm9_detail.jpg'} alt='PutA channel system' />
                     </div>
                 </div>
 
@@ -208,13 +208,13 @@ namespace ChannelsDB {
                             Huang, C.-S. et. al. <span style={{ fontStyle: 'italic' }}>Crystal structure of the potassium-importing KdpFABC membrane complex</span>. Nature 546, 681-685 (2017)</a></small></p>
                     </div>
                     <div className='col-md-5' style={{ width: '475px', margin: 'auto' }}>
-                        <img className='featurette-image img-responsive center-block' src={'assets/img/5mrw_detail.png'} alt='Potassium-importing complex' />
+                        <img className='featurette-image img-responsive center-block' src={'assets/img/5mrw_detail.jpg'} alt='Potassium-importing complex' />
                     </div>
                 </div>
 
                 <hr className='featurette-divider' style={{ margin: '40px 0' }} />
 
-                <img className='row featurette col-md-offset-6' src={'assets/img/elixirlogo.png'} alt='ELIXIR logo' height='70' />
+                <img className='row featurette col-md-offset-6' src={'assets/img/elixirlogo.jpg'} alt='ELIXIR logo' height='70' />
                 <div className='row well well-sm featurette text-center' style={{ marginTop: '10px' }}>
                     ChannelsDB is a part of services provided by <a href='https://www.elixir-czech.cz/' target='_blank'>ELIXIR</a> &ndash;
                      European research infrastructure for biological information. This work was supported by ELIXIR CZ research infrastructure project (MEYS Grant No: LM2015047)

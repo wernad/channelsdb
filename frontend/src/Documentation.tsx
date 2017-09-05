@@ -61,7 +61,7 @@ namespace ChannelsDB {
                         </p>
                     </div>
                     <div className='col-md-4'>
-                        <img className='featurette-image img-responsive center-block' src={'assets/img/pretty_channel.png'} width='500' height='500' alt='Channel details' />
+                        <img className='featurette-image img-responsive center-block' src={'assets/img/pretty_channel.jpg'} width='500' height='500' alt='Channel details' />
                     </div>
                 </div>
 
