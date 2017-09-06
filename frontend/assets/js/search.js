@@ -346,7 +346,9 @@ var ChannelsDB;
                             React.createElement("li", null,
                                 React.createElement("a", { href: 'http://mole.chemi.muni.cz', target: '_blank' }, "MOLE")),
                             React.createElement("li", null,
-                                React.createElement("a", { href: 'contribute.html' }, "Contribute"))))));
+                                React.createElement("a", { href: 'contribute.html' }, "Contribute")),
+                            React.createElement("li", null,
+                                React.createElement("a", { href: 'about.html' }, "About"))))));
         };
         return Menu;
     }(React.Component));
@@ -424,7 +426,7 @@ var ChannelsDB;
                                 "If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. ",
                                 React.createElement("a", { href: 'mailto:webchemistryhelp@gmail.com' }, "Get in touch with us"),
                                 ", or use the ",
-                                React.createElement("a", { href: 'contribute.html' }, "annotation API"),
+                                React.createElement("a", { href: 'contribute.html' }, "annotation form"),
                                 ".")))));
         };
         return Intro;
@@ -887,7 +889,7 @@ var ChannelsDB;
                         React.createElement("h4", { className: 'list-group-item-heading' }, "Results view"),
                         React.createElement("p", { className: 'list-group-item-text' }, "How to read the results page?")),
                     React.createElement("a", { href: '#db-api', className: 'list-group-item' },
-                        React.createElement("h4", { className: 'list-group-item-heading' }, "REST API"),
+                        React.createElement("h4", { className: 'list-group-item-heading' }, "API"),
                         React.createElement("p", { className: 'list-group-item-text' }, "How to access content of the database programatically."))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
                 React.createElement('a', { 'name': 'db-content' }),
@@ -1155,14 +1157,14 @@ var ChannelsDB;
                     React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/web-fig2.png', width: '800', alt: '2D detailed channel view' })),
                 React.createElement('a', { 'name': 'db-api' }),
                 React.createElement("div", { className: 'channelsdb-api-docs' },
-                    React.createElement("h2", { className: 'featurette-heading' }, "REST API "),
+                    React.createElement("h2", { className: 'featurette-heading' }, "API "),
                     React.createElement("p", null,
-                        " The entire database is powered by the REST API running on the ",
+                        " The entire database is powered by the API running on the ",
                         React.createElement("a", { href: 'https://webchem.ncbr.muni.cz', target: '_blank' }, "webchem server"),
                         ". Therefore, all the channel-related information can be programmatically retrieved and used for further processing. The returned content is ",
                         React.createElement("i", null, "application/json"),
                         " object and all the properties are self-explanatory. Should you have further questions or comments, do not hesitate to ",
-                        React.createElement("a", { href: 'mailto:webchemistryhelp@gmail.com?subject=ChannelsDB - REST API' }, "contact us.")),
+                        React.createElement("a", { href: 'mailto:webchemistryhelp@gmail.com?subject=ChannelsDB - API' }, "contact us.")),
                     React.createElement("h4", null,
                         "Channel position information ",
                         React.createElement("span", null, "/PDB/<PDB id>"),
@@ -1519,40 +1521,7 @@ var ChannelsDB;
             }
             return React.createElement("div", { style: { margin: '60px 0 0 20px' } },
                 React.createElement("h1", { className: 'text-center' }, "Contribute"),
-                ui(),
-                React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
-                React.createElement("h1", { className: 'text-center' }, "References"),
-                React.createElement("div", { className: 'tab-pane' },
-                    React.createElement("p", null, "Data annotations are taken from scientific literature, which is properly linked with a given entry. Other than that the ChannelsDB following services: "),
-                    React.createElement("dl", { className: 'publications-list' },
-                        React.createElement("dt", null, "MOLE"),
-                        React.createElement("dd", null,
-                            React.createElement("p", null,
-                                "Sehnal,D., Svobodov\u00E1 Va\u0159ekov\u00E1,R., Berka,K., Pravda,L., Navr\u00E1tilov\u00E1,V., Ban\u00E1\u0161,P., Ionescu,C.-M., Otyepka,M. and Ko\u010Da,J. (2013) ",
-                                React.createElement("a", { href: 'https://dx.doi.org/10.1186/1758-2946-5-39', target: '_blank' }, "MOLE 2.0: advanced approach for analysis of biomacromolecular channels"),
-                                ". J. Cheminform., 5, 39.")),
-                        React.createElement("dt", null, "LiteMol suite"),
-                        React.createElement("dd", null,
-                            React.createElement("p", null,
-                                React.createElement("a", { href: 'https://litemol.org', target: '_blank' }, "LiteMol suite"))),
-                        React.createElement("dt", null, "UniProt API"),
-                        React.createElement("dd", null,
-                            React.createElement("p", null,
-                                "Nightingale,A., Antunes,R., Alpi,E., Bursteinas,B., Gonzales,L., Liu,W., Luo,J., Qi,G., Turner,E. and Martin,M. (2017) ",
-                                React.createElement("a", { href: 'https://dx.doi.org/10.1093/nar/gkx237', target: '_blank' }, "The Proteins API: accessing key integrated protein and genome information"),
-                                ". Nucleic Acids Res., 45, W539\u2013W544.")),
-                        React.createElement("dt", null, "Protein Data Bank in Europe"),
-                        React.createElement("dd", null,
-                            React.createElement("p", null,
-                                "Velankar,S., van Ginkel,G., Alhroub,Y., Battle,G.M., Berrisford,J.M., Conroy,M.J., Dana,J.M., Gore,S.P., Gutmanas,A., Haslam,P., et al. (2016) ",
-                                React.createElement("a", { href: 'https://dx.doi.org/10.1093/nar/gkv1047', target: '_blank' }, "PDBe: improved accessibility of macromolecular structure data from PDB and EMDB"),
-                                ". Nucleic Acids Res., 44, D385\u2013D395.")),
-                        React.createElement("dt", null, "SIFTS"),
-                        React.createElement("dd", null,
-                            React.createElement("p", null,
-                                "Velankar,S., Dana,J.M., Jacobsen,J., van Ginkel,G., Gane,P.J., Luo,J., Oldfield,T.J., O\u2019Donovan,C., Martin,M.-J. and Kleywegt,G.J. (2013) ",
-                                React.createElement("a", { href: 'https://dx.doi.org/10.1093/nar/gks1258', target: '_blank' }, " SIFTS: Structure Integration with Function, Taxonomy and Sequences resource"),
-                                ". Nucleic Acids Res., 41, D483\u2013D489.")))));
+                ui());
         };
         return Contribute;
     }(React.Component));
@@ -1576,6 +1545,9 @@ var ChannelsDB;
                 break;
             case 'Contribute':
                 ReactDOM.render(React.createElement(ContributeMain, null), target);
+                break;
+            case 'About':
+                ReactDOM.render(React.createElement(AboutMain, null), target);
                 break;
         }
     }
@@ -1632,6 +1604,19 @@ var ChannelsDB;
                 React.createElement(Footer, null));
         };
         return ContributeMain;
+    }(React.Component));
+    var AboutMain = (function (_super) {
+        __extends(AboutMain, _super);
+        function AboutMain() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        AboutMain.prototype.render = function () {
+            return React.createElement("div", { className: 'container' },
+                React.createElement(ChannelsDB.Menu, null),
+                React.createElement(ChannelsDB.About, null),
+                React.createElement(Footer, null));
+        };
+        return AboutMain;
     }(React.Component));
     var Footer = (function (_super) {
         __extends(Footer, _super);
@@ -1948,6 +1933,55 @@ var ChannelsDB;
         };
         return Entries;
     }(React.Component));
+})(ChannelsDB || (ChannelsDB = {}));
+/*
+ * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
+ */
+var ChannelsDB;
+(function (ChannelsDB) {
+    var About = (function (_super) {
+        __extends(About, _super);
+        function About() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        About.prototype.render = function () {
+            return React.createElement("div", { className: 'container' },
+                React.createElement("h1", { className: 'text-center' }, "References"),
+                React.createElement("div", { className: 'tab-pane' },
+                    React.createElement("p", null, "Data annotations are taken from scientific literature, which is properly linked with a given PDB entry. Other than that the ChannelsDB uses the following services: "),
+                    React.createElement("dl", { className: 'publications-list' },
+                        React.createElement("dt", null, "MOLE"),
+                        React.createElement("dd", null,
+                            React.createElement("p", null,
+                                "Sehnal,D., Svobodov\u00E1 Va\u0159ekov\u00E1,R., Berka,K., Pravda,L., Navr\u00E1tilov\u00E1,V., Ban\u00E1\u0161,P., Ionescu,C.-M., Otyepka,M. and Ko\u010Da,J. (2013) ",
+                                React.createElement("a", { href: 'https://dx.doi.org/10.1186/1758-2946-5-39', target: '_blank' }, "MOLE 2.0: advanced approach for analysis of biomacromolecular channels"),
+                                ". J. Cheminform., 5, 39.")),
+                        React.createElement("dt", null, "LiteMol suite"),
+                        React.createElement("dd", null,
+                            React.createElement("p", null,
+                                React.createElement("a", { href: 'https://litemol.org', target: '_blank' }, "LiteMol suite"))),
+                        React.createElement("dt", null, "UniProt API"),
+                        React.createElement("dd", null,
+                            React.createElement("p", null,
+                                "Nightingale,A., Antunes,R., Alpi,E., Bursteinas,B., Gonzales,L., Liu,W., Luo,J., Qi,G., Turner,E. and Martin,M. (2017) ",
+                                React.createElement("a", { href: 'https://dx.doi.org/10.1093/nar/gkx237', target: '_blank' }, "The Proteins API: accessing key integrated protein and genome information"),
+                                ". Nucleic Acids Res., 45, W539\u2013W544.")),
+                        React.createElement("dt", null, "Protein Data Bank in Europe"),
+                        React.createElement("dd", null,
+                            React.createElement("p", null,
+                                "Velankar,S., van Ginkel,G., Alhroub,Y., Battle,G.M., Berrisford,J.M., Conroy,M.J., Dana,J.M., Gore,S.P., Gutmanas,A., Haslam,P., et al. (2016) ",
+                                React.createElement("a", { href: 'https://dx.doi.org/10.1093/nar/gkv1047', target: '_blank' }, "PDBe: improved accessibility of macromolecular structure data from PDB and EMDB"),
+                                ". Nucleic Acids Res., 44, D385\u2013D395.")),
+                        React.createElement("dt", null, "SIFTS"),
+                        React.createElement("dd", null,
+                            React.createElement("p", null,
+                                "Velankar,S., Dana,J.M., Jacobsen,J., van Ginkel,G., Gane,P.J., Luo,J., Oldfield,T.J., O\u2019Donovan,C., Martin,M.-J. and Kleywegt,G.J. (2013) ",
+                                React.createElement("a", { href: 'https://dx.doi.org/10.1093/nar/gks1258', target: '_blank' }, " SIFTS: Structure Integration with Function, Taxonomy and Sequences resource"),
+                                ". Nucleic Acids Res., 41, D483\u2013D489.")))));
+        };
+        return About;
+    }(React.Component));
+    ChannelsDB.About = About;
 })(ChannelsDB || (ChannelsDB = {}));
 var ChannelsDB;
 (function (ChannelsDB) {

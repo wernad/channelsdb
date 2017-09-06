@@ -3,8 +3,8 @@
  */
 
 namespace ChannelsDB {
-    export function renderUI(target: HTMLElement, kind: 'Search' | 'Methods' | 'Documentation' | 'Contribute') {
-        switch (kind){
+    export function renderUI(target: HTMLElement, kind: 'Search' | 'Methods' | 'Documentation' | 'Contribute' | 'About') {
+        switch (kind) {
             case 'Search':
                 ReactDOM.render(<SearchMain state={initState()} />, target);
                 break;
@@ -16,6 +16,9 @@ namespace ChannelsDB {
                 break;
             case 'Contribute':
                 ReactDOM.render(<ContributeMain />, target);
+                break;
+            case 'About':
+                ReactDOM.render(<AboutMain />, target);
                 break;
         }
     }
@@ -59,6 +62,16 @@ namespace ChannelsDB {
             return <div className='container'>
                 <Menu />
                 <Contribute />
+                <Footer />
+            </div>;
+        }
+    }
+
+    class AboutMain extends React.Component<{}, {}> {
+        render() {
+            return <div className='container'>
+                <Menu />
+                <About />
                 <Footer />
             </div>;
         }

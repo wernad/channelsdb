@@ -45,7 +45,7 @@ namespace ChannelsDB {
 
                             <hr className='featurette-divider' style={{ margin: '10px 0' }} />
 
-                            <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us</a>, or use the <a href='contribute.html'>annotation API</a>.</p>
+                            <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us</a>, or use the <a href='contribute.html'>annotation form</a>.</p>
                         </div>
                     </div>
                 </div>

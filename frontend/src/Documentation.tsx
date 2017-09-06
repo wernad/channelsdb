@@ -37,7 +37,7 @@ namespace ChannelsDB {
                         <p className='list-group-item-text'>How to read the results page?</p>
                     </a>                    
                     <a href='#db-api' className='list-group-item'>
-                        <h4 className='list-group-item-heading'>REST API</h4>
+                        <h4 className='list-group-item-heading'>API</h4>
                         <p className='list-group-item-text'>How to access content of the database programatically.</p>
                     </a>                                        
                 </div>
@@ -332,10 +332,10 @@ namespace ChannelsDB {
 
                 {React.createElement('a' as any, { 'name': 'db-api' })}
                 <div className='channelsdb-api-docs'>
-                        <h2 className='featurette-heading'>REST API </h2>
-                        <p> The entire database is powered by the REST API running on the <a href='https://webchem.ncbr.muni.cz' target='_blank'>webchem server</a>. 
+                        <h2 className='featurette-heading'>API </h2>
+                        <p> The entire database is powered by the API running on the <a href='https://webchem.ncbr.muni.cz' target='_blank'>webchem server</a>. 
                         Therefore, all the channel-related information can be programmatically retrieved and used for further processing. The returned content is <i>application/json</i> object
-                        and all the properties are self-explanatory. Should you have further questions or comments, do not hesitate to <a href='mailto:webchemistryhelp@gmail.com?subject=ChannelsDB - REST API'>contact us.</a></p>
+                        and all the properties are self-explanatory. Should you have further questions or comments, do not hesitate to <a href='mailto:webchemistryhelp@gmail.com?subject=ChannelsDB - API'>contact us.</a></p>
                         
                         <h4>Channel position information <span>/PDB/&lt;PDB id&gt;</span><br />
                             <small>Retrieves channels identified in the PDB entry.</small>

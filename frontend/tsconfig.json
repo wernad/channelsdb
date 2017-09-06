@@ -25,6 +25,7 @@
     "src/Documentation.tsx",
     "src/Contribute.tsx",
     "src/Index.tsx",
+    "src/About.tsx",
     "src/ScrollButton.tsx"
   ]
 }

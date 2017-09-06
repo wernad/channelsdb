@@ -17,6 +17,7 @@ namespace ChannelsDB {
                             <li><a href='documentation.html'>Documentation</a></li>                            
                             <li><a href='http://mole.chemi.muni.cz' target='_blank'>MOLE</a></li>                            
                             <li><a href='contribute.html'>Contribute</a></li>
+                            <li><a href='about.html'>About</a></li>
                             {/*<li><a href='#'>Contribute</a></li>*/}
                         </ul>
                     </div>
