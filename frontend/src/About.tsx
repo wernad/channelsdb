@@ -8,6 +8,18 @@ namespace ChannelsDB {
             return <div className='container'>
                 <h1 className='text-center'>References</h1>
                 <div className='tab-pane'>
+                    <p>If you find this resource usefull, please cite is as:</p>
+                    <dl className='publications-list'>
+                        <dt>ChannelsDB</dt>
+                        <dd>
+                            <p>Pravda,L., Sehnal,D., Svobodová Vařeková,R., Navrátilová,V., Toušek,D., Berka,K., Otyepka,M. and Koča,J. 
+                                <a href='https://academic.oup.com/nar/article/4316099/ChannelsDB-database-of-biomacromolecular-tunnels' target='_blank'> ChannelsDB: database of biomacromolecular tunnels and pores.</a>
+                                 Nucleic Acids Res., 10.1093/nar/gkx868.</p>
+                        </dd>
+                    </dl>
+                </div>
+                    
+                <div className='tab-pane'>
                     <p>Data annotations are taken from scientific literature, which is properly linked with a given PDB entry. Other than that the ChannelsDB uses the following services: </p>
                     <dl className='publications-list'>
                         <dt>MOLE</dt>

@@ -381,6 +381,10 @@ var ChannelsDB;
         };
         Intro.prototype.render = function () {
             var stats = this.state.statistics;
+            var reference = {
+                borderLeft: '2px solid #AAA',
+                paddingLeft: 6,
+            };
             return React.createElement("div", null,
                 React.createElement("div", { className: 'row' },
                     React.createElement("div", { className: 'col-lg-12' },
@@ -421,13 +425,17 @@ var ChannelsDB;
                                 "The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with the ",
                                 React.createElement("a", { href: 'http://www.uniprot.org', target: '_blank' }, "UniProt database"),
                                 " a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in a clear interactive manner further facilitating data interpretation. "),
-                            React.createElement("hr", { className: 'featurette-divider', style: { margin: '10px 0' } }),
                             React.createElement("p", null,
                                 "If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. ",
                                 React.createElement("a", { href: 'mailto:webchemistryhelp@gmail.com' }, "Get in touch with us"),
                                 ", or use the ",
                                 React.createElement("a", { href: 'contribute.html' }, "annotation form"),
-                                ".")))));
+                                "."),
+                            React.createElement("hr", { className: 'featurette-divider', style: { margin: '10px 0' } }),
+                            React.createElement("p", null, "Should you find this resource useful, please cite it as:"),
+                            React.createElement("p", { style: reference },
+                                React.createElement("small", null,
+                                    React.createElement("a", { href: 'https://academic.oup.com/nar/article/4316099/ChannelsDB-database-of-biomacromolecular-tunnels', target: '_blank' }, " Pravda,L., et al. (2017) ChannelsDB: database of biomacromolecular tunnels and pores. Nucleic Acids Res., 10.1093/nar/gkx868.")))))));
         };
         return Intro;
     }(React.Component));
@@ -1421,8 +1429,7 @@ var ChannelsDB;
                 issues.push('PDB id must be 4 characters long.');
             if (!fs.residues.length && !fs.channels.length)
                 issues.push('Enter at least one residue or channel annotation.');
-            if (!fs.files.length)
-                issues.push('Add at least one file with computed channels.');
+            // if (!fs.files.length) issues.push('Add at least one file with computed channels.');
             return issues;
         };
         Contribute.prototype.submitStart = function () {
@@ -1947,6 +1954,15 @@ var ChannelsDB;
         About.prototype.render = function () {
             return React.createElement("div", { className: 'container' },
                 React.createElement("h1", { className: 'text-center' }, "References"),
+                React.createElement("div", { className: 'tab-pane' },
+                    React.createElement("p", null, "If you find this resource usefull, please cite is as:"),
+                    React.createElement("dl", { className: 'publications-list' },
+                        React.createElement("dt", null, "ChannelsDB"),
+                        React.createElement("dd", null,
+                            React.createElement("p", null,
+                                "Pravda,L., Sehnal,D., Svobodov\u00E1 Va\u0159ekov\u00E1,R., Navr\u00E1tilov\u00E1,V., Tou\u0161ek,D., Berka,K., Otyepka,M. and Ko\u010Da,J.",
+                                React.createElement("a", { href: 'https://academic.oup.com/nar/article/4316099/ChannelsDB-database-of-biomacromolecular-tunnels', target: '_blank' }, " ChannelsDB: database of biomacromolecular tunnels and pores."),
+                                "Nucleic Acids Res., 10.1093/nar/gkx868.")))),
                 React.createElement("div", { className: 'tab-pane' },
                     React.createElement("p", null, "Data annotations are taken from scientific literature, which is properly linked with a given PDB entry. Other than that the ChannelsDB uses the following services: "),
                     React.createElement("dl", { className: 'publications-list' },

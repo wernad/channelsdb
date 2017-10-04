@@ -263,7 +263,7 @@ namespace ChannelsDB {
             const issues: string[] = [];
             if (fs.pdbId.trim().length !== 4) issues.push('PDB id must be 4 characters long.');
             if (!fs.residues.length && !fs.channels.length) issues.push('Enter at least one residue or channel annotation.');
-            if (!fs.files.length) issues.push('Add at least one file with computed channels.');
+            // if (!fs.files.length) issues.push('Add at least one file with computed channels.');
             return issues;
         }
 

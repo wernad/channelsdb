@@ -22,6 +22,11 @@ namespace ChannelsDB {
 
         render() {
             const stats = this.state.statistics;
+            let reference = {
+                borderLeft: '2px solid #AAA',
+                paddingLeft: 6,
+            };
+
             return <div>
                 <div className='row' >
                     <div className='col-lg-12'>
@@ -43,9 +48,16 @@ namespace ChannelsDB {
                                 the <a href='http://www.uniprot.org' target='_blank'>UniProt database</a> a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in
                                 a clear interactive manner further facilitating data interpretation. </p>
 
+                            <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us</a>, or use the <a href='contribute.html'>annotation form</a>.</p>
+
                             <hr className='featurette-divider' style={{ margin: '10px 0' }} />
 
-                            <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us</a>, or use the <a href='contribute.html'>annotation form</a>.</p>
+                            <p>Should you find this resource useful, please cite it as:</p>    
+                            <p style={reference}>
+                                <small>
+                                    <a href='https://academic.oup.com/nar/article/4316099/ChannelsDB-database-of-biomacromolecular-tunnels' target='_blank'> Pravda,L., et al. (2017) ChannelsDB: database of biomacromolecular tunnels and pores. Nucleic Acids Res., 10.1093/nar/gkx868.</a>
+                                </small>
+                            </p>
                         </div>
                     </div>
                 </div>
