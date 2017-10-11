@@ -121,6 +121,11 @@ namespace ChannelsDB {
                                     <td>Hydrophobic channel</td>
                                     <td>Pore providing a pathway for apolar chemical species to pass through lipid bilayer</td>
                                 </tr>
+                                <tr>  
+                                    <td>Peptide channel</td>
+                                    <td>Channel enabling a passage of polypeptides</td>
+                                </tr>
+                                
                             </tbody>                        
                         </table>    
                     </div>

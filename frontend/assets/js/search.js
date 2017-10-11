@@ -967,7 +967,10 @@ var ChannelsDB;
                                     React.createElement("td", null, "Pore providing a pathway for ion and other charged chemical species to pass through lipid bilayer")),
                                 React.createElement("tr", null,
                                     React.createElement("td", null, "Hydrophobic channel"),
-                                    React.createElement("td", null, "Pore providing a pathway for apolar chemical species to pass through lipid bilayer")))))),
+                                    React.createElement("td", null, "Pore providing a pathway for apolar chemical species to pass through lipid bilayer")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null, "Peptide channel"),
+                                    React.createElement("td", null, "Channel enabling a passage of polypeptides")))))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
                 React.createElement('a', { 'name': 'db-mole' }),
                 React.createElement("div", { className: 'row' },
@@ -1392,10 +1395,10 @@ var ChannelsDB;
             _this.errorMsg = '';
             _this.submitProgress = void 0;
             _this.channelsSpec = {
-                id: { header: 'Channel Id', width: '200px', placeholder: 'Identificaton (eg. 1)' },
+                id: { header: 'Channel Id', width: '170px', placeholder: 'Identificaton (eg. 1)' },
                 name: { header: 'Name', width: '200px', placeholder: 'Suggested name' },
                 description: { header: 'Description', width: 'auto', placeholder: 'Detailed description of channel\'s function' },
-                reference: { header: 'Reference', width: '300px', placeholder: 'DOI or Pubmed ID.' },
+                reference: { header: 'Reference', width: '170px', placeholder: 'DOI or Pubmed ID.' },
             };
             _this.residuesSpec = {
                 id: { header: 'Residue Id', width: '200px', placeholder: 'ALA 10 A' },

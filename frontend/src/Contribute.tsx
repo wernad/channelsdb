@@ -228,10 +228,10 @@ namespace ChannelsDB {
         private submitProgress: Rx.Observable<string> | undefined = void 0;
 
         private channelsSpec = {
-            id: { header: 'Channel Id', width: '200px', placeholder: 'Identificaton (eg. 1)' },
+            id: { header: 'Channel Id', width: '170px', placeholder: 'Identificaton (eg. 1)' },
             name: { header: 'Name', width: '200px', placeholder: 'Suggested name' },
             description: { header: 'Description', width: 'auto', placeholder: 'Detailed description of channel\'s function' },
-            reference: { header: 'Reference', width: '300px', placeholder: 'DOI or Pubmed ID.' },
+            reference: { header: 'Reference', width: '170px', placeholder: 'DOI or Pubmed ID.' },
         };
 
         private residuesSpec = {
