@@ -125,7 +125,10 @@ namespace ChannelsDB {
                                     <td>Peptide channel</td>
                                     <td>Channel enabling a passage of polypeptides</td>
                                 </tr>
-                                
+                                <tr>  
+                                    <td>Nucleotide channel</td>
+                                    <td>Channel enabling a passage of nucleotides</td>
+                                </tr>                                
                             </tbody>                        
                         </table>    
                     </div>
