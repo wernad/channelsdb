@@ -29,37 +29,36 @@ namespace ChannelsDB {
 
             return <div>
                 <div className='row' >
-                    <div className='col-lg-12'>
-                        <div className='well well-sm text-center' style={{ marginTop: '0', marginBottom: '40px' }}>
-                            ChannelsDB last update on <b>{stats ? stats.Date : 'n/a'}</b>
-                            &nbsp;<small>contains:</small><b> {stats ? stats.Total : 'n/a'}</b> entries
+                    <div className='col-lg-12 well well-sm text-center' style={{ marginTop: '0', marginBottom: '40px' }}>
+                        ChannelsDB last update on <b>{stats ? stats.Date : 'n/a'}</b>
+                        &nbsp;<small>contains:</small><b> {stats ? stats.Total : 'n/a'}</b> entries
                             &nbsp;(<b>{stats ? stats.Reviewed : 'n/a'}</b> <small>reviewed |</small>
-                            &nbsp;<b>{stats ? stats.CSA : 'n/a'}</b> <small>with <abbr title='Catalytic Site Atlas'>CSA</abbr> annotation |</small>
-                            &nbsp;<b>{stats ? stats.Cofactors : 'n/a'}</b> <small>with cofactors |</small>
-                            &nbsp;<b>{stats ? stats.Pores : 'n/a'}</b> <small>transmembrane pores</small>)
-                        </div>
-                        <div style={{ textAlign: 'left', textJustify: 'inter-word', padding: '0' }}>
+                        &nbsp;<b>{stats ? stats.CSA : 'n/a'}</b> <small>with <abbr title='Catalytic Site Atlas'>CSA</abbr> annotation |</small>
+                        &nbsp;<b>{stats ? stats.Cofactors : 'n/a'}</b> <small>with cofactors |</small>
+                        &nbsp;<b>{stats ? stats.Pores : 'n/a'}</b> <small>transmembrane pores</small>)
+                    </div>
+                    <div className='col-lg-9' style={{ textAlign: 'left', textJustify: 'inter-word', padding: '0' }}>
 
-                            <p className='lead'>ChannelsDB is a comprehensive and regularly updated resource of channels, pores and tunnels found in biomacromolecules deposited in the
+                        <p className='lead'>ChannelsDB is a comprehensive and regularly updated resource of channels, pores and tunnels found in biomacromolecules deposited in the
                                 <a target='_blank' href='http://www.ebi.ac.uk/pdbe/'> Protein Data Bank</a>. As such, it is a unique service for channel-related analyses.</p>
 
-                            <p className='text-justify'>
-                                The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with
+                        <p className='text-justify'>
+                            The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with
                                 the <a href='http://www.uniprot.org' target='_blank'>UniProt database</a> a comprehensive high-quality resource of protein function information. Last but not least, all the results are displayed in
                                 a clear interactive manner further facilitating data interpretation. </p>
 
-                            <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us</a>, or use the <a href='contribute.html'>annotation form</a>.</p>
+                        <p>If you would like to provide your own research results to be displayed soon as a part of Protein Data Bank in Europe. <a href='mailto:webchemistryhelp@gmail.com'>Get in touch with us</a>, or use the <a href='contribute.html'>annotation form</a>.</p>
 
-                            <hr className='featurette-divider' style={{ margin: '10px 0' }} />
+                        <hr className='featurette-divider' style={{ margin: '10px 0' }} />
 
-                            <p>Should you find this resource useful, please cite it as:</p>    
-                            <p style={reference}>
-                                <small>
-                                    <a href='https://academic.oup.com/nar/article/4316099/ChannelsDB-database-of-biomacromolecular-tunnels' target='_blank'> Pravda,L., et al. (2017) ChannelsDB: database of biomacromolecular tunnels and pores. Nucleic Acids Res., 10.1093/nar/gkx868.</a>
-                                </small>
-                            </p>
-                        </div>
+                        <p>Should you find this resource useful, please cite it as:</p>
+                        <p style={reference}>
+                            <small>
+                                <a href='https://dx.doi.org/10.1093/nar/gkx868' target='_blank'> Pravda,L., et al. (2018) ChannelsDB: database of biomacromolecular tunnels and pores. Nucleic Acids Res., 46, D399–D405.</a>
+                            </small>
+                        </p>
                     </div>
+                    <div className='channelsdb-logo col-lg-3'><a href='https://dx.doi.org/10.1093/nar/gkx868' target='_blank'><img src={'assets/img/channelsdb_cover.png'} style={{width: '100%'}} /></a></div>
                 </div>
             </div>;
         }

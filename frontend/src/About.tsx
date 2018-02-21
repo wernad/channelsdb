@@ -13,7 +13,7 @@ namespace ChannelsDB {
                         <dt>ChannelsDB</dt>
                         <dd>
                             <p>Pravda,L., Sehnal,D., Svobodová Vařeková,R., Navrátilová,V., Toušek,D., Berka,K., Otyepka,M. and Koča,J. &nbsp;
-                                <a href='https://academic.oup.com/nar/article/4316099/ChannelsDB-database-of-biomacromolecular-tunnels' target='_blank'>ChannelsDB: database of biomacromolecular tunnels and pores.</a>
+                                <a href='http://dx.doi.org/10.1093/nar/gkx868' target='_blank'>ChannelsDB: database of biomacromolecular tunnels and pores.</a>
                                  Nucleic Acids Res., 10.1093/nar/gkx868.</p>
                         </dd>
                     </dl>

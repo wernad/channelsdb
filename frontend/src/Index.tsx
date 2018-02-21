@@ -81,7 +81,7 @@ namespace ChannelsDB {
         render() {
             return <footer>
                 <hr className='featurette-divider' />
-                <p className='pull-right' style={{ color: '#999', fontSize: 'smaller', marginBottom: '30px' }}>&copy; 2017 Lukáš Pravda &amp; David Sehnal</p>
+                <p className='pull-right' style={{ color: '#999', fontSize: 'smaller', marginBottom: '30px' }}>&copy; 2018 Lukáš Pravda &amp; David Sehnal</p>
             </footer>;
         }
     }
