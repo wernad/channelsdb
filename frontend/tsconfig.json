@@ -16,16 +16,7 @@
     "skipDefaultLibCheck": true,
     "out": "assets/js/search.js"
   },
-  "files": [    
-    "src/Utils.ts",
-    "src/State.ts",
-    "src/Menu.tsx",
-    "src/Info.tsx",
-    "src/Methods.tsx",
-    "src/Documentation.tsx",
-    "src/Contribute.tsx",
-    "src/Index.tsx",
-    "src/About.tsx",
-    "src/ScrollButton.tsx"
+  "include": [
+    "src/**/*"
   ]
 }

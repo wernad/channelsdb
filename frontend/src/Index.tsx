@@ -3,7 +3,7 @@
  */
 
 namespace ChannelsDB {
-    export function renderUI(target: HTMLElement, kind: 'Search' | 'Methods' | 'Documentation' | 'Contribute' | 'About') {
+    export function renderUI(target: HTMLElement, kind: 'Search' | 'Methods' | 'Documentation' | 'Contribute' | 'About' | 'GDPR') {
         switch (kind) {
             case 'Search':
                 ReactDOM.render(<SearchMain state={initState()} />, target);
@@ -20,6 +20,10 @@ namespace ChannelsDB {
             case 'About':
                 ReactDOM.render(<AboutMain />, target);
                 break;
+            case 'GDPR':
+                ReactDOM.render(<GDPRMain />, target);
+                break;
+
         }
     }
 
@@ -67,6 +71,16 @@ namespace ChannelsDB {
         }
     }
 
+    class GDPRMain extends React.Component<{}, {}> {
+        render() {
+            return <div className='container'>
+                <Menu />
+                <GDPR />
+                <Footer />
+            </div>;
+        }
+    }
+
     class AboutMain extends React.Component<{}, {}> {
         render() {
             return <div className='container'>
@@ -81,7 +95,7 @@ namespace ChannelsDB {
         render() {
             return <footer>
                 <hr className='featurette-divider' />
-                <p className='pull-right' style={{ color: '#999', fontSize: 'smaller', marginBottom: '30px' }}>&copy; 2018 Lukáš Pravda &amp; David Sehnal</p>
+                <p className='pull-right' style={{ color: '#999', fontSize: 'smaller', marginBottom: '30px' }}>&copy; 2018 Lukáš Pravda &amp; David Sehnal | <a href="gdpr.html">Terms of Use &amp; GDPR </a></p>
             </footer>;
         }
     }
