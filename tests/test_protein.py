@@ -42,3 +42,15 @@ class TestAnnotations:
     def test_invalid_pdbid(self):
         response = client.get('/annotations/some_invalid_pdb_id')
         assert response.status_code == 404
+
+
+class TestDownloadPNG:
+    def test_stored(self, stored_pdbs):
+        response = client.get(f'/download/png/{stored_pdbs}', follow_redirects=False)
+        assert response.status_code in (200, 307)
+        if response.status_code == 200:
+            assert response.headers['content-type'] == 'image/png'
+
+    def test_invalid_pdbid(self):
+        response = client.get('/download/png/some_invalid_pdb_id')
+        assert response.status_code == 404

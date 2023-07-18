@@ -1,8 +1,10 @@
+from enum import Enum
 import gzip
 import json
 from pathlib import Path
 import requests
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse, RedirectResponse
 from zipfile import ZipFile
 import urllib.request
 import urllib.error
@@ -72,7 +74,8 @@ async def get_pdb_info(pdb_id: str):
     return data
 
 
-@app.get('/annotations/{pdb_id}', name='Annotation data', tags=['Protein'], description='Returns annotations of individual protein and its residues')
+@app.get('/annotations/{pdb_id}', name='Annotation data', tags=['Protein'],
+         description='Returns annotations of individual protein and its residues')
 async def get_annotations(pdb_id: str):
     annotations = {'EntryAnnotations': [],
                    'ResidueAnnotations': {
@@ -97,3 +100,26 @@ async def get_annotations(pdb_id: str):
         annotations['ResidueAnnotations']['ChannelsDB'].extend(api.externals.get_channelsdb_residue_annotations(uniprot_id, mapping))
 
     return annotations
+
+
+class DownloadType(str, Enum):
+    png = 'png'
+    json = 'json'
+
+
+@app.get('/download/{file_format}/{pdb_id}', name='Download data', tags=['Protein'], description='Download various data about the protein')
+async def download(file_format: DownloadType, pdb_id: str):
+    match file_format:
+        case DownloadType.png:
+            image_file = Path(config['dirs']['data']) / pdb_id[1:3] / pdb_id / f'{pdb_id}.png'
+
+            if image_file.exists():
+                return FileResponse(image_file)
+
+            assembly_id = await get_assembly_id(pdb_id)
+
+            return RedirectResponse(f'https://www.ebi.ac.uk/pdbe/static/entry/'
+                                    f'{pdb_id}_assembly_{assembly_id}_chemically_distinct_molecules_front_image-200x200.png')
+        case DownloadType.json:
+            # TODO not implemented yet
+            return 'NotImplementedYet'
