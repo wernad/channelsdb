@@ -16,7 +16,7 @@ class TestPDB:
 
     def test_invalid_pdbid(self):
         response = client.get('/pdb/some_invalid_pdb_id')
-        assert response.status_code == 404
+        assert response.status_code == 400
 
 
 class TestAssembly:
@@ -27,7 +27,7 @@ class TestAssembly:
 
     def test_invalid_pdbid(self):
         response = client.get('/assembly/some_invalid_pdb_id')
-        assert response.status_code == 404
+        assert response.status_code == 400
 
 
 class TestAnnotations:
@@ -41,7 +41,7 @@ class TestAnnotations:
 
     def test_invalid_pdbid(self):
         response = client.get('/annotations/some_invalid_pdb_id')
-        assert response.status_code == 404
+        assert response.status_code == 400
 
 
 class TestDownloadPNG:
@@ -53,4 +53,4 @@ class TestDownloadPNG:
 
     def test_invalid_pdbid(self):
         response = client.get('/download/png/some_invalid_pdb_id')
-        assert response.status_code == 404
+        assert response.status_code == 400
