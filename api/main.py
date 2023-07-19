@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import requests
 from typing import Annotated
-from fastapi import FastAPI, HTTPException, Path
+from fastapi import FastAPI, HTTPException, Path as AnnotationPath
 from fastapi.responses import FileResponse, RedirectResponse
 from zipfile import ZipFile
 import urllib.request
@@ -20,7 +20,7 @@ app = FastAPI(title='ChannelsDB API', contact={'name': 'Tomáš Raček', 'email'
               version='beta', swagger_ui_parameters={'syntaxHighlight': False, 'defaultModelsExpandDepth': -1})
 
 
-PDB_ID_Type = Annotated[str, Path(description='PDB ID', pattern='^[1-9][a-z0-9]{3}$')]
+PDB_ID_Type = Annotated[str, AnnotationPath(description='PDB ID', pattern='^[1-9][a-z0-9]{3}$')]
 
 
 @app.get('/assembly/{pdb_id}', name='Assembly', tags=['Protein'], description='Returns prefered assembly for a given protein')
@@ -39,7 +39,7 @@ async def get_statistics():
 
 
 @app.get('/content', name='Database content', tags=['General'], description='Returns the counts of tunnels for each stored entry')
-async def get_content():
+async def get_content() -> dict[str, list[int]]:
     with open(Path(config['dirs']['base']) / 'db_content.json') as f:
         return json.load(f)
 
