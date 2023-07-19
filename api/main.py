@@ -4,7 +4,8 @@ import gzip
 import json
 from pathlib import Path
 import requests
-from fastapi import FastAPI, HTTPException
+from typing import Annotated
+from fastapi import FastAPI, HTTPException, Path
 from fastapi.responses import FileResponse, RedirectResponse
 from zipfile import ZipFile
 import urllib.request
@@ -19,14 +20,11 @@ app = FastAPI(title='ChannelsDB API', contact={'name': 'Tomáš Raček', 'email'
               version='beta', swagger_ui_parameters={'syntaxHighlight': False, 'defaultModelsExpandDepth': -1})
 
 
-def check_pdb_id_structure(pdb_id: str):
-    if not re.match('^[1-9][a-z0-9]{3}$', pdb_id):
-        raise HTTPException(status_code=400, detail=f'PDB ID \'{pdb_id}\' has an invalid structure')
+PDB_ID_Type = Annotated[str, Path(description='PDB ID', pattern='^[1-9][a-z0-9]{3}$')]
 
 
 @app.get('/assembly/{pdb_id}', name='Assembly', tags=['Protein'], description='Returns prefered assembly for a given protein')
-async def get_assembly_id(pdb_id: str):
-    check_pdb_id_structure(pdb_id)
+async def get_assembly_id(pdb_id: PDB_ID_Type):
     req = requests.get(f'https://www.ebi.ac.uk/pdbe/api/pdb/entry/summary/{pdb_id}')
     if req.status_code != 200:
         raise HTTPException(status_code=404, detail='Cannot find assembly for PDB ID \'{pdb_id}\'')
@@ -47,8 +45,7 @@ async def get_content():
 
 
 @app.get('/pdb/{pdb_id}', name='Channel data', tags=['Protein'], description='Returns information about channels for a given protein')
-async def get_pdb_info(pdb_id: str):
-    check_pdb_id_structure(pdb_id)
+async def get_pdb_info(pdb_id: PDB_ID_Type):
     data = {'Annotations': [],
             'Channels': {TUNNEL_TYPES[name]: [] for name in TUNNEL_TYPES}}
 
@@ -84,8 +81,7 @@ async def get_pdb_info(pdb_id: str):
 
 @app.get('/annotations/{pdb_id}', name='Annotation data', tags=['Protein'],
          description='Returns annotations of individual protein and its residues')
-async def get_annotations(pdb_id: str):
-    check_pdb_id_structure(pdb_id)
+async def get_annotations(pdb_id: PDB_ID_Type):
     annotations = {'EntryAnnotations': [],
                    'ResidueAnnotations': {
                        'ChannelsDB': [],
@@ -117,8 +113,7 @@ class DownloadType(str, Enum):
 
 
 @app.get('/download/{file_format}/{pdb_id}', name='Download data', tags=['Protein'], description='Download various data about the protein')
-async def download(file_format: DownloadType, pdb_id: str):
-    check_pdb_id_structure(pdb_id)
+async def download(file_format: DownloadType, pdb_id: PDB_ID_Type):
     match file_format:
         case DownloadType.png:
             image_file = Path(config['dirs']['data']) / pdb_id[1:3] / pdb_id / f'{pdb_id}.png'

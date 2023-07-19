@@ -32,9 +32,9 @@ if __name__ == '__main__':
 
     raw_stats = get_statistics(args.datadir)
 
-    total = Counter()
+    total = Counter({value: 0 for value in common.TUNNEL_TYPES.values()})
     for partial in raw_stats.values():
-        total += partial
+        total.update(partial)
 
     statistics = {
         'statistics': total,
