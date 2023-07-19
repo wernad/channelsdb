@@ -131,5 +131,4 @@ async def download(file_format: DownloadType, pdb_id: str):
             return RedirectResponse(f'https://www.ebi.ac.uk/pdbe/static/entry/'
                                     f'{pdb_id}_assembly_{assembly_id}_chemically_distinct_molecules_front_image-200x200.png')
         case DownloadType.json:
-            # TODO not implemented yet
-            return 'NotImplementedYet'
+            return await get_pdb_info(pdb_id)
