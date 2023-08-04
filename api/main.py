@@ -8,6 +8,7 @@ from typing import Annotated
 from fastapi import FastAPI, HTTPException, Path as AnnotationPath
 from fastapi.responses import FileResponse, RedirectResponse
 from zipfile import ZipFile
+from pydantic import BaseModel, create_model
 import urllib.request
 import urllib.error
 import xml.etree.ElementTree as ET
@@ -32,8 +33,16 @@ async def get_assembly_id(pdb_id: PDB_ID_Type):
     return next(assembly['assembly_id'] for assembly in data if assembly['preferred'])
 
 
+TunnelModel = create_model('TunnelTypes', **{tunnel: (int, ...) for tunnel in TUNNEL_TYPES.values()})
+
+
+class StatisticsModel(BaseModel):
+    date: str
+    statistics: TunnelModel
+
+
 @app.get('/statistics', name='General statistics', tags=['General'], description='Returns summary statistics about the data stored')
-async def get_statistics():
+async def get_statistics() -> StatisticsModel:
     with open(Path(config['dirs']['base']) / 'pdb_stats.json') as f:
         return json.load(f)
 
