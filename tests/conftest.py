@@ -13,7 +13,7 @@ def get_stored_pdbs(datadir: str) -> list[str]:
     return pdb_ids
 
 
-stored_pdb_ids = get_stored_pdbs(config['dirs']['data'])
+stored_pdb_ids = get_stored_pdbs(config['dirs']['pdb'])
 
 
 def pytest_addoption(parser):

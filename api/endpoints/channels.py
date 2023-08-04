@@ -1,0 +1,61 @@
+import json
+from pathlib import Path
+from zipfile import ZipFile
+from fastapi import HTTPException
+from pydantic import BaseModel, create_model
+
+from api.main import app
+from api.common import CHANNEL_TYPES
+from api.config import config
+from api.common import SourceDatabase, PDB_ID_Type, Uniprot_ID_Type
+
+
+ChannelModel = create_model('ChannelModel', **{tunnel: (list, []) for tunnel in CHANNEL_TYPES.values()})
+
+
+class Channels(BaseModel):
+    Annotations: list = []
+    Channels: ChannelModel = ChannelModel()
+
+
+@app.get('/channels/pdb/{pdb_id}', name='Channel data', tags=['PDB'],
+         description='Returns information about channels for a given protein')
+async def get_channels_pdb(pdb_id: PDB_ID_Type) -> Channels:
+    return await get_channels(SourceDatabase.PDB, pdb_id)
+
+
+@app.get('/channels/alphafill/{uniprot_id}', name='Channel data', tags=['AlphaFill'],
+         description='Returns information about channels for a given protein')
+async def get_channels_alphafill(uniprot_id: Uniprot_ID_Type) -> Channels:
+    return await get_channels(SourceDatabase.AlphaFill, uniprot_id)
+
+
+async def get_channels(source_db: SourceDatabase, protein_id: str):
+
+    data = Channels().model_dump()
+
+    protein_dir = Path(config['dirs'][source_db.value.lower()]) / protein_id[1:3] / protein_id
+
+    if not Path(protein_dir).exists():
+        raise HTTPException(status_code=404, detail=f'Protein with ID \'{protein_id}\' not found in ChannelsDB ({source_db.value})')
+
+    with ZipFile(protein_dir / 'data.zip') as z:
+        for json_file in z.namelist():
+            if (name := Path(json_file).stem) in CHANNEL_TYPES:
+                with z.open(json_file) as f:
+                    try:
+                        orig = json.load(f)
+                        res = []
+                        for key in ('Paths', 'Tunnels', 'Pores', 'MergedPores'):
+                            res.extend(orig['Channels'][key])
+                        data['Channels'][CHANNEL_TYPES[name]] = res
+                    except json.decoder.JSONDecodeError:
+                        print(f'{protein_id} / {json_file} not a correct JSON')
+                        continue
+        try:
+            with z.open('annotations.json') as f:
+                data['Annotations'] = json.load(f)
+        except KeyError:
+            pass
+
+    return Channels().model_validate(data)

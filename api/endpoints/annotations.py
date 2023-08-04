@@ -1,8 +1,16 @@
+import gzip
 import json
+import urllib.request
+import urllib.error
+import requests
 from pathlib import Path
 import xml.etree.ElementTree as ET
+from fastapi import HTTPException
+from pydantic import BaseModel
 
+from api.main import app
 from api.config import config
+from api.common import PDB_ID_Type, Uniprot_ID_Type
 
 
 def parse_sifts_data(xml_data: str) -> dict[str, tuple[str, dict[str, str]]]:
@@ -48,7 +56,7 @@ def get_entry_annotations(uniprot_id: str, tree: ET) -> dict:
     return entry
 
 
-def get_uniprot_residue_annotations(mapping: tuple[str, dict[str, str]], tree: ET) -> list[dict]:
+def get_uniprot_residue_annotations(mapping: tuple[str, dict[str, str]] | None, tree: ET) -> list[dict]:
     ns = {'': 'http://uniprot.org/uniprot'}
 
     references: dict[str, tuple[str, str]] = {}
@@ -75,12 +83,15 @@ def get_uniprot_residue_annotations(mapping: tuple[str, dict[str, str]], tree: E
             }
             try:
                 position = item.find('location/position', ns)
-                residue_annotation['Id'] = mapping[1][position.attrib['position']]
-
-                residue_annotation['Chain'] = mapping[0]
+                if mapping is None:
+                    residue_annotation['Chain'] = 'A'
+                    residue_annotation['Id'] = position.attrib['position']
+                else:
+                    residue_annotation['Chain'] = mapping[0]
+                    residue_annotation['Id'] = mapping[1][position.attrib['position']]
 
                 if (evidence := item.attrib.get('evidence', None)) is not None:
-                    # TODO What to do with multiple references to a site? Now, picking first.
+                    # Picking only a first reference if multiple ones are provided
                     evidence = evidence.split()[0]
                     residue_annotation['Reference'] = references[evidence][0]
                     residue_annotation['ReferenceType'] = references[evidence][1]
@@ -99,7 +110,7 @@ def get_uniprot_residue_annotations(mapping: tuple[str, dict[str, str]], tree: E
     return residue_annotations
 
 
-def get_channelsdb_residue_annotations(uniprot_id: str, mapping: tuple[str, dict[str, str]]) -> list[dict]:
+def get_channelsdb_residue_annotations(uniprot_id: str, mapping: tuple[str, dict[str, str]] | None) -> list[dict]:
     path = Path(config['dirs']['annotations']) / f'{uniprot_id}.json'
     if not path.exists():
         return []
@@ -107,8 +118,57 @@ def get_channelsdb_residue_annotations(uniprot_id: str, mapping: tuple[str, dict
     with open(path) as f:
         data = json.load(f)
 
-    for annotation in data:
-        annotation['Chain'] = mapping[0]
-        annotation['Id'] = mapping[1].get(annotation['Id'], None)
+    if mapping is None:
+        for annotation in data:
+            annotation['Chain'] = 'A'
+    else:
+        for annotation in data:
+            annotation['Chain'] = mapping[0]
+            annotation['Id'] = mapping[1].get(annotation['Id'], None)
 
     return data
+
+
+def fill_annotations(annotations: dict, mapping: tuple[str, dict[str, str]] | None, uniprot_id: str):
+    req = requests.get(f'https://www.ebi.ac.uk/proteins/api/proteins/{uniprot_id}', headers={'accept': 'application/xml'})
+    xml_data = req.content.decode('utf-8')
+    tree = ET.fromstring(xml_data)
+    annotations['EntryAnnotations'].append(get_entry_annotations(uniprot_id, tree))
+    annotations['ResidueAnnotations']['UniProt'].extend(get_uniprot_residue_annotations(mapping, tree))
+    annotations['ResidueAnnotations']['ChannelsDB'].extend(get_channelsdb_residue_annotations(uniprot_id, mapping))
+
+
+class ResidueAnnotations(BaseModel):
+    ChannelsDB: list = []
+    UniProt: list = []
+
+
+class Annotations(BaseModel):
+    EntryAnnotations: list = []
+    ResidueAnnotations: ResidueAnnotations = ResidueAnnotations()
+
+
+@app.get('/annotations/alphafill/{uniprot_id}', name='Annotation data', tags=['AlphaFill'],
+         description='Returns annotations of individual protein and its residues')
+async def get_annotations_alphafill(uniprot_id: Uniprot_ID_Type) -> Annotations:
+    annotations = Annotations().model_dump()
+    fill_annotations(annotations, None, uniprot_id)
+    return Annotations().model_validate(annotations)
+
+
+@app.get('/annotations/pdb/{pdb_id}', name='Annotation data', tags=['PDB'],
+         description='Returns annotations of individual protein and its residues')
+async def get_annotations_pdb(pdb_id: PDB_ID_Type) -> Annotations:
+    annotations = Annotations().model_dump()
+    try:
+        with urllib.request.urlopen(f'ftp://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/{pdb_id}.xml.gz') as f:
+            xml_data = gzip.decompress(f.read()).decode('utf-8')
+    except urllib.error.URLError:
+        raise HTTPException(status_code=404, detail=f'Cannot find annotations for PDB ID \'{pdb_id}\'')
+
+    sifts = parse_sifts_data(xml_data)
+
+    for uniprot_id, mapping in sifts.items():
+        fill_annotations(annotations, mapping, uniprot_id)
+
+    return Annotations().model_validate(annotations)

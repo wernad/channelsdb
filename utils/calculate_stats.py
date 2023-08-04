@@ -14,11 +14,11 @@ def get_statistics(datadir: str) -> dict[str, Counter]:
     root = Path(datadir)
     for datafile in root.glob('**/data.zip'):
         pdb_id = datafile.parts[-2]
-        counts[pdb_id] = Counter({value: 0 for value in common.TUNNEL_TYPES.values()})
+        counts[pdb_id] = Counter({value: 0 for value in common.CHANNEL_TYPES.values()})
         for file in ZipFile(datafile).namelist():
             name = Path(file).stem
             if name != 'annotations':
-                counts[pdb_id][common.TUNNEL_TYPES[name]] += 1
+                counts[pdb_id][common.CHANNEL_TYPES[name]] += 1
 
     return counts
 
@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     raw_stats = get_statistics(args.datadir)
 
-    total = Counter({value: 0 for value in common.TUNNEL_TYPES.values()})
+    total = Counter({value: 0 for value in common.CHANNEL_TYPES.values()})
     for partial in raw_stats.values():
         total.update(partial)
 
@@ -47,5 +47,5 @@ if __name__ == '__main__':
     with open(args.content, 'w') as f:
         db_content = {}
         for pdb_id, counts in raw_stats.items():
-            db_content[pdb_id] = [counts[value] for value in common.TUNNEL_TYPES.values()]
+            db_content[pdb_id] = [counts[value] for value in common.CHANNEL_TYPES.values()]
         json.dump(db_content, f, sort_keys=True)

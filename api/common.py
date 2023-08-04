@@ -1,4 +1,17 @@
-TUNNEL_TYPES = {
+from fastapi import Path as AnnotationPath
+from typing import Annotated
+from enum import Enum
+
+PDB_ID_Type = Annotated[str, AnnotationPath(description='PDB ID', pattern='^[1-9][a-z0-9]{3}$')]
+Uniprot_ID_Type = Annotated[str, AnnotationPath(description='Uniprot ID')]
+
+
+class SourceDatabase(Enum):
+    PDB = "PDB"
+    AlphaFill = "AlphaFill"
+
+
+CHANNEL_TYPES = {
     'csa': 'CSATunnels_MOLE',
     'cscaver': 'CSATunnels_Caver',
 
