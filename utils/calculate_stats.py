@@ -1,51 +1,67 @@
 import json
-from argparse import ArgumentParser
 from datetime import date
 from collections import Counter
 from zipfile import ZipFile
 from pathlib import Path
 
-from api import common
+from api.config import config
+from api.common import CHANNEL_TYPES, CHANNEL_TYPES_ALPHAFILL, CHANNEL_TYPES_PDB, SourceDatabase
 
 
-def get_statistics(datadir: str) -> dict[str, Counter]:
+def get_statistics(database: SourceDatabase) -> dict[str, Counter]:
     counts = {}
-
-    root = Path(datadir)
-    for datafile in root.glob('**/data.zip'):
-        pdb_id = datafile.parts[-2]
-        counts[pdb_id] = Counter({value: 0 for value in common.CHANNEL_TYPES.values()})
-        for file in ZipFile(datafile).namelist():
-            name = Path(file).stem
-            if name != 'annotations':
-                counts[pdb_id][common.CHANNEL_TYPES[name]] += 1
-
+    root = Path(config['dirs'][database.value.lower()])
+    for datafile in root.rglob('data.zip'):
+        protein_id = datafile.parts[-2]
+        if database == SourceDatabase.PDB:
+            counts[protein_id] = Counter({value: 0 for value in CHANNEL_TYPES_PDB.values()})
+        else:
+            counts[protein_id] = Counter({value: 0 for value in CHANNEL_TYPES_ALPHAFILL.values()})
+        with ZipFile(datafile) as z:
+            for json_file in z.namelist():
+                if (name := Path(json_file).stem) in CHANNEL_TYPES:
+                    with z.open(json_file) as f:
+                        try:
+                            orig = json.load(f)
+                            for key in ('Paths', 'Tunnels', 'Pores', 'MergedPores'):
+                                counts[protein_id][CHANNEL_TYPES[name]] += len(orig['Channels'][key])
+                        except json.decoder.JSONDecodeError:
+                            print(f'{protein_id} / {json_file} not a correct JSON')
+                            continue
     return counts
 
 
-if __name__ == '__main__':
-    parser = ArgumentParser()
-    parser.add_argument('datadir', type=str, help='Directory with ChannelsDB data')
-    parser.add_argument('statistics', type=str, help='Output statistics')
-    parser.add_argument('content', type=str, help='Output summary contents')
-    args = parser.parse_args()
+def save_statistics() -> None:
+    pdb_stats = get_statistics(SourceDatabase.PDB)
+    alphafill_stats = get_statistics(SourceDatabase.AlphaFill)
 
-    raw_stats = get_statistics(args.datadir)
-
-    total = Counter({value: 0 for value in common.CHANNEL_TYPES.values()})
-    for partial in raw_stats.values():
-        total.update(partial)
+    total = Counter({value: 0 for value in CHANNEL_TYPES.values()})
+    for stats in (pdb_stats, alphafill_stats):
+        for partial in stats.values():
+            total.update(partial)
 
     statistics = {
         'statistics': total,
         'date': date.today().strftime('%d/%m/%Y')
     }
 
-    with open(args.statistics, 'w') as f:
+    with open(Path(config['dirs']['base']) / 'statistics.json', 'w') as f:
         json.dump(statistics, f, sort_keys=True, indent=4)
 
-    with open(args.content, 'w') as f:
-        db_content = {}
-        for pdb_id, counts in raw_stats.items():
-            db_content[pdb_id] = [counts[value] for value in common.CHANNEL_TYPES.values()]
+    db_content = {
+        'PDB': {},
+        'AlphaFill': {}
+    }
+
+    for pdb_id, counts in pdb_stats.items():
+        db_content['PDB'][pdb_id] = [counts[value] for value in CHANNEL_TYPES_PDB.values()]
+
+    for uniprot_id, counts in alphafill_stats.items():
+        db_content['AlphaFill'][uniprot_id] = [counts[value] for value in CHANNEL_TYPES_ALPHAFILL.values()]
+
+    with open(Path(config['dirs']['base']) / 'db_content.json', 'w') as f:
         json.dump(db_content, f, sort_keys=True)
+
+
+if __name__ == '__main__':
+    save_statistics()

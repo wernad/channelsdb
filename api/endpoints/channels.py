@@ -53,7 +53,7 @@ async def get_channels(source_db: SourceDatabase, protein_id: str):
                         res = []
                         for key in ('Paths', 'Tunnels', 'Pores', 'MergedPores'):
                             res.extend(orig['Channels'][key])
-                        data['Channels'][CHANNEL_TYPES[name]] = res
+                        data['Channels'][channel_types[name]] = res
                     except json.decoder.JSONDecodeError:
                         print(f'{protein_id} / {json_file} not a correct JSON')
                         continue
