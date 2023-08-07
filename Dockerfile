@@ -12,4 +12,6 @@ COPY ./config_docker.ini /code/config.ini
 
 COPY ./api /code/api
 
+COPY ./assets /code/assets
+
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
