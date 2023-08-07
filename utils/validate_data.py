@@ -4,7 +4,7 @@ from zipfile import ZipFile
 import sys
 
 from api.config import config
-from api.common import CHANNEL_TYPES
+from api.common import CHANNEL_TYPES_PDB, CHANNEL_TYPES_ALPHAFILL, SourceDatabase
 
 
 def validate_annotations() -> bool:
@@ -21,9 +21,13 @@ def validate_annotations() -> bool:
     return is_ok
 
 
-def validate_data(database: str) -> bool:
+def validate_data(database: SourceDatabase) -> bool:
+    if database == SourceDatabase.PDB:
+        channel_types = set(CHANNEL_TYPES_PDB)
+    else:
+        channel_types = set(CHANNEL_TYPES_ALPHAFILL)
     is_ok = True
-    root = Path(config['dirs'][database])
+    root = Path(config['dirs'][database.value.lower()])
     for datafile in root.rglob('*'):
         relpath = datafile.relative_to(root)
         if datafile.is_dir():
@@ -40,7 +44,7 @@ def validate_data(database: str) -> bool:
             elif datafile.name == 'data.zip':
                 with ZipFile(datafile) as z:
                     for file in z.namelist():
-                        if Path(file).suffix != '.json' or Path(file).stem not in set(CHANNEL_TYPES) | {'annotations'}:
+                        if Path(file).suffix != '.json' or Path(file).stem not in channel_types | {'annotations'}:
                             print(f'{datafile} contains invalid file {file}', file=sys.stderr)
                             continue
                         with z.open(file) as f:
@@ -65,8 +69,8 @@ def validate_data(database: str) -> bool:
 
 def validate() -> bool:
     is_ok = validate_annotations()
-    is_ok &= validate_data('pdb')
-    is_ok &= validate_data('alphafill')
+    is_ok &= validate_data(SourceDatabase.PDB)
+    is_ok &= validate_data(SourceDatabase.AlphaFill)
     return is_ok
 
 
