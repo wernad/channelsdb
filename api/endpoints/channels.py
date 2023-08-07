@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from pydantic import BaseModel, create_model
 
 from api.main import app
-from api.common import CHANNEL_TYPES
+from api.common import CHANNEL_TYPES_PDB, CHANNEL_TYPES_ALPHAFILL, CHANNEL_TYPES
 from api.config import config
 from api.common import SourceDatabase, PDB_ID_Type, Uniprot_ID_Type
 
@@ -36,12 +36,17 @@ async def get_channels(source_db: SourceDatabase, protein_id: str):
 
     protein_dir = Path(config['dirs'][source_db.value.lower()]) / protein_id[1:3] / protein_id
 
+    if source_db == SourceDatabase.PDB:
+        channel_types = CHANNEL_TYPES_PDB
+    else:
+        channel_types = CHANNEL_TYPES_ALPHAFILL
+
     if not Path(protein_dir).exists():
         raise HTTPException(status_code=404, detail=f'Protein with ID \'{protein_id}\' not found in ChannelsDB ({source_db.value})')
 
     with ZipFile(protein_dir / 'data.zip') as z:
         for json_file in z.namelist():
-            if (name := Path(json_file).stem) in CHANNEL_TYPES:
+            if (name := Path(json_file).stem) in channel_types:
                 with z.open(json_file) as f:
                     try:
                         orig = json.load(f)

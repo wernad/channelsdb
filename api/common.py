@@ -7,19 +7,16 @@ Uniprot_ID_Type = Annotated[str, AnnotationPath(description='Uniprot ID')]
 
 
 class SourceDatabase(Enum):
-    PDB = "PDB"
-    AlphaFill = "AlphaFill"
+    PDB = 'PDB'
+    AlphaFill = 'AlphaFill'
 
 
-CHANNEL_TYPES = {
+CHANNEL_TYPES_PDB = {
     'csa': 'CSATunnels_MOLE',
     'cscaver': 'CSATunnels_Caver',
 
     'authors': 'ReviewedChannels_MOLE',
     'aucaver': 'ReviewedChannels_Caver',
-
-    'alphafill': 'AlphaFillTunnels_MOLE',
-    'alphacaver': 'AlphaFillTunnels_Caver',
 
     'cofactors': 'CofactorTunnels_MOLE',
     'cocaver': 'CofactorTunnels_Caver',
@@ -28,5 +25,12 @@ CHANNEL_TYPES = {
     'pocaver': 'TransmembranePores_Caver',
 
     'procognate': 'ProcognateTunnels_MOLE',
-    'procaver': 'ProcagnateTunnels_Caver',
+    'procaver': 'ProcagnateTunnels_Caver'
 }
+
+CHANNEL_TYPES_ALPHAFILL = {
+    'alphafill': 'AlphaFillTunnels_MOLE',
+    'alphacaver': 'AlphaFillTunnels_Caver'
+}
+
+CHANNEL_TYPES = CHANNEL_TYPES_PDB | CHANNEL_TYPES_ALPHAFILL
