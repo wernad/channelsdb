@@ -1,4 +1,5 @@
 import configparser
 
 config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
-config.read('config.ini')
+if not config.read('config.ini'):
+    raise IOError('Cannot read config.ini')
