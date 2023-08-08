@@ -5,9 +5,9 @@ from api.main import app
 client = TestClient(app)
 
 
-class TestPDB:
+class TestChannels:
     def test_stored(self, stored_pdbs):
-        response = client.get(f'/pdb/{stored_pdbs}')
+        response = client.get(f'/channels/pdb/{stored_pdbs}')
         assert response.status_code == 200
         json = response.json()
         assert isinstance(json, dict)
@@ -15,8 +15,8 @@ class TestPDB:
         assert 'Channels' in json
 
     def test_invalid_pdbid(self):
-        response = client.get('/pdb/some_invalid_pdb_id')
-        assert response.status_code == 400
+        response = client.get('/channels/pdb/some_invalid_pdb_id')
+        assert response.status_code == 422
 
 
 class TestAssembly:
@@ -27,12 +27,12 @@ class TestAssembly:
 
     def test_invalid_pdbid(self):
         response = client.get('/assembly/some_invalid_pdb_id')
-        assert response.status_code == 400
+        assert response.status_code == 422
 
 
 class TestAnnotations:
     def test_stored(self, stored_pdbs):
-        response = client.get(f'/annotations/{stored_pdbs}')
+        response = client.get(f'/annotations/pdb/{stored_pdbs}')
         assert response.status_code == 200
         json = response.json()
         assert isinstance(json, dict)
@@ -40,17 +40,17 @@ class TestAnnotations:
         assert 'ResidueAnnotations' in json
 
     def test_invalid_pdbid(self):
-        response = client.get('/annotations/some_invalid_pdb_id')
-        assert response.status_code == 400
+        response = client.get('/annotations/pdb/some_invalid_pdb_id')
+        assert response.status_code == 422
 
 
 class TestDownloadPNG:
     def test_stored(self, stored_pdbs):
-        response = client.get(f'/download/png/{stored_pdbs}', follow_redirects=False)
+        response = client.get(f'/download/pdb/{stored_pdbs}/png', follow_redirects=False)
         assert response.status_code in (200, 307)
         if response.status_code == 200:
             assert response.headers['content-type'] == 'image/png'
 
     def test_invalid_pdbid(self):
-        response = client.get('/download/png/some_invalid_pdb_id')
-        assert response.status_code == 400
+        response = client.get('/download/pdb/some_invalid_pdb_id/png')
+        assert response.status_code == 422
