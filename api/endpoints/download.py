@@ -4,7 +4,7 @@ from fastapi.responses import FileResponse, RedirectResponse
 
 from api.main import app
 from api.config import config
-from api.common import PDB_ID_Type, Uniprot_ID_Type, SourceDatabase
+from api.common import PDB_ID_Type, Uniprot_ID_Type, SourceDatabase, uniprot_id_404_response, pdb_id_404_response
 from api.endpoints.assembly import get_assembly_id
 from api.endpoints.channels import get_channels
 
@@ -15,13 +15,13 @@ class DownloadType(str, Enum):
 
 
 @app.get('/download/alphafill/{uniprot_id}/{file_format}', name='Download data', tags=['AlphaFill'],
-         description='Download various data about the protein')
+         description='Download various data about the protein', responses=uniprot_id_404_response)
 async def download_alphafill(file_format: DownloadType, uniprot_id: Uniprot_ID_Type):
     return await download(SourceDatabase.AlphaFill, file_format, uniprot_id)
 
 
 @app.get('/download/pdb/{pdb_id}/{file_format}', name='Download data', tags=['PDB'],
-         description='Download various data about the protein')
+         description='Download various data about the protein', responses=pdb_id_404_response)
 async def download_pdb(file_format: DownloadType, pdb_id: PDB_ID_Type):
     return await download(SourceDatabase.PDB, file_format, pdb_id)
 

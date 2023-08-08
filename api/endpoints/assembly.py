@@ -3,10 +3,11 @@ import json
 from fastapi import HTTPException
 
 from api.main import app
-from api.common import PDB_ID_Type
+from api.common import PDB_ID_Type, pdb_id_404_response
 
 
-@app.get('/assembly/{pdb_id}', name='Assembly', tags=['PDB'], description='Returns prefered assembly for a given protein')
+@app.get('/assembly/{pdb_id}', name='Assembly', tags=['PDB'], description='Returns prefered assembly for a given protein',
+         responses=pdb_id_404_response)
 async def get_assembly_id(pdb_id: PDB_ID_Type) -> str:
     req = requests.get(f'https://www.ebi.ac.uk/pdbe/api/pdb/entry/summary/{pdb_id}')
     if req.status_code != 200:

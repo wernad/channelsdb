@@ -6,8 +6,8 @@ client = TestClient(app)
 
 
 class TestChannels:
-    def test_stored(self, stored_pdbs):
-        response = client.get(f'/channels/pdb/{stored_pdbs}')
+    def test_stored(self, stored_pdb_ids):
+        response = client.get(f'/channels/pdb/{stored_pdb_ids}')
         assert response.status_code == 200
         json = response.json()
         assert isinstance(json, dict)
@@ -20,8 +20,8 @@ class TestChannels:
 
 
 class TestAssembly:
-    def test_stored(self, stored_pdbs):
-        response = client.get(f'/assembly/{stored_pdbs}')
+    def test_stored(self, stored_pdb_ids):
+        response = client.get(f'/assembly/{stored_pdb_ids}')
         assert response.status_code == 200
         assert str(response.json()).isnumeric()
 
@@ -31,8 +31,8 @@ class TestAssembly:
 
 
 class TestAnnotations:
-    def test_stored(self, stored_pdbs):
-        response = client.get(f'/annotations/pdb/{stored_pdbs}')
+    def test_stored(self, stored_pdb_ids):
+        response = client.get(f'/annotations/pdb/{stored_pdb_ids}')
         assert response.status_code == 200
         json = response.json()
         assert isinstance(json, dict)
@@ -45,8 +45,8 @@ class TestAnnotations:
 
 
 class TestDownloadPNG:
-    def test_stored(self, stored_pdbs):
-        response = client.get(f'/download/pdb/{stored_pdbs}/png', follow_redirects=False)
+    def test_stored(self, stored_pdb_ids):
+        response = client.get(f'/download/pdb/{stored_pdb_ids}/png', follow_redirects=False)
         assert response.status_code in (200, 307)
         if response.status_code == 200:
             assert response.headers['content-type'] == 'image/png'

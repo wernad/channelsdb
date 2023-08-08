@@ -4,16 +4,17 @@ from pathlib import Path
 from api.config import config
 
 
-def get_stored_pdbs(datadir: str) -> list[str]:
+def get_stored_ids(datadir: str) -> list[str]:
     root = Path(datadir)
-    pdb_ids = []
+    protein_ids = []
     for datafile in root.glob('**/data.zip'):
-        pdb_ids.append(datafile.parts[-2])
+        protein_ids.append(datafile.parts[-2])
 
-    return pdb_ids
+    return protein_ids
 
 
-stored_pdb_ids = get_stored_pdbs(config['dirs']['pdb'])
+stored_pdb_ids = get_stored_ids(config['dirs']['pdb'])
+stored_uniprot_ids = get_stored_ids(config['dirs']['alphafill'])
 
 
 def pytest_addoption(parser):
@@ -22,13 +23,20 @@ def pytest_addoption(parser):
 
 
 def pytest_generate_tests(metafunc):
-    if 'stored_pdbs' in metafunc.fixturenames:
-        subset = metafunc.config.option.subset
-        count = metafunc.config.option.count
+    subset = metafunc.config.option.subset
+    count = metafunc.config.option.count
+    if 'stored_pdb_ids' in metafunc.fixturenames:
         if subset == 'all':
-            metafunc.parametrize('stored_pdbs', stored_pdb_ids)
+            metafunc.parametrize('stored_pdb_ids', stored_pdb_ids)
         elif subset == 'random':
-            metafunc.parametrize('stored_pdbs', random.sample(stored_pdb_ids, k=count))
+            metafunc.parametrize('stored_pdb_ids', random.sample(stored_pdb_ids, k=count))
         else:
             # first
-            metafunc.parametrize('stored_pdbs', stored_pdb_ids[:count])
+            metafunc.parametrize('stored_pdb_ids', stored_pdb_ids[:count])
+    if 'stored_uniprot_ids' in metafunc.fixturenames:
+        if subset == 'all':
+            metafunc.parametrize('stored_uniprot_ids', stored_uniprot_ids)
+        elif subset == 'random':
+            metafunc.parametrize('stored_uniprot_ids', random.sample(stored_uniprot_ids, k=count))
+        else:
+            metafunc.parametrize('stored_uniprot_ids', stored_uniprot_ids[:count])

@@ -1,5 +1,6 @@
 import gzip
 import json
+import sys
 import urllib.request
 import urllib.error
 import requests
@@ -10,7 +11,7 @@ from pydantic import BaseModel
 
 from api.main import app
 from api.config import config
-from api.common import PDB_ID_Type, Uniprot_ID_Type
+from api.common import PDB_ID_Type, Uniprot_ID_Type, uniprot_id_404_response, pdb_id_404_response
 
 
 def parse_sifts_data(xml_data: str) -> dict[str, tuple[str, dict[str, str]]]:
@@ -131,6 +132,8 @@ def get_channelsdb_residue_annotations(uniprot_id: str, mapping: tuple[str, dict
 
 def fill_annotations(annotations: dict, mapping: tuple[str, dict[str, str]] | None, uniprot_id: str):
     req = requests.get(f'https://www.ebi.ac.uk/proteins/api/proteins/{uniprot_id}', headers={'accept': 'application/xml'})
+    if req.status_code != 200:
+        raise HTTPException(status_code=404, detail=f'Cannot load annotations for Uniprot ID \'{uniprot_id}\'')
     xml_data = req.content.decode('utf-8')
     tree = ET.fromstring(xml_data)
     annotations['EntryAnnotations'].append(get_entry_annotations(uniprot_id, tree))
@@ -148,17 +151,17 @@ class Annotations(BaseModel):
     ResidueAnnotations: ResidueAnnotations = ResidueAnnotations()
 
 
-@app.get('/annotations/alphafill/{uniprot_id}', name='Annotation data', tags=['AlphaFill'],
-         description='Returns annotations of individual protein and its residues')
-async def get_annotations_alphafill(uniprot_id: Uniprot_ID_Type) -> Annotations:
+@app.get('/annotations/alphafill/{uniprot_id}', response_model=Annotations, name='Annotation data', tags=['AlphaFill'],
+         description='Returns annotations of individual protein and its residues', responses=uniprot_id_404_response)
+async def get_annotations_alphafill(uniprot_id: Uniprot_ID_Type):
     annotations = Annotations().model_dump()
     fill_annotations(annotations, None, uniprot_id)
-    return Annotations().model_validate(annotations)
+    return annotations
 
 
-@app.get('/annotations/pdb/{pdb_id}', name='Annotation data', tags=['PDB'],
-         description='Returns annotations of individual protein and its residues')
-async def get_annotations_pdb(pdb_id: PDB_ID_Type) -> Annotations:
+@app.get('/annotations/pdb/{pdb_id}', response_model=Annotations, name='Annotation data', tags=['PDB'],
+         description='Returns annotations of individual protein and its residues', responses=pdb_id_404_response)
+async def get_annotations_pdb(pdb_id: PDB_ID_Type):
     annotations = Annotations().model_dump()
     try:
         with urllib.request.urlopen(f'ftp://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/{pdb_id}.xml.gz') as f:
@@ -167,8 +170,12 @@ async def get_annotations_pdb(pdb_id: PDB_ID_Type) -> Annotations:
         raise HTTPException(status_code=404, detail=f'Cannot find annotations for PDB ID \'{pdb_id}\'')
 
     sifts = parse_sifts_data(xml_data)
+    try:
+        for uniprot_id, mapping in sifts.items():
+            fill_annotations(annotations, mapping, uniprot_id)
+    except HTTPException as e:
+        # We should never get here, this would mean incorrect SIFTS data
+        print(e, file=sys.stderr)
+        raise HTTPException(status_code=400, detail=f'Cannot load annotations for PDB ID \'{pdb_id}\'')
 
-    for uniprot_id, mapping in sifts.items():
-        fill_annotations(annotations, mapping, uniprot_id)
-
-    return Annotations().model_validate(annotations)
+    return annotations
