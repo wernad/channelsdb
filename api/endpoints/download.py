@@ -53,7 +53,7 @@ async def download(source_db: SourceDatabase, file_format: DownloadType, protein
     channels = get_channels(source_db, protein_id)
     match file_format:
         case DownloadType.json:
-            return json.dumps(channels)
+            return channels
         case DownloadType.pdb:
             return PlainTextResponse(get_PDB_file(channels))
         case DownloadType.pymol:
