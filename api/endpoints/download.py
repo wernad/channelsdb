@@ -45,7 +45,7 @@ async def download(source_db: SourceDatabase, file_format: DownloadType, protein
         case SourceDatabase.AlphaFill, DownloadType.png:
             return FileResponse('assets/alphafill.png')
         case _, DownloadType.json:
-            return await get_channels(source_db, protein_id)
+            return get_channels(source_db, protein_id)
         case _, DownloadType.pdb:
             return PlainTextResponse(get_PDB_file(source_db, protein_id))
         case _, DownloadType.pymol:
