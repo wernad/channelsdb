@@ -1,6 +1,9 @@
 from enum import Enum
 from pathlib import Path
-from fastapi.responses import FileResponse, RedirectResponse, PlainTextResponse
+from fastapi.responses import FileResponse, RedirectResponse, PlainTextResponse, Response
+import io
+import json
+import zipfile
 
 from api.main import app
 from api.config import config
@@ -17,6 +20,7 @@ class DownloadType(str, Enum):
     pymol = 'pymol'
     chimera = 'chimera'
     vmd = 'vmd'
+    zip = 'zip'
 
 
 @app.get('/download/alphafill/{uniprot_id}/{file_format}', name='Download data', tags=['AlphaFill'],
@@ -45,13 +49,27 @@ async def download(source_db: SourceDatabase, file_format: DownloadType, protein
                                     f'{protein_id}_assembly_{assembly_id}_chemically_distinct_molecules_front_image-200x200.png')
         case SourceDatabase.AlphaFill, DownloadType.png:
             return FileResponse('assets/alphafill.png')
-        case _, DownloadType.json:
-            return get_channels(source_db, protein_id)
-        case _, DownloadType.pdb:
-            return PlainTextResponse(get_PDB_file(source_db, protein_id))
-        case _, DownloadType.pymol:
-            return PlainTextResponse(get_Pymol_file(source_db, protein_id))
-        case _, DownloadType.chimera:
-            return PlainTextResponse(get_Chimera_file(source_db, protein_id))
-        case _, DownloadType.vmd:
-            return PlainTextResponse(get_VMD_file(source_db, protein_id))
+
+    channels = get_channels(source_db, protein_id)
+    match file_format:
+        case DownloadType.json:
+            return json.dumps(channels)
+        case DownloadType.pdb:
+            return PlainTextResponse(get_PDB_file(channels))
+        case DownloadType.pymol:
+            return PlainTextResponse(get_Pymol_file(channels))
+        case DownloadType.chimera:
+            return PlainTextResponse(get_Chimera_file(channels))
+        case DownloadType.vmd:
+            return PlainTextResponse(get_VMD_file(channels))
+        case DownloadType.zip:
+            content = io.BytesIO()
+            zf = zipfile.ZipFile(content, mode='w')
+            zf.writestr(f'{protein_id}_chimera.py', get_Chimera_file(channels))
+            zf.writestr(f'{protein_id}_pymol.py', get_Pymol_file(channels))
+            zf.writestr(f'{protein_id}_vmd.tk', get_VMD_file(channels))
+            zf.writestr(f'{protein_id}_report.json', json.dumps(channels))
+            zf.writestr(f'{protein_id}_channels.pdb', get_PDB_file(channels))
+            zf.close()
+
+            return Response(content=content.getvalue(), media_type='application/zip')

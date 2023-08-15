@@ -1,7 +1,3 @@
-from api.common import SourceDatabase
-from api.endpoints.channels import get_channels
-
-
 COLORS = ['red', 'green', 'blue', 'yellow', 'violet', 'cyan', 'salmon', 'lime', 'pink', 'slate', 'magenta', 'orange', 'marine', 'olive',
           'purple', 'teal', 'forest', 'firebrick', 'chocolate', 'wheat', 'white', 'grey']
 
@@ -36,8 +32,7 @@ cmd.group('Channels', [{name}], 'add')
 '''
 
 
-def get_Pymol_file(source_db: SourceDatabase, protein_id: str) -> str:
-    channels = get_channels(source_db, protein_id)
+def get_Pymol_file(channels: dict) -> str:
     channel_count = 0
     lines = []
     for channel_type in channels['Channels']:

@@ -1,7 +1,5 @@
 from string import ascii_uppercase
 
-from api.common import SourceDatabase
-from api.endpoints.channels import get_channels
 
 HEADER = '''\
 REMARK 920
@@ -21,8 +19,7 @@ REMARK ATOM  NAM RES   TUNID     X      Y       Z       Distnm RadiusA
 '''
 
 
-def get_PDB_file(source_db: SourceDatabase, protein_id: str) -> str:
-    channels = get_channels(source_db, protein_id)
+def get_PDB_file(channels: dict) -> str:
     total_atom_id = 0
     channel_count = 0
     lines = []

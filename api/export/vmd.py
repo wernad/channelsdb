@@ -1,6 +1,3 @@
-from api.common import SourceDatabase
-from api.endpoints.channels import get_channels
-
 HEADER = '''\
 package require http
 # To run this script please run it in VMD as source script.vmd
@@ -32,8 +29,7 @@ mol rename top {{{name}}}
 '''
 
 
-def get_VMD_file(source_db: SourceDatabase, protein_id: str) -> str:
-    channels = get_channels(source_db, protein_id)
+def get_VMD_file(channels: dict) -> str:
     channel_count = 0
     lines = []
     for channel_type in channels['Channels']:

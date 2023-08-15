@@ -1,6 +1,3 @@
-from api.common import SourceDatabase
-from api.endpoints.channels import get_channels
-
 HEADER = '''\
 import chimera
 
@@ -24,8 +21,7 @@ COLORS = ['red', 'orange red', 'orange', 'yellow', 'green', 'forest green', 'cya
           'rosy brown', 'slate gray']
 
 
-def get_Chimera_file(source_db: SourceDatabase, protein_id: str) -> str:
-    channels = get_channels(source_db, protein_id)
+def get_Chimera_file(channels: dict) -> str:
     channel_count = 0
     lines = []
     for channel_type in channels['Channels']:
