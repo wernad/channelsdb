@@ -7,19 +7,19 @@ from pymol import cmd
 from pymol.cgo import *
 import chempy
 def add_atom(model, name, vdw, x, y, z):
-  a = chempy.Atom()
-  a.name = name
-  a.vdw = vdw
-  a.coord = [x, y, z]
-  model.atom.append(a)
+    a = chempy.Atom()
+    a.name = name
+    a.vdw = vdw
+    a.coord = [x, y, z]
+    model.atom.append(a)
 '''
 
 
 FOOTER = '''\
     for a in range(len(model.atom) - 1):
-      b = chempy.Bond()
-      b.index = [a, a + 1]
-      model.bond.append(b)
+        b = chempy.Bond()
+        b.index = [a, a + 1]
+        model.bond.append(b)
     cmd.set('surface_mode', 1)
     cmd.set('sphere_mode', 9)
     cmd.set('mesh_mode', 1)
