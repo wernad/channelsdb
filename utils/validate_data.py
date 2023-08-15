@@ -2,9 +2,10 @@ import json
 from pathlib import Path
 from zipfile import ZipFile
 import sys
+import re
 
 from api.config import config
-from api.common import CHANNEL_TYPES_PDB, CHANNEL_TYPES_ALPHAFILL, SourceDatabase
+from api.common import CHANNEL_TYPES_PDB, CHANNEL_TYPES_ALPHAFILL, SourceDatabase, UNIPROT_ID_REGEX, PDB_ID_REGEX
 
 
 def validate_annotations() -> bool:
@@ -24,8 +25,10 @@ def validate_annotations() -> bool:
 def validate_data(database: SourceDatabase) -> bool:
     if database == SourceDatabase.PDB:
         channel_types = set(CHANNEL_TYPES_PDB)
+        regex = PDB_ID_REGEX
     else:
         channel_types = set(CHANNEL_TYPES_ALPHAFILL)
+        regex = UNIPROT_ID_REGEX
     is_ok = True
     root = Path(config['dirs'][database.value.lower()])
     for datafile in root.rglob('*'):
@@ -36,6 +39,9 @@ def validate_data(database: SourceDatabase) -> bool:
                pathlen == 2 and (relpath.parts[0] != relpath.parts[1][1:3]) or \
                pathlen > 2:
                 print(f'{datafile} is not a correctly placed directory', file=sys.stderr)
+                is_ok = False
+            elif pathlen == 2 and re.search(regex, relpath.parts[1]) is None:
+                print(f'{datafile} does not represent a valid ID for {database.value}', file=sys.stderr)
                 is_ok = False
         elif datafile.is_file():
             if len(relpath.parts) != 3:

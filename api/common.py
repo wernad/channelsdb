@@ -26,8 +26,11 @@ pdb_id_404_response = {404: {'description': 'PDB ID not found', 'model': IDError
 uniprot_id_404_response = {404: {'description': 'Uniprot ID not found', 'model': IDError}}
 
 
-PDB_ID_Type = Annotated[str, AnnotationPath(description='PDB ID', pattern='^[1-9][a-z0-9]{3}$'), AfterValidator(validate_pdb_id)]
-Uniprot_ID_Type = Annotated[str, AnnotationPath(description='Uniprot ID', pattern='^[a-zA-Z0-9]+$'), AfterValidator(validate_uniprot_id)]
+PDB_ID_REGEX = '^[1-9][a-z0-9]{3}$'
+UNIPROT_ID_REGEX = '^[a-zA-Z0-9]+$'
+
+PDB_ID_Type = Annotated[str, AnnotationPath(description='PDB ID', pattern=PDB_ID_REGEX), AfterValidator(validate_pdb_id)]
+Uniprot_ID_Type = Annotated[str, AnnotationPath(description='Uniprot ID', pattern=UNIPROT_ID_REGEX), AfterValidator(validate_uniprot_id)]
 
 
 class SourceDatabase(Enum):
