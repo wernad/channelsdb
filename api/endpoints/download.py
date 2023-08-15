@@ -1,17 +1,19 @@
 from enum import Enum
 from pathlib import Path
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse, PlainTextResponse
 
 from api.main import app
 from api.config import config
 from api.common import PDB_ID_Type, Uniprot_ID_Type, SourceDatabase, uniprot_id_404_response, pdb_id_404_response
 from api.endpoints.assembly import get_assembly_id
 from api.endpoints.channels import get_channels
+from api.endpoints.export.pdb import get_PDB_file
 
 
 class DownloadType(str, Enum):
     png = 'png'
     json = 'json'
+    pdb = 'pdb'
 
 
 @app.get('/download/alphafill/{uniprot_id}/{file_format}', name='Download data', tags=['AlphaFill'],
@@ -42,3 +44,5 @@ async def download(source_db: SourceDatabase, file_format: DownloadType, protein
             return FileResponse('assets/alphafill.png')
         case _, DownloadType.json:
             return await get_channels(source_db, protein_id)
+        case _, DownloadType.pdb:
+            return PlainTextResponse(get_PDB_file(source_db, protein_id))
