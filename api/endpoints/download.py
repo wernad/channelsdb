@@ -11,11 +11,12 @@ from api.export import *
 
 
 class DownloadType(str, Enum):
-    png = 'PNG'
-    json = 'JSON'
-    pdb = 'PDB'
-    pymol = 'PyMOL'
-    chimera = 'Chimera'
+    png = 'png'
+    json = 'json'
+    pdb = 'pdb'
+    pymol = 'pymol'
+    chimera = 'chimera'
+    vmd = 'vmd'
 
 
 @app.get('/download/alphafill/{uniprot_id}/{file_format}', name='Download data', tags=['AlphaFill'],
@@ -52,3 +53,5 @@ async def download(source_db: SourceDatabase, file_format: DownloadType, protein
             return PlainTextResponse(get_Pymol_file(source_db, protein_id))
         case _, DownloadType.chimera:
             return PlainTextResponse(get_Chimera_file(source_db, protein_id))
+        case _, DownloadType.vmd:
+            return PlainTextResponse(get_VMD_file(source_db, protein_id))
