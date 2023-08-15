@@ -2,8 +2,8 @@ from api.common import SourceDatabase
 from api.endpoints.channels import get_channels
 
 HEADER = '''\
-import chimera, _surface, numpy
-from numpy import array, single as floatc, intc
+import chimera
+
 
 def add_atom(molecule, id, residue, x, y, z, radius):
     at = molecule.newAtom(id, chimera.Element("Tunn"))
@@ -18,6 +18,10 @@ channel_object.name = '{name}'
 {name}(channel_object)
 chimera.openModels.add([channel_object])
 '''
+
+COLORS = ['red', 'orange red', 'orange', 'yellow', 'green', 'forest green', 'cyan', 'light sea green', 'blue', 'cornflower blue',
+          'medium blue', 'purple', 'hot pink', 'magenta', 'spring green', 'plum', 'sky blue', 'goldenrod', 'olive drab', 'coral',
+          'rosy brown', 'slate gray']
 
 
 def get_Chimera_file(source_db: SourceDatabase, protein_id: str) -> str:
@@ -37,5 +41,9 @@ def get_Chimera_file(source_db: SourceDatabase, protein_id: str) -> str:
                 lines.append(line)
 
             lines.append(FOOTER.format(name=name))
+
+    for i in range(channel_count):
+        lines.append(f'chimera.runCommand(\'color {COLORS[i % len(COLORS)]} #{i + 1})\'')
+        lines.append(f'chimera.runCommand(\'repr cpk: {i + 1})\'')
 
     return HEADER + '\n'.join(lines) + '\n'
