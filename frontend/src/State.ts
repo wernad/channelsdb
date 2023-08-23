@@ -20,6 +20,7 @@ namespace ChannelsDB {
         viewState: ViewState;
         stateUpdated: Rx.Subject<undefined>;
         fullSearch: Rx.Subject<undefined>;
+        channelsUrl: string;
     }
 
     export interface EntryGroup {
@@ -55,6 +56,7 @@ namespace ChannelsDB {
             viewState: { kind: 'Info' },
             stateUpdated: new Rx.Subject<undefined>(),
             fullSearch: new Rx.Subject<undefined>(),
+            channelsUrl: "http://channelsdb2.biodata.ceitec.cz",
         };
 
         const interrupt = Rx.Observable.merge(state.searchTerm as Rx.Observable<any>, state.fullSearch as Rx.Observable<any>);
@@ -82,7 +84,7 @@ namespace ChannelsDB {
 
     async function initSearch(state: State) {
         try {
-            const content = await ajaxGetJson('http://78.128.251.73/content'); //'https://webchem.ncbr.muni.cz/API/ChannelsDB/Content'
+            const content = await ajaxGetJson(`${state.channelsUrl}/content`);
             state.dbContent = { pdb: content.PDB, alphafill: content.AlphaFill };
             state.dbContentAvailable.onNext(true);
         } catch (e) {
@@ -96,7 +98,7 @@ namespace ChannelsDB {
                 state.statisticsAvailable.onNext(state.statistics);
                 return;
             }
-            const content = await ajaxGetJson('http://78.128.251.73/statistics'); //'https://webchem.ncbr.muni.cz/API/ChannelsDB/Statistics'
+            const content = await ajaxGetJson(`${state.channelsUrl}/statistics`); 
             state.statistics = content;
             state.statisticsAvailable.onNext(content);
         } catch (e) {

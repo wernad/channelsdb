@@ -177,9 +177,14 @@ namespace ChannelsDB {
                 <img className="img" src="assets/img/alphafill-logo.png" alt="alphafill_logo" height="50" />
                 {this.state.isAvailable
                     ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB for AlphaFill tunnels (P08686)....'
-                        // onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
+                        //onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
                         onKeyPress={(e) => {
-                            // if (e.key !== 'Enter') return;
+                            if (e.key !== 'Enter') {
+                                return;
+                            };
+                            console.log((e.target as any).value);
+                            //TODO check if UNIPROT exists
+                            window.open(`/detail/alphafill/${(e.target as any).value}`, "_blank");
                             // this.props.state.fullSearch.onNext(void 0);
                             // updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
                         }} />
@@ -294,7 +299,7 @@ namespace ChannelsDB {
             const msgAlphafill = numAlphafillChannels > 0 ? alphafillContent.filter((a) => a.length > 0).reduce((a, b) => a + ', ' + b) : '';
 
             return <div className='well pdb-entry'>
-                <a href={`/ChannelsDB/detail/${docs.pdb_id}`} target='_blank'>
+                <a href={`/detail/pdb/${docs.pdb_id}`} target='_blank'>
                     <div className='pdb-entry-header' style={{ background: pdb ? '#dfd' : '#ddd' }}>
                         <div>{docs.pdb_id}</div>
                         <div title={docs.title || 'n/a'}>{docs.title || 'n/a'}</div>

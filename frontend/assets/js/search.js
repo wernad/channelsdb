@@ -1137,7 +1137,7 @@ var ChannelsDB;
         __extends(AlphaFillSearchBox, _super);
         function AlphaFillSearchBox() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
-            //TODO 
+            //TODO initialize with search of AlphaFill molecules
             _this.state = { isAvailable: false };
             return _this;
         }
@@ -1150,9 +1150,15 @@ var ChannelsDB;
                 React.createElement("img", { className: "img", src: "assets/img/alphafill-logo.png", alt: "alphafill_logo", height: "50" }),
                 this.state.isAvailable
                     ? React.createElement("input", { key: 'fullsearch', type: 'text', className: 'form-control', style: { fontWeight: 'bold', borderColor: 'darkgreen' }, placeholder: 'Search ChannelsDB for AlphaFill tunnels (P08686)....', 
-                        // onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
+                        //onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
                         onKeyPress: function (e) {
-                            // if (e.key !== 'Enter') return;
+                            if (e.key !== 'Enter') {
+                                return;
+                            }
+                            ;
+                            console.log(e.target.value);
+                            //TODO check if UNIPROT exists
+                            window.open("/detail/alphafill/" + e.target.value, "_blank");
                             // this.props.state.fullSearch.onNext(void 0);
                             // updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
                         } })
@@ -1283,7 +1289,7 @@ var ChannelsDB;
             var msgPdb = numPdbChannels > 0 ? pdbContent.filter(function (a) { return a.length > 0; }).reduce(function (a, b) { return a + ', ' + b; }) : '';
             var msgAlphafill = numAlphafillChannels > 0 ? alphafillContent.filter(function (a) { return a.length > 0; }).reduce(function (a, b) { return a + ', ' + b; }) : '';
             return React.createElement("div", { className: 'well pdb-entry' },
-                React.createElement("a", { href: "/ChannelsDB/detail/" + docs.pdb_id, target: '_blank' },
+                React.createElement("a", { href: "/detail/pdb/" + docs.pdb_id, target: '_blank' },
                     React.createElement("div", { className: 'pdb-entry-header', style: { background: pdb ? '#dfd' : '#ddd' } },
                         React.createElement("div", null, docs.pdb_id),
                         React.createElement("div", { title: docs.title || 'n/a' }, docs.title || 'n/a'))),
@@ -2084,6 +2090,7 @@ var ChannelsDB;
             viewState: { kind: 'Info' },
             stateUpdated: new Rx.Subject(),
             fullSearch: new Rx.Subject(),
+            channelsUrl: "http://channelsdb2.biodata.ceitec.cz",
         };
         var interrupt = Rx.Observable.merge(state.searchTerm, state.fullSearch);
         state.searchTerm
@@ -2112,7 +2119,7 @@ var ChannelsDB;
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, ChannelsDB.ajaxGetJson('http://78.128.251.73/content')];
+                        return [4 /*yield*/, ChannelsDB.ajaxGetJson(state.channelsUrl + "/content")];
                     case 1:
                         content = _a.sent();
                         state.dbContent = { pdb: content.PDB, alphafill: content.AlphaFill };
@@ -2138,7 +2145,7 @@ var ChannelsDB;
                             state.statisticsAvailable.onNext(state.statistics);
                             return [2 /*return*/];
                         }
-                        return [4 /*yield*/, ChannelsDB.ajaxGetJson('http://78.128.251.73/statistics')];
+                        return [4 /*yield*/, ChannelsDB.ajaxGetJson(state.channelsUrl + "/statistics")];
                     case 1:
                         content = _a.sent();
                         state.statistics = content;
