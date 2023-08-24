@@ -184,7 +184,7 @@ namespace ChannelsDB {
                             };
                             console.log((e.target as any).value);
                             //TODO check if UNIPROT exists
-                            window.open(`/detail/alphafill/${(e.target as any).value}`, "_blank");
+                            window.open(`/ChannelsDB/alphafill/${(e.target as any).value}`, "_blank");
                             // this.props.state.fullSearch.onNext(void 0);
                             // updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
                         }} />
@@ -299,7 +299,7 @@ namespace ChannelsDB {
             const msgAlphafill = numAlphafillChannels > 0 ? alphafillContent.filter((a) => a.length > 0).reduce((a, b) => a + ', ' + b) : '';
 
             return <div className='well pdb-entry'>
-                <a href={`/detail/pdb/${docs.pdb_id}`} target='_blank'>
+                <a href={`/ChannelsDB/pdb/${docs.pdb_id}`} target='_blank'>
                     <div className='pdb-entry-header' style={{ background: pdb ? '#dfd' : '#ddd' }}>
                         <div>{docs.pdb_id}</div>
                         <div title={docs.title || 'n/a'}>{docs.title || 'n/a'}</div>

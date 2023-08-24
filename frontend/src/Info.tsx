@@ -102,21 +102,21 @@ namespace ChannelsDB {
                         <div className='well'>
                             <div>
                                 <div className='col-lg-4'>
-                                    <a href='/ChannelsDB/detail/1ymg'>
+                                    <a href='/ChannelsDB/pdb/1ymg'>
                                         <img style={centerStyle} className='img-circle' src={'assets/img/1ymg.png'} alt='1ymg channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-1ymg' role='button'><h3>Aquaporin water channel</h3></a>
                                     <p style={justify}>The pore architecture of Aquaporin O at 2.2&#8491; resolution highlights residues critical for water permeation regulation.</p>
                                 </div>
                                 <div className='col-lg-4'>
-                                    <a href='/ChannelsDB/detail/4nm9'>
+                                    <a href='/ChannelsDB/pdb/4nm9'>
                                         <img style={centerStyle} className='img-circle' src={'assets/img/4nm9.png'} alt='4nm9 channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-4nm9' role='button'><h3>Substrate channeling system</h3></a>
                                     <p style={justify}>Proline utilization A protein contains two active sites separated by ~75&#8491; long channeling system accompanied by a complex network of channels.</p>
                                 </div>
                                 <div className='col-lg-4'>
-                                    <a href='/ChannelsDB/detail/1jj2'>
+                                    <a href='/ChannelsDB/pdb/1jj2'>
                                         <img style={centerStyle} className='img-circle' src={'assets/img/1jj2.png'} alt='1jj2 channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-1jj2' role='button'><h3>Ribosomal polypeptide exit tunnel</h3></a>
@@ -130,14 +130,14 @@ namespace ChannelsDB {
                             </div>
                             <div>
                                 <div className='col-lg-6'>
-                                    <a href='/ChannelsDB/detail/3tbg'>
+                                    <a href='/ChannelsDB/pdb/3tbg'>
                                         <img style={centerStyle} className='img-circle' src={'assets/img/3tbg.png'} alt='3tbg channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-3tbg' role='button'><h3>Cytochrome P450 2D6 tunnels in experimental structure</h3></a>
                                     <p style={justify}>Cytochromes P450 are known for complex net of multiple channels leading towards the active site. These channels serve multiple roles.</p>
                                 </div>
                                 <div className='col-lg-6'>
-                                    <a href='/ChannelsDB/detail/P10635'>
+                                    <a href='/ChannelsDB/alphafill/P10635'>
                                         <img style={centerStyle} className='img-circle' src={'assets/img/alphafill_example.png'} alt='P10635 channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-P10635' role='button'><h3>Cytochrome P450 2D6 tunnels in Alphafill model</h3></a>
@@ -155,7 +155,7 @@ namespace ChannelsDB {
                 <div className='row featurette' style={{ marginTop: '40px' }}>
                     {React.createElement('a' as any, { 'name': 'ex-1ymg' })}
                     <div className='col-md-7'>
-                        <a href='/ChannelsDB/detail/1ymg'><h2 className='featurette-heading'>Aquaporin O <span className='text-muted'>(1ymg)</span></h2></a>
+                        <a href='/ChannelsDB/pdb/1ymg'><h2 className='featurette-heading'>Aquaporin O <span className='text-muted'>(1ymg)</span></h2></a>
                         <p style={justify} className='lead'>The pore architecture of Aquaporin O at 2.2&#8491; resolution highlights residues critical for water permeation regulation.</p>
                         <p style={justify}>The channel is ~ 30&#8491; long and highlights with some of the residues crucial for its proper function. Selectivity filter (ar/R), which allows water molecules passage through the membrane in a single file (green sticks). Residues providing canonical AQP hydrogen bond acceptor that align waters through the channel in balls and stick model. Finally, Tyr-149 important for channel gating (orange).</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1073/pnas.0405274101'>
@@ -171,7 +171,7 @@ namespace ChannelsDB {
                 <div className='row featurette'>
                     {React.createElement('a' as any, { 'name': 'ex-3tbg' })}
                     <div className='col-md-7 col-md-push-5'>
-                        <a href='/ChannelsDB/detail/3tbg'><h2 className='featurette-heading'>Cytochrome P450 2D6 experimental <br/>structures<span className='text-muted'>(3tbg)</span></h2></a>
+                        <a href='/ChannelsDB/pdb/3tbg'><h2 className='featurette-heading'>Cytochrome P450 2D6 experimental <br/>structures<span className='text-muted'>(3tbg)</span></h2></a>
                         <p style={justify} className='lead'>Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways.</p>
                         <p style={justify}>Cytochrome  P450  2D6  contributes  significantly  to  the  metabolism  of  >15%  of  the  200  most marketed drugs. Cytochrome P450 2D6 structure shows a second molecule of thioridazine bound in an expanded substrate access channel (channel 2f according to <a href='https://doi.org/10.1016/j.bbagen.2006.07.005' target='_blank'>Cojocaru et al. classification</a>  antechamber  with  its  piperidine  moiety  forming  a charge-stabilized hydrogen bond with Glu-222.</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1074/jbc.M114.627661'>
@@ -187,7 +187,7 @@ namespace ChannelsDB {
                 <div className='row featurette'>
                     {React.createElement('a' as any, { 'name': 'ex-P10635' })}
                     <div className='col-md-7 '>
-                        <a href='/ChannelsDB/detail/P10635'><h2 className='featurette-heading'>Cytochrome P450 2D6 Alphafill models<span className='text-muted'>(P10635)</span></h2></a>
+                        <a href='/ChannelsDB/alphafill/P10635'><h2 className='featurette-heading'>Cytochrome P450 2D6 Alphafill models<span className='text-muted'>(P10635)</span></h2></a>
                         <p style={justify} className='lead'>Cytochromes P450 channels starts at HEM cofactor, which can be used to guide channels even in AlphaFill models.</p>
                         <p style={justify}>As mentioned above, Cytochrome P450 2D6 contributes significantly to the metabolism of >15% of the 200 most marketed drugs. Cytochrome P450 2D6 structure shows a second molecule of thioridazine bound in an expanded substrate access channel (channel 2f according to Cojocaru et al. classification antechamber with its piperidine moiety forming a charge-stabilized hydrogen bond with Glu-222).</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1074/jbc.M114.627661'>
@@ -203,7 +203,7 @@ namespace ChannelsDB {
                 <div className='row featurette'>
                     {React.createElement('a' as any, { 'name': 'ex-1jj2' })}
                     <div className='col-md-7 '>
-                        <a href='/ChannelsDB/detail/1jj2'><h2 className='featurette-heading'>Large Ribosomal Subunit <span className='text-muted'>(1jj2)</span></h2></a>
+                        <a href='/ChannelsDB/pdb/1jj2'><h2 className='featurette-heading'>Large Ribosomal Subunit <span className='text-muted'>(1jj2)</span></h2></a>
                         <p style={justify} className='lead'>The ribosomal polypeptide tunnel provides an insight into the release of a nascent polypeptide chain out of the ribosomal complex.</p>
                         <p style={justify}>The exit tunnel is surrounded by arginine side chains (stick model), bearing positive charges as well as RNA backbone phosphate groups (spheres), thus providing fragmental charge along the tunnel, which is necessary to prevent the nascent peptide from sticking to the channel wall inside the ribosome. Subunits L4, L22 and L39e interacting with the exit tunnel are highlighted in yellow, green and magenta respectivelly.</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1016/j.jmb.2006.05.023'>
@@ -219,7 +219,7 @@ namespace ChannelsDB {
                 <div className='row featurette'>
                     {React.createElement('a' as any, { 'name': 'ex-4nm9' })}
                     <div className='col-md-7 col-md-push-5'>
-                        <a href='/ChannelsDB/detail/4nm9'><h2 className='featurette-heading'>PutA channeling system <span className='text-muted'>(4nm9)</span></h2></a>
+                        <a href='/ChannelsDB/pdb/4nm9'><h2 className='featurette-heading'>PutA channeling system <span className='text-muted'>(4nm9)</span></h2></a>
                         <p style={justify} className='lead'>Substrate channeling is a process of passing intermediate metabolic product from one reaction site to another through intramolecular tunnel.</p>
                         <p style={justify}>In Gram-negative bacteria a proline catabolism is exerted by a single protein combining two different enzymes commonly known as Proline utilization A protein (PutA).
                             The active sites of flavoenzyme proline dehydrogenase (PRODH) and ∆-1-pyrroline-5-carboxylate dehydrogenase (P5CDH) are connected by ~75&#8491; long channel throughout the hydrolysis
