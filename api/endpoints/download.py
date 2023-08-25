@@ -23,6 +23,17 @@ class DownloadType(str, Enum):
     zip = 'zip'
 
 
+EXTENSIONS: dict[DownloadType, str] = {
+    DownloadType.png: 'png',
+    DownloadType.json: 'json',
+    DownloadType.pdb: 'pdb',
+    DownloadType.pymol: 'py',
+    DownloadType.chimera: 'py',
+    DownloadType.vmd: 'tk',
+    DownloadType.zip: 'zip',
+}
+
+
 @app.get('/download/alphafill/{uniprot_id}/{file_format}', name='Download data', tags=['AlphaFill'],
          description='Download various data about the protein', responses=uniprot_id_404_response)
 async def download_alphafill(file_format: DownloadType, uniprot_id: Uniprot_ID_Type):
@@ -51,17 +62,18 @@ async def download(source_db: SourceDatabase, file_format: DownloadType, protein
             return FileResponse('assets/alphafill.png')
 
     channels = get_channels(source_db, protein_id)
+    headers = {'Content-Disposition': f'attachment; filename="channelsdb_{protein_id}.{EXTENSIONS[file_format]}"'}
     match file_format:
         case DownloadType.json:
-            return channels
+            return Response(content=json.dumps(channels), media_type='application/json', headers=headers)
         case DownloadType.pdb:
-            return PlainTextResponse(get_PDB_file(channels))
+            return PlainTextResponse(get_PDB_file(channels), headers=headers)
         case DownloadType.pymol:
-            return PlainTextResponse(get_Pymol_file(channels))
+            return PlainTextResponse(get_Pymol_file(channels), headers=headers)
         case DownloadType.chimera:
-            return PlainTextResponse(get_Chimera_file(channels))
+            return PlainTextResponse(get_Chimera_file(channels), headers=headers)
         case DownloadType.vmd:
-            return PlainTextResponse(get_VMD_file(channels))
+            return PlainTextResponse(get_VMD_file(channels), headers=headers)
         case DownloadType.zip:
             content = io.BytesIO()
             zf = zipfile.ZipFile(content, mode='w')
@@ -72,4 +84,4 @@ async def download(source_db: SourceDatabase, file_format: DownloadType, protein
             zf.writestr(f'{protein_id}_channels.pdb', get_PDB_file(channels))
             zf.close()
 
-            return Response(content=content.getvalue(), media_type='application/zip')
+            return Response(content=content.getvalue(), media_type='application/zip', headers=headers)
