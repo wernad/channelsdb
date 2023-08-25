@@ -95,7 +95,7 @@ namespace ChannelsDB {
         render() {
             return <footer>
                 <hr className='featurette-divider' />
-                <p className='pull-right' style={{ color: '#999', fontSize: 'smaller', marginBottom: '30px' }}>&copy; 2018 Lukáš Pravda &amp; David Sehnal | <a href="gdpr.html">Terms of Use &amp; GDPR </a></p>
+                <p className='pull-right' style={{ color: '#999', fontSize: 'smaller', marginBottom: '30px' }}>&copy; 2018 Lukáš Pravda &amp; David Sehnal;  2023 Anna Špačková & Václav Bazgier | <a href="gdpr.html">Terms of Use &amp; GDPR </a></p>
             </footer>;
         }
     }
@@ -106,6 +106,9 @@ namespace ChannelsDB {
             return <div style={{ marginTop: '20px' }}>
                 <div className='row'>
                     <div className='col-lg-12'><SearchBox {...this.props} /></div>
+                </div>
+                <div className='row'>
+                    <div className='col-lg-12'><AlphaFillSearchBox {...this.props} /></div>
                 </div>
                 <div className='row'>
                     <div className='col-lg-12'><StateView {...this.props} /></div>
@@ -145,6 +148,7 @@ namespace ChannelsDB {
 
         render() {
             return <div className='form-group form-group-lg'>
+                <img className="img" src="assets/img/pdbe_logo.png" alt="pdbe_logo" height="30" />
                 {this.state.isAvailable
                     ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB (e.g., cytochrome p450, 5ebl, KcsA) ...'
                         onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
@@ -152,6 +156,36 @@ namespace ChannelsDB {
                             if (e.key !== 'Enter') return;
                             this.props.state.fullSearch.onNext(void 0);
                             updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
+                        }} />
+                    : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }} disabled={true}
+                        value='Initializing search...'  />}
+            </div>;
+        }
+    }
+
+    class AlphaFillSearchBox extends React.Component<GlobalProps, { isAvailable: boolean }> {
+        //TODO initialize with search of AlphaFill molecules
+        state = { isAvailable: false };
+
+        componentDidMount() {
+            this.props.state.dbContentAvailable.subscribe((isAvailable) => this.setState({ isAvailable }));
+        }
+
+        render() {
+            return <div className='form-group form-group-lg'>
+                <img className="img" src="assets/img/alphafill-logo.png" alt="alphafill_logo" height="50" />
+                {this.state.isAvailable
+                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB for AlphaFill tunnels (P08686)....'
+                        //onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
+                        onKeyPress={(e) => {
+                            if (e.key !== 'Enter') {
+                                return;
+                            };
+                            console.log((e.target as any).value);
+                            //TODO check if UNIPROT exists
+                            window.open(`/detail/alphafill/${(e.target as any).value}`, "_blank");
+                            // this.props.state.fullSearch.onNext(void 0);
+                            // updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
                         }} />
                     : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }} disabled={true}
                         value='Initializing search...'  />}
@@ -250,15 +284,22 @@ namespace ChannelsDB {
     class Entry extends React.Component<GlobalProps & { docs: any }, { }> {
         render() {
             const docs = this.props.docs;
-            const dbContentMap = new Array('Reviewed', 'CSA', 'Pores', 'Cofactors');
-            const entry = this.props.state.dbContent.entries[toLower(docs.pdb_id)];
-            const numChannels = entry ? (entry.counts as number[]).reduce((a, b) => a + b, 0) : -1;
-            let entryContent = numChannels > 0 ? (entry.counts as number[]).map((el, index) => el > 0 ? dbContentMap[index] + ' (' + el + ')' : '') : new Array();
-            const msg = numChannels > 0 ? entryContent.filter((a) => a.length > 0).reduce((a, b) => a + ', ' + b) : '';
+            const pdbContentMap = new Array('CSATunnels MOLE', 'CSATunnels Caver', 'ReviewedChannels MOLE', 'ReviewedChannels Caver',
+             'CofactorTunnels MOLE', 'CofactorTunnels Caver', 'TransmembranePores MOLE', 'TransmembranePores Caver', 'ProcognateTunnels MOLE',
+             'ProcagnateTunnels Caver');
+            const alphafillContentMap = new Array('AlphaFillTunnels MOLE', 'AlphaFillTunnels Caver');
+            const pdb = this.props.state.dbContent.pdb[toLower(docs.pdb_id)];
+            const alphafill = this.props.state.dbContent.alphafill[toLower(docs.pdb_id)];
+            const numPdbChannels = pdb ? (pdb as number[]).reduce((a, b) => a + b, 0) : -1;
+            const numAlphafillChannels = alphafill ? (alphafill as number[]).reduce((a, b) => a + b, 0) : -1;
+            let pdbContent = numPdbChannels > 0 ? (pdb as number[]).map((el, index) => el > 0 ? pdbContentMap[index] + ' (' + el + ')' : '') : new Array();
+            let alphafillContent = numAlphafillChannels > 0 ? (pdb as number[]).map((el, index) => el > 0 ? alphafillContentMap[index] + ' (' + el + ')' : '') : new Array();
+            const msgPdb = numPdbChannels > 0 ? pdbContent.filter((a) => a.length > 0).reduce((a, b) => a + ', ' + b) : '';
+            const msgAlphafill = numAlphafillChannels > 0 ? alphafillContent.filter((a) => a.length > 0).reduce((a, b) => a + ', ' + b) : '';
 
             return <div className='well pdb-entry'>
-                <a href={`/ChannelsDB/detail/${docs.pdb_id}`} target='_blank'>
-                    <div className='pdb-entry-header' style={{ background: entry ? '#dfd' : '#ddd' }}>
+                <a href={`/detail/pdb/${docs.pdb_id}`} target='_blank'>
+                    <div className='pdb-entry-header' style={{ background: pdb ? '#dfd' : '#ddd' }}>
                         <div>{docs.pdb_id}</div>
                         <div title={docs.title || 'n/a'}>{docs.title || 'n/a'}</div>
                     </div>
@@ -266,9 +307,11 @@ namespace ChannelsDB {
                 <ul>
                     <li><b>Experiment Method:</b> {(docs.experimental_method || ['n/a']).join(', ')} | {docs.resolution || 'n/a'} Å</li>
                     <li><b>Organism:</b> <i>{(docs.organism_scientific_name || ['n/a']).join(', ')}</i></li>
-                    { numChannels > 0
-                        ? <li><i>{`${numChannels} channel${numChannels !== 1 ? 's' : ''}; ${msg}`}</i></li>
-                        : void 0
+                    { numPdbChannels > 0
+                        ? <li><i>{`${numPdbChannels} channel${numPdbChannels !== 1 ? 's' : ''}; ${msgPdb}`}</i></li>
+                        : 
+                      numAlphafillChannels > 0
+                        ? <li><i>{`${numAlphafillChannels} channel${numAlphafillChannels !== 1 ? 's' : ''}; ${msgAlphafill}`}</i></li> : void 0
                     }
                 </ul>
                 <div className='pdb-entry-img-wrap'>

@@ -39,6 +39,12 @@ var ChannelsDB;
                                 "Sehnal,D., Svobodov\u00E1 Va\u0159ekov\u00E1,R., Berka,K., Pravda,L., Navr\u00E1tilov\u00E1,V., Ban\u00E1\u0161,P., Ionescu,C.-M., Otyepka,M. and Ko\u010Da,J. (2013) \u00A0",
                                 React.createElement("a", { href: 'https://dx.doi.org/10.1186/1758-2946-5-39', target: '_blank' }, "MOLE 2.0: advanced approach for analysis of biomacromolecular channels"),
                                 ". J. Cheminform., 5, 39.")),
+                        React.createElement("dt", null, "CAVER"),
+                        React.createElement("dd", null,
+                            React.createElement("p", null,
+                                "Chovancova E, Pavelka A, Benes P, Strnad O, Brezovsky J, Kozlikova B, Gora A, Sustr V, Klvana M, Medek P, Biedermannova L, Sochor J, Damborsky J. \u00A0",
+                                React.createElement("a", { href: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3475669/", target: "_blank" }, "CAVER 3.0: a tool for the analysis of transport pathways in dynamic protein structures"),
+                                ". PLoS Comput Biol. 2012;8(10):e1002708. doi: 10.1371/journal.pcbi.1002708.")),
                         React.createElement("dt", null, "LiteMol suite"),
                         React.createElement("dd", null,
                             React.createElement("p", null,
@@ -435,6 +441,9 @@ var ChannelsDB;
                     React.createElement("a", { href: '#db-mole', className: 'list-group-item' },
                         React.createElement("h4", { className: 'list-group-item-heading' }, "MOLE settings"),
                         React.createElement("p", { className: 'list-group-item-text' }, "Settings used for channel extraction.")),
+                    React.createElement("a", { href: '#db-caver', className: 'list-group-item' },
+                        React.createElement("h4", { className: 'list-group-item-heading' }, "CAVER settings"),
+                        React.createElement("p", { className: 'list-group-item-text' }, "Settings used for channel extraction.")),
                     React.createElement("a", { href: '#db-cofactors', className: 'list-group-item' },
                         React.createElement("h4", { className: 'list-group-item-heading' }, "Cofactors"),
                         React.createElement("p", { className: 'list-group-item-text' }, "List of cofactors used for channel calculation.")),
@@ -467,7 +476,7 @@ var ChannelsDB;
                                     " database")),
                             "All the channels have been extracted from biological assemblies as identified by the Protein Data Bank in Europe.")),
                     React.createElement("div", { className: 'col-md-4' },
-                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/pretty_channel.jpg', width: '500', height: '500', alt: 'Channel details' }))),
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/pretty_channel.png', width: '500', height: '500', alt: 'Channel details' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
                 React.createElement('a', { 'name': 'db-nomenclature' }),
                 React.createElement("div", { className: 'row' },
@@ -601,7 +610,112 @@ var ChannelsDB;
                                 React.createElement("tr", null,
                                     React.createElement("td", null,
                                         React.createElement("i", null, "NonActiveParts")),
+                                    React.createElement("td", { "data-toggle": 'tooltip', "data-placement": 'bottom', title: 'Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))' }, "Query"))))),
+                    React.createElement("div", { className: 'row table-responsive col-md-4 col-md-push-2' },
+                        React.createElement("h2", { className: 'featurette-heading' }, "Cognate tunnels"),
+                        React.createElement("table", { className: 'table table-condensed active' },
+                            React.createElement("thead", null,
+                                React.createElement("tr", null,
+                                    React.createElement("th", null, "Parameter"),
+                                    React.createElement("th", null, "Value"))),
+                            React.createElement("tbody", null,
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "ProbeRadius")),
+                                    React.createElement("td", null, "5.0")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "InteriorThreshold")),
+                                    React.createElement("td", null, "1.4")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "IgnoreHetResidues")),
+                                    React.createElement("td", null, "True")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "MinTunnelLength")),
+                                    React.createElement("td", null, "15.0")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "BottleneckRadius")),
+                                    React.createElement("td", null, "1.25")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "BottleneckTolerance")),
+                                    React.createElement("td", null, "1.0")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "MaxTunnelSimilarity")),
+                                    React.createElement("td", null, "0.7")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "NonActiveParts")),
+                                    React.createElement("td", { "data-toggle": 'tooltip', "data-placement": 'bottom', title: 'Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))' }, "Query"))))),
+                    React.createElement("div", { className: 'row table-responsive col-md-4 col-md-push-2' },
+                        React.createElement("h2", { className: 'featurette-heading' }, "AlphaFill tunnels"),
+                        React.createElement("table", { className: 'table table-condensed active' },
+                            React.createElement("thead", null,
+                                React.createElement("tr", null,
+                                    React.createElement("th", null, "Parameter"),
+                                    React.createElement("th", null, "Value"))),
+                            React.createElement("tbody", null,
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "ProbeRadius")),
+                                    React.createElement("td", null, "5.0")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "InteriorThreshold")),
+                                    React.createElement("td", null, "1.4")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "IgnoreHetResidues")),
+                                    React.createElement("td", null, "True")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "MinTunnelLength")),
+                                    React.createElement("td", null, "15.0")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "BottleneckRadius")),
+                                    React.createElement("td", null, "1.25")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "BottleneckTolerance")),
+                                    React.createElement("td", null, "1.0")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "MaxTunnelSimilarity")),
+                                    React.createElement("td", null, "0.7")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "NonActiveParts")),
                                     React.createElement("td", { "data-toggle": 'tooltip', "data-placement": 'bottom', title: 'Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))' }, "Query")))))),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement('a', { 'name': 'db-caver' }),
+                React.createElement("div", { className: 'row' },
+                    React.createElement("h2", { className: 'featurette-heading' }, "CAVER settings"),
+                    React.createElement("p", { style: justify }, "All tunnels from CAVER in ChannelsDB were calculated using the following settings."),
+                    React.createElement("div", { className: 'row table-responsive col-md-4 col-md-offset-1' },
+                        React.createElement("h2", { className: 'featurette-heading' }, "CAVER tunnels"),
+                        React.createElement("table", { className: 'table table-condensed active' },
+                            React.createElement("thead", null,
+                                React.createElement("tr", null,
+                                    React.createElement("th", null, "Parameter"),
+                                    React.createElement("th", null, "Value"))),
+                            React.createElement("tbody", null,
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "ProbeRadius")),
+                                    React.createElement("td", null, "0.9")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "Shell radius")),
+                                    React.createElement("td", null, "3")),
+                                React.createElement("tr", null,
+                                    React.createElement("td", null,
+                                        React.createElement("i", null, "Shell depth")),
+                                    React.createElement("td", null, "4")))))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
                 React.createElement('a', { 'name': 'db-cofactors' }),
                 React.createElement("div", { className: 'row' },
@@ -937,7 +1051,7 @@ var ChannelsDB;
             return React.createElement("footer", null,
                 React.createElement("hr", { className: 'featurette-divider' }),
                 React.createElement("p", { className: 'pull-right', style: { color: '#999', fontSize: 'smaller', marginBottom: '30px' } },
-                    "\u00A9 2018 Luk\u00E1\u0161 Pravda & David Sehnal | ",
+                    "\u00A9 2018 Luk\u00E1\u0161 Pravda & David Sehnal;  2023 Anna \u0160pa\u010Dkov\u00E1 & V\u00E1clav Bazgier | ",
                     React.createElement("a", { href: "gdpr.html" }, "Terms of Use & GDPR ")));
         };
         return Footer;
@@ -952,6 +1066,9 @@ var ChannelsDB;
                 React.createElement("div", { className: 'row' },
                     React.createElement("div", { className: 'col-lg-12' },
                         React.createElement(SearchBox, __assign({}, this.props)))),
+                React.createElement("div", { className: 'row' },
+                    React.createElement("div", { className: 'col-lg-12' },
+                        React.createElement(AlphaFillSearchBox, __assign({}, this.props)))),
                 React.createElement("div", { className: 'row' },
                     React.createElement("div", { className: 'col-lg-12' },
                         React.createElement(StateView, __assign({}, this.props)))));
@@ -1002,16 +1119,51 @@ var ChannelsDB;
         };
         SearchBox.prototype.render = function () {
             var _this = this;
-            return React.createElement("div", { className: 'form-group form-group-lg' }, this.state.isAvailable
-                ? React.createElement("input", { key: 'fullsearch', type: 'text', className: 'form-control', style: { fontWeight: 'bold', borderColor: 'darkgreen' }, placeholder: 'Search ChannelsDB (e.g., cytochrome p450, 5ebl, KcsA) ...', onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
-                        if (e.key !== 'Enter')
-                            return;
-                        _this.props.state.fullSearch.onNext(void 0);
-                        ChannelsDB.updateViewState(_this.props.state, { kind: 'Entries', term: e.target.value });
-                    } })
-                : React.createElement("input", { key: 'placeholder', type: 'text', className: 'form-control', style: { fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }, disabled: true, value: 'Initializing search...' }));
+            return React.createElement("div", { className: 'form-group form-group-lg' },
+                React.createElement("img", { className: "img", src: "assets/img/pdbe_logo.png", alt: "pdbe_logo", height: "30" }),
+                this.state.isAvailable
+                    ? React.createElement("input", { key: 'fullsearch', type: 'text', className: 'form-control', style: { fontWeight: 'bold', borderColor: 'darkgreen' }, placeholder: 'Search ChannelsDB (e.g., cytochrome p450, 5ebl, KcsA) ...', onChange: function (e) { return _this.props.state.searchTerm.onNext(e.target.value); }, onKeyPress: function (e) {
+                            if (e.key !== 'Enter')
+                                return;
+                            _this.props.state.fullSearch.onNext(void 0);
+                            ChannelsDB.updateViewState(_this.props.state, { kind: 'Entries', term: e.target.value });
+                        } })
+                    : React.createElement("input", { key: 'placeholder', type: 'text', className: 'form-control', style: { fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }, disabled: true, value: 'Initializing search...' }));
         };
         return SearchBox;
+    }(React.Component));
+    var AlphaFillSearchBox = (function (_super) {
+        __extends(AlphaFillSearchBox, _super);
+        function AlphaFillSearchBox() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            //TODO initialize with search of AlphaFill molecules
+            _this.state = { isAvailable: false };
+            return _this;
+        }
+        AlphaFillSearchBox.prototype.componentDidMount = function () {
+            var _this = this;
+            this.props.state.dbContentAvailable.subscribe(function (isAvailable) { return _this.setState({ isAvailable: isAvailable }); });
+        };
+        AlphaFillSearchBox.prototype.render = function () {
+            return React.createElement("div", { className: 'form-group form-group-lg' },
+                React.createElement("img", { className: "img", src: "assets/img/alphafill-logo.png", alt: "alphafill_logo", height: "50" }),
+                this.state.isAvailable
+                    ? React.createElement("input", { key: 'fullsearch', type: 'text', className: 'form-control', style: { fontWeight: 'bold', borderColor: 'darkgreen' }, placeholder: 'Search ChannelsDB for AlphaFill tunnels (P08686)....', 
+                        //onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
+                        onKeyPress: function (e) {
+                            if (e.key !== 'Enter') {
+                                return;
+                            }
+                            ;
+                            console.log(e.target.value);
+                            //TODO check if UNIPROT exists
+                            window.open("/detail/alphafill/" + e.target.value, "_blank");
+                            // this.props.state.fullSearch.onNext(void 0);
+                            // updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
+                        } })
+                    : React.createElement("input", { key: 'placeholder', type: 'text', className: 'form-control', style: { fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }, disabled: true, value: 'Initializing search...' }));
+        };
+        return AlphaFillSearchBox;
     }(React.Component));
     var SearchResults = (function (_super) {
         __extends(SearchResults, _super);
@@ -1125,14 +1277,19 @@ var ChannelsDB;
         }
         Entry.prototype.render = function () {
             var docs = this.props.docs;
-            var dbContentMap = new Array('Reviewed', 'CSA', 'Pores', 'Cofactors');
-            var entry = this.props.state.dbContent.entries[ChannelsDB.toLower(docs.pdb_id)];
-            var numChannels = entry ? entry.counts.reduce(function (a, b) { return a + b; }, 0) : -1;
-            var entryContent = numChannels > 0 ? entry.counts.map(function (el, index) { return el > 0 ? dbContentMap[index] + ' (' + el + ')' : ''; }) : new Array();
-            var msg = numChannels > 0 ? entryContent.filter(function (a) { return a.length > 0; }).reduce(function (a, b) { return a + ', ' + b; }) : '';
+            var pdbContentMap = new Array('CSATunnels MOLE', 'CSATunnels Caver', 'ReviewedChannels MOLE', 'ReviewedChannels Caver', 'CofactorTunnels MOLE', 'CofactorTunnels Caver', 'TransmembranePores MOLE', 'TransmembranePores Caver', 'ProcognateTunnels MOLE', 'ProcagnateTunnels Caver');
+            var alphafillContentMap = new Array('AlphaFillTunnels MOLE', 'AlphaFillTunnels Caver');
+            var pdb = this.props.state.dbContent.pdb[ChannelsDB.toLower(docs.pdb_id)];
+            var alphafill = this.props.state.dbContent.alphafill[ChannelsDB.toLower(docs.pdb_id)];
+            var numPdbChannels = pdb ? pdb.reduce(function (a, b) { return a + b; }, 0) : -1;
+            var numAlphafillChannels = alphafill ? alphafill.reduce(function (a, b) { return a + b; }, 0) : -1;
+            var pdbContent = numPdbChannels > 0 ? pdb.map(function (el, index) { return el > 0 ? pdbContentMap[index] + ' (' + el + ')' : ''; }) : new Array();
+            var alphafillContent = numAlphafillChannels > 0 ? pdb.map(function (el, index) { return el > 0 ? alphafillContentMap[index] + ' (' + el + ')' : ''; }) : new Array();
+            var msgPdb = numPdbChannels > 0 ? pdbContent.filter(function (a) { return a.length > 0; }).reduce(function (a, b) { return a + ', ' + b; }) : '';
+            var msgAlphafill = numAlphafillChannels > 0 ? alphafillContent.filter(function (a) { return a.length > 0; }).reduce(function (a, b) { return a + ', ' + b; }) : '';
             return React.createElement("div", { className: 'well pdb-entry' },
-                React.createElement("a", { href: "/ChannelsDB/detail/" + docs.pdb_id, target: '_blank' },
-                    React.createElement("div", { className: 'pdb-entry-header', style: { background: entry ? '#dfd' : '#ddd' } },
+                React.createElement("a", { href: "/detail/pdb/" + docs.pdb_id, target: '_blank' },
+                    React.createElement("div", { className: 'pdb-entry-header', style: { background: pdb ? '#dfd' : '#ddd' } },
                         React.createElement("div", null, docs.pdb_id),
                         React.createElement("div", { title: docs.title || 'n/a' }, docs.title || 'n/a'))),
                 React.createElement("ul", null,
@@ -1147,10 +1304,13 @@ var ChannelsDB;
                         React.createElement("b", null, "Organism:"),
                         " ",
                         React.createElement("i", null, (docs.organism_scientific_name || ['n/a']).join(', '))),
-                    numChannels > 0
+                    numPdbChannels > 0
                         ? React.createElement("li", null,
-                            React.createElement("i", null, numChannels + " channel" + (numChannels !== 1 ? 's' : '') + "; " + msg))
-                        : void 0),
+                            React.createElement("i", null, numPdbChannels + " channel" + (numPdbChannels !== 1 ? 's' : '') + "; " + msgPdb))
+                        :
+                            numAlphafillChannels > 0
+                                ? React.createElement("li", null,
+                                    React.createElement("i", null, numAlphafillChannels + " channel" + (numAlphafillChannels !== 1 ? 's' : '') + "; " + msgAlphafill)) : void 0),
                 React.createElement("div", { className: 'pdb-entry-img-wrap' },
                     React.createElement("img", { src: "https://webchem.ncbr.muni.cz/API/ChannelsDB/Download/" + docs.pdb_id.toLowerCase() + "?type=png" })));
         };
@@ -1281,37 +1441,85 @@ var ChannelsDB;
                 React.createElement("div", { className: 'row' },
                     React.createElement("div", { className: 'col-lg-12 well well-sm text-center', style: { marginTop: '0', marginBottom: '40px' } },
                         "ChannelsDB last update on ",
-                        React.createElement("b", null, stats ? stats.Date : 'n/a'),
+                        React.createElement("b", null, stats ? stats.date : 'n/a'),
                         "\u00A0",
                         React.createElement("small", null, "contains:"),
                         React.createElement("b", null,
                             " ",
                             stats ? stats.Total : 'n/a'),
-                        " entries \u00A0(",
-                        React.createElement("b", null, stats ? stats.Reviewed : 'n/a'),
+                        " entries",
+                        "\u00A0(",
+                        React.createElement("b", null, stats && stats.statistics.ReviewedChannels_MOLE ? stats.statistics.ReviewedChannels_MOLE : 'n/a'),
                         " ",
-                        React.createElement("small", null, "reviewed |"),
+                        React.createElement("small", null, "reviewed MOLE |"),
                         "\u00A0",
-                        React.createElement("b", null, stats ? stats.CSA : 'n/a'),
+                        React.createElement("b", null, stats && stats.statistics.ReviewedChannels_Caver ? stats.statistics.ReviewedChannels_Caver : 'n/a'),
+                        " ",
+                        React.createElement("small", null, "reviewed CAVER |"),
+                        "\u00A0",
+                        React.createElement("b", null, stats && stats.statistics.CSATunnels_MOLE ? stats.statistics.CSATunnels_MOLE : 'n/a'),
                         " ",
                         React.createElement("small", null,
                             "with ",
                             React.createElement("abbr", { title: 'Catalytic Site Atlas' }, "CSA"),
-                            " annotation |"),
+                            " annotation MOLE |"),
                         "\u00A0",
-                        React.createElement("b", null, stats ? stats.Cofactors : 'n/a'),
+                        React.createElement("b", null, stats && stats.statistics.CSATunnels_Caver ? stats.statistics.CSATunnels_Caver : 'n/a'),
                         " ",
-                        React.createElement("small", null, "with cofactors |"),
+                        React.createElement("small", null,
+                            "with ",
+                            React.createElement("abbr", { title: 'Catalytic Site Atlas' }, "CSA"),
+                            " annotation CAVER |"),
                         "\u00A0",
-                        React.createElement("b", null, stats ? stats.Pores : 'n/a'),
+                        React.createElement("b", null, stats && stats.statistics.CofactorTunnels_MOLE ? stats.statistics.CofactorTunnels_MOLE : 'n/a'),
                         " ",
-                        React.createElement("small", null, "transmembrane pores"),
+                        React.createElement("small", null, "with cofactor MOLE |"),
+                        "\u00A0",
+                        React.createElement("b", null, stats && stats.statistics.CofactorTunnels_Caver ? stats.statistics.CofactorTunnels_Caver : 'n/a'),
+                        " ",
+                        React.createElement("small", null, "with cofactor COVER |"),
+                        "\u00A0",
+                        React.createElement("b", null, stats && stats.statistics.TransmembranePores_MOLE ? stats.statistics.TransmembranePores_MOLE : 'n/a'),
+                        " ",
+                        React.createElement("small", null, "transmembrane pores MOLE |"),
+                        "\u00A0",
+                        React.createElement("b", null, stats && stats.statistics.TransmembranePores_Caver ? stats.statistics.TransmembranePores_Caver : 'n/a'),
+                        " ",
+                        React.createElement("small", null, "transmembrane pores CAVER |"),
+                        "\u00A0",
+                        React.createElement("b", null, stats && stats.statistics.ProcognateTunnels_MOLE ? stats.statistics.ProcognateTunnels_MOLE : 'n/a'),
+                        " ",
+                        React.createElement("small", null, "Cognate tunnels MOLE |"),
+                        "\u00A0",
+                        React.createElement("b", null, stats && stats.statistics.ProcagnateTunnels_Caver ? stats.statistics.ProcagnateTunnels_Caver : 'n/a'),
+                        " ",
+                        React.createElement("small", null, "Cognate tunnels CAVER |"),
+                        "\u00A0",
+                        React.createElement("b", null, stats && stats.statistics.AlphaFillTunnels_MOLE ? stats.statistics.AlphaFillTunnels_MOLE : 'n/a'),
+                        " ",
+                        React.createElement("small", null, "Alphafill tunnels MOLE |"),
+                        "\u00A0",
+                        React.createElement("b", null, stats && stats.statistics.AlphaFillTunnels_Caver ? stats.statistics.AlphaFillTunnels_Caver : 'n/a'),
+                        " ",
+                        React.createElement("small", null, "Alphafill tunnels CAVER"),
                         ")"),
                     React.createElement("div", { className: 'col-lg-9', style: { textAlign: 'left', textJustify: 'inter-word', padding: '0' } },
-                        React.createElement("p", { className: 'lead' },
-                            "ChannelsDB is a comprehensive and regularly updated resource of channels, pores and tunnels found in biomacromolecules deposited in the",
-                            React.createElement("a", { target: '_blank', href: 'http://www.ebi.ac.uk/pdbe/' }, " Protein Data Bank"),
-                            ". As such, it is a unique service for channel-related analyses."),
+                        React.createElement("p", { className: "lead" },
+                            "ChannelsDB database is located at ",
+                            React.createElement("a", { target: "_blank", href: "https://channelsdb.ncbr.muni.cz/" }, "https://channelsdb.ncbr.muni.cz/"),
+                            "."),
+                        React.createElement("p", { className: "lead" },
+                            "ChannelsDB 2.0 is a comprehensive and regularly updated resource of channels, pores and tunnels found in biomacromolecules deposited in the ",
+                            React.createElement("a", { target: "_blank", href: "http://www.ebi.ac.uk/pdbe/" }, "Protein Data Bank"),
+                            " and ",
+                            React.createElement("a", { target: "_blank", href: "https://alphafill.eu/" }, "AlphaFill"),
+                            " / ",
+                            React.createElement("a", { target: "_blank", href: "https://alphafold.ebi.ac.uk/" }, "AlphaFold"),
+                            " databases. As such, it is a unique service for channel-related analyses. Pathways were calculated using an algorithms ",
+                            React.createElement("a", { target: "_blank", href: "https://loschmidt.chemi.muni.cz/caverweb/" }, "CAVER"),
+                            " and ",
+                            React.createElement("a", { target: "_blank", href: "https://mole.upol.cz/" }, "MOLE"),
+                            "."),
                         React.createElement("p", { className: 'text-justify' },
                             "The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with the ",
                             React.createElement("a", { href: 'http://www.uniprot.org', target: '_blank' }, "UniProt database"),
@@ -1361,20 +1569,20 @@ var ChannelsDB;
                         React.createElement("div", { className: 'well' },
                             React.createElement("div", null,
                                 React.createElement("div", { className: 'col-lg-4' },
-                                    React.createElement("a", { href: '/ChannelsDB/detail/1ymg' },
-                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1ymg.jpg', alt: '1ymg channel detail', width: '140', height: '140' })),
+                                    React.createElement("a", { href: '/detail/pdb/1ymg' },
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1ymg.png', alt: '1ymg channel detail', width: '140', height: '140' })),
                                     React.createElement("a", { href: '#ex-1ymg', role: 'button' },
                                         React.createElement("h3", null, "Aquaporin water channel")),
                                     React.createElement("p", { style: justify }, "The pore architecture of Aquaporin O at 2.2\u212B resolution highlights residues critical for water permeation regulation.")),
                                 React.createElement("div", { className: 'col-lg-4' },
-                                    React.createElement("a", { href: '/ChannelsDB/detail/4nm9' },
-                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/4nm9.jpg', alt: '4nm9 channel detail', width: '140', height: '140' })),
+                                    React.createElement("a", { href: '/detail/pdb/4nm9' },
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/4nm9.png', alt: '4nm9 channel detail', width: '140', height: '140' })),
                                     React.createElement("a", { href: '#ex-4nm9', role: 'button' },
                                         React.createElement("h3", null, "Substrate channeling system")),
                                     React.createElement("p", { style: justify }, "Proline utilization A protein contains two active sites separated by ~75\u212B long channeling system accompanied by a complex network of channels.")),
                                 React.createElement("div", { className: 'col-lg-4' },
-                                    React.createElement("a", { href: '/ChannelsDB/detail/1jj2' },
-                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1jj2.jpg', alt: '1jj2 channel detail', width: '140', height: '140' })),
+                                    React.createElement("a", { href: '/detail/pdb/1jj2' },
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/1jj2.png', alt: '1jj2 channel detail', width: '140', height: '140' })),
                                     React.createElement("a", { href: '#ex-1jj2', role: 'button' },
                                         React.createElement("h3", null, "Ribosomal polypeptide exit tunnel")),
                                     React.createElement("p", { style: justify }, "Ribosomal polypeptide exit tunnel directs a nascent protein from the peptidyl transferase center to the outside of the ribosome."))),
@@ -1387,26 +1595,26 @@ var ChannelsDB;
                                     React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-1jj2', role: 'button' }, "View details \u00BB"))),
                             React.createElement("div", null,
                                 React.createElement("div", { className: 'col-lg-6' },
-                                    React.createElement("a", { href: '/ChannelsDB/detail/3tbg' },
-                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/3tbg.jpg', alt: '3tbg channel detail', width: '140', height: '140' })),
+                                    React.createElement("a", { href: '/detail/pdb/3tbg' },
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/3tbg.png', alt: '3tbg channel detail', width: '140', height: '140' })),
                                     React.createElement("a", { href: '#ex-3tbg', role: 'button' },
-                                        React.createElement("h3", null, "Cytochrome P450 2D6 substrate tunnel")),
-                                    React.createElement("p", { style: justify }, "Cytochromes P450 are known for complex net of multiple channels leading towards the active site. These channels serve multiple roles in a substrate access, a product release or hydration pathways.")),
+                                        React.createElement("h3", null, "Cytochrome P450 2D6 tunnels in experimental structure")),
+                                    React.createElement("p", { style: justify }, "Cytochromes P450 are known for complex net of multiple channels leading towards the active site. These channels serve multiple roles.")),
                                 React.createElement("div", { className: 'col-lg-6' },
-                                    React.createElement("a", { href: '/ChannelsDB/detail/5mrw' },
-                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/5mrw.jpg', alt: '4nm9 channel detail', width: '140', height: '140' })),
-                                    React.createElement("a", { href: '#ex-5mrw', role: 'button' },
-                                        React.createElement("h3", null, "Charge transfer coupling tunnel in potassium-importing KdpFABC membrane complex")),
-                                    React.createElement("p", { style: justify }, "KdpFABC membrane complex has one ion channel-like subunit (KdpA) and pump-like subunit (KdpB). Coupling between these two subunits is provided by the charge transfer tunnel present in the membrane parts of these subunits."))),
+                                    React.createElement("a", { href: '/detail/alphafill/P10635' },
+                                        React.createElement("img", { style: centerStyle, className: 'img-circle', src: 'assets/img/alphafill_example.png', alt: 'P10635 channel detail', width: '140', height: '140' })),
+                                    React.createElement("a", { href: '#ex-P10635', role: 'button' },
+                                        React.createElement("h3", null, "Cytochrome P450 2D6 tunnels in Alphafill model")),
+                                    React.createElement("p", { style: justify }, "Complex net of multiple channels in cytochrome P450 2D6 leading towards the active site is visible even in AlphaFold structures."))),
                             React.createElement("div", { className: 'row', style: { margin: '20px 0' } },
                                 React.createElement("div", { className: 'col-lg-6' },
-                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-p450', role: 'button' }, "View details \u00BB")),
+                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-3tbg', role: 'button' }, "View details \u00BB")),
                                 React.createElement("div", { className: 'col-lg-6' },
-                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-5mrw', role: 'button' }, "View details \u00BB")))))),
+                                    React.createElement("a", { className: 'btn btn-block btn-default', href: '#ex-P10635', role: 'button' }, "View details \u00BB")))))),
                 React.createElement("div", { className: 'row featurette', style: { marginTop: '40px' } },
                     React.createElement('a', { 'name': 'ex-1ymg' }),
                     React.createElement("div", { className: 'col-md-7' },
-                        React.createElement("a", { href: '/ChannelsDB/detail/1ymg' },
+                        React.createElement("a", { href: '/detail/pdb/1ymg' },
                             React.createElement("h2", { className: 'featurette-heading' },
                                 "Aquaporin O ",
                                 React.createElement("span", { className: 'text-muted' }, "(1ymg)"))),
@@ -1419,14 +1627,16 @@ var ChannelsDB;
                                     React.createElement("span", { style: { fontStyle: 'italic' } }, "The channel architecture of aquaporin 0 at a 2.2\u212B resolution"),
                                     ". Proc. Natl. Acad. Sci. 101, 14045\u201314050 (2004)")))),
                     React.createElement("div", { className: 'col-md-5' },
-                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1ymg_detail.jpg', width: '500', height: '500', alt: '1ymg detailed channel view' }))),
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1ymg_detail.png', width: '500', height: '500', alt: '1ymg detailed channel view' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
                     React.createElement('a', { 'name': 'ex-3tbg' }),
                     React.createElement("div", { className: 'col-md-7 col-md-push-5' },
-                        React.createElement("a", { href: '/ChannelsDB/detail/3tbg' },
+                        React.createElement("a", { href: '/detail/pdb/3tbg' },
                             React.createElement("h2", { className: 'featurette-heading' },
-                                "Cytochrome P450 2D6 ",
+                                "Cytochrome P450 2D6 experimental ",
+                                React.createElement("br", null),
+                                "structures",
                                 React.createElement("span", { className: 'text-muted' }, "(3tbg)"))),
                         React.createElement("p", { style: justify, className: 'lead' }, "Cytochromes P450 are known for complex net of multiple channels leading towards active site. These channels serve multiple roles in substrate access, product release or hydration pathways."),
                         React.createElement("p", { style: justify },
@@ -1440,12 +1650,30 @@ var ChannelsDB;
                                     React.createElement("span", { style: { fontStyle: 'italic' } }, "Contributions of Ionic Interactions and Protein Dynamics to Cytochrome P450 2D6 (CYP2D6) Substrate and Inhibitor Binding"),
                                     " J.Biol.Chem. 290: 5092-5104 (2015)")))),
                     React.createElement("div", { className: 'col-md-5 col-md-pull-7' },
-                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/3tbg_detail.jpg', alt: 'Cytochrome P450 substrate channel details' }))),
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/3tbg_detail.png', alt: 'Cytochrome P450 substrate channel details' }))),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
+                React.createElement("div", { className: 'row featurette' },
+                    React.createElement('a', { 'name': 'ex-P10635' }),
+                    React.createElement("div", { className: 'col-md-7 ' },
+                        React.createElement("a", { href: '/detail/alphafill/P10635' },
+                            React.createElement("h2", { className: 'featurette-heading' },
+                                "Cytochrome P450 2D6 Alphafill models",
+                                React.createElement("span", { className: 'text-muted' }, "(P10635)"))),
+                        React.createElement("p", { style: justify, className: 'lead' }, "Cytochromes P450 channels starts at HEM cofactor, which can be used to guide channels even in AlphaFill models."),
+                        React.createElement("p", { style: justify }, "As mentioned above, Cytochrome P450 2D6 contributes significantly to the metabolism of >15% of the 200 most marketed drugs. Cytochrome P450 2D6 structure shows a second molecule of thioridazine bound in an expanded substrate access channel (channel 2f according to Cojocaru et al. classification antechamber with its piperidine moiety forming a charge-stabilized hydrogen bond with Glu-222)."),
+                        React.createElement("p", { style: reference },
+                            React.createElement("small", null,
+                                React.createElement("a", { target: '_blank', href: 'https://dx.doi.org/10.1074/jbc.M114.627661' },
+                                    "Wang, A., et al.  ",
+                                    React.createElement("span", { style: { fontStyle: 'italic' } }, "Contributions of Ionic Interactions and Protein Dynamics to Cytochrome P450 2D6 (CYP2D6) Substrate and Inhibitor Binding"),
+                                    " J.Biol.Chem. 290: 5092-5104 (2015)")))),
+                    React.createElement("div", { className: 'col-md-5' },
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/alphafill_example.png', alt: 'Cytochrome P450 substrate channel details' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
                     React.createElement('a', { 'name': 'ex-1jj2' }),
                     React.createElement("div", { className: 'col-md-7 ' },
-                        React.createElement("a", { href: '/ChannelsDB/detail/1jj2' },
+                        React.createElement("a", { href: '/detail/pdb/1jj2' },
                             React.createElement("h2", { className: 'featurette-heading' },
                                 "Large Ribosomal Subunit ",
                                 React.createElement("span", { className: 'text-muted' }, "(1jj2)"))),
@@ -1458,12 +1686,12 @@ var ChannelsDB;
                                     React.createElement("span", { style: { fontStyle: 'italic' } }, "The geometry of the ribosomal polypeptide exit tunnel."),
                                     ". J. Mol. Biol. 360, 893\u2013906 (2006)")))),
                     React.createElement("div", { className: 'col-md-5 ' },
-                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1jj2_detail.jpg', alt: 'Polypeptide exit tunnel' }))),
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/1jj2_detail.png', alt: 'Polypeptide exit tunnel' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
                     React.createElement('a', { 'name': 'ex-4nm9' }),
                     React.createElement("div", { className: 'col-md-7 col-md-push-5' },
-                        React.createElement("a", { href: '/ChannelsDB/detail/4nm9' },
+                        React.createElement("a", { href: '/detail/pdb/4nm9' },
                             React.createElement("h2", { className: 'featurette-heading' },
                                 "PutA channeling system ",
                                 React.createElement("span", { className: 'text-muted' }, "(4nm9)"))),
@@ -1476,34 +1704,16 @@ var ChannelsDB;
                                     React.createElement("span", { style: { fontStyle: 'italic' } }, "Structures of the PutA peripheral membrane flavoenzyme reveal a dynamic substrate-channeling tunnel and the quinone-binding site"),
                                     " Proc. Natl. Acad. Sci., 111, 3389\u20133394. (2014)")))),
                     React.createElement("div", { className: 'col-md-5 col-md-pull-7' },
-                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/4nm9_detail.jpg', alt: 'PutA channel system' }))),
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/4nm9_detail.png', alt: 'PutA channel system' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
-                React.createElement("div", { className: 'row featurette' },
-                    React.createElement('a', { 'name': 'ex-5mrw' }),
-                    React.createElement("div", { className: 'col-md-7 ' },
-                        React.createElement("a", { href: '/ChannelsDB/detail/5mrw' },
-                            React.createElement("h2", { className: 'featurette-heading' },
-                                "Potassium-importing KdpFABC membrane complex ",
-                                React.createElement("span", { className: 'text-muted' }, "(5mrw)"))),
-                        React.createElement("p", { style: justify, className: 'lead' }, "KdpFABC membrane complex has one ion channel-like subunit (KdpA) and pump-like subunit (KdpB). Coupling between these two subunits is provided by the charge transfer tunnel present in the membrane parts of these subunits."),
-                        React.createElement("p", { style: justify },
-                            "KdpFABC serves as an potassium-importing pump, which uses two subunits - channel-like one (KdpA) and pump-like one (KdpB) which undertake phosphorylation. The cycle is initiated by K",
-                            React.createElement("sup", null, "+"),
-                            " binding to the E1 state of KdpA from the periplasm (gray channel). The presence of K",
-                            React.createElement("sup", null, "+"),
-                            " within the selectivity filter of KdpA leads to charge transfer to water molecules through the tunnel to the transmembrane domain of KdpB (red channel). The presence of charge at the canonical site in KdpB triggers phosphorylation through a conserved P-type ATPase mechanism. The transition to the E2P state in P-type ATPases involves inclination of the P domain away from KdpA, which will pull the D3 coupling helix of KdpA. This movement opens the cytoplasmic gate, thereby allowing K",
-                            React.createElement("sup", null, "+"),
-                            " release to the cytosol."),
-                        React.createElement("p", { style: reference },
-                            React.createElement("small", null,
-                                React.createElement("a", { target: '_blank', href: 'https://dx.doi.org/10.1038/nature22970' },
-                                    "Huang, C.-S. et. al. ",
-                                    React.createElement("span", { style: { fontStyle: 'italic' } }, "Crystal structure of the potassium-importing KdpFABC membrane complex"),
-                                    ". Nature 546, 681-685 (2017)")))),
-                    React.createElement("div", { className: 'col-md-5', style: { width: '475px', margin: 'auto' } },
-                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/5mrw_detail.jpg', alt: 'Potassium-importing complex' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '40px 0' } }),
-                React.createElement("img", { className: 'row featurette col-md-offset-6', src: 'assets/img/elixirlogo.jpg', alt: 'ELIXIR logo', height: '70' }),
+                React.createElement("img", { className: 'img', src: 'assets/img/elixirlogo.png', alt: 'ELIXIR logo', height: '70' }),
+                React.createElement("img", { className: "img", src: "assets/img/kfc.jpg", alt: "KFC logo", height: "70" }),
+                React.createElement("img", { className: "img", src: "assets/img/upol.jpg", alt: "UPOL logo", height: "70" }),
+                React.createElement("img", { className: "img", src: "assets/img/metacentrum.jpg", alt: "METACENTRUM logo", height: "70" }),
+                React.createElement("img", { className: "img", src: "assets/img/recetox.jpg", alt: "RECETOX logo", height: "70" }),
+                React.createElement("img", { className: "img", src: "assets/img/ceitec.jpg", alt: "CEITEC logo", height: "70" }),
+                React.createElement("img", { className: "img", src: "assets/img/muni.jpg", alt: "MUNI logo", height: "70" }),
                 React.createElement("div", { className: 'row well well-sm featurette text-center', style: { marginTop: '10px' } },
                     "ChannelsDB is a part of services provided by ",
                     React.createElement("a", { href: 'https://www.elixir-czech.cz/', target: '_blank' }, "ELIXIR"),
@@ -1531,7 +1741,7 @@ var ChannelsDB;
                 React.createElement("div", { className: 'container-fluid' },
                     React.createElement("div", { className: 'navbar-header' },
                         React.createElement("a", { href: 'index.html' },
-                            React.createElement("img", { height: '50', style: { margin: '10px 0' }, src: 'assets/img/channelsdb_logo.png' }))),
+                            React.createElement("img", { height: '70', style: { margin: '10px 0' }, src: 'assets/img/channelsdb2_logo.png' }))),
                     React.createElement("div", { id: 'navbar', className: 'navbar-collapse collapse' },
                         React.createElement("ul", { className: 'nav navbar-nav navbar-right' },
                             React.createElement("li", { style: { marginTop: '12px', fontSize: '120%', fontWeight: 'bold' } },
@@ -1542,6 +1752,8 @@ var ChannelsDB;
                                 React.createElement("a", { href: 'documentation.html' }, "Documentation")),
                             React.createElement("li", { style: { marginTop: '12px', fontSize: '120%', fontWeight: 'bold' } },
                                 React.createElement("a", { href: 'https://mole.upol.cz', target: '_blank' }, "MOLE")),
+                            React.createElement("li", { style: { marginTop: '12px', fontSize: '120%', fontWeight: 'bold' } },
+                                React.createElement("a", { href: 'https://loschmidt.chemi.muni.cz/caverweb/', target: '_blank' }, "CAVER")),
                             React.createElement("li", { style: { marginTop: '12px', fontSize: '120%', fontWeight: 'bold' } },
                                 React.createElement("a", { href: 'contribute.html' }, "Contribute")),
                             React.createElement("li", { style: { marginTop: '12px', fontSize: '120%', fontWeight: 'bold' } },
@@ -1588,7 +1800,7 @@ var ChannelsDB;
                                     React.createElement("i", null, "Anatomy of enzyme channels"),
                                     ". BMC Bioinformatics, 15, 379. (2014)")))),
                     React.createElement("div", { className: 'col-md-5' },
-                        React.createElement("img", { style: { margin: '60px 0' }, className: 'featurette-image img-responsive center-block', src: 'assets/img/channel_detail.jpg', width: '500', height: '500', alt: 'Channel details' }))),
+                        React.createElement("img", { style: { margin: '60px 0' }, className: 'featurette-image img-responsive center-block', src: 'assets/img/channel_detail.png', width: '500', height: '500', alt: 'Channel details' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
                 React.createElement("div", { className: 'row featurette' },
                     React.createElement("h2", { className: 'featurette-heading' }, "MOLE"),
@@ -1616,6 +1828,26 @@ var ChannelsDB;
                                     ". Nucleic Acids Res., 40, W222-7. (2012)")))),
                     React.createElement("div", { className: 'col-md-5 col-md-pull-7' },
                         React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/alg_outline.jpg', width: '500', height: '500', alt: 'Channel details' }))),
+                React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
+                React.createElement("div", { className: 'row featurette' },
+                    React.createElement("h2", { className: 'featurette-heading' }, "CAVER"),
+                    React.createElement("div", { className: 'col-md-7 col-md-push-5' },
+                        React.createElement("p", { style: justify },
+                            "CAVER is a software tool for the detection of tunnels and channels in the protein structures and their ensembles. In the first step, the Voronoi diagram representation of the molecule (A) is constructed and the cost for each Voronoi edge is calculated with respect to its width (B). In the second step, too narrow edges are filtered out and the Djikstra\u2019s algorithm is used to find all shortest paths to the protein surface (C). In the third step, the tunnels are clustered and too similar tunnels are removed. In the last step, the characteristics like length and throughput are calculated for all tunnels and their spherical representation is saved (D). CAVER is available as an ",
+                            React.createElement("a", { href: "https://loschmidt.chemi.muni.cz/caverweb/", target: "_blank" }, "online "),
+                            "tool, as a ",
+                            React.createElement("a", { href: "https://caver.cz/", target: "_blank" }, "command-line "),
+                            "program, analytical ",
+                            React.createElement("a", { href: "https://caver.cz/index.php?sid=199", target: "_blank" }, "software suite "),
+                            "CAVER Analyst, or as a PyMOL ",
+                            React.createElement("a", { href: "https://pymolwiki.org/index.php/Caver3", target: "_blank" }, "plugin. ")),
+                        React.createElement("p", { style: reference },
+                            React.createElement("small", null,
+                                React.createElement("a", { target: '_blank', href: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3475669/' },
+                                    "Chovancova E, Pavelka A, Benes P, Strnad O, Brezovsky J, Kozlikova B, Gora A, Sustr V, Klvana M, Medek P, Biedermannova L, Sochor J, Damborsky J.",
+                                    React.createElement("span", { style: { fontStyle: 'italic' } }, "CAVER 3.0: a tool for the analysis of transport pathways in dynamic protein structures. PLoS Comput Biol. 2012;8(10):e1002708. doi: 10.1371/journal.pcbi.1002708."))))),
+                    React.createElement("div", { className: 'col-md-5 col-md-pull-7' },
+                        React.createElement("img", { className: 'featurette-image img-responsive center-block', src: 'assets/img/figure_caver.jpg', width: '500', height: '500', alt: 'Channel details' }))),
                 React.createElement("hr", { className: 'featurette-divider', style: { margin: '50px 0' } }),
                 React.createElement("div", { className: 'row' },
                     React.createElement("h2", { className: 'featurette-heading' }, "Physicochemical properties"),
@@ -1855,6 +2087,7 @@ var ChannelsDB;
             viewState: { kind: 'Info' },
             stateUpdated: new Rx.Subject(),
             fullSearch: new Rx.Subject(),
+            channelsUrl: "http://channelsdb2.biodata.ceitec.cz",
         };
         var interrupt = Rx.Observable.merge(state.searchTerm, state.fullSearch);
         state.searchTerm
@@ -1883,10 +2116,10 @@ var ChannelsDB;
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, ChannelsDB.ajaxGetJson('https://webchem.ncbr.muni.cz/API/ChannelsDB/Content')];
+                        return [4 /*yield*/, ChannelsDB.ajaxGetJson(state.channelsUrl + "/content")];
                     case 1:
                         content = _a.sent();
-                        state.dbContent = { entries: content };
+                        state.dbContent = { pdb: content.PDB, alphafill: content.AlphaFill };
                         state.dbContentAvailable.onNext(true);
                         return [3 /*break*/, 3];
                     case 2:
@@ -1909,7 +2142,7 @@ var ChannelsDB;
                             state.statisticsAvailable.onNext(state.statistics);
                             return [2 /*return*/];
                         }
-                        return [4 /*yield*/, ChannelsDB.ajaxGetJson('https://webchem.ncbr.muni.cz/API/ChannelsDB/Statistics')];
+                        return [4 /*yield*/, ChannelsDB.ajaxGetJson(state.channelsUrl + "/statistics")];
                     case 1:
                         content = _a.sent();
                         state.statistics = content;
@@ -1964,7 +2197,7 @@ var ChannelsDB;
     ChannelsDB.toLower = toLower;
     function sortGroups(state, groups) {
         var withChannels = [], withoutChannels = [];
-        var content = state.dbContent.entries;
+        var content = state.dbContent.pdb; //TODO set also alphafill
         for (var _i = 0, groups_1 = groups; _i < groups_1.length; _i++) {
             var group = groups_1[_i];
             if (content[toLower(group.doclist.docs[0].pdb_id)])

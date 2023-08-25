@@ -28,6 +28,10 @@ namespace ChannelsDB {
                         <h4 className='list-group-item-heading'>MOLE settings</h4>
                         <p className='list-group-item-text'>Settings used for channel extraction.</p>
                     </a>
+                    <a href='#db-caver' className='list-group-item'>
+                        <h4 className='list-group-item-heading'>CAVER settings</h4>
+                        <p className='list-group-item-text'>Settings used for channel extraction.</p>
+                    </a>
                     <a href='#db-cofactors' className='list-group-item'>
                         <h4 className='list-group-item-heading'>Cofactors</h4>
                         <p className='list-group-item-text'>List of cofactors used for channel calculation.</p>
@@ -61,7 +65,7 @@ namespace ChannelsDB {
                         </p>
                     </div>
                     <div className='col-md-4'>
-                        <img className='featurette-image img-responsive center-block' src={'assets/img/pretty_channel.jpg'} width='500' height='500' alt='Channel details' />
+                        <img className='featurette-image img-responsive center-block' src={'assets/img/pretty_channel.png'} width='500' height='500' alt='Channel details' />
                     </div>
                 </div>
 
@@ -226,6 +230,131 @@ namespace ChannelsDB {
                                     <td><i>NonActiveParts</i></td>
                                     <td data-toggle='tooltip' data-placement='bottom' title='Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))'>Query</td>
                                 </tr>                                                                                                
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className='row table-responsive col-md-4 col-md-push-2'>
+                        <h2 className='featurette-heading'>Cognate tunnels</h2>
+                        <table className='table table-condensed active'>
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i>ProbeRadius</i></td>
+                                    <td>5.0</td>
+                                </tr>
+                                <tr>
+                                    <td><i>InteriorThreshold</i></td>
+                                    <td>1.4</td>
+                                </tr>
+                                <tr>
+                                    <td><i>IgnoreHetResidues</i></td>
+                                    <td>True</td>
+                                </tr>
+                                <tr>
+                                    <td><i>MinTunnelLength</i></td>
+                                    <td>15.0</td>
+                                </tr>
+                                <tr>
+                                    <td><i>BottleneckRadius</i></td>
+                                    <td>1.25</td>
+                                </tr>
+                                <tr>
+                                    <td><i>BottleneckTolerance</i></td>
+                                    <td>1.0</td>
+                                </tr>
+                                <tr>
+                                    <td><i>MaxTunnelSimilarity</i></td>
+                                    <td>0.7</td>
+                                </tr>                                                                                                
+                                <tr>
+                                    <td><i>NonActiveParts</i></td>
+                                    <td data-toggle='tooltip' data-placement='bottom' title='Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))'>Query</td>
+                                </tr>                                                                                                
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className='row table-responsive col-md-4 col-md-push-2'>
+                        <h2 className='featurette-heading'>AlphaFill tunnels</h2>
+                        <table className='table table-condensed active'>
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i>ProbeRadius</i></td>
+                                    <td>5.0</td>
+                                </tr>
+                                <tr>
+                                    <td><i>InteriorThreshold</i></td>
+                                    <td>1.4</td>
+                                </tr>
+                                <tr>
+                                    <td><i>IgnoreHetResidues</i></td>
+                                    <td>True</td>
+                                </tr>
+                                <tr>
+                                    <td><i>MinTunnelLength</i></td>
+                                    <td>15.0</td>
+                                </tr>
+                                <tr>
+                                    <td><i>BottleneckRadius</i></td>
+                                    <td>1.25</td>
+                                </tr>
+                                <tr>
+                                    <td><i>BottleneckTolerance</i></td>
+                                    <td>1.0</td>
+                                </tr>
+                                <tr>
+                                    <td><i>MaxTunnelSimilarity</i></td>
+                                    <td>0.7</td>
+                                </tr>                                                                                                
+                                <tr>
+                                    <td><i>NonActiveParts</i></td>
+                                    <td data-toggle='tooltip' data-placement='bottom' title='Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))'>Query</td>
+                                </tr>                                                                                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr className='featurette-divider' style={{ margin: '50px 0' }} />
+
+                {React.createElement('a' as any, { 'name': 'db-caver' })}
+                <div className='row'>
+                    <h2 className='featurette-heading'>CAVER settings</h2>
+                    <p style={justify}>All tunnels from CAVER in ChannelsDB were calculated using the following settings.</p>
+                    <div className='row table-responsive col-md-4 col-md-offset-1'>
+                        <h2 className='featurette-heading'>CAVER tunnels</h2>
+                        <table className='table table-condensed active'>
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i>ProbeRadius</i></td>
+                                    <td>0.9</td>
+                                </tr>
+                                <tr>
+                                    <td><i>Shell radius</i></td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <td><i>Shell depth</i></td>
+                                    <td>4</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

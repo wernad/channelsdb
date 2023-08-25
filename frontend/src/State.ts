@@ -5,7 +5,8 @@
 namespace ChannelsDB {
 
     export interface DBContent {
-        entries: { [id: string]: any };
+        pdb: { [id: string]: any };
+        alphafill: { [id: string]: any };
     }
 
     export interface State {
@@ -18,6 +19,7 @@ namespace ChannelsDB {
         viewState: ViewState;
         stateUpdated: Rx.Subject<undefined>;
         fullSearch: Rx.Subject<undefined>;
+        channelsUrl: string;
     }
 
     export interface EntryGroup {
@@ -53,6 +55,7 @@ namespace ChannelsDB {
             viewState: { kind: 'Info' },
             stateUpdated: new Rx.Subject<undefined>(),
             fullSearch: new Rx.Subject<undefined>(),
+            channelsUrl: "http://channelsdb2.biodata.ceitec.cz",
         };
 
         const interrupt = Rx.Observable.merge(state.searchTerm as Rx.Observable<any>, state.fullSearch as Rx.Observable<any>);
@@ -80,8 +83,8 @@ namespace ChannelsDB {
 
     async function initSearch(state: State) {
         try {
-            const content = await ajaxGetJson('https://webchem.ncbr.muni.cz/API/ChannelsDB/Content');
-            state.dbContent = { entries: content };
+            const content = await ajaxGetJson(`${state.channelsUrl}/content`);
+            state.dbContent = { pdb: content.PDB, alphafill: content.AlphaFill };
             state.dbContentAvailable.onNext(true);
         } catch (e) {
             setTimeout(() => initSearch(state), 2000);
@@ -94,7 +97,7 @@ namespace ChannelsDB {
                 state.statisticsAvailable.onNext(state.statistics);
                 return;
             }
-            const content = await ajaxGetJson('https://webchem.ncbr.muni.cz/API/ChannelsDB/Statistics');
+            const content = await ajaxGetJson(`${state.channelsUrl}/statistics`); 
             state.statistics = content;
             state.statisticsAvailable.onNext(content);
         } catch (e) {
@@ -135,7 +138,7 @@ namespace ChannelsDB {
 
     function sortGroups(state: State, groups: any) {
         const withChannels = [], withoutChannels = [];
-        const content = state.dbContent.entries;
+        const content = state.dbContent.pdb; //TODO set also alphafill
 
         for (const group of groups) {
             if (content[toLower(group.doclist.docs[0].pdb_id)]) withChannels.push(group);

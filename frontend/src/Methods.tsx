@@ -43,7 +43,7 @@ namespace ChannelsDB {
                           Pravda,L. and Berka,K. et al. <i>Anatomy of enzyme channels</i>. BMC Bioinformatics, 15, 379. (2014)</a></small></p>
                     </div>
                     <div className='col-md-5'>
-                        <img style={{margin: '60px 0'}} className='featurette-image img-responsive center-block' src={'assets/img/channel_detail.jpg'} width='500' height='500' alt='Channel details' />
+                        <img style={{margin: '60px 0'}} className='featurette-image img-responsive center-block' src={'assets/img/channel_detail.png'} width='500' height='500' alt='Channel details' />
                     </div>
                 </div>
 
@@ -71,6 +71,29 @@ namespace ChannelsDB {
                     </div>
                      <div className='col-md-5 col-md-pull-7'>
                         <img className='featurette-image img-responsive center-block' src={'assets/img/alg_outline.jpg'} width='500' height='500' alt='Channel details' />
+                    </div>
+                </div>
+
+                <hr className='featurette-divider' style={{ margin: '50px 0' }} />
+
+                <div className='row featurette'>
+                    <h2 className='featurette-heading'>CAVER</h2>
+                    <div className='col-md-7 col-md-push-5'>
+                        <p style={justify}>CAVER is a software tool for the detection of tunnels and channels in the protein structures and their ensembles. In the first step, the Voronoi diagram representation
+                         of the molecule (A) is constructed and the cost for each Voronoi edge is calculated with respect to its width (B). In the second step, too narrow edges are filtered out and the Djikstra’s 
+                         algorithm is used to find all shortest paths to the protein surface (C). In the third step, the tunnels are clustered and too similar tunnels are removed. In the last step, the characteristics 
+                         like length and throughput are calculated for all tunnels and their spherical representation is saved (D). CAVER is available as an <a href="https://loschmidt.chemi.muni.cz/caverweb/" target="_blank">online </a>
+                         tool, as a <a href="https://caver.cz/" target="_blank">command-line </a>program, analytical <a href="https://caver.cz/index.php?sid=199" target="_blank">software suite </a>
+                         CAVER Analyst, or as a PyMOL <a href="https://pymolwiki.org/index.php/Caver3" target="_blank">plugin. </a>
+                        </p> 
+                        <p style={reference}><small><a target='_blank' href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3475669/'>
+                        Chovancova E, Pavelka A, Benes P, Strnad O, Brezovsky J, Kozlikova B, Gora A, Sustr V, Klvana M, Medek P, Biedermannova L, Sochor J, Damborsky J. 
+                        <span style={{ fontStyle: 'italic' }}>CAVER 3.0: a tool for the analysis of transport pathways in dynamic protein structures. PLoS Comput Biol. 
+                        2012;8(10):e1002708. doi: 10.1371/journal.pcbi.1002708.
+                        </span></a></small></p>  
+                    </div>
+                     <div className='col-md-5 col-md-pull-7'>
+                        <img className='featurette-image img-responsive center-block' src={'assets/img/figure_caver.jpg'} width='500' height='500' alt='Channel details' />
                     </div>
                 </div>
 

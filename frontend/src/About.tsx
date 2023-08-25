@@ -27,6 +27,12 @@ namespace ChannelsDB {
                             <p>Sehnal,D., Svobodová Vařeková,R., Berka,K., Pravda,L., Navrátilová,V., Banáš,P., Ionescu,C.-M., Otyepka,M. and Koča,J. (2013) &nbsp;
                                  <a href='https://dx.doi.org/10.1186/1758-2946-5-39' target='_blank'>MOLE 2.0: advanced approach for analysis of biomacromolecular channels</a>. J. Cheminform., 5, 39.</p>
                         </dd>
+                        <dt>CAVER</dt>
+                        <dd>
+                            <p>Chovancova E, Pavelka A, Benes P, Strnad O, Brezovsky J, Kozlikova B, Gora A, Sustr V, Klvana M, Medek P, Biedermannova L, Sochor J, Damborsky J. &nbsp;
+                            <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3475669/" target="_blank">CAVER 3.0: a tool for the analysis of transport pathways in dynamic protein structures</a>
+                            . PLoS Comput Biol. 2012;8(10):e1002708. doi: 10.1371/journal.pcbi.1002708.</p>
+                        </dd>
                         <dt>LiteMol suite</dt>
                         <dd>
                             <p>Sehnal,D., Deshpande,M., Vařeková,R.S., Mir,S., Berka,K., Midlik,A., Pravda,L., Velankar,S. and Koča,J. (2017) &nbsp;
