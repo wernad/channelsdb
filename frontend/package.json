@@ -18,5 +18,7 @@
     "react-dom": "^15.6.1",
     "rx": "^4.1.0",
     "typescript": "^2.4.2"
+  },
+  "dependencies": {
   }
 }
