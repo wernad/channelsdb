@@ -2,11 +2,6 @@
 
 The project consinsts of three parts: Python API (`/api`), main page (`/frontpage`) and the results page (`/results`).
 
-## Build
-
-To build the project, run `build.sh` in the main directory. This will cause both `/frontpage` and `/results` to run their `build.sh` scripts,
-which install all the necessary dependencies and compiles the sources.
-
 ## Running
 
 To run the ChannelsDB 2, use the following commands:
