@@ -16,10 +16,10 @@ $ docker-compose build
 $ docker-compose up
 ```
 
-By default, the application runs on port `8080` and uses `/data` as the data directory. To change this behaviour,
+By default, the application runs on port `80` and uses `/data` as the data directory. To change this behaviour,
 set the following environment variables before running `docker-compose up`. For example:
 
 ```bash
-export CHANNELSDB_PORT=80
+export CHANNELSDB_PORT=8080
 export CHANNELSDB_DATA=/home/channelsdb/data
 ```
