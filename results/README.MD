@@ -1,7 +1,8 @@
-Pro nainstalování potřebných závislostí spusti 'npm install'
+# Result page of ChannelsDB
 
-Pro různá prostředí je třeba před buildem v souboru ChannelsDB/src/App.ts nastavit proměnnou ROUTING_MODE na odpovídající prostředí pro které se bude aplikace sestavovat.
+Run `build.sh` to install necessary dependencies and compile.
 
-Pro sestavení aplikace a zároveň spuštění lokálního http-serveru na portu 8080 lze použít přiložený skript make.sh
+For running in different environments (e.g., separately from the ChannelsDB),
+change `ROUTING_MODE` variable in `ChannelsDB/src/App.ts` before the build.
 
 
