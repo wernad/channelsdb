@@ -4,8 +4,8 @@ The project consinsts of three parts: Python API (`/api`), main page (`/frontpag
 
 ## Build
 
-To build the project, `/frontpage` and `/results` have both scripts called `build.sh`, which install all the necessary
-dependencies and compiles the sources.
+To build the project, run `build.sh` in the main directory. This will cause both `/frontpage` and `/results` to run their `build.sh` scripts,
+which install all the necessary dependencies and compiles the sources.
 
 ## Running
 
