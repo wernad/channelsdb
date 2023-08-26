@@ -22,7 +22,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx.devel.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx.production.conf:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt/live/channelsdb2.biodata.ceitec.cz/fullchain.pem:/etc/fullchain.pem:ro
       - /etc/letsencrypt/live/channelsdb2.biodata.ceitec.cz/privkey.pem:/etc/privkey.pem:ro
     restart: always

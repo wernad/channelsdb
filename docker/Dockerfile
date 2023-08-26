@@ -26,3 +26,4 @@ COPY --from=frontend /build/*.html /var/www/
 
 COPY --from=results /build/dist/ChannelsDB /var/www/detail
 
+CMD ["nginx", "-g", "daemon off;"]
