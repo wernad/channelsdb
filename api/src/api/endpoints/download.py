@@ -59,7 +59,7 @@ async def download(source_db: SourceDatabase, file_format: DownloadType, protein
             return RedirectResponse(f'https://www.ebi.ac.uk/pdbe/static/entry/'
                                     f'{protein_id}_assembly_{assembly_id}_chemically_distinct_molecules_front_image-200x200.png')
         case SourceDatabase.AlphaFill, DownloadType.png:
-            return FileResponse('assets/alphafill.png')
+            return FileResponse('../assets/alphafill.png')
 
     channels = get_channels(source_db, protein_id)
     headers = {'Content-Disposition': f'attachment; filename="channelsdb_{protein_id}.{EXTENSIONS[file_format]}"'}
