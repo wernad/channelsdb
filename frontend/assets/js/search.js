@@ -2087,7 +2087,7 @@ var ChannelsDB;
             viewState: { kind: 'Info' },
             stateUpdated: new Rx.Subject(),
             fullSearch: new Rx.Subject(),
-            channelsUrl: "https://channelsdb2.biodata.ceitec.cz",
+            channelsUrl: "/api",
         };
         var interrupt = Rx.Observable.merge(state.searchTerm, state.fullSearch);
         state.searchTerm

@@ -55,7 +55,7 @@ namespace ChannelsDB {
             viewState: { kind: 'Info' },
             stateUpdated: new Rx.Subject<undefined>(),
             fullSearch: new Rx.Subject<undefined>(),
-            channelsUrl: "https://channelsdb2.biodata.ceitec.cz",
+            channelsUrl: "/api",
         };
 
         const interrupt = Rx.Observable.merge(state.searchTerm as Rx.Observable<any>, state.fullSearch as Rx.Observable<any>);
