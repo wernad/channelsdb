@@ -57,9 +57,9 @@ namespace ChannelsDB {
                             <b>The entire database is composed out of the following content:</b>
                                 <ul>
                                     <li>Manually curated channel annotations from literature extracted entries</li>
-                                    <li>Ligand-accessible tunnels to the catalytic sites annotated in the <a target='_blank' href='http://www.ebi.ac.uk/thornton-srv/databases/CSA/'>Catalytic Site Atlas</a></li>
+                                    <li>Ligand-accessible tunnels to the catalytic sites annotated in the <a target='_blank' href='https://www.ebi.ac.uk/thornton-srv/m-csa/'>Catalytic Site Atlas</a></li>
                                     <li>Product/substrate tunnels leading towards the well-known enzyme cofactors such as <abbr className='abbr initialism' title='HEME (Protoporhpyrin IX containing Fe)'>HEM</abbr> or <abbr className='abbr initialism' title='Flavin-adenine dinucleotide'>FAD</abbr></li>
-                                    <li>Pores in transmembrane proteins enabling flow of ions and small molecules across the lipid bilayer for proteins deposited in the <a target='_blank' href='http://opm.phar.umich.edu/' >OPM</a> database</li>                                    
+                                    <li>Pores in transmembrane proteins enabling flow of ions and small molecules across the lipid bilayer for proteins deposited in the <a target='_blank' href='https://opm.phar.umich.edu/' >OPM</a> database</li>
                                 </ul>
                             All the channels have been extracted from biological assemblies as identified by the Protein Data Bank in Europe.
                         </p>

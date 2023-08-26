@@ -29,7 +29,7 @@ namespace ChannelsDB {
                              facilitating transport of ions or molecules through cellular biomembranes.                    
                         </p>
                         <p style={justify}>
-                            Channel walls are made from surrounding amino acids making up for a specific micro-environment (see e.g. <a href='http://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >Pravda and Berka et al.</a>),
+                            Channel walls are made from surrounding amino acids making up for a specific micro-environment (see e.g. <a href='https://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >Pravda and Berka et al.</a>),
                             which influence to a great extent specificity and selectivity of plethora biologically important processes. Their constitution is especially important in channel's
                             constriction sites such as local minima and bottlenecks, which can function as gatekeepers.
                         </p>
@@ -39,7 +39,7 @@ namespace ChannelsDB {
                             A new layer starts whenever there is a change in residues lining it along its length. Their size and composition is in turn used for estimating channel's 
                             physicochemical properties. These are especially important for local minima and a bottleneck (the narrowest part of the channel).
                         </p>
-                        <p style={reference}><small><a href='http://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >
+                        <p style={reference}><small><a href='https://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >
                           Pravda,L. and Berka,K. et al. <i>Anatomy of enzyme channels</i>. BMC Bioinformatics, 15, 379. (2014)</a></small></p>
                     </div>
                     <div className='col-md-5'>
@@ -59,7 +59,7 @@ namespace ChannelsDB {
                         <p style={justify}>
                             Once the channels have been identified a unique set of residues surrounding channel volume is retrieved. Given this set of residues, a physicochemical properties such as Hydropathy
                             are computed for each channel and its parts. Individual steps of the algorithm are highlighted at the picture below  and more details on the channel identification can be found
-                            in the respective <a href='http://dx.doi.org/10.1186/1758-2946-5-39' target='_blank'>paper</a>. Finally, user structures can be analysed using the <a href='https://mole.upol.cz' target='_blank'>
+                            in the respective <a href='https://dx.doi.org/10.1186/1758-2946-5-39' target='_blank'>paper</a>. Finally, user structures can be analysed using the <a href='https://mole.upol.cz' target='_blank'>
                             online</a> as well as the <a href='https://webchem.ncbr.muni.cz/Platform/App/Mole' target='_blank'>command-line</a> version of MOLE.
                         </p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1186/1758-2946-5-39'>

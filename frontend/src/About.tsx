@@ -13,7 +13,7 @@ namespace ChannelsDB {
                         <dt>ChannelsDB</dt>
                         <dd>
                             <p>Pravda,L., Sehnal,D., Svobodová Vařeková,R., Navrátilová,V., Toušek,D., Berka,K., Otyepka,M. and Koča,J. &nbsp;
-                                <a href='http://dx.doi.org/10.1093/nar/gkx868' target='_blank'>ChannelsDB: database of biomacromolecular tunnels and pores.</a>
+                                <a href='https://dx.doi.org/10.1093/nar/gkx868' target='_blank'>ChannelsDB: database of biomacromolecular tunnels and pores.</a>
                                  Nucleic Acids Res., 10.1093/nar/gkx868.</p>
                         </dd>
                     </dl>
@@ -36,7 +36,7 @@ namespace ChannelsDB {
                         <dt>LiteMol suite</dt>
                         <dd>
                             <p>Sehnal,D., Deshpande,M., Vařeková,R.S., Mir,S., Berka,K., Midlik,A., Pravda,L., Velankar,S. and Koča,J. (2017) &nbsp;
-                                 <a href='http://dx.doi.org/10.1038/nmeth.4499'>LiteMol suite: interactive web-based visualization of large-scale macromolecular structure data</a>. Nat. Methods, 14, 1121–1122.</p>
+                                 <a href='https://dx.doi.org/10.1038/nmeth.4499'>LiteMol suite: interactive web-based visualization of large-scale macromolecular structure data</a>. Nat. Methods, 14, 1121–1122.</p>
                         </dd>
                         <dt>UniProt API</dt>
                         <dd>
