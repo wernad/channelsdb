@@ -2,7 +2,7 @@ FROM node:latest as frontend
 
 WORKDIR /build
 
-COPY frontend/ /build
+COPY ./frontend /build
 
 RUN npm install
 
@@ -12,7 +12,7 @@ FROM node:latest as results
 
 WORKDIR /build
 
-COPY results /build
+COPY ./results /build
 
 RUN npm install
 
@@ -26,6 +26,3 @@ COPY --from=frontend /build/*.html /var/www/
 
 COPY --from=results /build/dist/ChannelsDB /var/www/detail
 
-COPY ./nginx.conf /etc/nginx/nginx.conf
-
-CMD ["nginx", "-g", "daemon off;"]
