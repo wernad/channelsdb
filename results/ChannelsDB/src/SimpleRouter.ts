@@ -190,7 +190,7 @@ namespace SimpleRouter{
 
         private static router:Router;
 
-        private static defaultChannelsURL = "http://channelsdb2.biodata.ceitec.cz";
+        private static defaultChannelsURL = "https://channelsdb2.biodata.ceitec.cz";
 
         private static isInitialized:boolean = false;
 

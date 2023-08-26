@@ -4741,7 +4741,7 @@ var ResidueAnnotations;
         class DGBody extends React.Component {
             generateLink(annotation) {
                 if (annotation.reference === "") {
-                    return (annotation.text !== void 0 && annotation.text !== null) ? React.createElement("span", null, annotation.text) : React.createElement("span", { className: "no-annotation" });
+                    return (annotation.text !== void 0 && annotation.text !== null) ? React.createElement("span", { dangerouslySetInnerHTML: { __html: annotation.text } }) : React.createElement("span", { className: "no-annotation" });
                 }
                 return React.createElement("a", { target: "_blank", href: annotation.link, dangerouslySetInnerHTML: { __html: annotation.text } });
             }
@@ -5453,7 +5453,7 @@ var SimpleRouter;
             return this.defaultChannelsURL;
         }
     }
-    GlobalRouter.defaultChannelsURL = "http://channelsdb2.biodata.ceitec.cz";
+    GlobalRouter.defaultChannelsURL = "https://channelsdb2.biodata.ceitec.cz";
     GlobalRouter.isInitialized = false;
     SimpleRouter.GlobalRouter = GlobalRouter;
 })(SimpleRouter || (SimpleRouter = {}));
