@@ -16,4 +16,4 @@ services:
     depends_on:
       - api
     ports:
-      - "8080:80"
+      - "${CHANNELSDB_PORT:-8080}:80"
