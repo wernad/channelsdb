@@ -1,0 +1,22 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": false,
+    "declaration": false,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "lib": [ "es6", "dom" ],
+    "target": "es5",
+    "jsx": "react",
+    "module": "none",
+    "types": [ "rx", "react", "react-dom" ],
+    "skipDefaultLibCheck": true,
+    "out": "assets/js/search.js"
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
