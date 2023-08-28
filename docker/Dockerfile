@@ -2,9 +2,11 @@ FROM node:latest as frontend
 
 WORKDIR /build
 
-COPY ./frontend /build
+COPY ./frontend/package.json ./frontend/package-lock.json /build/
 
 RUN npm install
+
+COPY ./frontend /build
 
 RUN ./node_modules/.bin/tsc
 
@@ -12,9 +14,11 @@ FROM node:latest as results
 
 WORKDIR /build
 
-COPY ./results /build
+COPY ./results/package.json ./results/package-lock.json /build/
 
 RUN npm install
+
+COPY ./results /build
 
 RUN ./node_modules/.bin/gulp
 
