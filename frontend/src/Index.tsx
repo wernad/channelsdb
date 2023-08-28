@@ -284,16 +284,16 @@ namespace ChannelsDB {
     class Entry extends React.Component<GlobalProps & { docs: any }, { }> {
         render() {
             const docs = this.props.docs;
-            const pdbContentMap = new Array('CSATunnels MOLE', 'CSATunnels Caver', 'ReviewedChannels MOLE', 'ReviewedChannels Caver',
+            const pdbContentMap = ['CSATunnels MOLE', 'CSATunnels Caver', 'ReviewedChannels MOLE', 'ReviewedChannels Caver',
              'CofactorTunnels MOLE', 'CofactorTunnels Caver', 'TransmembranePores MOLE', 'TransmembranePores Caver', 'ProcognateTunnels MOLE',
-             'ProcagnateTunnels Caver');
-            const alphafillContentMap = new Array('AlphaFillTunnels MOLE', 'AlphaFillTunnels Caver');
+             'ProcagnateTunnels Caver'];
+            const alphafillContentMap = ['AlphaFillTunnels MOLE', 'AlphaFillTunnels Caver'];
             const pdb = this.props.state.dbContent.pdb[toLower(docs.pdb_id)];
             const alphafill = this.props.state.dbContent.alphafill[toLower(docs.pdb_id)];
             const numPdbChannels = pdb ? (pdb as number[]).reduce((a, b) => a + b, 0) : -1;
             const numAlphafillChannels = alphafill ? (alphafill as number[]).reduce((a, b) => a + b, 0) : -1;
-            let pdbContent = numPdbChannels > 0 ? (pdb as number[]).map((el, index) => el > 0 ? pdbContentMap[index] + ' (' + el + ')' : '') : new Array();
-            let alphafillContent = numAlphafillChannels > 0 ? (pdb as number[]).map((el, index) => el > 0 ? alphafillContentMap[index] + ' (' + el + ')' : '') : new Array();
+            let pdbContent = numPdbChannels > 0 ? (pdb as number[]).map((el, index) => el > 0 ? pdbContentMap[index] + ' (' + el + ')' : '') : [];
+            let alphafillContent = numAlphafillChannels > 0 ? (pdb as number[]).map((el, index) => el > 0 ? alphafillContentMap[index] + ' (' + el + ')' : '') : [];
             const msgPdb = numPdbChannels > 0 ? pdbContent.filter((a) => a.length > 0).reduce((a, b) => a + ', ' + b) : '';
             const msgAlphafill = numAlphafillChannels > 0 ? alphafillContent.filter((a) => a.length > 0).reduce((a, b) => a + ', ' + b) : '';
 
@@ -315,7 +315,7 @@ namespace ChannelsDB {
                     }
                 </ul>
                 <div className='pdb-entry-img-wrap'>
-                    <img src={`https://webchem.ncbr.muni.cz/API/ChannelsDB/Download/${docs.pdb_id.toLowerCase()}?type=png`}/>
+                    <img src={`/api/download/pdb/${docs.pdb_id.toLowerCase()}/png`}/>
                 </div>
             </div>;
         }
