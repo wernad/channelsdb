@@ -470,24 +470,10 @@ namespace ChannelsDB {
                 {React.createElement('a' as any, { 'name': 'db-api' })}
                 <div className='channelsdb-api-docs'>
                         <h2 className='featurette-heading'>API </h2>
-                        <p> The entire database is powered by the API running on the <a href='https://webchem.ncbr.muni.cz' target='_blank'>webchem server</a>. 
+                    <p> The entire database is powered by the API with an interactive <a href="/api">documentation</a> available.
                         Therefore, all the channel-related information can be programmatically retrieved and used for further processing. The returned content is <i>application/json</i> object
-                        and all the properties are self-explanatory. Should you have further questions or comments, do not hesitate to <a href='mailto:webchemistryhelp@gmail.com?subject=ChannelsDB - API'>contact us.</a></p>
-                        
-                        <h4>Channel position information <span>/PDB/&lt;PDB id&gt;</span><br />
-                            <small>Retrieves channels identified in the PDB entry.</small>
-                        </h4>
-                        <h5>Examples</h5>
-                            <a href='https://webchem.ncbr.muni.cz/API/ChannelsDB/PDB/3tbg' target='_blank'>/API/ChannelsDB/PDB/3tbg</a><br />
-                            <a href='https://webchem.ncbr.muni.cz/API/ChannelsDB/PDB/5an8' target='_blank'>/API/ChannelsDB/PDB/5an8</a>
-
-                        <h4>Additional annotations <span>/Annotations/&lt;PDB id&gt;</span><br />
-                            <small>Retrieves PDB level information (name, function, catalyzed reactions) and important residues annotations.</small>
-                        </h4>
-                        <h5>Examples</h5>
-                            <a href='https://webchem.ncbr.muni.cz/API/ChannelsDB/Annotations/3tbg' target='_blank'>/API/ChannelsDB/Annotations/3tbg</a><br />
-                            <a href='https://webchem.ncbr.muni.cz/API/ChannelsDB/Annotations/1ymg' target='_blank'>/API/ChannelsDB/Annotations/1ymg</a>
-                </div>
+                        and all the properties are self-explanatory. Should you have further questions or comments, do not hesitate to <a href='mailto:webchemistryhelp@gmail.com?subject=ChannelsDB2 - API'>contact us.</a></p>
+                   </div>
 
                 <ScrollButton scrollStepInPx='50' delayInMs='10'/>
 
