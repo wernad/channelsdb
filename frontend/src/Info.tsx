@@ -31,7 +31,7 @@ namespace ChannelsDB {
                 <div className='row' >
                     <div className='col-lg-12 well well-sm text-center' style={{ marginTop: '0', marginBottom: '40px' }}>
                         ChannelsDB last update on <b>{stats ? stats.date : 'n/a'}</b>
-                        &nbsp;<small>contains:</small><b> {stats ? stats.Total : 'n/a'}</b> entries
+                        &nbsp;<small>contains:</small><b> {stats ? stats.entries_count : 'n/a'}</b> protein entries
                         {/* TODO if 0 n/a or just 0 */}
                         &nbsp;(<b>{stats && stats.statistics.ReviewedChannels_MOLE ? stats.statistics.ReviewedChannels_MOLE : 'n/a'}</b> <small>reviewed MOLE |</small>
                         &nbsp;<b>{stats && stats.statistics.ReviewedChannels_Caver ? stats.statistics.ReviewedChannels_Caver : 'n/a'}</b> <small>reviewed CAVER |</small>
