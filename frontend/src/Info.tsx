@@ -7,9 +7,9 @@ namespace ChannelsDB {
         private sub: Rx.IDisposable | undefined = void 0;
         state = { statistics: this.props.state.statistics, statisticsExpanded: false };
 
-        private toggle(e: React.MouseEvent<HTMLElement>) {
+        private setStatistics(e: React.MouseEvent<HTMLElement>, value: boolean) {
             e.preventDefault();
-            this.setState({ statisticsExpanded: !this.state.statisticsExpanded });
+            this.setState({ statisticsExpanded: value });
         }
 
         componentDidMount() {
@@ -38,7 +38,7 @@ namespace ChannelsDB {
                         <div className="text-center">
                             ChannelsDB last update on <b>{stats ? stats.date : 'n/a'}</b>
                             &nbsp;<small>contains:</small><b> {stats ? stats.entries_count : 'n/a'}</b> protein entries
-                            &nbsp;<a href="_blank" onClick={e => this.toggle(e)}>Show more/less</a>
+                            &nbsp;{this.state.statisticsExpanded ? <a href="_blank" onClick={e => this.setStatistics(e, false)}>Hide details</a> : <a href="_blank" onClick={e => this.setStatistics(e, true)}>Show details</a>}
                         </div>
                         <table className="table table-condensed active w-auto" style={{ display: this.state.statisticsExpanded ? 'table' : 'none' }}>
                             <thead>
