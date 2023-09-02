@@ -89,7 +89,7 @@ namespace LiteMol.Example.Channels.UI {
                                             <b>Data for specified protein are not available.</b>
                                         </div>
                                         <div>
-                                            <b>Reason:</b> <i>If you think this protein has tunnels, try to calculate them at <a href="https://mole.upol.cz">MOLEonline</a> or <a href="https://loschmidt.chemi.muni.cz/caverweb/">CaverWeb</a>.</i>
+                                            <i>If you think this protein has tunnels, try to calculate them at <a href="https://mole.upol.cz">MOLEonline</a> or <a href="https://loschmidt.chemi.muni.cz/caverweb/">CaverWeb</a>.</i>
                                         </div>
                                     </div>);
                             }
