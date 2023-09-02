@@ -13,9 +13,9 @@ namespace LiteMol.Example.Channels.UI {
         LiteMol.Plugin.ReactDOM.render(<App plugin={plugin} />, target);
     }
 
-    export class App extends React.Component<{ plugin: Plugin.Controller }, { isLoading?: boolean, error?: string, data?: any, isWaitingForData?: boolean }> {
+    export class App extends React.Component<{ plugin: Plugin.Controller }, { isLoading?: boolean, error?: string, data?: any, isWaitingForData?: boolean, apiStatus: number|undefined }> {
 
-        state = { isLoading: false, data: void 0, error: void 0};
+        state = { isLoading: false, data: void 0, error: void 0, apiStatus: undefined};
 
         private currentProteinId:string;
         private subDB:string;
@@ -23,6 +23,9 @@ namespace LiteMol.Example.Channels.UI {
         componentDidMount() {
             this.load();
             $(window).on("contentResize", this.onContentResize.bind(this));
+            let globalRouter = SimpleRouter.GlobalRouter;
+            const url = `${globalRouter.getChannelsURL()}/statistics`;
+            fetch(url).then(resp => this.setState({apiStatus: resp.status}));
         }
 
         private onContentResize(_:any){
@@ -52,7 +55,7 @@ namespace LiteMol.Example.Channels.UI {
                 })
                 .catch(e => {
                     console.log(`ERR on loading: ${e}`);
-                    this.setState({ isLoading: false, error: 'Application was unable to load data. Please try again later.' });
+                    this.setState({ isLoading: false, error: e.message }); //'Application was unable to load data. Please try again later.'
                 });
         }
 
@@ -60,27 +63,50 @@ namespace LiteMol.Example.Channels.UI {
             if (this.state.data) {
                 return <Data data={this.state.data} plugin={this.props.plugin} />
             } else {
-                let controls: any[] = [];
-
-                if (this.state.isLoading) {
+                let controls = [];
+                if (this.state.isLoading || this.state.apiStatus === undefined) {
                     controls.push(<h1>Loading...</h1>);
                 } else {
                     if (this.state.error) {
                         let error = this.state.error as string|undefined;
-                        let errorMessage:string = (error===void 0)?"":error;
-                        controls.push(
-                            <div className="error-message">
-                                <div>
-                                    <b>Data for specified protein are not available.</b>
-                                </div>
-                                <div>
-                                    <b>Reason:</b> <i dangerouslySetInnerHTML={{__html:errorMessage}}></i>
-                                </div>
-                            </div>);
+                        let errorMessage:string = (error===void 0) ? "" : error;
+                        if (this.state.apiStatus) {
+                            if (this.state.apiStatus === 404) {
+                                controls.push(
+                                    <div className="error-message">
+                                        <div>
+                                            <b>Data for specified protein are not available.</b>
+                                        </div>
+                                        <div>
+                                            <b>Reason:</b> <i dangerouslySetInnerHTML={{__html:errorMessage}}></i>
+                                        </div>
+                                    </div>);
+                                controls.push(<button className="reload-data btn btn-primary" onClick={() => this.load()}>Reload Data</button>);
+                            } else {
+                                controls.push(
+                                    <div className="error-message">
+                                        <div>
+                                            <b>Data for specified protein are not available.</b>
+                                        </div>
+                                        <div>
+                                            <b>Reason:</b> <i>If you think this protein has tunnels, try to calculate them at <a href="https://mole.upol.cz">MOLEonline</a> or <a href="https://loschmidt.chemi.muni.cz/caverweb/">CaverWeb</a>.</i>
+                                        </div>
+                                    </div>);
+                            }
+                        } else {
+                            controls.push(
+                                <div className="error-message">
+                                    <div>
+                                        <b>Data for specified protein are not available.</b>
+                                    </div>
+                                    <div>
+                                        <b>Reason:</b> <i dangerouslySetInnerHTML={{__html:errorMessage}}></i>
+                                    </div>
+                                </div>);
+                            controls.push(<button className="reload-data btn btn-primary" onClick={() => this.load()}>Reload Data</button>);
+                        }
                     }
-                    controls.push(<button className="reload-data btn btn-primary" onClick={() => this.load()}>Reload Data</button>);
                 }
-
                 return <div>{controls}</div>;
             }
         }
