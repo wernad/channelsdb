@@ -152,10 +152,10 @@ namespace LayersVizualizer.UI{
                     >
                     <div className="wrapper-container">
                         <Controls {...this.props} isCustom={false} />
+                        <CommonControls {...this.props} />
                         <CanvasWrapper {...this.props} />
                         <Controls {...this.props} isCustom={true} />
                     </div>
-                    <CommonControls {...this.props} />
                 </div>
             );
         };
@@ -510,7 +510,7 @@ namespace LayersVizualizer.UI{
                 <img className="fake-canvas"
                     id={`layer-vizualizer-fake-canvas${this.props.instanceId}`}
                     useMap={`#layersInteractiveMap${this.props.instanceId}`}
-                    src="images/no_img.png"
+                    src="../images/no_img.png"
                     ></img>
             );
         }
