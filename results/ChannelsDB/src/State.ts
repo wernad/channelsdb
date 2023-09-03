@@ -108,7 +108,7 @@ namespace LiteMol.Example.Channels.State {
                     });
                 } else {
                     let model = plugin.createTransform()
-                        .add(plugin.root, Transformer.Data.Download, { url: `https://alphafill.eu/v1/aff/${pid.toUpperCase()}`, type: 'String', id: pid })
+                        .add(plugin.root, Transformer.Data.Download, { url: `https://alphafill.eu/v1/aff/${pid}`, type: 'String', id: pid })
                         .then(Transformer.Molecule.CreateFromData, { format: Core.Formats.Molecule.SupportedFormats.mmCIF }, { isBinding: true })
                         .then(Transformer.Molecule.CreateModel, { modelIndex: 0 })
                         .then(Transformer.Molecule.CreateMacromoleculeVisual, { polymer: true, polymerRef: 'polymer-visual', het: true });
@@ -130,10 +130,10 @@ namespace LiteMol.Example.Channels.State {
                     .then(Transformer.Molecule.CreateModel, { modelIndex: 0 })
                     .then(Transformer.Molecule.CreateMacromoleculeVisual, { polymer: true, polymerRef: 'polymer-visual', het: true })
             */
-            let data = plugin.createTransform().add(plugin.root, Transformer.Data.Download, { url: subDB === "pdb" ? `${url}/channels/${subDB}/${pid}` : `${url}/channels/${subDB}/${pid.toLowerCase()}`, type: 'String', id: 'MOLE Data' }, { isHidden: false })
+            let data = plugin.createTransform().add(plugin.root, Transformer.Data.Download, { url: `${url}/channels/${subDB}/${pid.toLowerCase()}`, type: 'String', id: 'MOLE Data' }, { isHidden: false })
                 .then(Transformer.Data.ParseJson, { id: 'MOLE Data' }, { ref: 'channelsDB-data' });
 
-            let annotationData = plugin.createTransform().add(plugin.root, Transformer.Data.Download, { url: subDB === "pdb" ? `${url}/annotations/${subDB}/${pid}` : `${url}/annotations/${subDB}/${pid.toLowerCase()}`, type: 'String', id: 'ChannelDB annotation Data' }, { isHidden: false })
+            let annotationData = plugin.createTransform().add(plugin.root, Transformer.Data.Download, { url: `${url}/annotations/${subDB}/${pid.toLowerCase()}`, type: 'String', id: 'ChannelDB annotation Data' }, { isHidden: false })
                 .then(Transformer.Data.ParseJson, { id: 'ChannelDB annotation Data' }, { ref: 'channelsDB-annotation-data' });
 
             let promises = [];

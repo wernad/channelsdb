@@ -210,6 +210,9 @@ namespace SimpleRouter{
             if(this.useParameterAsPid === true){
                 subDB = url.getParameterValue("subDB");
                 pid = url.getParameterValue("pid");
+                if (subDB === "alphafill" && pid) {
+                    pid = pid.toUpperCase()
+                }
             }
             else if(this.useLastPathPartAsPid === true){
                 let lastPathPartAsParam = url.substractPathFromStart(this.defaultContextPath).getLastPart();

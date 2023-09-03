@@ -181,7 +181,7 @@ namespace ProteinAnnotations.UI{
                     );
 
                 rows.push(
-                        <DGComponents.DGElementRow columns={[<span>UniProt Id:</span>,<a href={annotation.link} target="_blank">{annotation.uniProtId}</a>]} />
+                        <DGComponents.DGElementRow columns={[<span>UniProt Id:</span>,<a href={annotation.link} target="_blank">{SimpleRouter.GlobalRouter.getCurrentDB() === 'alphafill' ? annotation.uniProtId.toUpperCase() : annotation.uniProtId}</a>]} />
                     );
 
                 rows.push(
