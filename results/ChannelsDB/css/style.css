@@ -714,3 +714,15 @@ only screen and (max-height: 900px) {
         width:61%;
     }
 }
+
+.channels-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+@media only screen and (max-width: 980px) {
+    .channels-header {
+        flex-direction: column;
+    } 
+}

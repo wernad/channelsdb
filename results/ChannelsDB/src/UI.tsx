@@ -138,7 +138,7 @@ namespace LiteMol.Example.Channels.UI {
                 <Selection {...this.props} />
 
                 <div className="ui-header">
-                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <div className="channels-header">
                         <span>Channels</span>
                         <button className="btn btn-primary btn-sm bt-none" style={{ marginTop: '0.5em', marginBottom:'0.5em' }} onClick={e => this.toggle(e)}>Hide all</button>
                     </div>
