@@ -332,7 +332,7 @@ namespace ChannelsDB {
                 {React.createElement('a' as any, { 'name': 'db-caver' })}
                 <div className='row'>
                     <h2 className='featurette-heading'>CAVER settings</h2>
-                    <p style={justify}>All tunnels from CAVER in ChannelsDB were calculated using the following settings.</p>
+                    <p style={justify}>All tunnels from CAVER in ChannelsDB were calculated using the following settings. Reviewed tunnels calculated by Caver used manually adjusted startings points and smaller probe 0.7 Å.</p>
                     <div className='row table-responsive col-md-4 col-md-offset-1'>
                         <h2 className='featurette-heading'>CAVER tunnels</h2>
                         <table className='table table-condensed active'>

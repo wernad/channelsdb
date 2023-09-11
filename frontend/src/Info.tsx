@@ -165,24 +165,32 @@ namespace ChannelsDB {
                                 <div className='col-lg-4'><a className='btn btn-block btn-default' href='#ex-1jj2' role='button'>View details &raquo;</a></div>
                             </div>
                             <div>
-                                <div className='col-lg-6'>
+                                <div className='col-lg-4'>
                                     <a href='/detail/pdb/3tbg'>
                                         <img style={centerStyle} className='img-circle' src={'assets/img/3tbg.png'} alt='3tbg channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-3tbg' role='button'><h3>Cytochrome P450 2D6 tunnels in experimental structure</h3></a>
                                     <p style={justify}>Cytochromes P450 are known for complex net of multiple channels leading towards the active site. These channels serve multiple roles.</p>
                                 </div>
-                                <div className='col-lg-6'>
+                                <div className='col-lg-4'>
                                     <a href='/detail/alphafill/P10635'>
                                         <img style={centerStyle} className='img-circle' src={'assets/img/alphafill_example.png'} alt='P10635 channel detail' width='140' height='140' />
                                     </a>
                                     <a href='#ex-P10635' role='button'><h3>Cytochrome P450 2D6 tunnels in Alphafill model</h3></a>
                                     <p style={justify}>Complex net of multiple channels in cytochrome P450 2D6 leading towards the active site is visible even in AlphaFold structures.</p>
                                 </div>
+                                <div className='col-lg-4'>
+                                    <a href='/detail/pdb/5lka'>
+                                        <img style={centerStyle} className='img-circle' src={'assets/img/examples-figure-HLD.png'} alt='HLD channel detail' width='140' height='140' />
+                                    </a>
+                                    <a href='#ex-HLD' role='button'><h3>Haloalkane dehalogenase LinB with engineered tunnels</h3></a>
+                                    <p style={justify}>Haloalkane dehalogenase LinB is an important model enzyme used in various practical applications, including biodegradation, bioremediation, and biosensing. The access tunnels present in haloalkane dehalogenases have been well studied and were a target of engineering by mutagenesis to change their properties.</p>
+                                </div>
                             </div>
                             <div className='row' style={{ margin: '20px 0' }}>
-                                <div className='col-lg-6'><a className='btn btn-block btn-default' href='#ex-3tbg' role='button'>View details &raquo;</a></div>
-                                <div className='col-lg-6'><a className='btn btn-block btn-default' href='#ex-P10635' role='button'>View details &raquo;</a></div>
+                                <div className='col-lg-4'><a className='btn btn-block btn-default' href='#ex-3tbg' role='button'>View details &raquo;</a></div>
+                                <div className='col-lg-4'><a className='btn btn-block btn-default' href='#ex-P10635' role='button'>View details &raquo;</a></div>
+                                <div className='col-lg-4'><a className='btn btn-block btn-default' href='#ex-HLD' role='button'>View details &raquo;</a></div>
                             </div>
                         </div>
                     </div>
@@ -265,6 +273,24 @@ namespace ChannelsDB {
                     </div>
                     <div className='col-md-5 col-md-pull-7'>
                         <img className='featurette-image img-responsive center-block' src={'assets/img/4nm9_detail.png'} alt='PutA channel system' />
+                    </div>
+                </div>
+
+                <hr className='featurette-divider' style={{ margin: '40px 0' }} />
+
+                <div className='row featurette'>
+                    {React.createElement('a' as any, { 'name': 'ex-HLD' })}
+                    <div className='col-md-7 '>
+                        <h2 className='featurette-heading'><a href='/detail/pdb/5lka'>Haloalkane dehalogenase LinB engineered tunnels </a><span className='text-muted'>(<a href='/detail/pdb/1k63'>1k63</a>, <a href='/detail/pdb/4wdq'>4wdq</a>, <a href='/detail/pdb/5lka'>5lka</a>)</span></h2>
+                        <p style={justify} className='lead'>Application of computational design and directed evolution led to the design of a de novo transport tunnel in haloalkane dehalogenase LinB.</p>
+                        <p style={justify}>Mutants with a blocked native main tunnel p1 and newly opened auxiliary tunnel p3 in a distinct part of the structure showed dramatically modified properties. Opening of the auxiliary
+                         tunnel resulted in the changes of the specificity and substrate inhibition. Crystallographic analysis and molecular dynamics simulations confirmed the successful introduction of a structurally
+                         defined and functional transport tunnel. The utilised strategy can facilitate the creation of a wide range of useful biocatalysts.</p>
+                        <p style={reference}><small><a target='_blank' href='https://doi.org/10.1021/acscatal.6b02081'>
+                            Brezovsky,J., et al. <span style={{ fontStyle: 'italic' }}>Engineering a de Novo Transport Tunnel</span> ACS Catalysis, 6 (11), 7597-7610. (2016)</a></small></p>
+                    </div>
+                    <div className='col-md-5 '>
+                        <img className='featurette-image img-responsive center-block' src={'assets/img/examples-figure-HLD.png'} alt='HLD channel detail' />
                     </div>
                 </div>
 
