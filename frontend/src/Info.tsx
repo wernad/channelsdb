@@ -294,16 +294,13 @@ namespace ChannelsDB {
                     </div>
                 </div>
 
-                <hr className='featurette-divider' style={{ margin: '40px 0' }} />
-                <hr className='featurette-divider' style={{ margin: '40px 0' }} />
+                <hr className='featurette-divider' style={{ margin: '20px 0' }} />
 
                 <img className='img' src={'assets/img/elixirlogo.png'} alt='ELIXIR logo' height='70' />
-                <img className="img" src="assets/img/kfc.jpg" alt="KFC logo" height="70" />
-                <img className="img" src="assets/img/upol.jpg" alt="UPOL logo" height="70"/>
-                <img className="img" src="assets/img/metacentrum.jpg" alt="METACENTRUM logo" height="70"/>
-                <img className="img" src="assets/img/recetox.jpg" alt="RECETOX logo" height="70"/>
-                <img className="img" src="assets/img/ceitec.jpg" alt="CEITEC logo" height="70"/>
-                <img className="img" src="assets/img/muni.jpg" alt="MUNI logo" height="70"/>
+                <img className="img" src={'assets/img/kfc.png'} alt="KFC logo" height="70" />
+                <img className="img" src={'assets/img/upol.png'} alt="UPOL logo" height="70"/>
+                <img className="img" src={'assets/img/recetox.png'} alt="RECETOX logo" height="70"/>
+                <img className="img" src={'assets/img/ceitec.png'} alt="CEITEC logo" height="70"/>
                 <div className='row well well-sm featurette text-center' style={{ marginTop: '10px' }}>
                     ChannelsDB is a part of services provided by <a href='https://www.elixir-czech.cz/' target='_blank'>ELIXIR</a> &ndash;
                      European research infrastructure for biological information. This work was supported by ELIXIR CZ research infrastructure project (MEYS Grant No: LM2015047)
