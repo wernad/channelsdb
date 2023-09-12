@@ -303,7 +303,7 @@ namespace ChannelsDB {
                 <img className="img" src={'assets/img/ceitec.png'} alt="CEITEC logo" height="70"/>
                 <div className='row well well-sm featurette text-center' style={{ marginTop: '10px' }}>
                     ChannelsDB is a part of services provided by <a href='https://www.elixir-czech.cz/' target='_blank'>ELIXIR</a> &ndash;
-                     European research infrastructure for biological information. This work was supported by ELIXIR CZ research infrastructure project (MEYS Grant No: LM2015047)
+                     European research infrastructure for biological information. This work was supported by ELIXIR CZ and RECETOX RI research infrastructure projects (MEYS) [LM2023055; LM2023069]
                      including access to computing and storage facilities. For other services provided by ELIXIR's Czech Republic Node visit <a href='https://www.elixir-czech.cz/services' target='_blank'>www.elixir-czech.cz/services</a>.
                 </div>
 
