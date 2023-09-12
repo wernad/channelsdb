@@ -145,17 +145,17 @@ namespace LiteMol.Example.Channels.UI {
                 </div>
                 <div>
                     {this.props.data.Channels.ReviewedChannels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.ReviewedChannels_MOLE} state={this.props}  header='Reviewed Channels MOLE' hide={this.state.hideAll} /> : null}
-                    {this.props.data.Channels.ReviewedChannels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.ReviewedChannels_Caver} state={this.props}  header='Reviewed Channels Caver' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.ReviewedChannels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.ReviewedChannels_Caver} state={this.props}  header='Reviewed Channels CAVER' hide={this.state.hideAll} /> : null}
                     {this.props.data.Channels.CSATunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.CSATunnels_MOLE} state={this.props}  header='CSA Tunnels MOLE' hide={this.state.hideAll} /> : null}
-                    {this.props.data.Channels.CSATunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.CSATunnels_Caver} state={this.props}  header='CSA Tunnels Caver' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.CSATunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.CSATunnels_Caver} state={this.props}  header='CSA Tunnels CAVER' hide={this.state.hideAll} /> : null}
                     {this.props.data.Channels.TransmembranePores_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.TransmembranePores_MOLE} state={this.props}  header='Transmembrane Pores MOLE' hide={this.state.hideAll} /> : null}
-                    {this.props.data.Channels.TransmembranePores_Caver.length > 0 ? <Channels channels={this.props.data.Channels.TransmembranePores_Caver} state={this.props}  header='Transmembrane Pores Caver' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.TransmembranePores_Caver.length > 0 ? <Channels channels={this.props.data.Channels.TransmembranePores_Caver} state={this.props}  header='Transmembrane Pores CAVER' hide={this.state.hideAll} /> : null}
                     {this.props.data.Channels.CofactorTunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.CofactorTunnels_MOLE} state={this.props}  header='Cofactor Tunnels MOLE' hide={this.state.hideAll} /> : null}
-                    {this.props.data.Channels.CofactorTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.CofactorTunnels_Caver} state={this.props}  header='Cofactor Tunnels Caver' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.CofactorTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.CofactorTunnels_Caver} state={this.props}  header='Cofactor Tunnels CAVER' hide={this.state.hideAll} /> : null}
                     {this.props.data.Channels.ProcognateTunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.ProcognateTunnels_MOLE} state={this.props}  header='COGNATE Tunnels MOLE' hide={this.state.hideAll} /> : null}
-                    {this.props.data.Channels.ProcagnateTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.ProcagnateTunnels_Caver} state={this.props}  header='COGNATE Tunnels Caver' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.ProcagnateTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.ProcagnateTunnels_Caver} state={this.props}  header='COGNATE Tunnels CAVER' hide={this.state.hideAll} /> : null}
                     {this.props.data.Channels.AlphaFillTunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.AlphaFillTunnels_MOLE} state={this.props}  header='AlphaFill Tunnels MOLE' hide={this.state.hideAll} /> : null}
-                    {this.props.data.Channels.AlphaFillTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.AlphaFillTunnels_Caver} state={this.props}  header='AlphaFill Tunnels Caver' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.AlphaFillTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.AlphaFillTunnels_Caver} state={this.props}  header='AlphaFill Tunnels CAVER' hide={this.state.hideAll} /> : null}
                 </div>
             </div>;
             /*
