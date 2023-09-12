@@ -21,29 +21,29 @@ namespace LiteMol.Example.Channels.State {
     function showDefaultVisuals(plugin: Plugin.Controller, data: any, channelCount: number) {
         return new Promise(res => {
             let toShow = [];
-            if(data.CSATunnels_MOLE.length > 0){
-                toShow = data.CSATunnels_MOLE;
-            }
-            else if(data.CSATunnels_Caver.length > 0){
-                toShow = data.CSATunnels_Caver;
-            }
-            else if(data.ReviewedChannels_MOLE.length > 0){
+            if(data.ReviewedChannels_MOLE.length > 0){
                 toShow = data.ReviewedChannels_MOLE;
             }
             else if(data.ReviewedChannels_Caver.length > 0){
                 toShow = data.ReviewedChannels_Caver;
             }
-            else if(data.CofactorTunnels_MOLE.length > 0){
-                toShow = data.CofactorTunnels_MOLE;
+            else if(data.CSATunnels_MOLE.length > 0){
+                toShow = data.CSATunnels_MOLE;
             }
-            else if(data.CofactorTunnels_Caver.length > 0){
-                toShow = data.CofactorTunnels_Caver;
+            else if(data.CSATunnels_Caver.length > 0){
+                toShow = data.CSATunnels_Caver;
             }
             else if(data.TransmembranePores_MOLE.length > 0){
                 toShow = data.TransmembranePores_MOLE;
             }
             else if(data.TransmembranePores_Caver.length > 0){
                 toShow = data.TransmembranePores_Caver;
+            }
+            else if(data.CofactorTunnels_MOLE.length > 0){
+                toShow = data.CofactorTunnels_MOLE;
+            }
+            else if(data.CofactorTunnels_Caver.length > 0){
+                toShow = data.CofactorTunnels_Caver;
             }
             else if(data.ProcognateTunnels_MOLE.length > 0){
                 toShow = data.ProcognateTunnels_MOLE;
