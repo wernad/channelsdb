@@ -1,8 +1,6 @@
 import gzip
 import json
 import sys
-import urllib.request
-import urllib.error
 import requests
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -163,12 +161,11 @@ async def get_annotations_alphafill(uniprot_id: Uniprot_ID_Type):
          description='Returns annotations of individual protein and its residues', responses=pdb_id_404_response)
 async def get_annotations_pdb(pdb_id: PDB_ID_Type):
     annotations = Annotations().model_dump()
-    try:
-        with urllib.request.urlopen(f'ftp://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/{pdb_id}.xml.gz') as f:
-            xml_data = gzip.decompress(f.read()).decode('utf-8')
-    except urllib.error.URLError:
+    req = requests.get(f'https://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/{pdb_id}.xml.gz')
+    if req.status_code != 200:
         raise HTTPException(status_code=404, detail=f'Cannot find annotations for PDB ID \'{pdb_id}\'')
 
+    xml_data = gzip.decompress(req.content).decode('utf-8')
     sifts = parse_sifts_data(xml_data)
     try:
         for uniprot_id, mapping in sifts.items():
