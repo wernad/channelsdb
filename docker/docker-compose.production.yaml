@@ -10,6 +10,10 @@ services:
     restart: always
     networks:
       - channelsdb-net
+    logging:
+      driver: journald
+      options:
+        tag: channelsdb-api
 
   web:
     container_name: web
@@ -28,6 +32,10 @@ services:
     restart: always
     networks:
       - channelsdb-net
+    logging:
+      driver: journald
+      options:
+        tag: channelsdb-web
 
 # Workaround for OpenStack networking
 # See: https://docs.e-infra.cz/compute/openstack/technical-reference/brno-site/faq/
