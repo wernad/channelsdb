@@ -14,6 +14,7 @@ namespace ChannelsDB {
                         <ul className='nav navbar-nav navbar-right'>
                             <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='index.html'>Search</a></li>
                             <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='methods.html'>Methods</a></li>
+                            <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='/api' target='_blank'>API</a></li>
                             <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='documentation.html'>Documentation</a></li>                            
                             <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='https://mole.upol.cz' target='_blank'>MOLE</a></li>                            
                             <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='https://loschmidt.chemi.muni.cz/caverweb/' target='_blank'>CAVER</a></li>                            
