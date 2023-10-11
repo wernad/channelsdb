@@ -175,7 +175,7 @@ namespace ChannelsDB {
             return <div className='form-group form-group-lg'>
                 <img className="img" src="assets/img/alphafill-logo.png" alt="alphafill_logo" height="50" />
                 {this.state.isAvailable
-                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for Alphafill structures via Uniprot ID (e.g. P08686, P10635)'
+                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for AlphaFill structures via Uniprot ID (e.g. P08686, P10635)'
                         //onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
                         onKeyPress={(e) => {
                             if (e.key !== 'Enter') {

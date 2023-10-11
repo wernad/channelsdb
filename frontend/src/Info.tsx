@@ -176,7 +176,7 @@ namespace ChannelsDB {
                                     <a href='/detail/alphafill/P10635'>
                                         <img style={centerStyle} className='img-circle' src={'assets/img/alphafill_example.png'} alt='P10635 channel detail' width='140' height='140' />
                                     </a>
-                                    <a href='#ex-P10635' role='button'><h3>Cytochrome P450 2D6 tunnels in Alphafill model</h3></a>
+                                    <a href='#ex-P10635' role='button'><h3>Cytochrome P450 2D6 tunnels in AlphaFill model</h3></a>
                                     <p style={justify}>Complex net of multiple channels in cytochrome P450 2D6 leading towards the active site is visible even in AlphaFold structures.</p>
                                 </div>
                                 <div className='col-lg-4'>
@@ -231,7 +231,7 @@ namespace ChannelsDB {
                 <div className='row featurette'>
                     {React.createElement('a' as any, { 'name': 'ex-P10635' })}
                     <div className='col-md-7 '>
-                        <a href='/detail/alphafill/P10635'><h2 className='featurette-heading'>Cytochrome P450 2D6 Alphafill models<span className='text-muted'>(P10635)</span></h2></a>
+                        <a href='/detail/alphafill/P10635'><h2 className='featurette-heading'>Cytochrome P450 2D6 AlphaFill models<span className='text-muted'>(P10635)</span></h2></a>
                         <p style={justify} className='lead'>Cytochromes P450 channels starts at HEM cofactor, which can be used to guide channels even in AlphaFill models.</p>
                         <p style={justify}>As mentioned above, Cytochrome P450 2D6 contributes significantly to the metabolism of >15% of the 200 most marketed drugs. Cytochrome P450 2D6 structure shows a second molecule of thioridazine bound in an expanded substrate access channel (channel 2f according to Cojocaru et al. classification antechamber with its piperidine moiety forming a charge-stabilized hydrogen bond with Glu-222).</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1074/jbc.M114.627661'>
