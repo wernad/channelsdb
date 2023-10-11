@@ -150,7 +150,7 @@ namespace ChannelsDB {
             return <div className='form-group form-group-lg'>
                 <img className="img" src="assets/img/pdbe_logo.png" alt="pdbe_logo" height="30" />
                 {this.state.isAvailable
-                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB (e.g., cytochrome p450, 5ebl, KcsA) ...'
+                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for experimental structures using name or IDs (e.g. cytochrome P450, 5ebl, KcsA, P08686)'
                         onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
                         onKeyPress={(e) => {
                             if (e.key !== 'Enter') return;
@@ -175,7 +175,7 @@ namespace ChannelsDB {
             return <div className='form-group form-group-lg'>
                 <img className="img" src="assets/img/alphafill-logo.png" alt="alphafill_logo" height="50" />
                 {this.state.isAvailable
-                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB for AlphaFill tunnels (P08686)....'
+                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for Alphafill structures via Uniprot ID (e.g. P08686, P10635)'
                         //onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
                         onKeyPress={(e) => {
                             if (e.key !== 'Enter') {
