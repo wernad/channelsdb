@@ -153,7 +153,7 @@ namespace LiteMol.Example.Channels.UI {
                     {this.props.data.Channels.CofactorTunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.CofactorTunnels_MOLE} state={this.props}  header='Cofactor Tunnels MOLE' hide={this.state.hideAll} /> : null}
                     {this.props.data.Channels.CofactorTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.CofactorTunnels_Caver} state={this.props}  header='Cofactor Tunnels CAVER' hide={this.state.hideAll} /> : null}
                     {this.props.data.Channels.ProcognateTunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.ProcognateTunnels_MOLE} state={this.props}  header='COGNATE Tunnels MOLE' hide={this.state.hideAll} /> : null}
-                    {this.props.data.Channels.ProcagnateTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.ProcagnateTunnels_Caver} state={this.props}  header='COGNATE Tunnels CAVER' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.ProcognateTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.ProcognateTunnels_Caver} state={this.props}  header='COGNATE Tunnels CAVER' hide={this.state.hideAll} /> : null}
                     {this.props.data.Channels.AlphaFillTunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.AlphaFillTunnels_MOLE} state={this.props}  header='AlphaFill Tunnels MOLE' hide={this.state.hideAll} /> : null}
                     {this.props.data.Channels.AlphaFillTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.AlphaFillTunnels_Caver} state={this.props}  header='AlphaFill Tunnels CAVER' hide={this.state.hideAll} /> : null}
                 </div>

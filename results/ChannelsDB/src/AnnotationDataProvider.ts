@@ -189,7 +189,7 @@ namespace Annotation{
 
             if(data.Channels.ProcognateTunnels_MOLE !== void 0) channels = channels.concat(data.Channels.ProcognateTunnels_MOLE);
 
-            if(data.Channels.ProcagnateTunnels_Caver !== void 0) channels = channels.concat(data.Channels.ProcagnateTunnels_Caver);
+            if(data.Channels.ProcognateTunnels_Caver !== void 0) channels = channels.concat(data.Channels.ProcognateTunnels_Caver);
 
             if(data.Channels.AlphaFillTunnels_MOLE !== void 0) channels = channels.concat(data.Channels.AlphaFillTunnels_MOLE);
 

@@ -58,7 +58,7 @@ CHANNEL_TYPES_PDB = {
     'pocaver': 'TransmembranePores_Caver',
 
     'procognate': 'ProcognateTunnels_MOLE',
-    'procaver': 'ProcagnateTunnels_Caver'
+    'procaver': 'ProcognateTunnels_Caver'
 }
 
 CHANNEL_TYPES_ALPHAFILL = {

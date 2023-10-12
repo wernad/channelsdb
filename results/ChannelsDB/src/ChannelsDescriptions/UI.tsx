@@ -46,7 +46,7 @@ namespace ChannelsDescriptions.UI{
                     toShow = toShow.concat(data.Channels.TransmembranePores_MOLE);
                     toShow = toShow.concat(data.Channels.TransmembranePores_Caver);
                     toShow = toShow.concat(data.Channels.ProcognateTunnels_MOLE);
-                    toShow = toShow.concat(data.Channels.ProcagnateTunnels_Caver);
+                    toShow = toShow.concat(data.Channels.ProcognateTunnels_Caver);
                     toShow = toShow.concat(data.Channels.AlphaFillTunnels_MOLE);
                     toShow = toShow.concat(data.Channels.AlphaFillTunnels_Caver);
                     let state = this.state;

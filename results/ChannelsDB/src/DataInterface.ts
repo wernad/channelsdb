@@ -108,7 +108,7 @@ namespace DataInterface{
             TransmembranePores_MOLE: Tunnel[],
             TransmembranePores_Caver: Tunnel[],
             ProcognateTunnels_MOLE: Tunnel[],
-            ProcagnateTunnels_Caver: Tunnel[],
+            ProcognateTunnels_Caver: Tunnel[],
             AlphaFillTunnels_MOLE: Tunnel[],
             AlphaFillTunnels_Caver: Tunnel[]
         },

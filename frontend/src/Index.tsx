@@ -286,7 +286,7 @@ namespace ChannelsDB {
             const docs = this.props.docs;
             const pdbContentMap = ['CSATunnels MOLE', 'CSATunnels Caver', 'ReviewedChannels MOLE', 'ReviewedChannels Caver',
              'CofactorTunnels MOLE', 'CofactorTunnels Caver', 'TransmembranePores MOLE', 'TransmembranePores Caver', 'ProcognateTunnels MOLE',
-             'ProcagnateTunnels Caver'];
+             'ProcognateTunnels Caver'];
             const alphafillContentMap = ['AlphaFillTunnels MOLE', 'AlphaFillTunnels Caver'];
             const pdb = this.props.state.dbContent.pdb[toLower(docs.pdb_id)];
             const alphafill = this.props.state.dbContent.alphafill[toLower(docs.pdb_id)];

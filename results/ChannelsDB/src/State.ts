@@ -48,8 +48,8 @@ namespace LiteMol.Example.Channels.State {
             else if(data.ProcognateTunnels_MOLE.length > 0){
                 toShow = data.ProcognateTunnels_MOLE;
             }
-            else if(data.ProcagnateTunnels_Caver.length > 0){
-                toShow = data.ProcagnateTunnels_Caver;
+            else if(data.ProcognateTunnels_Caver.length > 0){
+                toShow = data.ProcognateTunnels_Caver;
             }
             else if(data.AlphaFillTunnels_MOLE.length > 0){
                 toShow = data.AlphaFillTunnels_MOLE;

@@ -72,7 +72,7 @@ namespace ChannelsDB {
                                 <tr>
                                     <td>Cognate</td>
                                     <td className="text-right"><b>{stats && stats.statistics.ProcognateTunnels_MOLE ? stats.statistics.ProcognateTunnels_MOLE : 'n/a'}</b></td>
-                                    <td className="text-right"><b>{stats && stats.statistics.ProcagnateTunnels_Caver ? stats.statistics.ProcagnateTunnels_Caver : 'n/a'}</b></td>
+                                    <td className="text-right"><b>{stats && stats.statistics.ProcognateTunnels_Caver ? stats.statistics.ProcognateTunnels_Caver : 'n/a'}</b></td>
                                 </tr>
                                 <tr>
                                     <td>AlphaFill</td>
