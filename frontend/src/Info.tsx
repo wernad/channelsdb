@@ -100,7 +100,7 @@ namespace ChannelsDB {
                         <p>Should you find this resource useful, please cite it as:</p>
                         <p style={reference}>
                             <small>
-                                <a href='https://dx.doi.org/10.1093/nar/gkx868' target='_blank'> Pravda,L., et al. (2018) ChannelsDB: database of biomacromolecular tunnels and pores. Nucleic Acids Res., 46, D399–D405.</a>
+                                <a href='https://doi.org/10.1093/nar/gkad1012' target='_blank'> Špačková,A., et al. (2023) ChannelsDB 2.0: a comprehensive database of protein tunnels and pores in AlphaFold era. Nucleic Acids Research</a>
                             </small>
                         </p>
                     </div>

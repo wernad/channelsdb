@@ -8,12 +8,18 @@ namespace ChannelsDB {
             return <div className='container'>
                 <h1 className='text-center'>References</h1>
                 <div className='tab-pane'>
-                    <p>If you find this resource usefull, please cite is as:</p>
+                    <p>If you find this resource useful, please cite it as:</p>
                     <dl className='publications-list'>
+                        <dt>ChannelsDB 2.0</dt>
+                        <dd>
+                            <p>Špačková,A., Vávra,O., Raček,T., Bazgier,V., Sehnal,D., Damborský,J., Svobodová,R., Bednář,D. and Berka,K. &nbsp;
+                                <a href='https://doi.org/10.1093/nar/gkad1012' target='_blank'>ChannelsDB 2.0: a comprehensive database of protein tunnels and pores in AlphaFold era</a>.
+                                 Nucleic Acids Res., 10.1093/nar/gkad1012.</p>
+                        </dd>
                         <dt>ChannelsDB</dt>
                         <dd>
                             <p>Pravda,L., Sehnal,D., Svobodová Vařeková,R., Navrátilová,V., Toušek,D., Berka,K., Otyepka,M. and Koča,J. &nbsp;
-                                <a href='https://dx.doi.org/10.1093/nar/gkx868' target='_blank'>ChannelsDB: database of biomacromolecular tunnels and pores.</a>
+                                <a href='https://dx.doi.org/10.1093/nar/gkx868' target='_blank'>ChannelsDB: database of biomacromolecular tunnels and pores</a>.
                                  Nucleic Acids Res., 10.1093/nar/gkx868.</p>
                         </dd>
                     </dl>
