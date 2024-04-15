@@ -84,8 +84,6 @@ namespace ChannelsDB {
                     </div>
                     <div className='col-lg-9' style={{ textAlign: 'left', textJustify: 'inter-word', padding: '0' }}>
 
-                        <p className="lead">ChannelsDB database is located at <a target="_blank" href="https://channelsdb.ncbr.muni.cz/">https://channelsdb.ncbr.muni.cz/</a>.</p>
-
                         <p className="lead">ChannelsDB 2.0 is a comprehensive and regularly updated resource of channels, pores and tunnels found in biomacromolecules deposited in the <a target="_blank" href="https://www.ebi.ac.uk/pdbe/">Protein Data Bank</a> and <a target="_blank" href="https://alphafill.eu/">AlphaFill</a> / <a target="_blank" href="https://alphafold.ebi.ac.uk/">AlphaFold</a> databases. As such, it is a unique service for channel-related analyses. Pathways were calculated using an algorithms <a target="_blank" href="https://loschmidt.chemi.muni.cz/caverweb/">CAVER</a> and <a target="_blank" href="https://mole.upol.cz/">MOLE</a>.</p>
 
                         <p className='text-justify'>
