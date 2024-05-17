@@ -20,7 +20,9 @@ RUN npm install
 
 COPY ./results /build
 
-RUN ./node_modules/.bin/gulp
+COPY ./results/ChannelsDB/molstar ./node_modules/molstar
+
+RUN npm run build
 
 FROM nginx:latest
 
