@@ -1,69 +1,73 @@
 /*
- * Copyright (c) 2016 - now David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
- */
+* Copyright (c) 2016 - now David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
+*/
 
-namespace LiteMol.Example.Channels.State {
+import { Tunnel, TunnelMetaInfo } from "./DataInterface";
+import { Tunnel as DataTunnel } from "./DataInterface";
+import { Context } from "./Context";
+import { PluginCommands } from 'molstar/lib/mol-plugin/commands';
+import { UUID } from 'molstar/lib/mol-util/uuid'
+import { ColorGenerator } from "molstar/lib/extensions/meshes/mesh-utils";
+import { AnnotationDataProvider } from "./AnnotationDataProvider";
+import { Tunnels } from "./CommonUtils/Tunnels";
+import { Color } from "molstar/lib/mol-util/color";
+import { Shape } from "molstar/lib/mol-model/shape";
 
-    import Tree = Bootstrap.Tree;
-    import Transform = Tree.Transform;  
+export interface SurfaceTag { type: string, element?: any }
 
-    import Transformer = Bootstrap.Entity.Transformer;
-
-    export interface SurfaceTag { type: string, element?: any }
-
-    function showDefaultVisuals(plugin: Plugin.Controller, data: any, channelCount: number) {
-        return new Promise(res => {
-            let toShow = [];
-            if(data.ReviewedChannels_MOLE.length > 0){
-                toShow = data.ReviewedChannels_MOLE;
+export async function showDefaultVisuals(plugin: Context, data: any, channelCount: number) {
+    return new Promise((res, rej) => {
+        let toShow = [];
+        if(data.ReviewedChannels_MOLE.length > 0){
+            toShow = data.ReviewedChannels_MOLE;
+        }
+        else if(data.ReviewedChannels_Caver.length > 0){
+            toShow = data.ReviewedChannels_Caver;
+        }
+        else if(data.CSATunnels_MOLE.length > 0){
+            toShow = data.CSATunnels_MOLE;
+        }
+        else if(data.CSATunnels_Caver.length > 0){
+            toShow = data.CSATunnels_Caver;
+        }
+        else if(data.TransmembranePores_MOLE.length > 0){
+            toShow = data.TransmembranePores_MOLE;
+        }
+        else if(data.TransmembranePores_Caver.length > 0){
+            toShow = data.TransmembranePores_Caver;
+        }
+        else if(data.CofactorTunnels_MOLE.length > 0){
+            toShow = data.CofactorTunnels_MOLE;
+        }
+        else if(data.CofactorTunnels_Caver.length > 0){
+            toShow = data.CofactorTunnels_Caver;
+        }
+        else if(data.ProcognateTunnels_MOLE.length > 0){
+            toShow = data.ProcognateTunnels_MOLE;
+        }
+        else if(data.ProcognateTunnels_Caver.length > 0){
+            toShow = data.ProcognateTunnels_Caver;
+        }
+        else if(data.AlphaFillTunnels_MOLE.length > 0){
+            toShow = data.AlphaFillTunnels_MOLE;
+        }
+        else if(data.AlphaFillTunnels_Caver.length > 0){
+            toShow = data.AlphaFillTunnels_Caver;
+        }
+        
+        return showChannelVisuals(plugin, toShow/*.slice(0, channelCount)*/, true).then(() => {
+            if(data.Cavities === void 0){
+                res(null);
+                return;
             }
-            else if(data.ReviewedChannels_Caver.length > 0){
-                toShow = data.ReviewedChannels_Caver;
+            let cavity = data.Cavities.Cavities[0];
+            if (!cavity) {
+                res(null);
+                return;
             }
-            else if(data.CSATunnels_MOLE.length > 0){
-                toShow = data.CSATunnels_MOLE;
-            }
-            else if(data.CSATunnels_Caver.length > 0){
-                toShow = data.CSATunnels_Caver;
-            }
-            else if(data.TransmembranePores_MOLE.length > 0){
-                toShow = data.TransmembranePores_MOLE;
-            }
-            else if(data.TransmembranePores_Caver.length > 0){
-                toShow = data.TransmembranePores_Caver;
-            }
-            else if(data.CofactorTunnels_MOLE.length > 0){
-                toShow = data.CofactorTunnels_MOLE;
-            }
-            else if(data.CofactorTunnels_Caver.length > 0){
-                toShow = data.CofactorTunnels_Caver;
-            }
-            else if(data.ProcognateTunnels_MOLE.length > 0){
-                toShow = data.ProcognateTunnels_MOLE;
-            }
-            else if(data.ProcognateTunnels_Caver.length > 0){
-                toShow = data.ProcognateTunnels_Caver;
-            }
-            else if(data.AlphaFillTunnels_MOLE.length > 0){
-                toShow = data.AlphaFillTunnels_MOLE;
-            }
-            else if(data.AlphaFillTunnels_Caver.length > 0){
-                toShow = data.AlphaFillTunnels_Caver;
-            }
-            
-            return showChannelVisuals(plugin, toShow/*.slice(0, channelCount)*/, true).then(() => {
-                if(data.Cavities === void 0){
-                    res(null);
-                    return;
-                }
-                let cavity = data.Cavities.Cavities[0];
-                if (!cavity) {
-                    res(null);
-                    return;
-                }
-                showCavityVisuals(plugin, [cavity ], true).then(() => res(null));
-            })});
-    }
+            showCavityVisuals(plugin, [cavity ], true).then(() => res(null));
+        })});
+}
 
     export function loadData(plugin: Plugin.Controller, pid: string, url: string, subDB: string) {
             plugin.clear();
