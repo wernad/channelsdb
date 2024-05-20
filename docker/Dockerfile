@@ -20,8 +20,6 @@ RUN npm install
 
 COPY ./results /build
 
-COPY ./results/ChannelsDB/molstar ./node_modules/molstar
-
 RUN npm run build
 
 FROM nginx:latest
