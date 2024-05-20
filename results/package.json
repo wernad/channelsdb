@@ -15,7 +15,7 @@
   "contributors": [
     "Dušan Veľký <dvelky@mail.muni.cz>"
   ],
-  "homepage": "https://webchemdev.ncbr.muni.cz/ChannelsDB/",
+  "homepage": "https://channelsdb2.biodata.ceitec.cz/",
   "keywords": [],
   "license": "",
   "devDependencies": {
