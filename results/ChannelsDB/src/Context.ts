@@ -18,11 +18,11 @@ import { ParamDefinition } from "molstar/lib/mol-util/param-definition";
 import { clearStructureOverpaint } from 'molstar/lib/mol-plugin-state/helpers/structure-overpaint';
 import { ColorParams, InitParams } from "./VizualizerMol/spec";
 import { CifFile } from "molstar/lib/mol-io/reader/cif";
-import { Tunnel } from "molstar/lib/extensions/sb-ncbr/tunnels/data-model";
-import { TunnelShapeProvider, TunnelFromRawData } from "molstar/lib/extensions/sb-ncbr";
 import { Download, ParseCif } from "molstar/lib/mol-plugin-state/transforms/data";
 import { TrajectoryFromMmCif, ModelFromTrajectory, StructureFromModel, StructureComponent } from "molstar/lib/mol-plugin-state/transforms/model";
 import { StructureRepresentation3D } from "molstar/lib/mol-plugin-state/transforms/representation";
+import { TunnelFromRawData, TunnelShapeProvider } from "./sb-ncbr";
+import { Tunnel } from "./sb-ncbr/tunnels/data-model";
 
 export class Context {
   plugin: PluginUIContext;
