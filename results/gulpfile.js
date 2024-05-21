@@ -18,3 +18,21 @@ gulp.task('merge-js', function() {
       .pipe(concat('scripts.js'))
       .pipe(gulp.dest('./ChannelsDB/js'));
   });
+
+gulp.task('merge-css', function() {
+    return gulp.src([
+        './ChannelsDB/css/AglomeredParameters.css',
+        './ChannelsDB/css/bootstrap.min.css',
+        './ChannelsDB/css/ChannelsDescriptions.css',
+        './ChannelsDB/css/datagrid.css',
+        './ChannelsDB/css/DownloadReport.css',
+        './ChannelsDB/css/jquery-ui.css',
+        './ChannelsDB/css/LayerVizualizerStyles.css',
+        './ChannelsDB/css/lining-residues.css',
+        './ChannelsDB/css/PDBID.css',
+        './ChannelsDB/css/style.css',
+        './ChannelsDB/css/tooltips.css',
+    ])
+      .pipe(concat('styles.css'))
+      .pipe(gulp.dest('./ChannelsDB/css'));
+})
