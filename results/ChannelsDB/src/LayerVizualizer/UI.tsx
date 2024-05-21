@@ -517,8 +517,8 @@ class InteractionMap extends React.Component<State & {controller: Context},{}>{
             let parts = (residue as string).split(" ");
             res.push({
                 struct_asym_id: parts[2],
-                start_residue_number: Number(parts[1]),
-                end_residue_number: Number(parts[1]),
+                start_auth_residue_number: Number(parts[1]),
+                end_auth_residue_number: Number(parts[1]),
                 color:{r:255,g:0,b:255},
                 sideChain: true,
                 focus: true
