@@ -21,6 +21,10 @@ body{
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.msp-plugin * {
+    font-family: inherit; /* Ensures inheritance from parent elements, not the broad rule */
+}
+
 .ui-widget-content a{
     color:#337ab7;
 }
@@ -102,6 +106,14 @@ a.section-header:hover {
 body {
     background: white;
     color: #333;
+}
+
+.channelsdb-controls {
+    width: 370px;
+    height: 50px;
+    position: fixed;
+    right: 25vw;
+    z-index: 1;
 }
 
 /*
@@ -236,6 +248,7 @@ only screen and (max-height: 600px) {
 
 .chdb-panel{
 	position:absolute;
+    font-family: "Courier New", monospace;
 }
 
 .plugin{
