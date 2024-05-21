@@ -20,7 +20,7 @@ RUN npm install
 
 COPY ./results /build
 
-RUN ./node_modules/.bin/gulp
+RUN npm run build
 
 FROM nginx:latest
 

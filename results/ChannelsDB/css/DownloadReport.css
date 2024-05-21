@@ -15,22 +15,22 @@
     left: 0;
     margin-top: -3px;
 }
-.download-button{
+.download-button {
     width: 175px;
     height: 32px;
-    position: fixed;
+    position: absolute;
     z-index: 900;
     line-height: 30px;
     text-align: center;
     font-size: 13pt;
     background-color: #f8f8f8;
-    left: 140px;
+    right: 140px;
     padding: 0;
     color: #777;
-    padding-right: 10px;
-    border-left: 1px #ccc solid;
-    border-bottom-right-radius: 30px;
-}
+    padding-left: 10px;
+    border-right: 1px #ccc solid;
+    border-bottom-left-radius: 30px;
+  }
 button.download.dropdown-toggle {
     background-color: transparent;
     border: 0;

@@ -1,423 +1,365 @@
-namespace Annotation{
+import { SimpleObservable } from "./CommonUtils/Observable";
+import { Context } from "./Context";
+import { AnnotationObject, Annotations, ChannelsDBData, Tunnel } from "./DataInterface";
+import { Map } from "immutable";
 
-    import LiteMoleEvent = LiteMol.Bootstrap.Event;
-    import FastMap = LiteMol.Core.Utils.FastMap;
+export interface ResidueAnnotation{
+    text: string,
+    reference: string,
+    link: string,
+    isLining: boolean
+};
+export interface ChannelAnnotation{
+    text: string,
+    reference: string,
+    description: string,
+    link: string
+};
+export interface ProteinAnnotation{
+    function: string,
+    name: string,
+    catalytics: string[],
+    uniProtId: string,
+    link: string
+};
 
-    export interface ResidueAnnotation{
-        text: string,
-        reference: string,
-        link: string,
-        isLining: boolean
-    };
-    export interface ChannelAnnotation{
-        text: string,
-        reference: string,
-        description: string,
-        link: string
-    };
-    export interface ProteinAnnotation{
-        function: string,
-        name: string,
-        catalytics: string[],
-        uniProtId: string,
-        link: string
-    };
+export class AnnotationDataProvider{
 
-    export class AnnotationDataProvider{
+    private static residueAnnotations: Map<string,ResidueAnnotation[]>;
+    private static channelAnnotations: Map<string,ChannelAnnotation[]>;
+    private static proteinAnnotations: ProteinAnnotation[];
 
-        private static residueAnnotations: LiteMol.Core.Utils.FastMap<string,ResidueAnnotation[]>;
-        private static channelAnnotations: LiteMol.Core.Utils.FastMap<string,ChannelAnnotation[]>;
-        private static proteinAnnotations: ProteinAnnotation[];
+    private static liningResidues: string[];
 
-        private static liningResidues: string[];
+    private static subscribed: boolean = false;
 
-        private static subscribed: boolean = false;
+    private static dataReady:boolean = false;
 
-        private static dataReady:boolean = false;
+    private static moleDataPromise: Promise<any>;
+    private static channelsDBPromise: Promise<any>;
 
-        private static moleDataPromise: Promise<any>;
-        private static channelsDBPromise: Promise<any>;
+    private static retries:number = 0;
+    
 
-        private static retries:number = 0;
+    private static isLining(residue:string):boolean{
+        return this.liningResidues.indexOf(residue)>=0;
+    }
+
+    private static parseChannelsData(data:AnnotationObject[]){
+        let map = Map<string,ChannelAnnotation[]>();
+
+        for(let annotation of data){               
+            let channelId = annotation.Id
+            
+            if(channelId === null){
+                console.log("Found channel annotation wihtout id. Skipping...");
+                continue;
+            }
+
+            let list:ChannelAnnotation[] = [];
+            if(map.has(channelId)){
+                let l = map.get(channelId);
+                if(l!==void 0){
+                    list = l;
+                }
+            }
+            list.push(
+                {
+                    text: annotation.Name,
+                    reference: annotation.Reference,
+                    description: annotation.Description,
+                    link: this.createLink(annotation.ReferenceType, annotation.Reference)
+                }
+            );
+            map = map.set(channelId,list); // immutable
+        }
+
+        return map;
+    }
+
+    private static stripChars(str:string,chars:string[]):string{
+        for(let char of chars){
+            str = str.replace(char,"");
+        }
+
+        return str;
+    }
+    private static parseCatalytics(items: string[]):string[]{
+        let rv:string[] = [];
+        for(let item of items){
+            let line = item.replace(/\(\d*\)/g,(x:string)=>`<sub>${this.stripChars(x,['(',')'])}</sub>`);
+            line = line.replace(/\(\+\)|\(\-\)/g,(x:string)=>`<sup>${this.stripChars(x,['(',')'])}</sup>`)
+            
+            rv.push(line);
+        }
+        return rv;
+    }
+
+    private static parseProteinData(data:Annotations.ProteinAnnotation[]){
+        let list:ProteinAnnotation[] = [];
+
+        for(let item of data){
+            list.push({
+                name: item.Name,
+                function: item.Function,
+                link: this.createLink("UniProt",item.UniProtId),
+                uniProtId: item.UniProtId,
+                catalytics: this.parseCatalytics(item.Catalytics)
+            });
+        }
+
+        return list; 
+    }
+
+    //PUBMEDID vs UniProtId ??? PUBMED není v JSONU vůbec přítomné
+    //link pro uniprot používá adresu http://www.uniprot.org/uniprot/
+    private static createLink(type: string, reference: string):string{
+        if(type === "DOI"){
+            return `http://dx.doi.org/${reference}`;
+        }
+        else if(type === "UniProt"){
+            return `http://www.uniprot.org/uniprot/${reference}`;
+        }
+        else if(type === "PubMed"){
+            return `http://europepmc.org/abstract/MED/${reference}`;
+        }
+        else{
+            console.log(`Unknown reference type ${type} for reference ${reference}`);
+            return `#unknown-reference-type`;
+        }
+    }
+
+    private static parseResidueItem(item: Annotations.Annotation,map: Map<string,ResidueAnnotation[]>){
+        let residueId = `${item.Id} ${item.Chain}`;
+        let annotations = map.get(residueId);
+            if(annotations === void 0){
+                annotations = [];
+            }
+            annotations.push({
+                text: item.Text,
+                reference: item.Reference,
+                link: this.createLink(item.ReferenceType,item.Reference),
+                isLining: this.isLining(residueId)
+            });
+        return map.set(`${item.Id} ${item.Chain}`,annotations); // since it is Immutable map
+    }
+
+    private static parseResidueData(data:Annotations.ResidueAnnotations){
+        let map = Map<string,ResidueAnnotation[]>();
+
+        for(let item of data.ChannelsDB){
+            map = this.parseResidueItem(item,map); // immutable
+        }
+
+        for(let item of data.UniProt){
+            map = this.parseResidueItem(item,map); // immutable
+        }
+
+        return map;   
+    }
+
+    private static parseLiningResidues(data:ChannelsDBData){
+        let channels:Tunnel[] = [];
         
+        if(data.Channels.CSATunnels_MOLE !== void 0) channels = channels.concat(data.Channels.CSATunnels_MOLE);
 
-        private static isLining(residue:string):boolean{
-            return this.liningResidues.indexOf(residue)>=0;
-        }
+        if(data.Channels.CSATunnels_Caver !== void 0) channels = channels.concat(data.Channels.CSATunnels_Caver);
 
-        private static parseChannelsData(data:DataInterface.AnnotationObject[]){
-            let map = LiteMol.Core.Utils.FastMap.create<string,ChannelAnnotation[]>();
+        if(data.Channels.ReviewedChannels_MOLE !== void 0) channels = channels.concat(data.Channels.ReviewedChannels_MOLE);
 
-            for(let annotation of data){               
-                let channelId = annotation.Id
-                
-                if(channelId === null){
-                    console.log("Found channel annotation wihtout id. Skipping...");
-                    continue;
-                }
+        if(data.Channels.ReviewedChannels_Caver !== void 0) channels = channels.concat(data.Channels.ReviewedChannels_Caver);
 
-                let list:ChannelAnnotation[] = [];
-                if(map.has(channelId)){
-                    let l = map.get(channelId);
-                    if(l!==void 0){
-                        list = l;
+        if(data.Channels.CofactorTunnels_MOLE !== void 0) channels = channels.concat(data.Channels.CofactorTunnels_MOLE);
+
+        if(data.Channels.CofactorTunnels_Caver !== void 0) channels = channels.concat(data.Channels.CofactorTunnels_Caver);
+
+        if(data.Channels.TransmembranePores_MOLE !== void 0) channels = channels.concat(data.Channels.TransmembranePores_MOLE);
+
+        if(data.Channels.TransmembranePores_Caver !== void 0) channels = channels.concat(data.Channels.TransmembranePores_Caver);
+
+        if(data.Channels.ProcognateTunnels_MOLE !== void 0) channels = channels.concat(data.Channels.ProcognateTunnels_MOLE);
+
+        if(data.Channels.ProcognateTunnels_Caver !== void 0) channels = channels.concat(data.Channels.ProcognateTunnels_Caver);
+
+        if(data.Channels.AlphaFillTunnels_MOLE !== void 0) channels = channels.concat(data.Channels.AlphaFillTunnels_MOLE);
+
+        if(data.Channels.AlphaFillTunnels_Caver !== void 0) channels = channels.concat(data.Channels.AlphaFillTunnels_Caver);
+
+        let liningResidues:string[] = [];
+        for(let channel of channels){                
+            for(let layerInfo of channel.Layers.LayersInfo){
+                for(let residue of layerInfo.Residues){
+                    let residueId = residue.split(" ").slice(1,3).join(" ");
+                    if(liningResidues.indexOf(residueId)<0){
+                        liningResidues.push(residueId);
                     }
                 }
-                list.push(
-                    {
-                        text: annotation.Name,
-                        reference: annotation.Reference,
-                        description: annotation.Description,
-                        link: this.createLink(annotation.ReferenceType, annotation.Reference)
-                    }
-                );
-                map.set(channelId,list);
             }
-
-            return map;
-        }
-
-        private static stripChars(str:string,chars:string[]):string{
-            for(let char of chars){
-                str = str.replace(char,"");
-            }
-
-            return str;
-        }
-        private static parseCatalytics(items: string[]):string[]{
-            let rv:string[] = [];
-            for(let item of items){
-                let line = item.replace(/\(\d*\)/g,(x:string)=>`<sub>${this.stripChars(x,['(',')'])}</sub>`);
-                line = line.replace(/\(\+\)|\(\-\)/g,(x:string)=>`<sup>${this.stripChars(x,['(',')'])}</sup>`)
-                
-                rv.push(line);
-            }
-            return rv;
-        }
-
-        private static parseProteinData(data:DataInterface.Annotations.ProteinAnnotation[]){
-            let list:ProteinAnnotation[] = [];
-
-            for(let item of data){
-                list.push({
-                    name: item.Name,
-                    function: item.Function,
-                    link: this.createLink("UniProt",item.UniProtId),
-                    uniProtId: item.UniProtId,
-                    catalytics: this.parseCatalytics(item.Catalytics)
-                });
-            }
-
-            return list; 
-        }
-
-        //PUBMEDID vs UniProtId ??? PUBMED není v JSONU vůbec přítomné
-        //link pro uniprot používá adresu http://www.uniprot.org/uniprot/
-        private static createLink(type: string, reference: string):string{
-            if(type === "DOI"){
-                return `http://dx.doi.org/${reference}`;
-            }
-            else if(type === "UniProt"){
-                return `http://www.uniprot.org/uniprot/${reference}`;
-            }
-            else if(type === "PubMed"){
-                return `http://europepmc.org/abstract/MED/${reference}`;
-            }
-            else{
-                console.log(`Unknown reference type ${type} for reference ${reference}`);
-                return `#unknown-reference-type`;
-            }
-        }
-
-        private static parseResidueItem(item: DataInterface.Annotations.Annotation,map: FastMap<string,ResidueAnnotation[]>){
-            let residueId = `${item.Id} ${item.Chain}`;
-            let annotations = map.get(residueId);
-                if(annotations === void 0){
-                    annotations = [];
-                }
-                annotations.push({
-                    text: item.Text,
-                    reference: item.Reference,
-                    link: this.createLink(item.ReferenceType,item.Reference),
-                    isLining: this.isLining(residueId)
-                });
-            map.set(`${item.Id} ${item.Chain}`,annotations);
-        }
-
-        private static parseResidueData(data:DataInterface.Annotations.ResidueAnnotations){
-            let map = LiteMol.Core.Utils.FastMap.create<string,ResidueAnnotation[]>();
-
-            for(let item of data.ChannelsDB){
-                this.parseResidueItem(item,map);
-            }
-
-            for(let item of data.UniProt){
-                this.parseResidueItem(item,map);
-            }
-
-            return map;   
-        }
-
-        private static parseLiningResidues(data:DataInterface.ChannelsDBData){
-            let channels:DataInterface.Tunnel[] = [];
-
-            // if (data.Channels) {
-            //     Object.keys(data.Channels).forEach(function(key) {
-            //         console.log(key);
-            //         console.log(data.Channels[key]);
-            //         if (data.Channels[key] !== void 0) {
-            //             channels = channels.concat(data.Channels[key]);
-            //         }
-            //     });
-            // }
             
-            if(data.Channels.CSATunnels_MOLE !== void 0) channels = channels.concat(data.Channels.CSATunnels_MOLE);
+        }
 
-            if(data.Channels.CSATunnels_Caver !== void 0) channels = channels.concat(data.Channels.CSATunnels_Caver);
+        return liningResidues;
+    }
 
-            if(data.Channels.ReviewedChannels_MOLE !== void 0) channels = channels.concat(data.Channels.ReviewedChannels_MOLE);
+    public static isDataReady():boolean{
+        return this.dataReady;
+    }
 
-            if(data.Channels.ReviewedChannels_Caver !== void 0) channels = channels.concat(data.Channels.ReviewedChannels_Caver);
+    private static handleChannelsAPIData(data:any){
+        let liningResidues = this.parseLiningResidues(data);
+        let channelsData = this.parseChannelsData(data.Annotations);
+        
+        return {liningResidues,channelsData};
+    }
 
-            if(data.Channels.CofactorTunnels_MOLE !== void 0) channels = channels.concat(data.Channels.CofactorTunnels_MOLE);
+    private static handleAnnotationsAPIData(data:any){
+        let proteinData = this.parseProteinData(data.EntryAnnotations);
+        let residueData = this.parseResidueData(data.ResidueAnnotations);
+        
+        return {proteinData,residueData};
+    }
 
-            if(data.Channels.CofactorTunnels_Caver !== void 0) channels = channels.concat(data.Channels.CofactorTunnels_Caver);
+    public static subscribeToPluginContext(context: Context) {
+        interface ChannelsAPIDataHandledPromiseResult {
+          liningResidues: any,
+          channelsData: any
+        }
+        interface AnnotationAPIDataHandledPromiseResult {
+          proteinData: any,
+          residueData: any
+        }
+      
+        let channelsAPIobserver: SimpleObservable;
+        let annotationsAPIobserver: SimpleObservable;
+      
+        new Promise<Object>((res, rej) => {
+          channelsAPIobserver = new SimpleObservable(
+            () => context.data,
+            (moleData) => res(this.handleChannelsAPIData(moleData))
+          );
+          channelsAPIobserver.subscribe();
+        }).then((val: ChannelsAPIDataHandledPromiseResult) => {
+          this.liningResidues = val.liningResidues;
+          this.channelAnnotations = val.channelsData;
+      
+          return new Promise<Object>((res, rej) => {
+            annotationsAPIobserver = new SimpleObservable(
+              () => context.annotations,
+              (annotationData) => res(this.handleAnnotationsAPIData(annotationData))
+            );
+            annotationsAPIobserver.subscribe();
+          });
+        }).then((val: AnnotationAPIDataHandledPromiseResult) => {
+          this.proteinAnnotations = val.proteinData;
+          this.residueAnnotations = val.residueData;
+      
+          this.dataReady = true;
+          this.invokeHandlers();
+        }).catch((err) => {
+          console.log("API Parse Error:", err);
+          if (this.retries > 5) {
+            return;
+          }
+          this.retries++;
+          setTimeout(() => this.subscribeToPluginContext(context), 100);
+        });
+      
+        this.subscribed = true;
+    }
 
-            if(data.Channels.TransmembranePores_MOLE !== void 0) channels = channels.concat(data.Channels.TransmembranePores_MOLE);
+    private static handlers: {handler:()=>void}[];
+    public static subscribeForData(handler:()=>void){
+        if(this.handlers === void 0){
+            this.handlers = [];
+        }
+        this.handlers.push({handler});
+    }
 
-            if(data.Channels.TransmembranePores_Caver !== void 0) channels = channels.concat(data.Channels.TransmembranePores_Caver);
+    private static invokeHandlers(){
+        if(this.handlers === void 0){
+            console.log("no handlers attached... Skiping...");
+            return;
+        }
+        for(let h of this.handlers){
+            h.handler();
+        }
+    }
 
-            if(data.Channels.ProcognateTunnels_MOLE !== void 0) channels = channels.concat(data.Channels.ProcognateTunnels_MOLE);
+    public static getResidueAnnotations(residueId:string):ResidueAnnotation[]|undefined{
+        if(!this.subscribed){
+            return void 0;
+        }
 
-            if(data.Channels.ProcognateTunnels_Caver !== void 0) channels = channels.concat(data.Channels.ProcognateTunnels_Caver);
-
-            if(data.Channels.AlphaFillTunnels_MOLE !== void 0) channels = channels.concat(data.Channels.AlphaFillTunnels_MOLE);
-
-            if(data.Channels.AlphaFillTunnels_Caver !== void 0) channels = channels.concat(data.Channels.AlphaFillTunnels_Caver);
-
-            let liningResidues:string[] = [];
-            for(let channel of channels){                
-                for(let layerInfo of channel.Layers.LayersInfo){
-                    for(let residue of layerInfo.Residues){
-                        let residueId = residue.split(" ").slice(1,3).join(" ");
-                        if(liningResidues.indexOf(residueId)<0){
-                            liningResidues.push(residueId);
-                        }
-                    }
-                }
-                
+        if(this.residueAnnotations !== void 0){
+            let value = this.residueAnnotations.get(residueId);
+            if(value === void 0){
+                return [];
             }
-
-            return liningResidues;
-        }
-
-        public static isDataReady():boolean{
-            return this.dataReady;
-        }
-
-        private static handleChannelsAPIData(data:any){
-            let liningResidues = this.parseLiningResidues(data);
-            let channelsData = this.parseChannelsData(data.Annotations);
             
-            return {liningResidues,channelsData};
+            return value;             
         }
 
-        private static handleAnnotationsAPIData(data:any){
-            let proteinData = this.parseProteinData(data.EntryAnnotations);
-            let residueData = this.parseResidueData(data.ResidueAnnotations);
-            
-            return {proteinData,residueData};
+        return void 0;
+    }
+
+    public static getResidueList():string[]|undefined{
+        if(!this.subscribed || this.residueAnnotations === void 0){
+            return void 0;
         }
 
-        public static subscribeToPluginContext(context: LiteMol.Bootstrap.Context){
-            interface channelsAPIDataHandledPromiseResult{
-                liningResidues: any,
-                channelsData: any
+        let rv:string[] = [];
+        this.residueAnnotations.forEach((_,key,map)=>{
+            if(rv.indexOf(key)<0){
+                rv.push(key);
             }
-            interface annotationAPIDataHandledPromiseResult{
-                proteinData: any,
-                residueData: any
-            }
+        });
 
-            let channelsAPIobserver:any;
-            let annotationsAPIobserver:any;
+        return rv;
+    }
 
-            new Promise<Object>((res,rej)=>{
-                let moleData = context.select("channelsDB-data")[0] as LiteMol.Bootstrap.Entity.Data.Json;
-                if(moleData !== void 0){
-                    res(this.handleChannelsAPIData(moleData.props.data));
-                }else{
-                    channelsAPIobserver = LiteMoleEvent.Tree.NodeAdded.getStream(context).subscribe(e => {
-                        if(e.data.tree !== void 0 && e.data.ref === "channelsDB-data"){
-                            res(this.handleChannelsAPIData(e.data.props.data));
-                        }
-                    });
-                }
-            }).then((val)=>{
-                if(channelsAPIobserver!==void 0){
-                    channelsAPIobserver.dispose();
-                }
-
-                let item = val as channelsAPIDataHandledPromiseResult;
-
-                this.liningResidues = item.liningResidues;
-                this.channelAnnotations = item.channelsData;
-                
-                new Promise<Object>((res,rej)=>{
-                    let annotationData = context.select("channelsDB-annotation-data")[0] as LiteMol.Bootstrap.Entity.Data.Json;
-                    if(annotationData !== void 0){
-                        res(this.handleAnnotationsAPIData(annotationData.props.data));
-                    }
-                    else{
-                        annotationsAPIobserver = LiteMoleEvent.Tree.NodeAdded.getStream(context).subscribe(e => {
-                            if(e.data.tree !== void 0 && e.data.ref === "channelsDB-annotation-data"){
-                                res(this.handleAnnotationsAPIData(e.data.props.data));
-                            }
-                        });
-                    }
-                }).then((val)=>{
-                    if(annotationsAPIobserver!==void 0){
-                        annotationsAPIobserver.dispose();
-                    }
-
-                    let item = val as annotationAPIDataHandledPromiseResult;
-                    this.proteinAnnotations = item.proteinData;
-                    this.residueAnnotations = item.residueData;
-
-                    this.dataReady = true;
-                    this.invokeHandlers();
-                })
-                .catch((err)=>{
-                    console.log("annotationsAPIParseError:");
-                    console.log(err);
-                    if(annotationsAPIobserver !== void 0){
-                        annotationsAPIobserver.dispose();
-                    }
-                    if(channelsAPIobserver !== void 0){
-                        channelsAPIobserver.dispose();
-                    }
-                    if(this.retries > 5){
-                        return;
-                    }
-                    this.retries++;
-                    setTimeout((()=>{this.subscribeToPluginContext(context)}).bind(this),100);
-                });
-                
-            })
-            .catch((err)=>{
-                console.log("channelsAPIParseError:");
-                console.log(err);
-                if(annotationsAPIobserver !== void 0){
-                    annotationsAPIobserver.dispose();
-                }
-                if(channelsAPIobserver !== void 0){
-                    channelsAPIobserver.dispose();
-                }
-
-                if(this.retries > 5){
-                    return;
-                }
-                this.retries++;
-                setTimeout((()=>{this.subscribeToPluginContext(context)}).bind(this),100);
-            });
-
-            this.subscribed = true;
+    public static getChannelAnnotations(channelId:string):ChannelAnnotation[]|null|undefined{
+        if(!this.subscribed){
+            return void 0; 
         }
 
-        private static handlers: {handler:()=>void}[];
-        public static subscribeForData(handler:()=>void){
-            if(this.handlers === void 0){
-                this.handlers = [];
+        if(this.channelAnnotations !== void 0){
+            let value = this.channelAnnotations.get(channelId);
+            if(value === void 0){
+                return null;
             }
-            this.handlers.push({handler});
+
+            return value;
         }
 
-        private static invokeHandlers(){
-            if(this.handlers === void 0){
-                console.log("no handlers attached... Skiping...");
-                return;
-            }
-            for(let h of this.handlers){
-                h.handler();
-            }
+        return void 0;
+    }
+
+    public static getChannelAnnotation(channelId:string):ChannelAnnotation|null|undefined{
+        if(!this.subscribed){
+            return void 0; 
         }
 
-        public static getResidueAnnotations(residueId:string):ResidueAnnotation[]|undefined{
+        if(this.channelAnnotations !== void 0){
+            let value = this.channelAnnotations.get(channelId);
+            if(value === void 0){
+                return null;
+            }
+
+            return value[0];
+        }
+
+        return void 0;
+    }
+
+    public static getProteinAnnotations():ProteinAnnotation[]|undefined{
             if(!this.subscribed){
                 return void 0;
             }
 
-            if(this.residueAnnotations !== void 0){
-                let value = this.residueAnnotations.get(residueId);
-                if(value === void 0){
-                    return [];
-                }
-                
-                return value;             
+            if(this.proteinAnnotations !== void 0){
+                return this.proteinAnnotations;
             }
 
             return void 0;
-        }
-
-        public static getResidueList():string[]|undefined{
-            if(!this.subscribed || this.residueAnnotations === void 0){
-                return void 0;
-            }
-
-            let rv:string[] = [];
-            this.residueAnnotations.forEach((_,key,map)=>{
-                if(rv.indexOf(key)<0){
-                    rv.push(key);
-                }
-            });
-
-            return rv;
-        }
-
-        public static getChannelAnnotations(channelId:string):ChannelAnnotation[]|null|undefined{
-            if(!this.subscribed){
-                return void 0; 
-            }
-
-            if(this.channelAnnotations !== void 0){
-                let value = this.channelAnnotations.get(channelId);
-                if(value === void 0){
-                    return null;
-                }
-
-                return value;
-            }
-
-            return void 0;
-        }
-
-        public static getChannelAnnotation(channelId:string):ChannelAnnotation|null|undefined{
-            if(!this.subscribed){
-                return void 0; 
-            }
-
-            if(this.channelAnnotations !== void 0){
-                let value = this.channelAnnotations.get(channelId);
-                if(value === void 0){
-                    return null;
-                }
-
-                return value[0];
-            }
-
-            return void 0;
-        }
-
-        public static getProteinAnnotations():ProteinAnnotation[]|undefined{
-                if(!this.subscribed){
-                    return void 0;
-                }
-
-                if(this.proteinAnnotations !== void 0){
-                    return this.proteinAnnotations;
-                }
-
-                return void 0;
-        }
     }
 }

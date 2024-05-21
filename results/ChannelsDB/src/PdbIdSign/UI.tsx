@@ -1,26 +1,21 @@
-namespace PdbIdSign.UI{
+import React from "react";
+import { GlobalRouter } from "../SimpleRouter";
 
-    import React = LiteMol.Plugin.React
-    import LiteMoleEvent = LiteMol.Bootstrap.Event;
+export class PdbIdSign extends React.Component<{}, {}> {
 
-    export function render(target: Element) {
-        LiteMol.Plugin.ReactDOM.render(<App />, target);
+    componentDidMount() {
     }
 
-    export class App extends React.Component<{}, {}> {
+    componentWillUnmount(){
+    }
 
-        componentDidMount() {
-        }
-
-        componentWillUnmount(){
-        }
-
-        render() {
-            let pid = SimpleRouter.GlobalRouter.getCurrentPid();
-            let subDB = SimpleRouter.GlobalRouter.getCurrentDB();
-            return <div>
-                <a href={subDB === "pdb" ? `https://pdbe.org/${pid}` : `https://alphafill.eu/model?id=${pid}`} style={subDB === "pdb" ? {} : {fontSize: "14"}} target="_blank">{pid} <span className="glyphicon glyphicon-new-window href-ico"></span></a>
-            </div>
-        }
-    }  
+    render() {
+        let pid = GlobalRouter.getCurrentPid();
+        let subDB = GlobalRouter.getCurrentDB();
+        return <div id="pdbid-sign" className="current-pdbid-sign">
+            <a href={subDB === "pdb" ? `https://pdbe.org/${pid}` : `https://alphafill.eu/model?id=${pid}`} style={subDB === "pdb" ? {} : {fontSize: "14px"}} target="_blank">{pid} <span className="glyphicon glyphicon-new-window href-ico"></span></a>
+        </div>
+    }
 }
+
+export default PdbIdSign;
