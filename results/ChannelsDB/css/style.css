@@ -25,6 +25,10 @@ body{
     font-family: inherit; /* Ensures inheritance from parent elements, not the broad rule */
 }
 
+.msp-viewport-controls {
+    margin-top: 40px;
+}
+
 .ui-widget-content a{
     color:#337ab7;
 }
