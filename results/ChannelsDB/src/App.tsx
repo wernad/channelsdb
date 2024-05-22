@@ -25,6 +25,7 @@ import { Color } from "molstar/lib/mol-util/color";
 import { Controls } from "./Controls/UI";
 import ReactDOM from 'react-dom';
 import { Viewer } from "./MolViewer/UI";
+import { SbNcbrTunnels } from "./sb-ncbr/tunnels/behavior";
 
 (function() {
     const ROUTING_OPTIONS:any = {
@@ -66,7 +67,7 @@ import { Viewer } from "./MolViewer/UI";
             },
         },
         behaviors: [
-            PluginSpec.Behavior(SbNcbrPartialCharges),
+            PluginSpec.Behavior(SbNcbrTunnels),
             ...DefaultPluginUISpec().behaviors,
             ...DefaultPluginSpec().behaviors,
         ],
