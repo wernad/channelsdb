@@ -1,4 +1,4 @@
-FROM node:latest as frontend
+FROM node:20-slim as frontend
 
 WORKDIR /build
 
@@ -10,7 +10,7 @@ COPY ./frontend /build
 
 RUN ./node_modules/.bin/tsc
 
-FROM node:latest as results
+FROM node:20-slim as results
 
 WORKDIR /build
 
@@ -22,7 +22,7 @@ COPY ./results /build
 
 RUN npm run build
 
-FROM nginx:latest
+FROM nginx:1.26
 
 COPY --from=frontend /build/assets /var/www/assets
 
