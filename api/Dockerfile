@@ -2,17 +2,14 @@ FROM python:3.11-slim
 
 WORKDIR /channelsdb
 
-COPY requirements.txt /channelsdb/requirements.txt
-
-RUN pip install --no-cache-dir --upgrade -r /channelsdb/requirements.txt
-
-RUN mkdir /data
+RUN --mount=type=bind,source=requirements.txt,target=/channelsdb/requirements.txt,readonly \
+    pip install --no-cache-dir --upgrade --root-user-action=ignore -r /channelsdb/requirements.txt
 
 COPY config_docker.ini /channelsdb/config.ini
 
-COPY src/api /channelsdb/code/api
-
 COPY assets /channelsdb/assets
+
+COPY src/api /channelsdb/code/api
 
 WORKDIR /channelsdb/code
 
