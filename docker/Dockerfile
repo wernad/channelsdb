@@ -22,7 +22,7 @@ COPY ./results /build
 
 RUN npm run build
 
-FROM nginx:1.26
+FROM nginx:1.26-alpine-slim
 
 COPY --from=frontend /build/assets /var/www/assets
 
