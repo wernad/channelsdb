@@ -11,8 +11,8 @@ Two setups are available, a local development version and a production version m
 To run the development version of ChannelsDB 2, use the following commands:
 
 ```bash
-$ docker compose -f docker/docker-compose.devel.yaml build
-$ docker compose -f docker/docker-compose.devel.yaml up
+$ docker compose -f docker/docker-compose.yaml build
+$ docker compose -f docker/docker-compose.yaml up
 ```
 
 By default, the application runs on port `80` and uses `/data` as the data directory. To change this behaviour,
@@ -25,4 +25,5 @@ export CHANNELSDB_DATA=/home/channelsdb/data
 
 ### Production
 
-The production version has to use `docker/docker-compose.production.yaml` file. No further setup is allowed.
+The production version has to use `docker/docker-compose.production.yaml` together with the main `docker/docker-compose.yaml` file.
+No further setup is allowed.
