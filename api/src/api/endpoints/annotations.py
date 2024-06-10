@@ -41,15 +41,15 @@ def get_entry_annotations(uniprot_id: str, tree: ET) -> dict:
              'Name': ''
              }
 
-    if (function := tree.find('comment[@type="function"]/text', ns)) is not None:
+    if (function := tree.find('entry/comment[@type="function"]/text', ns)) is not None:
         entry['Function'] = function.text
 
     for name_type in ('recommendedName', 'alternativeName', 'submittedName'):
-        if (node := tree.find(f'protein/{name_type}/fullName', ns)) is not None:
+        if (node := tree.find(f'entry/protein/{name_type}/fullName', ns)) is not None:
             entry['Name'] = node.text
             break
 
-    for catalytics in tree.iterfind('comment[@type="catalytic activity"]/*/text', ns):
+    for catalytics in tree.iterfind('entry/comment[@type="catalytic activity"]/*/text', ns):
         entry['Catalytics'].append(catalytics.text)
 
     return entry
@@ -59,7 +59,7 @@ def get_uniprot_residue_annotations(mapping: tuple[str, dict[str, str]] | None, 
     ns = {'': 'http://uniprot.org/uniprot'}
 
     references: dict[str, tuple[str, str]] = {}
-    for evidence in tree.iterfind('evidence', ns):
+    for evidence in tree.iterfind('entry/evidence', ns):
         key = evidence.attrib['key']
         if (reference := evidence.find('source/dbReference', ns)) is not None:
             ref_id, ref_type = reference.attrib['id'], reference.attrib['type']
@@ -67,7 +67,7 @@ def get_uniprot_residue_annotations(mapping: tuple[str, dict[str, str]] | None, 
 
     features = {}
     for feature_type in ('sequence variant', 'active site', 'binding site', 'mutagenesis site', 'site', 'metal ion-binding site'):
-        features[feature_type] = tree.findall(f'feature[@type="{feature_type}"]', ns)
+        features[feature_type] = tree.findall(f'entry/feature[@type="{feature_type}"]', ns)
 
     residue_annotations = []
 
