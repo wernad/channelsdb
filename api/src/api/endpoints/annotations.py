@@ -24,7 +24,8 @@ def parse_sifts_data(xml_data: str) -> dict[str, tuple[str, dict[str, str]]]:
                     uniprot_id = uniprot_node.attrib['dbAccessionId']
                     uniprot_res_num = uniprot_node.attrib['dbResNum']
                     if (pdb_node := residue.find('./crossRefDb[@dbCoordSys="PDBresnum"]', ns)) is not None:
-                        pdb_res_num = pdb_node.attrib['dbResNum']
+                        if (pdb_res_num := pdb_node.attrib['dbResNum']) == "null":
+                            continue
                         if uniprot_id in data:
                             data[uniprot_id][1].update({uniprot_res_num: pdb_res_num})
                         else:
