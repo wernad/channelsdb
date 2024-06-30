@@ -39,6 +39,8 @@ export class Context {
   isHighlightColorUpdated = false;
   isSelectedColorUpdated = false;
 
+  apiError = false;
+
   constructor(MySpec: PluginUISpec) {
     this.plugin = new PluginUIContext(MySpec);
     this.plugin.init();
@@ -108,6 +110,11 @@ export class Context {
 
   async loadChannelData(url:string, pid: string, subDB: string) {
     const response = await fetch(`${url}/channels/${subDB}/${pid}`);
+    if (!response.ok) { 
+        this.apiError = true;
+        Context.invokeHandlers()
+        return { Error: await response.json(), apiStatus: response.status };
+    }
     const data = await response.json();
     this.data = data;
     return data;
@@ -115,6 +122,10 @@ export class Context {
 
   async loadAnnotations(url:string, pid: string, subDB: string) {
     const response = await fetch(`${url}/annotations/${subDB}/${pid}`)
+    if (!response.ok) {
+        this.apiError = true;
+        return { Error: await response.json(), apiStatus: response.status };
+    }
     const data = await response.json();
     this.annotations = data;
     return data;
