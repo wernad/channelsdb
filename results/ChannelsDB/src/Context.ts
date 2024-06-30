@@ -40,11 +40,30 @@ export class Context {
   isSelectedColorUpdated = false;
 
   apiError = false;
+  private static handlers: {handler:()=>void}[];
 
   constructor(MySpec: PluginUISpec) {
     this.plugin = new PluginUIContext(MySpec);
     this.plugin.init();
   }
+
+  //TODO: This is just hotfix, maybe it needs refactoring.
+    public static subscribeForApiStatus(handler:()=>void){
+        if(this.handlers === void 0){
+            this.handlers = [];
+        }
+        this.handlers.push({handler});
+    }
+
+    private static invokeHandlers(){
+        if(this.handlers === void 0){
+            console.log("no handlers attached... Skiping...");
+            return;
+        }
+        for(let h of this.handlers){
+            h.handler();
+        }
+    }
 
   async renderTunnel(data: Tunnel, color: Color): Promise<[Loci, string]> {
     const update = this.plugin.build();
