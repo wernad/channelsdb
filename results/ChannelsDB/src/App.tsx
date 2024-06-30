@@ -101,6 +101,6 @@ import { SbNcbrTunnels } from "molstar/lib/extensions/sb-ncbr";
 
     ReactDOM.render(<ProteinAnnotations controller={plugin}/>, document.getElementById('right-panel-tabs-1') !)
 
-    ReactDOM.render(<Controls />, document.getElementById('controls') !)
+    ReactDOM.render(<Controls controller={plugin}/>, document.getElementById('controls') !)
 
 })();
