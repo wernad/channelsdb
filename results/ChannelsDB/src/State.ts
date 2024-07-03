@@ -161,9 +161,8 @@ export async function showChannelVisuals(plugin: Context, channels: Tunnel[]&Tun
             let color = ColorGenerator.next().value;
             while (!isBrightEnough(color)) {
                 color = ColorGenerator.next().value;
-                console.log(color)
             }
-            channel.__color = ColorGenerator.next().value;
+            channel.__color = color;
         }
 
         if (!visible) {
