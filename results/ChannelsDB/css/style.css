@@ -29,6 +29,19 @@ body{
     margin-top: 40px;
 }
 
+.msp-selection-viewport-controls {
+    position: absolute !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 10px auto !important;
+}
+
+.msp-selection-viewport-controls-actions {
+    top: auto !important;
+    bottom: 32px !important;
+}
+
 .ui-widget-content a{
     color:#337ab7;
 }
