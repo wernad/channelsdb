@@ -78,8 +78,10 @@ export class SelectionHelper{
 
     public static attachClearSelectionToEventHandler(plugin: Context){
         plugin.plugin.behaviors.interaction.click.subscribe(async ({current, button, modifiers}) => {
-            await plugin.visual.clearSelection(); // TODO: do we want this or we want selection to stay
-            this.objectSelected(current, plugin);
+            if (!plugin.plugin.selectionMode) {
+                await plugin.visual.clearSelection(); // TODO: do we want this or we want selection to stay
+                this.objectSelected(current, plugin);
+            }
         })
         plugin.plugin.managers.structure.focus.behaviors.current.subscribe((selected) => {
             if (selected?.label) this.invokeOnSelectionHandlers(selected.label);
