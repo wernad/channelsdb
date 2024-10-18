@@ -1,9 +1,9 @@
 from sqlmodel import Field, SQLModel, Relationship, JSON
 
 
-# TODO possibly a table ?
-class Annotation(SQLModel):
+class Annotation(SQLModel, table=True):
     id: float
+    structure_id: int
     name: str
     description: str
     reference: str
@@ -12,38 +12,39 @@ class Annotation(SQLModel):
 
 class Channels(SQLModel):
     annotations: list[Annotation]
-    channels: list["Tunnel"]
+    channels: list["Channel"]
 
 
-class Tunnel(SQLModel, table=True):
+class Channel(SQLModel, table=True):
     id: int = Field(primary_key=True)
     structure_id: int
     method_id: int = Field(foreign_key="method.id")
     category_id: int = Field(foreign_key="category.id")
     auto: bool
 
-    method: "Method" = Relationship(back_populates="tunnels")
-    category: "Category" = Relationship(back_populates="tunnels")
-    layers: list["Layer"] = Relationship(cascade_delete=True, back_populates="tunnel")
+    method: "Method" = Relationship(back_populates="channels")
+    category: "Category" = Relationship(back_populates="channels")
+    layers: list["Layer"] = Relationship(cascade_delete=True, back_populates="channel")
+    het_residues: list["HetResidue"] = Relationship(back_populates="channel")
 
 
 class Method(SQLModel, table=True):
     id: int = Field(primary_key=True)
     name: str = Field(index=True)
 
-    tunnels: list["Tunnel"] = Relationship(back_populates="method")
+    channels: list["Channel"] = Relationship(back_populates="method")
 
 
 class Category(SQLModel, table=True):
     id: int = Field(primary_key=True)
     name: str = Field(index=True)
 
-    tunnels: list["Tunnel"] = Relationship(back_populates="category")
+    channels: list["Channel"] = Relationship(back_populates="category")
 
 
 class Layer(SQLModel, table=True):
     id: int = Field(primary_key=True)
-    tunnel_id: int = Field(foreign_key="tunnel.id")
+    channel_id: int = Field(foreign_key="channel.id")
     order: int
     radius: float
     free_radius: float
@@ -52,7 +53,7 @@ class Layer(SQLModel, table=True):
     local_minimum: bool
     bottleneck: bool
 
-    tunnel: Tunnel = Relationship(back_populates="layers")
+    channel: Channel = Relationship(back_populates="layers")
     residues: list["LayerResidue"] = Relationship(back_populates="layer")
 
 
@@ -67,11 +68,20 @@ class Residue(SQLModel, table=True):
     layers: list["LayerResidue"] = Relationship(back_populates="residue")
 
 
+class HetResidue(SQLModel, table=True):
+    residue_id: int = Field(primary_key=True, foreign_key="residue.id")
+    channel_id: int = Field(primary_key=True, foreign_key="channel.id")
+    sequence_number: int
+    type: str
+
+    channel: Channel = Relationship(back_populates="channel")
+
+
 class LayerResidue(SQLModel, table=True):
-    layer_id = Field(primary_key=True, foreign_key="layers.id")
-    residue_id = Field(primary_key=True, foreign_key="residue.id")
-    chain_id: int
-    chain_type: int = Field(foreign_key="")
+    layer_id: int = Field(primary_key=True, foreign_key="layers.id")
+    residue_id: int = Field(primary_key=True, foreign_key="residue.id")
+    sequence_number: int
+    type: str
     flow_id: int
     coord_x: float
     coord_y: float
@@ -82,9 +92,9 @@ class LayerResidue(SQLModel, table=True):
     residue: Residue = Relationship(back_populates="layers")
 
 
-# TODO not used yet
 class Profile(SQLModel, table=True):
     id: int = Field(primary_key=True)
+    channel_id: int = Field(foreign_key="channel.id")
     radius: float
     free_radius: float
     t_value: float
@@ -93,18 +103,6 @@ class Profile(SQLModel, table=True):
     coord_z: float
     distance: float
     charge: float
-
-
-# TODO not used yet
-class Cavity(SQLModel, table=True):
-    id: int = Field(primary_key=True)
-    volume: float
-    depth: float
-    depthLength: float
-
-
-# TODO not used yet
-class ParentType(SQLModel, table=True): ...
 
 
 # TODO not used yet
