@@ -10,11 +10,6 @@ class Annotation(SQLModel, table=True):
     referenceType: str
 
 
-class Channels(SQLModel):
-    annotations: list[Annotation]
-    channels: list["Channel"]
-
-
 class Channel(SQLModel, table=True):
     id: int = Field(primary_key=True)
     structure_id: int
@@ -110,3 +105,25 @@ class ConfigFile(SQLModel, table=True):
     id: int = Field(primary_key=True)
     name: str
     config_file: JSON
+
+
+################## Responses ##################
+
+
+class Channels(SQLModel):
+    annotations: list[Annotation]
+    channels: dict[str, list]
+
+
+class ChannelsFilter(SQLModel):
+    category: str | None
+    method: str | None
+    auto: bool | None
+    charge_from: int | None
+    charge_to: int | None
+    hodropathy_from: float | None
+    hodropathy_to: float | None
+    polarity_from: float | None
+    polarity_to: float | None
+    mutability_from: int | None
+    mutability_to: int | None

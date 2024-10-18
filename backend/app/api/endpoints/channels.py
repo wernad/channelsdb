@@ -1,9 +1,8 @@
 from fastapi import HTTPException, APIRouter
-from pydantic import BaseModel, create_model
 
+from app.database.models import Channels, ChannelsFilter
 from app.api.deps import SessionDep
 from app.database import crud
-from app.api.common import CHANNEL_TYPES
 from app.api.common import (
     SourceDatabase,
     PDB_ID_Type,
@@ -13,15 +12,6 @@ from app.api.common import (
 )
 
 router = APIRouter()
-
-ChannelModel = create_model(
-    "ChannelModel", **{tunnel: (list, []) for tunnel in CHANNEL_TYPES.values()}
-)
-
-
-class Channels(BaseModel):
-    Annotations: list = []
-    Channels: ChannelModel = ChannelModel()
 
 
 @router.get(
@@ -48,15 +38,31 @@ async def get_channels_alphafill(uniprot_id: Uniprot_ID_Type):
     return get_channels(SourceDatabase.AlphaFill, uniprot_id)
 
 
+# TODO add DB facade.
 def get_channels(source_db: SourceDatabase, protein_id: str, session: SessionDep):
     data = Channels().model_dump()
 
-    tunnel = crud.find_channel_by_structure_id(session=session, structure_id=protein_id)
+    tunnels = crud.find_channels_by_structure_id(
+        session=session, structure_id=protein_id
+    )
 
-    if not tunnel:
+    for tunnel in tunnels:
+        data[""]
+
+    if not tunnels:
         raise HTTPException(
             status_code=404,
             detail=f"Protein with ID '{protein_id}' not found in ChannelsDB ({source_db.value})",
         )
 
-    return tunnel
+    return tunnels
+
+
+@router.get(
+    path="/channels/filter",
+    response_model=list[Channels],
+    name="Filtered channels",
+    tags=["PDB", "Alphafil"],
+    description="Returns list of channels based on passed filter.",
+)
+async def get_channels_filter(filter: ChannelsFilter): ...
