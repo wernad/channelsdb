@@ -1,6 +1,7 @@
 from sqlmodel import create_engine, SQLModel, Session
+from app.config import DB_USER, DB_PASSWORD, DB_HOST
 
-DATABASE_URL = "postgresql://postgres:admin@postgresserver/db"
+DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}"
 
 
 connect_args = {"check_same_thread": False}
