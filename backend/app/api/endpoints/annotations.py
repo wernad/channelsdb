@@ -192,7 +192,7 @@ class ResidueAnnotations(BaseModel):
 
 class Annotations(BaseModel):
     EntryAnnotations: list = []
-    ResidueAnnotations: ResidueAnnotations = ResidueAnnotations()
+    ResidueAnnotations: "ResidueAnnotations" = ResidueAnnotations()
 
 
 @router.get(
