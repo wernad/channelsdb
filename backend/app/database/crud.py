@@ -1,9 +1,10 @@
 from sqlmodel import SQLModel, Session, and_, select
 
 from app.database.models import Channel, Annotation
-from app.database.common import Filter
+from channelsdb.backend.app.database.structures import Filter
 
 
+# TODO modify to accomodate request models instead.
 def _build_filter_statement(table: SQLModel, filter: Filter):
     # Get single value filters.
     filter_simple = {k: v for k, v in filter.simple.items() if v is not None}
@@ -15,6 +16,7 @@ def _build_filter_statement(table: SQLModel, filter: Filter):
     query = query.filter(and_(*filter_conditions))
 
     # Get range filters.
+    filter_range = None
     range_conditions = [
         getattr(Channel, key).between(min_value, max_value)
         for key, (min_value, max_value) in filter.range_.items()
