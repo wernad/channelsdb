@@ -42,27 +42,27 @@ async def get_channels_alphafill(uniprot_id: Uniprot_ID_Type):
 def get_channels(source_db: SourceDatabase, protein_id: str, session: SessionDep):
     data = Channels().model_dump()
 
-    tunnels = crud.find_channels_by_structure_id(
+    channels = crud.find_channels_by_structure_id(
         session=session, structure_id=protein_id
     )
 
-    for tunnel in tunnels:
-        data[""]
-
-    if not tunnels:
+    if not channels:
         raise HTTPException(
             status_code=404,
             detail=f"Protein with ID '{protein_id}' not found in ChannelsDB ({source_db.value})",
         )
 
-    return tunnels
+    for channel in channels:
+        data[""]
+
+    return data
 
 
-@router.get(
-    path="/channels/filter",
-    response_model=list[Channels],
-    name="Filtered channels",
-    tags=["PDB", "Alphafil"],
-    description="Returns list of channels based on passed filter.",
-)
-async def get_channels_filter(filter: ChannelsFilter): ...
+# @router.get(
+#     path="/channels/filter",
+#     response_model=list[Channels],
+#     name="Filtered channels",
+#     tags=["PDB", "Alphafil"],
+#     description="Returns list of channels based on passed filter.",
+# )
+# async def get_channels_filter(filter: ChannelsFilter): ...
