@@ -2,8 +2,7 @@ import requests
 import json
 from fastapi import HTTPException, APIRouter
 
-from api.main import app
-from api.common import PDB_ID_Type, pdb_id_404_response
+from app.api.common import PDB_ID_Type, pdb_id_404_response
 
 router = APIRouter()
 

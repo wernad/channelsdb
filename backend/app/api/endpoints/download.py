@@ -11,16 +11,16 @@ import json
 import zipfile
 
 from fastapi import APIRouter
-from api.config import config
-from api.common import (
+from app.api.config import config
+from app.api.common import (
     PDB_ID_Type,
     Uniprot_ID_Type,
     SourceDatabase,
     uniprot_id_404_response,
     pdb_id_404_response,
 )
-from api.endpoints.assembly import get_assembly_id
-from api.endpoints.channels import get_channels
+from app.api.endpoints.assembly import get_assembly_id
+from app.api.endpoints.channels import get_channels
 import api.export as exp
 
 router = APIRouter()

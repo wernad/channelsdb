@@ -9,8 +9,8 @@ COPY config_docker.ini /channelsdb/config.ini
 
 COPY assets /channelsdb/assets
 
-COPY src/api /channelsdb/code/api
+COPY app /channelsdb/code/app
 
 WORKDIR /channelsdb/code
 
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]

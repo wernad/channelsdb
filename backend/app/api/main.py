@@ -1,5 +1,12 @@
 from fastapi import APIRouter
-from endpoints import annotations, assembly, channels, content, download, statistics
+from app.api.endpoints import (
+    annotations,
+    assembly,
+    channels,
+    content,
+    download,
+    statistics,
+)
 
 router = APIRouter()
 router.include_router(annotations.router, tags=["annotations"], prefix="/annotations")

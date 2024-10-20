@@ -1,10 +1,13 @@
+from typing import TYPE_CHECKING
+
 from sqlmodel import Field, SQLModel, Relationship
-from app.database.models import Channel, LayerResidue
+
+if TYPE_CHECKING:
+    from app.database.models import Channel, LayerResidue
 
 
-class Layer(SQLModel, table=True):
-    id: int = Field(primary_key=True)
-    channel_id: int = Field(foreign_key="channel.id")
+class LayerBase(SQLModel):
+    channel_id: int = Field(unique=True, foreign_key="channel.id")
     order: int
     radius: float
     free_radius: float
@@ -13,5 +16,13 @@ class Layer(SQLModel, table=True):
     local_minimum: bool
     bottleneck: bool
 
-    channel: Channel = Relationship(back_populates="layers")
-    residues: list[LayerResidue] = Relationship(back_populates="layer")
+
+class Layer(LayerBase, table=True):
+    id: int = Field(primary_key=True)
+
+    channel: "Channel" = Relationship(back_populates="layers")
+    residues: list["LayerResidue"] = Relationship(back_populates="layer")
+
+
+class LayerOutput(LayerBase):
+    pass

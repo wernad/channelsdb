@@ -1,8 +1,7 @@
 from fastapi import HTTPException, APIRouter
 
-from app.database.models import Channels, ChannelsFilter
-from app.api.deps import SessionDep
-from app.database import crud
+from app.database.models.channel import Channels
+from channelsdb.backend.app.api.dependencies import ChannelsRepositoryDep
 from app.api.common import (
     SourceDatabase,
     PDB_ID_Type,
@@ -39,23 +38,18 @@ async def get_channels_alphafill(uniprot_id: Uniprot_ID_Type):
 
 
 # TODO add DB facade.
-def get_channels(source_db: SourceDatabase, protein_id: str, session: SessionDep):
-    data = Channels().model_dump()
-
-    channels = crud.find_channels_by_structure_id(
-        session=session, structure_id=protein_id
-    )
+def get_channels(
+    source_db: SourceDatabase, protein_id: str, channel_repo: ChannelsRepositoryDep
+):
+    channels = channel_repo.find_channels_by_structure_id(structure_id=protein_id)
 
     if not channels:
         raise HTTPException(
             status_code=404,
-            detail=f"Protein with ID '{protein_id}' not found in ChannelsDB ({source_db.value})",
+            detail=f"Protein with ID '{protein_id}' not asdasdasdasdsafound in ChannelsDB ({source_db.value})",
         )
 
-    for channel in channels:
-        data[""]
-
-    return data
+    return channels
 
 
 # @router.get(

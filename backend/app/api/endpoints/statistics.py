@@ -4,8 +4,8 @@ from pathlib import Path
 from fastapi import APIRouter
 from pydantic import BaseModel, create_model
 
-from api.config import config
-from api.common import CHANNEL_TYPES
+from app.api.config import config
+from app.api.common import CHANNEL_TYPES
 
 router = APIRouter()
 

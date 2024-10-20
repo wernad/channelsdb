@@ -4,7 +4,7 @@ from pathlib import Path
 from pydantic import BaseModel
 from fastapi import APIRouter
 
-from api.config import config
+from app.api.config import config
 
 
 class ContentModel(BaseModel):

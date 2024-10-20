@@ -1,9 +1,15 @@
+from typing import TYPE_CHECKING
 from sqlmodel import Field, SQLModel, Relationship
-from app.database.models import Channel
+
+if TYPE_CHECKING:
+    from app.database.models import Channel
 
 
-class Method(SQLModel, table=True):
-    id: int = Field(primary_key=True)
+class MethodBase(SQLModel):
     name: str = Field(index=True)
 
-    channels: list[Channel] = Relationship(back_populates="method")
+
+class Method(MethodBase, table=True):
+    id: int = Field(primary_key=True)
+
+    channels: list["Channel"] = Relationship(back_populates="method")
