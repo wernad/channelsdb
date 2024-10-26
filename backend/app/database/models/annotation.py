@@ -2,7 +2,7 @@ from sqlmodel import Field, SQLModel
 
 
 class AnnotationBase(SQLModel):
-    structure_id: int
+    structure_id: str
     name: str
     description: str
     reference: str

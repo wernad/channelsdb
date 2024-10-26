@@ -5,4 +5,4 @@ from sqlmodel import Field, SQLModel, JSON
 class ConfigFile(SQLModel, table=True):
     id: int = Field(primary_key=True)
     name: str
-    config_file: JSON
+    config_file: dict = Field(sa_type=JSON)

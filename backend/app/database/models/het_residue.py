@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 class HetResidueBase(SQLModel):
     sequence_number: int
-    type: str
+    chain_id: str
 
 
 class HetResidue(HetResidueBase, table=True):

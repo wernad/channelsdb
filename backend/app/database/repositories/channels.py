@@ -2,7 +2,7 @@ from sqlmodel import Session, select, join
 
 from app.database.repositories.base import RepositoryBase
 from app.database.models import Channel
-from channelsdb.backend.app.database.structures import Filter
+from app.database.structures import Filter
 
 
 class ChannelRepository(RepositoryBase):

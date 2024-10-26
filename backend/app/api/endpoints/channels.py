@@ -1,7 +1,7 @@
 from fastapi import HTTPException, APIRouter
 
 from app.database.models.channel import Channels
-from channelsdb.backend.app.api.dependencies import ChannelsRepositoryDep
+from app.api.dependencies import ChannelsRepositoryDep
 from app.api.common import (
     SourceDatabase,
     PDB_ID_Type,
@@ -37,7 +37,6 @@ async def get_channels_alphafill(uniprot_id: Uniprot_ID_Type):
     return get_channels(SourceDatabase.AlphaFill, uniprot_id)
 
 
-# TODO add DB facade.
 def get_channels(
     source_db: SourceDatabase, protein_id: str, channel_repo: ChannelsRepositoryDep
 ):

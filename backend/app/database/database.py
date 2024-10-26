@@ -1,15 +1,25 @@
 from sqlmodel import create_engine, SQLModel, Session
-from app.config import DB_USER, DB_PASSWORD, DB_HOST
+from app.config import DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT
+from pydantic_core import MultiHostUrl
 
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}"
+DATABASE_URL = str(
+    MultiHostUrl.build(
+        scheme="postgresql",
+        username=DB_USER,
+        password=DB_PASSWORD,
+        host=DB_HOST,
+        port=DB_PORT,
+        path=DB_NAME,
+    )
+)
+# DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
 
 
-connect_args = {"check_same_thread": False}
-engine = create_engine(DATABASE_URL, connect_args=connect_args, echo=True)
+engine = create_engine(DATABASE_URL, echo=True)
 
 
 def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
+    SQLModel.metadata.create_all(bind=engine)
 
 
 def get_session():

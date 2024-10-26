@@ -1,5 +1,8 @@
-DB_USER = "admin"
+DB_HOST = "172.17.0.1"
+DB_PORT = 5432
+DB_NAME = "channelsdb"
+DB_USER = "channelsdb"
 DB_PASSWORD = "local"
-DB_HOST = "postgresserver/db"
 
-API_PATH = "/api/v1/"
+
+API_PATH = "/api/v1"

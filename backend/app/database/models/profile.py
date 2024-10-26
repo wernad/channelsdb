@@ -1,15 +1,16 @@
 from sqlmodel import Field, SQLModel
+from decimal import Decimal
 
 
 class ProfileBase(SQLModel):
-    radius: float
-    free_radius: float
-    t_value: float
-    coord_x: float
-    coord_y: float
-    coord_z: float
-    distance: float
-    charge: float
+    radius: Decimal = Field(decimal_places=3)
+    free_radius: Decimal = Field(decimal_places=3)
+    t_value: Decimal = Field(decimal_places=3)
+    coord_x: Decimal = Field(decimal_places=3)
+    coord_y: Decimal = Field(decimal_places=3)
+    coord_z: Decimal = Field(decimal_places=3)
+    distance: Decimal = Field(decimal_places=3)
+    charge: int
 
 
 class Profile(ProfileBase, table=True):

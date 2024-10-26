@@ -1,16 +1,25 @@
 FROM python:3.11-alpine
 
-WORKDIR /channelsdb
+ARG APP_NAME=channelsdb
 
-RUN --mount=type=bind,source=requirements.txt,target=/channelsdb/requirements.txt,readonly \
-    pip install --no-cache-dir --upgrade --root-user-action=ignore -r /channelsdb/requirements.txt
+# Update and add basic packages
+RUN apk update && apk add --no-cache build-base libpq-dev gcc musl-dev 
+ 
+# Working directory
+RUN mkdir -p /opt/${APP_NAME}
+WORKDIR /opt/${APP_NAME}
 
-COPY config_docker.ini /channelsdb/config.ini
+# Dependencies
+COPY ["requirements.txt", "/opt/${APP_NAME}"]
+RUN --mount=type=bind,source=requirements.txt,target=/${APP_NAME}/requirements.txt,readonly \
+    pip install --no-cache-dir --upgrade --root-user-action=ignore -r requirements.txt
 
-COPY assets /channelsdb/assets
+# Copy source files.
+COPY [".", "/opt/${APP_NAME}"]
 
-COPY app /channelsdb/code/app
+# Create user
+RUN adduser -D ${APP_NAME} && chown -R ${APP_NAME} /opt/${APP_NAME}
+USER ${APP_NAME}
 
-WORKDIR /channelsdb/code
-
+# Run app
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]

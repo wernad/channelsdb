@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+from decimal import Decimal
 
 from sqlmodel import Field, SQLModel, Relationship
 
@@ -8,11 +9,11 @@ if TYPE_CHECKING:
 
 class LayerResidueBase(SQLModel):
     sequence_number: int
-    type: str
+    chain_id: str
     flow_id: int
-    coord_x: float
-    coord_y: float
-    coord_z: float
+    coord_x: Decimal = Field(decimal_places=3)
+    coord_y: Decimal = Field(decimal_places=3)
+    coord_z: Decimal = Field(decimal_places=3)
     backbone: bool
 
 

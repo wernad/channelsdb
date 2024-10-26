@@ -2,7 +2,7 @@ from fastapi import FastAPI, APIRouter
 from app.api.main import api_router
 from app.config import API_PATH
 from app.database.database import create_db_and_tables
-
+from psycopg2 import OperationalError
 
 router = APIRouter()
 router.include_router(api_router, prefix=API_PATH)
@@ -20,4 +20,8 @@ app = FastAPI(
 
 @app.on_event("startup")
 def on_startup():
-    create_db_and_tables()
+    try:
+        print("Creating database and tables.")
+        create_db_and_tables()
+    except OperationalError as e:
+        print(e.pgcode)

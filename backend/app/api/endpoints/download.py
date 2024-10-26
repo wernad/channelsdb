@@ -11,7 +11,8 @@ import json
 import zipfile
 
 from fastapi import APIRouter
-from app.api.config import config
+
+# from app.api.config import config
 from app.api.common import (
     PDB_ID_Type,
     Uniprot_ID_Type,
@@ -21,7 +22,7 @@ from app.api.common import (
 )
 from app.api.endpoints.assembly import get_assembly_id
 from app.api.endpoints.channels import get_channels
-import api.export as exp
+import app.api.export as exp
 
 router = APIRouter()
 
@@ -61,58 +62,59 @@ async def download_pdb(file_format: DownloadType, pdb_id: PDB_ID_Type):
 async def download(
     source_db: SourceDatabase, file_format: DownloadType, protein_id: str
 ):
-    match (source_db, file_format):
-        case SourceDatabase.PDB, DownloadType.png:
-            image_file = (
-                Path(config["dirs"]["pdb"])
-                / protein_id[1:3]
-                / protein_id
-                / f"{protein_id}.png"
-            )
+    return "No config data"
+    # match (source_db, file_format):
+    #     case SourceDatabase.PDB, DownloadType.png:
+    #         image_file = (
+    #             Path(config["dirs"]["pdb"])
+    #             / protein_id[1:3]
+    #             / protein_id
+    #             / f"{protein_id}.png"
+    #         )
 
-            if image_file.exists():
-                return FileResponse(image_file)
+    #         if image_file.exists():
+    #             return FileResponse(image_file)
 
-            assembly_id = await get_assembly_id(protein_id)
+    #         assembly_id = await get_assembly_id(protein_id)
 
-            return RedirectResponse(
-                f"https://www.ebi.ac.uk/pdbe/static/entry/"
-                f"{protein_id}_assembly_{assembly_id}_chemically_distinct_molecules_front_image-200x200.png"
-            )
-        case SourceDatabase.AlphaFill, DownloadType.png:
-            return FileResponse("../assets/alphafill.png")
+    #         return RedirectResponse(
+    #             f"https://www.ebi.ac.uk/pdbe/static/entry/"
+    #             f"{protein_id}_assembly_{assembly_id}_chemically_distinct_molecules_front_image-200x200.png"
+    #         )
+    #     case SourceDatabase.AlphaFill, DownloadType.png:
+    #         return FileResponse("../assets/alphafill.png")
 
-    channels = get_channels(source_db, protein_id)
-    headers = {
-        "Content-Disposition": f'attachment; filename="channelsdb_{protein_id}.{file_format.value}"'
-    }
-    match file_format:
-        case DownloadType.json:
-            return Response(
-                content=json.dumps(channels),
-                media_type="application/json",
-                headers=headers,
-            )
-        case DownloadType.pdb:
-            return PlainTextResponse(exp.get_PDB_file(channels), headers=headers)
-        case DownloadType.pymol:
-            return PlainTextResponse(exp.get_Pymol_file(channels), headers=headers)
-        case DownloadType.chimera:
-            return PlainTextResponse(exp.get_Chimera_file(channels), headers=headers)
-        case DownloadType.vmd:
-            return PlainTextResponse(exp.get_VMD_file(channels), headers=headers)
-        case DownloadType.zip:
-            content = io.BytesIO()
-            zf = zipfile.ZipFile(content, mode="w")
-            zf.writestr(f"{protein_id}_chimera.py", exp.get_Chimera_file(channels))
-            zf.writestr(f"{protein_id}_pymol.py", exp.get_Pymol_file(channels))
-            zf.writestr(f"{protein_id}_vmd.tk", exp.get_VMD_file(channels))
-            zf.writestr(f"{protein_id}_report.json", json.dumps(channels))
-            zf.writestr(f"{protein_id}_channels.pdb", exp.get_PDB_file(channels))
-            zf.close()
+    # channels = get_channels(source_db, protein_id)
+    # headers = {
+    #     "Content-Disposition": f'attachment; filename="channelsdb_{protein_id}.{file_format.value}"'
+    # }
+    # match file_format:
+    #     case DownloadType.json:
+    #         return Response(
+    #             content=json.dumps(channels),
+    #             media_type="application/json",
+    #             headers=headers,
+    #         )
+    #     case DownloadType.pdb:
+    #         return PlainTextResponse(exp.get_PDB_file(channels), headers=headers)
+    #     case DownloadType.pymol:
+    #         return PlainTextResponse(exp.get_Pymol_file(channels), headers=headers)
+    #     case DownloadType.chimera:
+    #         return PlainTextResponse(exp.get_Chimera_file(channels), headers=headers)
+    #     case DownloadType.vmd:
+    #         return PlainTextResponse(exp.get_VMD_file(channels), headers=headers)
+    #     case DownloadType.zip:
+    #         content = io.BytesIO()
+    #         zf = zipfile.ZipFile(content, mode="w")
+    #         zf.writestr(f"{protein_id}_chimera.py", exp.get_Chimera_file(channels))
+    #         zf.writestr(f"{protein_id}_pymol.py", exp.get_Pymol_file(channels))
+    #         zf.writestr(f"{protein_id}_vmd.tk", exp.get_VMD_file(channels))
+    #         zf.writestr(f"{protein_id}_report.json", json.dumps(channels))
+    #         zf.writestr(f"{protein_id}_channels.pdb", exp.get_PDB_file(channels))
+    #         zf.close()
 
-            return Response(
-                content=content.getvalue(),
-                media_type="application/zip",
-                headers=headers,
-            )
+    #         return Response(
+    #             content=content.getvalue(),
+    #             media_type="application/zip",
+    #             headers=headers,
+    #         )

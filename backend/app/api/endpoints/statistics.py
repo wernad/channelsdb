@@ -4,7 +4,7 @@ from pathlib import Path
 from fastapi import APIRouter
 from pydantic import BaseModel, create_model
 
-from app.api.config import config
+# from app.api.config import config
 from app.api.common import CHANNEL_TYPES
 
 router = APIRouter()
@@ -27,5 +27,6 @@ class StatisticsModel(BaseModel):
     description="Returns summary statistics about the data stored",
 )
 async def get_statistics() -> StatisticsModel:
-    with open(Path(config["dirs"]["base"]) / "statistics.json") as f:
-        return json.load(f)
+    # with open(Path(config["dirs"]["base"]) / "statistics.json") as f:
+    #     return json.load(f)
+    return "No statistics found"

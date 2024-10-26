@@ -1,29 +1,64 @@
 name: channelsdb
 
 services:
-  backend:
+  channels_db:
+    image: postgres:14
+    container_name: channels_db
+    environment:
+      POSTGRES_NAME: channels
+      POSTGRES_USER: channels
+      POSTGRES_PASSWORD: admin
+      POSTGRES_PORT: 5432
+    ports:
+      - "5435:5432"
+    networks:
+      channelsnet:
+        ipv4_address: 172.20.0.4
+
+  channels_be:
     build: ../backend
-    container_name: backend
+    container_name: channels_be
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --root-path /app --proxy-headers --workers 8
+    environment:
+      CHANNELS_DB_NAME: channels
+      CHANNELS_DB_USER: channels
+      CHANNELS_DB_PASS: admin
+      CHANNELS_DB_HOST: 172.20.0.4
+      CHANNELS_DB_PORT: 5432
     volumes:
+      - .:/opt/
       - ${CHANNELSDB_DATA:-/data}:/data:ro
     logging:
       driver: journald
       options:
         tag: channelsdb-backend
+    networks:
+      channelsnet:
+        ipv4_address: 172.20.0.3
 
-  web:
-    container_name: web
+  channels_fe:
+    container_name: channels_fe
     build:
       context: ..
       dockerfile: ./docker/Dockerfile
     volumes:
       - ./nginx.devel.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - backend
+      - channels_be
     ports:
       - "${CHANNELSDB_PORT:-80}:80"
     logging:
       driver: journald
       options:
         tag: channelsdb-web
+    networks:
+      channelsnet:
+        ipv4_address: 172.20.0.2
+
+networks:
+  channelsnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/29 # 5 hosts + gateway
+          gateway: 172.20.0.1

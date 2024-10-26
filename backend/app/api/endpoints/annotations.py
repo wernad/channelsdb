@@ -1,12 +1,9 @@
 import gzip
-import json
 import sys
 import requests
-from pathlib import Path
 import xml.etree.ElementTree as ET
 from fastapi import HTTPException, APIRouter
 
-from app.api.config import config
 from app.api.common import (
     PDB_ID_Type,
     Uniprot_ID_Type,
@@ -139,13 +136,13 @@ def get_uniprot_residue_annotations(
 def get_channelsdb_residue_annotations(
     uniprot_id: str, mapping: tuple[str, dict[str, str]] | None
 ) -> list[dict]:
-    path = Path(config["dirs"]["annotations"]) / f"{uniprot_id}.json"
-    if not path.exists():
-        return []
+    # path = Path(config["dirs"]["annotations"]) / f"{uniprot_id}.json"
+    # if not path.exists():
+    #     return []
 
-    with open(path) as f:
-        data = json.load(f)
-
+    # with open(path) as f:
+    # data = json.load(f)
+    data = []
     if mapping is None:
         for annotation in data:
             annotation["Chain"] = "A"
