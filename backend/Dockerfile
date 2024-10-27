@@ -22,4 +22,4 @@ RUN adduser -D ${APP_NAME} && chown -R ${APP_NAME} /opt/${APP_NAME}
 USER ${APP_NAME}
 
 # Run app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
