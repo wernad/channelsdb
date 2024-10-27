@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from sqlmodel import Field, SQLModel, Relationship
 
@@ -13,4 +13,4 @@ class CategoryBase(SQLModel):
 class Category(CategoryBase, table=True):
     id: int = Field(primary_key=True)
 
-    channels: list["Channel"] = Relationship(back_populates="category")
+    channels: List["Channel"] = Relationship(back_populates="category")

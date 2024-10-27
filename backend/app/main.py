@@ -9,6 +9,7 @@ router.include_router(api_router, prefix=API_PATH)
 
 
 app = FastAPI(
+    routes=router.routes,
     title="ChannelsDB 2.1 API",
     contact={"name": "Tomáš Raček", "email": "tomas.racek@ceitec.muni.cz"},
     redoc_url=None,
@@ -24,4 +25,4 @@ def on_startup():
         print("Creating database and tables.")
         create_db_and_tables()
     except OperationalError as e:
-        print(e.pgcode)
+        print(f"An operational error occured white creating tables: {e.pgcode}")

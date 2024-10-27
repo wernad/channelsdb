@@ -45,7 +45,7 @@ def get_channels(
     if not channels:
         raise HTTPException(
             status_code=404,
-            detail=f"Protein with ID '{protein_id}' not asdasdasdasdsafound in ChannelsDB ({source_db.value})",
+            detail=f"Protein with ID '{protein_id}' not found in ChannelsDB ({source_db.value})",
         )
 
     return channels

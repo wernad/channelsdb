@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 from decimal import Decimal
 
 from sqlmodel import Field, SQLModel, Relationship
@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 
 class LayerBase(SQLModel):
-    channel_id: int = Field(unique=True, foreign_key="channel.id")
+    channel_id: int = Field(foreign_key="channel.id")
     order: int
     radius: Decimal = Field(decimal_places=3)
     free_radius: Decimal = Field(decimal_places=3)
@@ -22,7 +22,9 @@ class Layer(LayerBase, table=True):
     id: int = Field(primary_key=True)
 
     channel: "Channel" = Relationship(back_populates="layers")
-    residues: list["LayerResidue"] = Relationship(back_populates="layer")
+    layer_residues: List["LayerResidue"] = Relationship(
+        cascade_delete=True, back_populates="layer"
+    )
 
 
 class LayerOutput(LayerBase):

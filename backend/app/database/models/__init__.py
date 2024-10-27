@@ -7,5 +7,5 @@ from app.database.models.layer import Layer
 from app.database.models.layer_residue import LayerResidue
 from app.database.models.method import Method
 from app.database.models.pdb import PDBData
-from app.database.models.profile import Profile
+from app.database.models.profile import Profile, ProfileOutput
 from app.database.models.residue import Residue

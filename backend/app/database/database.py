@@ -12,7 +12,6 @@ DATABASE_URL = str(
         path=DB_NAME,
     )
 )
-# DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
 
 
 engine = create_engine(DATABASE_URL, echo=True)

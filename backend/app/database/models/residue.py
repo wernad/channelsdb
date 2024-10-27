@@ -1,10 +1,10 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 from decimal import Decimal
 
 from sqlmodel import Field, SQLModel, Relationship
 
 if TYPE_CHECKING:
-    from app.database.models import LayerResidue
+    from app.database.models import LayerResidue, HetResidue
 
 
 class ResidueBase(SQLModel):
@@ -18,7 +18,8 @@ class ResidueBase(SQLModel):
 class Residue(ResidueBase, table=True):
     id: int = Field(primary_key=True)
 
-    layers: list["LayerResidue"] = Relationship(back_populates="residue")
+    layer_residues: List["LayerResidue"] = Relationship(back_populates="residue")
+    het_residues: List["HetResidue"] = Relationship(back_populates="residue")
 
 
 class ResidueOutput(ResidueBase):

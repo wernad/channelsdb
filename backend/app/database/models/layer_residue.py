@@ -18,11 +18,11 @@ class LayerResidueBase(SQLModel):
 
 
 class LayerResidue(LayerResidueBase, table=True):
-    layer_id: int = Field(primary_key=True, foreign_key="layers.id")
+    layer_id: int = Field(primary_key=True, foreign_key="layer.id")
     residue_id: int = Field(primary_key=True, foreign_key="residue.id")
 
-    layer: "Layer" = Relationship(back_populates="residues")
-    residue: "Residue" = Relationship(back_populates="layers")
+    layer: "Layer" = Relationship(back_populates="layer_residues")
+    residue: "Residue" = Relationship(back_populates="layer_residues")
 
 
 class LayerResidueOutput(LayerResidueBase):
