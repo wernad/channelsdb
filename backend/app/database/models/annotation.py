@@ -17,7 +17,7 @@ class AnnotationBase(SQLModel):
 class Annotation(AnnotationBase, table=True):
     id: int = Field(primary_key=True)
 
-    structure: "PDBData" = Relationship(back_populates="structure")
+    structure: "PDBData" = Relationship(back_populates="annotations")
 
 
 class AnnotationOutput(AnnotationBase):

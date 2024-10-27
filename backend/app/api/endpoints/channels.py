@@ -1,52 +1,41 @@
-from fastapi import HTTPException, APIRouter
+from fastapi import APIRouter
+from pydantic import BaseModel
 
-from app.database.models.channel import Channels
-from app.api.dependencies import ChannelsRepositoryDep
+# from app.database.models.channel import Channels
+from app.api.dependencies import ChannelsRepositoryDep, SessionDep
+from app.api.exceptions import ProteinNotFound, UnsupportedDBType
 from app.api.common import (
-    SourceDatabase,
-    PDB_ID_Type,
-    Uniprot_ID_Type,
     pdb_id_404_response,
-    uniprot_id_404_response,
 )
 
 router = APIRouter()
 
 
+class Channels(BaseModel):
+    annotations: list = []
+
+
 @router.get(
-    "/channels/pdb/{pdb_id}",
+    "/{protein_id}",
     response_model=Channels,
     name="Channel data",
     tags=["PDB"],
     description="Returns information about channels for a given protein",
     responses=pdb_id_404_response,
 )
-async def get_channels_pdb(pdb_id: PDB_ID_Type):
-    return get_channels(SourceDatabase.PDB, pdb_id)
-
-
-@router.get(
-    "/channels/alphafill/{uniprot_id}",
-    response_model=Channels,
-    name="Channel data",
-    tags=["AlphaFill"],
-    description="Returns information about channels for a given protein",
-    responses=uniprot_id_404_response,
-)
-async def get_channels_alphafill(uniprot_id: Uniprot_ID_Type):
-    return get_channels(SourceDatabase.AlphaFill, uniprot_id)
-
-
-def get_channels(
-    source_db: SourceDatabase, protein_id: str, channel_repo: ChannelsRepositoryDep
+async def get_channels(
+    channel_repo: ChannelsRepositoryDep, protein_id: str, db_type: str
 ):
-    channels = channel_repo.find_channels_by_structure_id(structure_id=protein_id)
+    if db_type not in ["pdb", "alphafil"]:
+        raise UnsupportedDBType(db_type=db_type)
+
+    # channels = {"annotations": [123]}
+    channels = channel_repo.find_channels_by_structure_id(
+        structure_id=protein_id,
+    )
 
     if not channels:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Protein with ID '{protein_id}' not found in ChannelsDB ({source_db.value})",
-        )
+        raise ProteinNotFound(protein_id=protein_id)
 
     return channels
 

@@ -5,6 +5,8 @@ from app.database.models import Channel
 from app.database.structures import Filter
 
 
+# TODO possibly add services to handle manipulation of fetched data.
+# TODO potentially change engine and repo to true async
 class ChannelRepository(RepositoryBase):
     """Repository for DB operations related to ."""
 
@@ -29,9 +31,9 @@ class ChannelRepository(RepositoryBase):
 
     #     query = query.filter(and_(*range_conditions))
 
-    def find_channels_by_structure_id(self, session: Session, structure_id: str):
+    def find_channels_by_structure_id(self, structure_id: str):
         statement = select(Channel).where(Channel.structure_id == structure_id)
-        channels: Channel = session.exec(statement).all()
+        channels: Channel = self.db.exec(statement).all()
 
         tunnels_dict = {}
 

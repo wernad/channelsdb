@@ -40,4 +40,4 @@ class ChannelOutput(ChannelBase):
 
 
 class Channels(SQLModel):
-    channels: List["Channel"]
+    channels: List["ChannelBase"]
