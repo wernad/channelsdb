@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 # from app.database.models.channel import Channels
-from app.api.dependencies import ChannelsRepositoryDep, SessionDep
+from app.api.dependencies import ChannelsRepositoryDep
 from app.api.exceptions import ProteinNotFound, UnsupportedDBType
 from app.api.common import (
     pdb_id_404_response,
