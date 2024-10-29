@@ -9,13 +9,13 @@ if TYPE_CHECKING:
 
 class LayerBase(SQLModel):
     channel_id: int = Field(foreign_key="channel.id")
-    order: int
+    layer_order: int
     radius: Decimal = Field(decimal_places=3)
     free_radius: Decimal = Field(decimal_places=3)
     start_distance: Decimal = Field(decimal_places=3)
     end_distance: Decimal = Field(decimal_places=3)
     local_minimum: bool
-    bottleneck: bool
+    bottleneck: bool | None = Field(default=None)
 
 
 class Layer(LayerBase, table=True):

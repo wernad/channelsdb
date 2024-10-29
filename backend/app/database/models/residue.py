@@ -9,10 +9,10 @@ if TYPE_CHECKING:
 
 class ResidueBase(SQLModel):
     name: str
-    charge: int = Field(index=True)
-    hodropathy: Decimal = Field(index=True, decimal_places=3)
-    polarity: Decimal = Field(index=True, decimal_places=3)
-    mutability: int = Field(index=True)
+    charge: int | None = Field(index=True, default=None)
+    hydropathy: Decimal | None = Field(index=True, decimal_places=3, default=None)
+    polarity: Decimal | None = Field(index=True, decimal_places=3, default=None)
+    mutability: int | None = Field(index=True, default=None)
 
 
 class Residue(ResidueBase, table=True):

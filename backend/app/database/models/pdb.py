@@ -12,9 +12,7 @@ class PDBDataBase(SQLModel):
 
 
 class PDBData(PDBDataBase, table=True):
-    structure_id: str = Field(
-        primary_key=True
-    )  # Used as primary key because it's acquired externally.
+    structure_id: str = Field(primary_key=True)
 
     channels: List["Channel"] = Relationship(back_populates="structure")
     annotations: List["Annotation"] = Relationship(back_populates="structure")
