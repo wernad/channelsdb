@@ -31,15 +31,13 @@ class ChannelRepository(RepositoryBase):
 
     #     query = query.filter(and_(*range_conditions))
 
-    def find_channels_by_structure_id(self, structure_id: str):
+    def get_channels_by_structure_id(self, structure_id: str):
         statement = select(Channel).where(Channel.structure_id == structure_id)
-        channels: Channel = self.db.exec(statement).all()
-
-        tunnels_dict = {}
+        channels: list[Channel] = self.db.exec(statement).all()
 
         return channels
 
-    def find_channels_by_params(self, session: Session, filter: Filter):
+    def get_channels_by_params(self, session: Session, filter: Filter):
         statement = self._build_filter_statement(Channel, filter)
         channels = session.exec(statement).all()
         return channels
