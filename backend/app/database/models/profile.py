@@ -1,7 +1,11 @@
+from typing import TYPE_CHECKING
+
 from sqlmodel import Field, Relationship, SQLModel
 from decimal import Decimal
 
-from app.database.models.channel import Channel
+
+if TYPE_CHECKING:
+    from app.database.models.channel import Channel
 
 
 class ProfileBase(SQLModel):
@@ -19,7 +23,7 @@ class Profile(ProfileBase, table=True):
     id: int = Field(primary_key=True)
     channel_id: int = Field(foreign_key="channel.id")
 
-    channel: Channel = Relationship(back_populates="profiles")
+    channel: "Channel" = Relationship(back_populates="profiles")
 
 
 class ProfileOutput(ProfileBase):

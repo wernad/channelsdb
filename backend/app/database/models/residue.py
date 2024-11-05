@@ -11,6 +11,7 @@ class ResidueBase(SQLModel):
     name: str
     charge: int | None = Field(index=True, default=None)
     hydropathy: Decimal | None = Field(index=True, decimal_places=3, default=None)
+    hydrophobicity: Decimal | None = Field(index=True, decimal_places=3, default=None)
     polarity: Decimal | None = Field(index=True, decimal_places=3, default=None)
     mutability: int | None = Field(index=True, default=None)
 
