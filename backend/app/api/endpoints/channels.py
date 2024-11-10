@@ -2,9 +2,8 @@ from typing import List, Dict
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-# from app.database.models.channel import Channels
-from app.api.dependencies import ChannelServiceDep
-from app.api.exceptions import ProteinNotFound, UnsupportedDBType
+from app.api.dependencies import ChannelServiceDep, AnnotationServiceDep
+from app.api.exceptions import ProteinNotFound
 from app.api.common import (
     pdb_id_404_response,
 )
@@ -25,17 +24,17 @@ class Channels(BaseModel):
     description="Returns information about channels for a given protein",
     responses=pdb_id_404_response,
 )
-async def get_channels(service: ChannelServiceDep, protein_id: str, db_type: str):
-    if db_type not in ["pdb", "alphafil"]:
-        raise UnsupportedDBType(db_type=db_type)
-
-    channels = service.get_channels_by_structure_json(
-        structure_id=protein_id,
+async def get_channels(channels_service: ChannelServiceDep, ann_service: AnnotationServiceDep, structure_id: str):
+    print("@@@@@@", "panda")
+    channels = channels_service.get_channels_by_structure_json(
+        structure_id=structure_id,
     )
 
+    annotations = ann_service.get_annotations_by_structure_json(structure_id=structure_id)
+
     if not channels:
-        raise ProteinNotFound(protein_id=protein_id)
-    return channels
+        raise ProteinNotFound(protein_id=structure_id)
+    return {"annotations": annotations, "channels": channels}
 
 
 # @router.get(
