@@ -1,4 +1,4 @@
-HEADER = '''\
+HEADER = """\
 package require http
 # To run this script please run it in VMD as source script.vmd
 # 
@@ -10,37 +10,37 @@ proc add_atom {id center r} {
  $atom set {x y z}  $center
  $atom set radius $r
 }
-'''
+"""
 
-CHANNEL_START = '''\
+CHANNEL_START = """\
 set {name} [mol new atoms {num_atoms}]
 mol top ${name}
 animate dup ${name}
 mol color ColorID {color_id}
-mol representation VDW 1 60'''
+mol representation VDW 1 60"""
 
 
-CHANNEL_END = '''\
+CHANNEL_END = """\
 mol delrep 0 ${name}
 mol addrep ${name}
 mol selection {{{{all}}}}
 mol rename top {{{name}}}
 
-'''
+"""
 
 
 def get_VMD_file(channels: dict) -> str:
     channel_count = 0
     lines = []
-    for channel_type in channels['Channels']:
-        for channel in channels['Channels'][channel_type]:
+    for channel_type in channels["channels"]:
+        for channel in channels["channels"][channel_type]:
             channel_count += 1
-            name = f'channel{channel_count}'
-            profile = channel['Profile']
+            name = f"channel{channel_count}"
+            profile = channel["profile"]
             lines.append(CHANNEL_START.format(name=name, num_atoms=len(profile), color_id=channel_count % 33))
             for current_atom_id, atom in enumerate(profile):
-                line = f'add_atom {current_atom_id} {{{{ {atom["X"]:.3f}, {atom["Y"]:.3f}, {atom["Z"]:.3f} }}}} {atom["Radius"]:.3f}'
+                line = f'add_atom {current_atom_id} {{{{ {atom["x"]:.3f}, {atom["y"]:.3f}, {atom["z"]:.3f} }}}} {atom["radius"]:.3f}'
                 lines.append(line)
 
             lines.append(CHANNEL_END.format(name=name))
-    return HEADER + '\n'.join(lines) + 'display reset view\n'
+    return HEADER + "\n".join(lines) + "display reset view\n"

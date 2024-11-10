@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import Depends
 from sqlmodel import Session
 from app.database.database import engine
-from app.api.services import AnnotationService, ChannelService
+from app.services import AnnotationService, ChannelService
 
 __all__ = ["AnnotationServiceDep", "ChannelServiceDep"]
 
@@ -17,9 +17,7 @@ def get_session() -> Generator[Session, None, None]:
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-def get_channel_service(
-    db: SessionDep,
-) -> Generator[ChannelService, None, None]:
+def get_channel_service(db: SessionDep) -> Generator[ChannelService, None, None]:
     yield ChannelService(db)
 
 
