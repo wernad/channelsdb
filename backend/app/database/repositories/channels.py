@@ -31,9 +31,9 @@ class ChannelRepository(RepositoryBase):
 
     #     query = query.filter(and_(*range_conditions))
 
-    def get_channels_by_structure_id(self, structure_id: str):
+    def get_channels_by_structure_id(self, structure_id: str) -> list[Channel]:
         statement = select(Channel).where(Channel.structure_id == structure_id)
-        channels: list[Channel] = self.db.exec(statement).all()
+        channels = self.db.exec(statement).all()
 
         return channels
 
