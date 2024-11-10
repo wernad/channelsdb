@@ -8,3 +8,4 @@ httpx==0.24.1
 pytest==7.4.0
 uvicorn==0.23.2
 email-validator==2.0.0.post2
+biopython==1.84
