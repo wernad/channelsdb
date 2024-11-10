@@ -20,9 +20,11 @@ class ChannelService:
         result = {}
 
         for channel in channels:
-            result[channel.method.name.upper()] = []
+            method = channel.method.name.upper()
+            if method not in result:
+                result[method] = []
 
-            result[channel.method.name.upper()].append(
+            result[method].append(
                 {
                     "type": channel.category.name,
                     "id": channel.id,
