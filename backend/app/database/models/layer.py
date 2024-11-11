@@ -8,8 +8,6 @@ if TYPE_CHECKING:
 
 
 class LayerBase(SQLModel):
-    channel_id: int = Field(foreign_key="channel.id")
-    layer_order: int
     radius: Decimal = Field(decimal_places=3)
     free_radius: Decimal = Field(decimal_places=3)
     start_distance: Decimal = Field(decimal_places=3)
@@ -20,12 +18,34 @@ class LayerBase(SQLModel):
 
 class Layer(LayerBase, table=True):
     id: int = Field(primary_key=True)
+    channel_id: int = Field(foreign_key="channel.id")
+    layer_order: int
 
     channel: "Channel" = Relationship(back_populates="layers")
-    layer_residues: List["LayerResidue"] = Relationship(
-        cascade_delete=True, back_populates="layer"
-    )
+    layer_residues: List["LayerResidue"] = Relationship(cascade_delete=True, back_populates="layer")
 
 
-class LayerOutput(LayerBase):
+class LayerGeometry(LayerBase):
     pass
+
+
+class LayerProperties(SQLModel):
+    charge: int
+    num_positives: int
+    num_negatives: int
+    hydrophobicity: float
+    hydropathy: float
+    polarity: float
+    mutability: float
+
+
+class LayerInfo(SQLModel):
+    layer_geometry: LayerGeometry
+    residues: list[str]
+    properties: LayerProperties
+
+
+class Layers(SQLModel):
+    residue_flow: list[str]
+    het_residues: list[str]
+    layers_info: list[LayerInfo]

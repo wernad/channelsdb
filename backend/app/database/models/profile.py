@@ -5,7 +5,7 @@ from decimal import Decimal
 
 
 if TYPE_CHECKING:
-    from app.database.models.channel import Channel
+    from app.database.models import Channel
 
 
 class ProfileBase(SQLModel):

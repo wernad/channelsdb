@@ -8,8 +8,6 @@ if TYPE_CHECKING:
 
 
 class AnnotationBase(SQLModel):
-    structure_id: str = Field(foreign_key="pdbdata.structure_id")
-    channel_id: int = Field(foreign_key="channel.id")
     name: str
     description: str
     reference: str
@@ -18,10 +16,12 @@ class AnnotationBase(SQLModel):
 
 class Annotation(AnnotationBase, table=True):
     id: int = Field(primary_key=True)
+    structure_id: str = Field(foreign_key="pdbdata.structure_id")
+    channel_id: int = Field(foreign_key="channel.id")
 
     structure: "PDBData" = Relationship(back_populates="annotations")
     channel: "Channel" = Relationship(back_populates="annotation")
 
 
 class AnnotationOutput(AnnotationBase):
-    pass
+    id: int

@@ -2,12 +2,14 @@ from typing import TYPE_CHECKING, List
 
 from sqlmodel import Field, SQLModel, Relationship
 
+
 if TYPE_CHECKING:
     from app.database.models import (
         Annotation,
         Method,
         Category,
         Layer,
+        Layers,
         HetResidue,
         Profile,
         ProfileOutput,
@@ -16,15 +18,15 @@ if TYPE_CHECKING:
 
 
 class ChannelBase(SQLModel):
-    structure_id: str = Field(foreign_key="pdbdata.structure_id")
-    method_id: int = Field(foreign_key="method.id")
-    category_id: int = Field(foreign_key="category.id")
     auto: bool
     cavity: int
 
 
 class Channel(ChannelBase, table=True):
     id: int = Field(primary_key=True)
+    structure_id: str = Field(foreign_key="pdbdata.structure_id")
+    method_id: int = Field(foreign_key="method.id")
+    category_id: int = Field(foreign_key="category.id")
 
     annotation: "Annotation" = Relationship(back_populates="channel")
     structure: "PDBData" = Relationship(back_populates="channels")
@@ -36,8 +38,7 @@ class Channel(ChannelBase, table=True):
 
 
 class ChannelOutput(ChannelBase):
-    profiles: List["ProfileOutput"]
-
-
-class Channels(SQLModel):
-    channels: List["ChannelBase"]
+    id: int
+    type: str
+    profile: list["ProfileOutput"]
+    layers: "Layers"
