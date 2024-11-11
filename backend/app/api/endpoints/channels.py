@@ -8,24 +8,25 @@ from app.api.common import (
     pdb_id_404_response,
 )
 
+from app.database.models import AnnotationOutput, ChannelOutput
+
 router = APIRouter()
 
 
-class Channels(BaseModel):
-    annotations: List = []
-    channels: Dict[str, list]
+class ChannelsResponse(BaseModel):
+    annotations: List[AnnotationOutput] = []
+    channels: Dict[str, List[ChannelOutput]]
 
 
 @router.get(
     "/{protein_id}",
-    response_model=Channels,
+    response_model=ChannelsResponse,
     name="Channel data",
     tags=["PDB"],
     description="Returns information about channels for a given protein",
     responses=pdb_id_404_response,
 )
 async def get_channels(channels_service: ChannelServiceDep, ann_service: AnnotationServiceDep, structure_id: str):
-    print("@@@@@@", "panda")
     channels = channels_service.get_channels_by_structure_json(
         structure_id=structure_id,
     )
