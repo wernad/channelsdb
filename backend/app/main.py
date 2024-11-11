@@ -4,6 +4,7 @@ from app.config import API_PATH
 from app.database.database import create_db_and_tables
 from psycopg2 import OperationalError
 
+
 router = APIRouter()
 router.include_router(api_router, prefix=API_PATH)
 
