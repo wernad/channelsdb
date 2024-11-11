@@ -1,14 +1,12 @@
 from enum import StrEnum
-from pathlib import Path
 from fastapi.responses import (
     FileResponse,
     RedirectResponse,
     PlainTextResponse,
     Response,
 )
-import io
 import json
-import zipfile
+
 
 from fastapi import APIRouter
 
@@ -19,8 +17,8 @@ from app.api.common import (
     uniprot_id_404_response,
     pdb_id_404_response,
 )
-from app.api.dependencies import ChannelServiceDep
-import app.api.export as exp
+from app.api.dependencies import ExportServiceDep
+from app.api.exceptions import ProteinNotFound, UnknownFileType
 
 router = APIRouter()
 
@@ -44,11 +42,11 @@ class DownloadType(StrEnum):
     responses=uniprot_id_404_response,
 )
 async def download_alphafill(
-    channels_service: ChannelServiceDep,
+    export_service: ExportServiceDep,
     file_format: DownloadType,
     uniprot_id: Uniprot_ID_Type,
 ):
-    return await download(channels_service, file_format, uniprot_id)
+    return await download(export_service, file_format, uniprot_id)
 
 
 @router.get(
@@ -59,50 +57,52 @@ async def download_alphafill(
     responses=pdb_id_404_response,
 )
 async def download_pdb(
-    channels_service: ChannelServiceDep,
+    export_service: ExportServiceDep,
     file_format: DownloadType,
     pdb_id: PDB_ID_Type,
 ):
-    return await download(channels_service, file_format, pdb_id)
+    return await download(export_service, file_format, pdb_id)
 
 
 # TODO add output class
-async def download(channels_service: ChannelServiceDep, file_format: DownloadType, structure_id: str):
-    channels = channels_service.get_channels_by_structure_json(structure_id)
-
+async def download(export_service: ExportServiceDep, file_format: DownloadType, structure_id: str):
     headers = {"Content-Disposition": f'attachment; filename="channelsdb_{structure_id}.{file_format.value}"'}
 
+    # TODO handle png format later.
     match file_format:
         case DownloadType.json:
+            result = export_service.get_json_file(structure_id)
+            if not result:
+                raise ProteinNotFound(protein_id=structure_id)
+
             return Response(
-                content=json.dumps(channels),
+                content=result,
                 media_type="application/json",
                 headers=headers,
             )
         case DownloadType.pdb:
-            return PlainTextResponse(exp.get_PDB_file(channels), headers=headers)
+            result = export_service.get_pdb_file(structure_id)
         case DownloadType.pymol:
-            return PlainTextResponse(exp.get_Pymol_file(channels), headers=headers)
+            result = export_service.get_pymol_file(structure_id)
         case DownloadType.chimera:
-            return PlainTextResponse(exp.get_Chimera_file(channels), headers=headers)
+            result = export_service.get_chimera_file(structure_id)
         case DownloadType.vmd:
-            return PlainTextResponse(exp.get_VMD_file(channels), headers=headers)
+            result = export_service.get_vmd_file(structure_id)
         case DownloadType.zip:
-            content = io.BytesIO()
-            zf = zipfile.ZipFile(content, mode="w")
-            zf.writestr(f"{structure_id}_chimera.py", exp.get_Chimera_file(channels))
-            zf.writestr(f"{structure_id}_pymol.py", exp.get_Pymol_file(channels))
-            zf.writestr(f"{structure_id}_vmd.tk", exp.get_VMD_file(channels))
-            zf.writestr(f"{structure_id}_report.json", json.dumps(channels))
-            zf.writestr(f"{structure_id}_channels.pdb", exp.get_PDB_file(channels))
-            zf.close()
-
+            result = export_service.get_zip_file(structure_id)
+            if not result:
+                raise ProteinNotFound(protein_id=structure_id)
             return Response(
-                content=content.getvalue(),
+                content=result,
                 media_type="application/zip",
                 headers=headers,
             )
         case DownloadType.cif:
-            return PlainTextResponse(exp.get_cif())
+            file_path = "/home/chiro/Documen    ts/DP/channelsdb/backend/app/api/export/1tqn.cif"
+            result = export_service.get_cif_file(file_path)
         case _:
-            return "Unknown download file type received."
+            raise UnknownFileType(DownloadType.value)
+    if not result:
+        raise ProteinNotFound(protein_id=structure_id)
+
+    return PlainTextResponse(result, headers=headers)
