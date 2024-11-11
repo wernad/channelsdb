@@ -14,6 +14,9 @@ class AnnotationService:
 
         annotations = self.repository.get_annotations_by_structure_id(structure_id)
 
+        if not annotations:
+            return None
+
         result = []
 
         for ann in annotations:
