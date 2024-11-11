@@ -1,5 +1,6 @@
 from sqlmodel import Session
-from app.database.repositories.annotations import AnnotationRepository
+from app.database.repositories import AnnotationRepository
+from app.database.models import AnnotationOutput
 
 
 class AnnotationService:
@@ -17,13 +18,13 @@ class AnnotationService:
 
         for ann in annotations:
             result.append(
-                {
-                    "Id": ann.channel_id,
-                    "Name": ann.name,
-                    "Description": ann.description,
-                    "Reference": ann.reference,
-                    "ReferenceType": ann.reference_type,
-                }
+                AnnotationOutput(
+                    id=ann.channel_id,
+                    name=ann.name,
+                    description=ann.description,
+                    reference=ann.reference,
+                    reference_type=ann.reference_type,
+                )
             )
 
         return result
