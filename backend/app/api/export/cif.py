@@ -61,7 +61,7 @@ _profile.charge
 """
 
 
-def get_cif():
+def get_cif(channels):
     parent_cif = MMCIF2Dict("/home/chiro/Documents/DP/channelsdb/backend/app/api/export/1tqn.cif")
     residue_names = parent_cif["_atom_site.label_comp_id"]
     # id + 1 because cif file starts from index 1.
