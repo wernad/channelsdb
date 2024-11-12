@@ -47,8 +47,8 @@ ChannelServiceDep = Annotated[ChannelService, Depends(get_channel_service)]
 # Export
 
 
-def get_export_service() -> Generator[ExportService, None, None]:
-    yield ExportService()
+def get_export_service(db: SessionDep) -> Generator[ExportService, None, None]:
+    yield ExportService(db)
 
 
 ExportServiceDep = Annotated[ExportService, Depends(get_export_service)]
