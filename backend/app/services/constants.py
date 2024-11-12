@@ -1,62 +1,63 @@
 # ============ CIF ============
 CIF_ANNOTATION = """
-    loop_
-    _annotation.channel_id
-    _annotation.name
-    _annotation.description
-    _annotation.reference
-    _annotation.reference_type
-    """
+loop_
+_annotation.channel_id
+_annotation.name
+_annotation.description
+_annotation.reference
+_annotation.reference_type
+"""
 
 CIF_CHANNEL = """
-    loop_
-    _channel.id
-    _channel.category # Path, Pore, Tunnel, etc
-    _channel.method # CSATunnel_MOLE, CSATunnel_Caver, etc
-    _channel.auto # bool
-    _channel.cavity # integer
-    """
+loop_
+_channel.id
+_channel.category # Path, Pore, Tunnel, etc
+_channel.method # CSATunnel_MOLE, CSATunnel_Caver, etc
+_channel.auto # bool
+_channel.cavity # integer
+"""
 
 CIF_LAYER = """
-    loop_
-    _layer.id
-    _layer.channel_id
-    _layer.order # order in channel
-    _layer.min_radius
-    _layer.min_free_radius
-    _layer.start_distance
-    _layer.end_distance
-    _layer.local_minimum # bool
-    _layer.bottleneck # bool
-    """
+loop_
+_layer.id
+_layer.channel_id
+_layer.order # order in channel
+_layer.min_radius
+_layer.min_free_radius
+_layer.start_distance
+_layer.end_distance
+_layer.local_minimum # bool
+_layer.bottleneck # bool
+"""
 
 CIF_HET_RESIDUE = """
-    loop_
-    _het_residue.channel_id
-    _het_residue.name
-    _het_residue.sequence_number
-    _het_residue.chain_id
-    """
+loop_
+_het_residue.channel_id
+_het_residue.name
+_het_residue.sequence_number
+_het_residue.chain_id
+"""
 
 CIF_LAYER_RESIDUE = """
-    loop_
-    _residue_layer.layer_id
-    _residue_layer.residue_id
-    _residue_layer.flow
-    _residue_layer.backbone # bool"""
+loop_
+_layer_residue.layer_id
+_layer_residue.residue_id
+_layer_residue.flow
+_layer_residue.backbone # bool
+"""
 
 CIF_PROFILE = """
-    loop_
-    _profile.channel_id
-    _profile.radius
-    _profile.free_radius
-    _profile.distance
-    _profile.T
-    _profile.x
-    _profile.y
-    _profile.z
-    _profile.charge
-    """
+loop_
+_profile.channel_id
+_profile.radius
+_profile.free_radius
+_profile.distance
+_profile.T
+_profile.x
+_profile.y
+_profile.z
+_profile.charge
+"""
 
 # ============ CHIMERA ============
 CHIMERA_HEADER = """\
