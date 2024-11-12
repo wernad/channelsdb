@@ -152,22 +152,30 @@ class ExportService:
         if not channels:
             return None
 
-        res2idx = ExportService.name_to_index(file_path)
+        # Keep original file for later concatenation.
+        with open(file_path, "r", encoding="utf-8") as f:
+            original_file = f.read()
+            f.seek(0)
+            res2idx = ExportService.name_to_index(f)
 
-        result = {"annotation": [], "channel": [], "layer": [], "het_residue": [], "layer_residue": [], "profile": []}
+        loops = {"annotation": [], "channel": [], "het_residue": [], "layer": [], "layer_residue": [], "profile": []}
         for channel in channels:
-            result["annotation"].append(
-                f"{channel.annotation.channel_id} {channel.annotation.name} {channel.annotation.description} {channel.annotation.reference} {channel.annotation.reference_type}"
-            )
-            result["channel"].append(
+            if channel.annotation:
+                loops["annotation"].append(
+                    f"{channel.annotation.channel_id} {channel.annotation.name} {channel.annotation.description} {channel.annotation.reference} {channel.annotation.reference_type}"
+                )
+            loops["channel"].append(
                 f"{channel.id} {channel.category.name} {channel.method.name} {channel.auto} {channel.cavity}"
             )
 
-            result["het_residue"].extend(
-                [f"{res.channel_id} {res.name} {res.sequence_number} {res.chain_id}" for res in channel.het_residues]
+            loops["het_residue"].extend(
+                [
+                    f"{res.channel_id} {res.residue.name.upper()} {res.sequence_number} {res.chain_id}"
+                    for res in channel.het_residues
+                ]
             )
 
-            result["profile"].extend(
+            loops["profile"].extend(
                 [
                     f"{p.channel_id} {p.radius} {p.free_radius} {p.distance} {p.t_value} {p.coord_x} {p.coord_y} {p.coord_z} {p.charge}"
                     for p in channel.profiles
@@ -175,17 +183,32 @@ class ExportService:
             )
 
             for layer in channel.layers:
-                result["layer"].append(
+                loops["layer"].append(
                     f"{layer.id} {layer.channel_id} {layer.layer_order} {layer.radius} {layer.free_radius} {layer.start_distance} {layer.end_distance} {layer.local_minimum} {layer.bottleneck}"
                 )
 
-                result["layer_residue"].extend(
+                loops["layer_residue"].extend(
                     [
-                        f"{lr.layer_id} {res2idx[lr.residue.name]} {lr.flow_id} {lr.backbone}"
+                        f"{lr.layer_id} {res2idx[lr.residue.name.upper()]} {lr.flow_id} {lr.backbone}"
                         for lr in layer.layer_residues
                     ]
                 )
+        result = ""
+        loop_headers = [
+            const.CIF_ANNOTATION,
+            const.CIF_CHANNEL,
+            const.CIF_HET_RESIDUE,
+            const.CIF_LAYER,
+            const.CIF_LAYER_RESIDUE,
+            const.CIF_PROFILE,
+        ]
 
+        for header, rows in zip(loop_headers, list(loops.values())):
+            result += header
+            for row in rows:
+                result += f"{row}\n"
+
+        result = f"{original_file}\n# CHANNELSDB \n{result}"
         return result
 
     def get_zip_file(self, structure_id: str):
