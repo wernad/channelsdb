@@ -33,8 +33,7 @@ async def get_channels(channels_service: ChannelServiceDep, ann_service: Annotat
     if not channels:
         raise ProteinNotFound(protein_id=structure_id)
 
-    annotations = ann_service.get_annotations_by_structure_json(structure_id=structure_id)
-
+    annotations = ann_service.get_annotations_by_structure(structure_id=structure_id)
     return {"annotations": annotations, "channels": channels}
 
 

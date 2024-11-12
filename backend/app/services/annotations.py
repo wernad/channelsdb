@@ -9,13 +9,10 @@ class AnnotationService:
     def __init__(self, db: Session):
         self.repository = AnnotationRepository(db)
 
-    def get_annotations_by_structure_json(self, structure_id: str):
+    def get_annotations_by_structure(self, structure_id: str):
         """Fetches annotations for given structure and returns it as a dict."""
 
         annotations = self.repository.get_annotations_by_structure_id(structure_id)
-
-        if not annotations:
-            return None
 
         result = []
 

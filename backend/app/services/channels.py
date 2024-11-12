@@ -3,16 +3,15 @@ from typing import TYPE_CHECKING
 from sqlmodel import Session
 from app.database.repositories.channels import ChannelRepository
 
-if TYPE_CHECKING:
-    from app.database.models import (
-        Channel,
-        ChannelOutput,
-        ProfileOutput,
-        Layers,
-        LayerInfo,
-        LayerGeometry,
-        LayerProperties,
-    )
+from app.database.models import (
+    Channel,
+    ChannelOutput,
+    ProfileOutput,
+    Layers,
+    LayerInfo,
+    LayerGeometry,
+    LayerProperties,
+)
 
 
 class ChannelService:
@@ -26,7 +25,7 @@ class ChannelService:
         return sum(v for v in values) / len(values)
 
     @staticmethod
-    def channels_with_annotations_as_model(channels: list[Channel]) -> dict:
+    def channels_with_annotations_as_model(channels: list["Channel"]) -> dict:
         result = {}
 
         for channel in channels:
@@ -40,7 +39,7 @@ class ChannelService:
                     id=channel.id,
                     cavity=channel.cavity,
                     auto=channel.auto,
-                    profile=[ProfileOutput(**p) for p in channel.profiles],
+                    profile=[ProfileOutput(**dict(p)) for p in channel.profiles],
                     layers=Layers(
                         residue_flow=[
                             f"{lr.residue.name.upper()} {lr.sequence_number} {lr.chain_id}{" Backbone" if lr.backbone else ""}"
