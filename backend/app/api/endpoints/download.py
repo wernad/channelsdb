@@ -5,7 +5,6 @@ from fastapi.responses import (
     PlainTextResponse,
     Response,
 )
-import json
 
 
 from fastapi import APIRouter
