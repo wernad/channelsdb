@@ -22,7 +22,6 @@ class ChannelsResponse(BaseModel):
     "/{protein_id}",
     response_model=ChannelsResponse,
     name="Channel data",
-    tags=["PDB"],
     description="Returns information about channels for a given protein",
     responses=pdb_id_404_response,
 )

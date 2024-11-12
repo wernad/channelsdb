@@ -9,9 +9,7 @@ from app.api.common import CHANNEL_TYPES
 
 router = APIRouter()
 
-TunnelModel = create_model(
-    "TunnelTypes", **{tunnel: (int, ...) for tunnel in CHANNEL_TYPES.values()}
-)
+TunnelModel = create_model("TunnelTypes", **{tunnel: (int, ...) for tunnel in CHANNEL_TYPES.values()})
 
 
 class StatisticsModel(BaseModel):
@@ -23,7 +21,6 @@ class StatisticsModel(BaseModel):
 @router.get(
     "/statistics",
     name="General statistics",
-    tags=["General"],
     description="Returns summary statistics about the data stored",
 )
 async def get_statistics() -> StatisticsModel:

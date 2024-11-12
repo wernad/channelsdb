@@ -23,18 +23,10 @@ def parse_sifts_data(xml_data: str) -> dict[str, tuple[str, dict[str, str]]]:
         chain = entity.attrib["entityId"]
         for segment in entity.iterfind("segment", ns):
             for residue in segment.find("listResidue", ns):
-                if (
-                    uniprot_node := residue.find(
-                        './crossRefDb[@dbCoordSys="UniProt"]', ns
-                    )
-                ) is not None:
+                if (uniprot_node := residue.find('./crossRefDb[@dbCoordSys="UniProt"]', ns)) is not None:
                     uniprot_id = uniprot_node.attrib["dbAccessionId"]
                     uniprot_res_num = uniprot_node.attrib["dbResNum"]
-                    if (
-                        pdb_node := residue.find(
-                            './crossRefDb[@dbCoordSys="PDBresnum"]', ns
-                        )
-                    ) is not None:
+                    if (pdb_node := residue.find('./crossRefDb[@dbCoordSys="PDBresnum"]', ns)) is not None:
                         if (pdb_res_num := pdb_node.attrib["dbResNum"]) == "null":
                             continue
                         if uniprot_id in data:
@@ -57,17 +49,13 @@ def get_entry_annotations(uniprot_id: str, tree: ET) -> dict:
             entry["Name"] = node.text
             break
 
-    for catalytics in tree.iterfind(
-        'entry/comment[@type="catalytic activity"]/*/text', ns
-    ):
+    for catalytics in tree.iterfind('entry/comment[@type="catalytic activity"]/*/text', ns):
         entry["Catalytics"].append(catalytics.text)
 
     return entry
 
 
-def get_uniprot_residue_annotations(
-    mapping: tuple[str, dict[str, str]] | None, tree: ET
-) -> list[dict]:
+def get_uniprot_residue_annotations(mapping: tuple[str, dict[str, str]] | None, tree: ET) -> list[dict]:
     ns = {"": "http://uniprot.org/uniprot"}
 
     references: dict[str, tuple[str, str]] = {}
@@ -86,9 +74,7 @@ def get_uniprot_residue_annotations(
         "site",
         "metal ion-binding site",
     ):
-        features[feature_type] = tree.findall(
-            f'entry/feature[@type="{feature_type}"]', ns
-        )
+        features[feature_type] = tree.findall(f'entry/feature[@type="{feature_type}"]', ns)
 
     residue_annotations = []
 
@@ -121,9 +107,7 @@ def get_uniprot_residue_annotations(
                         f'{item.find("original", ns).text} &rarr; {item.find("variation", ns).text}: {item.attrib["description"]}'
                     )
                 else:
-                    residue_annotation["Text"] = (
-                        f'{item.attrib["type"].title()}: {item.attrib["description"]}'
-                    )
+                    residue_annotation["Text"] = f'{item.attrib["type"].title()}: {item.attrib["description"]}'
 
             except (AttributeError, KeyError):
                 continue
@@ -133,9 +117,7 @@ def get_uniprot_residue_annotations(
     return residue_annotations
 
 
-def get_channelsdb_residue_annotations(
-    uniprot_id: str, mapping: tuple[str, dict[str, str]] | None
-) -> list[dict]:
+def get_channelsdb_residue_annotations(uniprot_id: str, mapping: tuple[str, dict[str, str]] | None) -> list[dict]:
     # path = Path(config["dirs"]["annotations"]) / f"{uniprot_id}.json"
     # if not path.exists():
     #     return []
@@ -154,9 +136,7 @@ def get_channelsdb_residue_annotations(
     return data
 
 
-def fill_annotations(
-    annotations: dict, mapping: tuple[str, dict[str, str]] | None, uniprot_id: str
-):
+def fill_annotations(annotations: dict, mapping: tuple[str, dict[str, str]] | None, uniprot_id: str):
     req = requests.get(
         f"https://www.ebi.ac.uk/proteins/api/proteins/{uniprot_id}",
         headers={"accept": "application/xml"},
@@ -174,50 +154,27 @@ def fill_annotations(
     xml_data = req.content.decode("utf-8")
     tree = ET.fromstring(xml_data)
     annotations["EntryAnnotations"].append(get_entry_annotations(uniprot_id, tree))
-    annotations["ResidueAnnotations"]["UniProt"].extend(
-        get_uniprot_residue_annotations(mapping, tree)
-    )
-    annotations["ResidueAnnotations"]["ChannelsDB"].extend(
-        get_channelsdb_residue_annotations(uniprot_id, mapping)
-    )
+    annotations["ResidueAnnotations"]["UniProt"].extend(get_uniprot_residue_annotations(mapping, tree))
+    annotations["ResidueAnnotations"]["ChannelsDB"].extend(get_channelsdb_residue_annotations(uniprot_id, mapping))
 
 
 @router.get(
-    "/annotations/alphafill/{uniprot_id}",
+    "/{pdb_id}",
     response_model=AnnotationOutput,
     name="Annotation data",
-    tags=["AlphaFill"],
-    description="Returns annotations of individual protein and its residues",
-    responses=uniprot_id_404_response,
-)
-async def get_annotations_alphafill(uniprot_id: Uniprot_ID_Type):
-    annotations = AnnotationOutput().model_dump()
-    fill_annotations(annotations, None, uniprot_id)
-    return annotations
-
-
-@router.get(
-    "/annotations/pdb/{pdb_id}",
-    response_model=AnnotationOutput,
-    name="Annotation data",
-    tags=["PDB"],
     description="Returns annotations of individual protein and its residues",
     responses=pdb_id_404_response,
 )
 async def get_annotations_pdb(pdb_id: PDB_ID_Type):
     annotations = AnnotationOutput().model_dump()
-    req = requests.get(
-        f"https://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/{pdb_id}.xml.gz"
-    )
+    req = requests.get(f"https://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/{pdb_id}.xml.gz")
     if req.status_code > 500:
         raise HTTPException(
             status_code=503,
             detail=f"PDBe server returned an error when accessing: {req.url}",
         )
     if req.status_code != 200:
-        raise HTTPException(
-            status_code=404, detail=f"Cannot find annotations for PDB ID '{pdb_id}'"
-        )
+        raise HTTPException(status_code=404, detail=f"Cannot find annotations for PDB ID '{pdb_id}'")
 
     xml_data = gzip.decompress(req.content).decode("utf-8")
     sifts = parse_sifts_data(xml_data)
@@ -227,8 +184,6 @@ async def get_annotations_pdb(pdb_id: PDB_ID_Type):
     except HTTPException as e:
         # We should never get here, this would mean incorrect SIFTS data
         print(e, file=sys.stderr)
-        raise HTTPException(
-            status_code=400, detail=f"Cannot load annotations for PDB ID '{pdb_id}'"
-        )
+        raise HTTPException(status_code=400, detail=f"Cannot load annotations for PDB ID '{pdb_id}'")
 
     return annotations

@@ -34,24 +34,8 @@ class DownloadType(StrEnum):
 
 
 @router.get(
-    "/download/alphafill/{uniprot_id}/{file_format}",
+    "/{pdb_id}/{file_format}",
     name="Download data",
-    tags=["AlphaFill"],
-    description="Download various data about the protein",
-    responses=uniprot_id_404_response,
-)
-async def download_alphafill(
-    export_service: ExportServiceDep,
-    file_format: DownloadType,
-    uniprot_id: Uniprot_ID_Type,
-):
-    return await download(export_service, file_format, uniprot_id)
-
-
-@router.get(
-    "/download/pdb/{pdb_id}/{file_format}",
-    name="Download data",
-    tags=["PDB"],
     description="Download various data about the protein",
     responses=pdb_id_404_response,
 )
@@ -97,8 +81,8 @@ async def download(export_service: ExportServiceDep, file_format: DownloadType, 
                 headers=headers,
             )
         case DownloadType.cif:
-            file_path = "/home/chiro/Documen    ts/DP/channelsdb/backend/app/api/export/1tqn.cif"
-            result = export_service.get_cif_file(file_path)
+            file_path = f"/home/chiro/Documents/DP/channelsdb/backend/app/services/{structure_id}.cif"
+            result = export_service.get_cif_file(structure_id, file_path)
         case _:
             raise UnknownFileType(DownloadType.value)
     if not result:

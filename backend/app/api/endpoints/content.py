@@ -18,7 +18,6 @@ router = APIRouter()
 @router.get(
     "/content",
     name="Database content",
-    tags=["General"],
     description="Returns the counts of tunnels for each stored entry",
 )
 async def get_content() -> ContentModel:

@@ -10,7 +10,6 @@ router = APIRouter()
 @router.get(
     "/assembly/{pdb_id}",
     name="Assembly",
-    tags=["PDB"],
     description="Returns prefered assembly for a given protein",
     responses=pdb_id_404_response,
 )
@@ -22,8 +21,6 @@ async def get_assembly_id(pdb_id: PDB_ID_Type) -> str:
             detail=f"PDBe API returned an error when accessing: {req.url}",
         )
     if req.status_code != 200:
-        raise HTTPException(
-            status_code=404, detail="Cannot find assembly for PDB ID '{pdb_id}'"
-        )
+        raise HTTPException(status_code=404, detail="Cannot find assembly for PDB ID '{pdb_id}'")
     data = json.loads(req.content)[pdb_id][0]["assemblies"]
     return next(assembly["assembly_id"] for assembly in data if assembly["preferred"])
