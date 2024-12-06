@@ -53,6 +53,8 @@ async def download(export_service: ExportServiceDep, file_format: DownloadType, 
 
     # TODO handle png format later.
     match file_format:
+        case DownloadType.png:
+            return "TODO"
         case DownloadType.json:
             result = export_service.get_json_file(structure_id)
             if not result:
