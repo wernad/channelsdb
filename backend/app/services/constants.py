@@ -1,62 +1,75 @@
+# TODO Add ids to loops that dont have identification.
 # ============ CIF ============
 CIF_ANNOTATION = """
 loop_
-_annotation.channel_id
-_annotation.name
-_annotation.description
-_annotation.reference
-_annotation.reference_type
+_sb_ncbr_channel_annotation.id
+_sb_ncbr_channel_annotation.channel_id
+_sb_ncbr_channel_annotation.name
+_sb_ncbr_channel_annotation.description
+_sb_ncbr_channel_annotation.reference
+_sb_ncbr_channel_annotation.reference_type
 """
 
 CIF_CHANNEL = """
 loop_
-_channel.id
-_channel.category # Path, Pore, Tunnel, etc
-_channel.method # CSATunnel_MOLE, CSATunnel_Caver, etc
-_channel.auto # bool
-_channel.cavity # integer
+_sb_ncbr_channel.id
+_sb_ncbr_channel.type # Path, Pore, etc
+_sb_ncbr_channel.method # CSATunnel, etc
+_sb_ncbr_channel.software # MOLE, Caver
+_sb_ncbr_channel.auto # bool
+_sb_ncbr_channel.cavity
 """
 
 CIF_LAYER = """
 loop_
-_layer.id
-_layer.channel_id
-_layer.order # order in channel
-_layer.min_radius
-_layer.min_free_radius
-_layer.start_distance
-_layer.end_distance
-_layer.local_minimum # bool
-_layer.bottleneck # bool
+_sb_ncbr_channel_layer.id
+_sb_ncbr_channel_layer.channel_id
+_sb_ncbr_channel_layer.order # order in channel
+_sb_ncbr_channel_layer.min_radius
+_sb_ncbr_channel_layer.min_free_radius
+_sb_ncbr_channel_layer.start_distance
+_sb_ncbr_channel_layer.end_distance
+_sb_ncbr_channel_layer.local_minimum # bool
+_sb_ncbr_channel_layer.bottleneck # bool
+_sb_ncbr_channel_layer.charge
+_sb_ncbr_channel_layer.numPositives
+_sb_ncbr_channel_layer.numNegatives
+_sb_ncbr_channel_layer.hydrophobicity
+_sb_ncbr_channel_layer.hydropathy
+_sb_ncbr_channel_layer.polarity
+_sb_ncbr_channel_layer.mutability
 """
 
 CIF_HET_RESIDUE = """
 loop_
-_het_residue.channel_id
-_het_residue.name
-_het_residue.sequence_number
-_het_residue.chain_id
+_sb_ncbr_channel_het_residue.id
+_sb_ncbr_channel_het_residue.channel_id
+_sb_ncbr_channel_het_residue.name
+_sb_ncbr_channel_het_residue.sequence_number
+_sb_ncbr_channel_het_residue.chain_id
+_sb_ncbr_channel_het_residue.bottleneck # bool
 """
 
 CIF_LAYER_RESIDUE = """
 loop_
-_layer_residue.layer_id
-_layer_residue.residue_id
-_layer_residue.flow
-_layer_residue.backbone # bool
+_sb_ncbr_channel_layer_residue.layer_id
+_sb_ncbr_channel_layer_residue.residue_id
+_sb_ncbr_channel_layer_residue.flow
+_sb_ncbr_channel_layer_residue.backbone # bool
 """
 
 CIF_PROFILE = """
 loop_
-_profile.channel_id
-_profile.radius
-_profile.free_radius
-_profile.distance
-_profile.T
-_profile.x
-_profile.y
-_profile.z
-_profile.charge
+_sb_ncbr_channel_profile.id
+_sb_ncbr_channel_profile.channel_id
+_sb_ncbr_channel_profile.radius
+_sb_ncbr_channel_profile.free_radius
+_sb_ncbr_channel_profile.distance
+_sb_ncbr_channel_profile.T
+_sb_ncbr_channel_profile.x
+_sb_ncbr_channel_profile.y
+_sb_ncbr_channel_profile.z
+_sb_ncbr_channel_profile.charge
 """
 
 # ============ CHIMERA ============

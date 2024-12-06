@@ -1,4 +1,5 @@
 import json
+from statistics import mean
 from string import ascii_uppercase
 from io import BytesIO
 from zipfile import ZipFile
@@ -11,7 +12,6 @@ from app.services import constants as const, ChannelService
 from app.database.repositories.channels import ChannelRepository
 
 
-# TODO update all export methods to use ORM.
 class ExportService:
     channel_repo: ChannelRepository
 
@@ -20,13 +20,19 @@ class ExportService:
 
     @staticmethod
     def name_to_index(file_path: str):
-        """Method loads"""
+        """Method loads file with parent CIF and extracts residues with indicies from it based on a key."""
+        residue_key = "_atom_site.label_comp_id"
         parent_cif = MMCIF2Dict(file_path)
-        residue_names = parent_cif["_atom_site.label_comp_id"]
+        residue_names = parent_cif[residue_key]
         # id + 1 because cif file starts from index 1.
         name_to_indices = {elem: residue_names.index(elem) + 1 for elem in set(residue_names)}
 
         return name_to_indices
+
+    @staticmethod
+    def round_items(values: list[float], decimal_places: int = 3):
+        """Round all values to predefined decimal places and joins them into a string."""
+        return " ".join(str(round(x, decimal_places)) for x in values)
 
     def get_json_file(self, structure_id: str) -> str:
         """Creates json file from given channel data using ChannelService."""
@@ -148,6 +154,7 @@ class ExportService:
     def get_cif_file(self, structure_id: str, file_path: str) -> str:
         """Builds CIF file and inserts it into parent file."""
         channels = self.channel_repo.get_channels_by_structure_id(structure_id)
+        decimal_places = 3
 
         if not channels:
             return None
@@ -162,29 +169,40 @@ class ExportService:
         for channel in channels:
             if channel.annotation:
                 loops["annotation"].append(
-                    f"{channel.annotation.channel_id} {channel.annotation.name} {channel.annotation.description} {channel.annotation.reference} {channel.annotation.reference_type}"
+                    f'{channel.annotation.channel_id} "{channel.annotation.name}" "{channel.annotation.description}" "{channel.annotation.reference}" {channel.annotation.reference_type}'
                 )
+            method, software = channel.method.name.split("_")
             loops["channel"].append(
-                f"{channel.id} {channel.category.name} {channel.method.name} {channel.auto} {channel.cavity}"
+                f"{channel.id} {channel.category.name} {method} {software} {channel.auto} {channel.cavity}"
             )
 
+            het_id = len(loops["het_residue"])
             loops["het_residue"].extend(
                 [
-                    f"{res.channel_id} {res.residue.name.upper()} {res.sequence_number} {res.chain_id}"
-                    for res in channel.het_residues
+                    f"{het_id + idx + 1} {res.channel_id} {res.residue.name.upper()} {res.sequence_number} {res.chain_id} {res.backbone}"
+                    for idx, res in enumerate(channel.het_residues)
                 ]
             )
 
+            profile_id = len(loops["profile"])
             loops["profile"].extend(
                 [
-                    f"{p.channel_id} {p.radius} {p.free_radius} {p.distance} {p.t_value} {p.coord_x} {p.coord_y} {p.coord_z} {p.charge}"
-                    for p in channel.profiles
+                    f"{profile_id + idx + 1} {p.channel_id} {ExportService.round_items([p.radius, p.free_radius,p.distance,p.t_value,p.coord_x, p.coord_y, p.coord_z])} {p.charge}"
+                    for idx, p in enumerate(channel.profiles)
                 ]
             )
 
             for layer in channel.layers:
+                charge = sum(lr.residue.charge for lr in layer.layer_residues)
+                negatives = len([1 for lr in layer.layer_residues if lr.residue.charge > 0])
+                positives = len([1 for lr in layer.layer_residues if lr.residue.charge < 0])
+                hydrophobicity = round(mean([lr.residue.hydrophobicity for lr in layer.layer_residues]), decimal_places)
+                hydropathy = round(mean([lr.residue.hydropathy for lr in layer.layer_residues]), decimal_places)
+                polarity = round(mean([lr.residue.polarity for lr in layer.layer_residues]), decimal_places)
+                mutability = round(mean([lr.residue.mutability for lr in layer.layer_residues]), decimal_places)
+                bottleneck = layer.bottleneck if layer.bottleneck else False
                 loops["layer"].append(
-                    f"{layer.id} {layer.channel_id} {layer.layer_order} {layer.radius} {layer.free_radius} {layer.start_distance} {layer.end_distance} {layer.local_minimum} {layer.bottleneck}"
+                    f"{layer.id} {layer.channel_id} {ExportService.round_items([layer.layer_order, layer.radius, layer.free_radius, layer.start_distance, layer.end_distance])} {layer.local_minimum} {bottleneck} {charge} {positives} {negatives} {hydrophobicity} {hydropathy} {polarity} {mutability}"
                 )
 
                 loops["layer_residue"].extend(
