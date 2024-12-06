@@ -1,4 +1,4 @@
-from sqlmodel import Session, select, join
+from sqlmodel import select, join
 
 from app.database.repositories.base import RepositoryBase
 from app.database.models import Channel
@@ -37,7 +37,7 @@ class ChannelRepository(RepositoryBase):
 
         return channels
 
-    def get_channels_by_params(self, session: Session, filter: Filter):
+    def get_channels_by_params(self, filter: Filter):
         statement = self._build_filter_statement(Channel, filter)
-        channels = session.exec(statement).all()
+        channels = self.db.exec(statement).all()
         return channels
