@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from statistics import mean
 
 from sqlmodel import Session
 from app.database.repositories.channels import ChannelRepository
@@ -19,10 +19,6 @@ class ChannelService:
 
     def __init__(self, db: Session):
         self.repository = ChannelRepository(db)
-
-    @staticmethod
-    def _get_average(values: list):
-        return sum(v for v in values) / len(values)
 
     @staticmethod
     def channels_with_annotations_as_model(channels: list["Channel"]) -> dict:
@@ -74,20 +70,12 @@ class ChannelService:
                                         [lr.residue.charge for lr in layer.layer_residues if lr.residue.charge > 0]
                                     ),
                                     num_negatives=len(
-                                        [lr.residue.charge for lr in layer.layer_residues if lr.residue.charge > 0]
+                                        [lr.residue.charge for lr in layer.layer_residues if lr.residue.charge < 0]
                                     ),
-                                    hydrophobicity=ChannelService._get_average(
-                                        [lr.residue.hydrophobicity for lr in layer.layer_residues]
-                                    ),
-                                    hydropathy=ChannelService._get_average(
-                                        [lr.residue.hydropathy for lr in layer.layer_residues]
-                                    ),
-                                    polarity=ChannelService._get_average(
-                                        [lr.residue.polarity for lr in layer.layer_residues]
-                                    ),
-                                    mutability=ChannelService._get_average(
-                                        [lr.residue.mutability for lr in layer.layer_residues]
-                                    ),
+                                    hydrophobicity=mean([lr.residue.hydrophobicity for lr in layer.layer_residues]),
+                                    hydropathy=mean([lr.residue.hydropathy for lr in layer.layer_residues]),
+                                    polarity=mean([lr.residue.polarity for lr in layer.layer_residues]),
+                                    mutability=mean([lr.residue.mutability for lr in layer.layer_residues]),
                                 ),
                             )
                             for layer in sorted(channel.layers, key=lambda x: x.layer_order)
