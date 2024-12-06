@@ -9,6 +9,7 @@ if TYPE_CHECKING:
 
 class PDBDataBase(SQLModel):
     has_channels: bool
+    version: int
 
 
 class PDBData(PDBDataBase, table=True):
