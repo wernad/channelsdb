@@ -38,13 +38,17 @@ class ChannelService:
                     profile=[ProfileOutput(**dict(p)) for p in channel.profiles],
                     layers=Layers(
                         residue_flow=[
-                            f"{lr.residue.name.upper()} {lr.sequence_number} {lr.chain_id}{" Backbone" if lr.backbone else ""}"
+                            f"{lr.residue.name.upper()} {lr.sequence_number} {lr.chain_id}{' Backbone' if lr.backbone else ''}"
                             for layer in channel.layers
-                            for lr in sorted(layer.layer_residues, key=lambda x: x.sequence_number)
+                            for lr in sorted(
+                                layer.layer_residues, key=lambda x: x.sequence_number
+                            )
                         ],
                         het_residues=[
-                            f"{hr.residue.name.upper()} {hr.sequence_number} {hr.chain_id}{" Backbone" if hr.backbone else ""}"
-                            for hr in sorted(channel.het_residues, key=lambda x: x.sequence_number)
+                            f"{hr.residue.name.upper()} {hr.sequence_number} {hr.chain_id}{' Backbone' if hr.backbone else ''}"
+                            for hr in sorted(
+                                channel.het_residues, key=lambda x: x.sequence_number
+                            )
                         ],
                         layers_info=[
                             LayerInfo(
@@ -59,26 +63,61 @@ class ChannelService:
                                 residues=list(
                                     set(
                                         [
-                                            f"{lr.residue.name.upper()} {lr.sequence_number} {lr.chain_id}{" Backbone" if lr.backbone else ""}"
-                                            for lr in sorted(layer.layer_residues, key=lambda lr: lr.sequence_number)
+                                            f"{lr.residue.name.upper()} {lr.sequence_number} {lr.chain_id}{' Backbone' if lr.backbone else ''}"
+                                            for lr in sorted(
+                                                layer.layer_residues,
+                                                key=lambda lr: lr.sequence_number,
+                                            )
                                         ]
                                     )
                                 ),
                                 properties=LayerProperties(
-                                    charge=sum(lr.residue.charge for lr in layer.layer_residues),
+                                    charge=sum(
+                                        lr.residue.charge for lr in layer.layer_residues
+                                    ),
                                     num_positives=len(
-                                        [lr.residue.charge for lr in layer.layer_residues if lr.residue.charge > 0]
+                                        [
+                                            lr.residue.charge
+                                            for lr in layer.layer_residues
+                                            if lr.residue.charge > 0
+                                        ]
                                     ),
                                     num_negatives=len(
-                                        [lr.residue.charge for lr in layer.layer_residues if lr.residue.charge < 0]
+                                        [
+                                            lr.residue.charge
+                                            for lr in layer.layer_residues
+                                            if lr.residue.charge < 0
+                                        ]
                                     ),
-                                    hydrophobicity=mean([lr.residue.hydrophobicity for lr in layer.layer_residues]),
-                                    hydropathy=mean([lr.residue.hydropathy for lr in layer.layer_residues]),
-                                    polarity=mean([lr.residue.polarity for lr in layer.layer_residues]),
-                                    mutability=mean([lr.residue.mutability for lr in layer.layer_residues]),
+                                    hydrophobicity=mean(
+                                        [
+                                            lr.residue.hydrophobicity
+                                            for lr in layer.layer_residues
+                                        ]
+                                    ),
+                                    hydropathy=mean(
+                                        [
+                                            lr.residue.hydropathy
+                                            for lr in layer.layer_residues
+                                        ]
+                                    ),
+                                    polarity=mean(
+                                        [
+                                            lr.residue.polarity
+                                            for lr in layer.layer_residues
+                                        ]
+                                    ),
+                                    mutability=mean(
+                                        [
+                                            lr.residue.mutability
+                                            for lr in layer.layer_residues
+                                        ]
+                                    ),
                                 ),
                             )
-                            for layer in sorted(channel.layers, key=lambda x: x.layer_order)
+                            for layer in sorted(
+                                channel.layers, key=lambda x: x.layer_order
+                            )
                         ],
                     ),
                 )
