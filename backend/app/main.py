@@ -17,9 +17,7 @@ router.include_router(api_router, prefix=API_PATH)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
-        log.debug("Creating database and tables.")
         create_db_and_tables()
-        log.debug("Database and tables created successfully.")
     except OperationalError as e:
         log.error(f"An operational error occured white creating tables: {e.pgcode}")
 
