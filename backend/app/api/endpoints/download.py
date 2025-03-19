@@ -16,7 +16,7 @@ from app.api.common import (
     uniprot_id_404_response,
     pdb_id_404_response,
 )
-from app.api.dependencies import ExportServiceDep
+from app.api.dependencies import ExportServiceDep, IDCheckDep
 from app.api.exceptions import ProteinNotFound, UnknownFileType
 
 router = APIRouter()
@@ -48,8 +48,14 @@ async def download_pdb(
 
 
 # TODO add output class
-async def download(export_service: ExportServiceDep, file_format: DownloadType, structure_id: str):
-    headers = {"Content-Disposition": f'attachment; filename="channelsdb_{structure_id}.{file_format.value}"'}
+async def download(
+    export_service: ExportServiceDep,
+    file_format: DownloadType,
+    structure_id: IDCheckDep,
+):
+    headers = {
+        "Content-Disposition": f'attachment; filename="channelsdb_{structure_id}.{file_format.value}"'
+    }
 
     # TODO handle png format later.
     match file_format:

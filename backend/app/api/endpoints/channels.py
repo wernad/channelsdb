@@ -2,7 +2,7 @@ from typing import List, Dict
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from app.api.dependencies import ChannelServiceDep, AnnotationServiceDep
+from app.api.dependencies import ChannelServiceDep, AnnotationServiceDep, IDCheckDep
 from app.api.exceptions import ProteinNotFound
 from app.api.common import (
     pdb_id_404_response,
@@ -25,14 +25,18 @@ class ChannelsResponse(BaseModel):
     description="Returns information about channels for a given protein",
     responses=pdb_id_404_response,
 )
-async def get_channels(channels_service: ChannelServiceDep, ann_service: AnnotationServiceDep, structure_id: str):
+async def get_channels(
+    channels_service: ChannelServiceDep,
+    ann_service: AnnotationServiceDep,
+    protein_id: IDCheckDep,
+):
     channels = channels_service.get_channels_with_annotations_by_structure(
-        structure_id=structure_id,
+        structure_id=protein_id,
     )
     if not channels:
-        raise ProteinNotFound(protein_id=structure_id)
+        raise ProteinNotFound(protein_id=protein_id)
 
-    annotations = ann_service.get_annotations_by_structure(structure_id=structure_id)
+    annotations = ann_service.get_annotations_by_structure(structure_id=protein_id)
     return {"annotations": annotations, "channels": channels}
 
 

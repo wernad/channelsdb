@@ -6,8 +6,14 @@ from sqlmodel import Session
 from app.database.database import engine
 from app.database.repositories import ChannelRepository
 from app.services import AnnotationService, ChannelService, ExportService
+from app.api.exceptions import UnsupportedIDFormat
 
-__all__ = ["AnnotationServiceDep", "ChannelServiceDep"]
+__all__ = [
+    "AnnotationServiceDep",
+    "ChannelServiceDep",
+    "ExportServiceDep",
+    "IDCheckDep",
+]
 
 # Session
 
@@ -52,3 +58,21 @@ def get_export_service(db: SessionDep) -> Generator[ExportService, None, None]:
 
 
 ExportServiceDep = Annotated[ExportService, Depends(get_export_service)]
+
+# ID handling
+
+
+def check_protein_id(protein_id: str):
+    if len(protein_id) == 4:
+        protein_id = f"pdb_0000{protein_id}"
+    elif len(protein_id) == 12 and protein_id.startswith("pdb_"):
+        pass
+    elif len(protein_id) == 6 and protein_id.startswith("P"):
+        pass
+    else:
+        raise UnsupportedIDFormat(protein_id=protein_id)
+
+    return protein_id
+
+
+IDCheckDep = Annotated[str, Depends(check_protein_id)]
