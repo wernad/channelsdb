@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship, SQLModel
+from pydantic.alias_generators import to_pascal
 
 
 if TYPE_CHECKING:
@@ -25,3 +26,17 @@ class Annotation(AnnotationBase, table=True):
 
 class AnnotationOutput(AnnotationBase):
     id: int
+
+
+class ResidueAnnotationOutput(SQLModel):
+    channels_db: list = Field(default_factory=list, alias="ChannelsDB")
+    uni_prot: list = Field(default_factory=list, alias="UniProt")
+
+
+class AnnotationsOutput(SQLModel):
+    entry_annotations: list[dict] = Field(
+        default_factory=list, alias="EntryAnnotations"
+    )
+    residue_annotations: ResidueAnnotationOutput = Field(
+        default_factory=ResidueAnnotationOutput, alias="ResidueAnnotations"
+    )
