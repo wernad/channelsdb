@@ -1,9 +1,15 @@
-FROM python:3.11-alpine
+FROM python:3.11-slim
 
 ARG APP_NAME=channelsdb
 
 # Update and add basic packages
-RUN apk update && apk add --no-cache build-base libpq-dev gcc musl-dev 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    gcc \
+    libc6-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
  
 # Working directory
 RUN mkdir -p /opt/${APP_NAME}
@@ -15,11 +21,12 @@ RUN --mount=type=bind,source=requirements.txt,target=/${APP_NAME}/requirements.t
     pip install --no-cache-dir --upgrade --root-user-action=ignore -r requirements.txt
 
 # Copy source files.
-COPY [".", "/opt/${APP_NAME}"]
+COPY ["./app", "/opt/${APP_NAME}"]
 
 # Create user
-RUN adduser -D ${APP_NAME} && chown -R ${APP_NAME} /opt/${APP_NAME}
+RUN useradd --create-home --shell /bin/bash --user-group ${APP_NAME} \
+    && chown -R ${APP_NAME}:${APP_NAME} /opt/${APP_NAME}
 USER ${APP_NAME}
 
 # Run app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
