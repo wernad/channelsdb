@@ -54,7 +54,6 @@ def check_if_tables_exist():
     inspector = inspect(engine)
 
     for table in REQUIRED_TABLES:
-        # log.debug(f"WORKER {getpid()} -- {table} -- {inspector.has_table(table)}")
         if not inspector.has_table(table):
             return False
 
@@ -65,8 +64,9 @@ def create_db_and_tables():
     with engine.begin() as conn:
         log.debug(f"WORKER {getpid()} -- Attempting to acquire lock...")
         try:
+            lock_id = "12345"
             lock_acquired = conn.execute(
-                text("SELECT pg_try_advisory_lock(12345)")
+                text(f"SELECT pg_try_advisory_lock({lock_id})")
             ).scalar()
 
             if lock_acquired:
@@ -76,7 +76,7 @@ def create_db_and_tables():
                 SQLModel.metadata.create_all(bind=engine)
 
                 # Release the lock when done
-                conn.execute(text("SELECT pg_advisory_unlock(12345)"))
+                conn.execute(text(f"SELECT pg_advisory_unlock({lock_id})"))
                 log.debug(f"WORKER {getpid()} -- Tables created.")
             else:
                 # Another worker is already creating tables, wait for completion
@@ -89,4 +89,4 @@ def create_db_and_tables():
 
                 log.debug(f"WORKER {getpid()} -- Done waiting")
         except Exception as e:
-            log.debug(f"Error during initialization: {e}")
+            log.debug(f"Error during table creation: {e}")
