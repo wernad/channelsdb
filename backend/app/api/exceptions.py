@@ -16,4 +16,4 @@ class UnknownFileType(HTTPException):
 class UnsupportedIDFormat(HTTPException):
     def __init__(self, protein_id: str):
         self.status_code = 400
-        self.detail = f"Given protein id is in unsupported format ({protein_id}). Expected format examples: 11ba (PDB), pdb_000011ba (PDB), P12345 (Alphafill)."
+        self.detail = f"Given protein id is in unsupported format ({protein_id}). Expected format examples: 11ba (PDB), pdb_000011ba (PDB), P12345 (UniProt)."
