@@ -63,11 +63,11 @@ ExportServiceDep = Annotated[ExportService, Depends(get_export_service)]
 
 
 def check_protein_id(protein_id: str):
-    if len(protein_id) == 4:
+    if len(protein_id) == 4:  # Old PDB ID
         protein_id = f"pdb_0000{protein_id}"
-    elif len(protein_id) == 12 and protein_id.startswith("pdb_"):
+    elif len(protein_id) == 12 and protein_id.startswith("pdb_"):  # New PDB id
         pass
-    elif len(protein_id) == 6 and protein_id.startswith("P"):
+    elif len(protein_id) == 6 and protein_id.startswith("P"):  # UniProt ID
         pass
     else:
         raise UnsupportedIDFormat(protein_id=protein_id)
