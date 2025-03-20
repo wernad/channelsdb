@@ -75,8 +75,9 @@ namespace ChannelsDB {
                 }
             });
 
-        initSearch(state);
-        getStatistics(state);
+        // TODO add required endpoints to BE
+        // initSearch(state);
+        // getStatistics(state);
 
         return state;
     }
@@ -97,7 +98,7 @@ namespace ChannelsDB {
                 state.statisticsAvailable.onNext(state.statistics);
                 return;
             }
-            const content = await ajaxGetJson(`${state.channelsUrl}/statistics`); 
+            const content = await ajaxGetJson(`${state.channelsUrl}/statistics`);
             state.statistics = content;
             state.statisticsAvailable.onNext(content);
         } catch (e) {

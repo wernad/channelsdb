@@ -33,7 +33,7 @@ namespace ChannelsDB {
         render() {
             return <div className='container'>
                 <Menu />
-                <div className='container-fluid' style={{ padding: '0 15px '}}>
+                <div className='container-fluid' style={{ padding: '0 15px ' }}>
                     <SearchView {...this.props} />
                 </div>
                 <Footer />
@@ -149,16 +149,17 @@ namespace ChannelsDB {
         render() {
             return <div className='form-group form-group-lg'>
                 <img className="img" src="assets/img/pdbe_logo.png" alt="pdbe_logo" height="30" />
-                {this.state.isAvailable
-                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for experimental structures using name or IDs (e.g. cytochrome P450, 5ebl, KcsA, P08686)'
-                        onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
-                        onKeyPress={(e) => {
-                            if (e.key !== 'Enter') return;
-                            this.props.state.fullSearch.onNext(void 0);
-                            updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
-                        }} />
-                    : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }} disabled={true}
-                        value='Initializing search...'  />}
+                {/* {this.state.isAvailable 
+                    ? */}
+                <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for experimental structures using name or IDs (e.g. cytochrome P450, 5ebl, KcsA, P08686)'
+                    onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
+                    onKeyPress={(e) => {
+                        if (e.key !== 'Enter') return;
+                        this.props.state.fullSearch.onNext(void 0);
+                        updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
+                    }} />
+                {/* : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }} disabled={true}
+                        value='Initializing search...'  />} */}
             </div>;
         }
     }
@@ -174,21 +175,22 @@ namespace ChannelsDB {
         render() {
             return <div className='form-group form-group-lg'>
                 <img className="img" src="assets/img/alphafill-logo.png" alt="alphafill_logo" height="50" />
-                {this.state.isAvailable
-                    ? <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for AlphaFill structures via Uniprot ID (e.g. P08686, P10635)'
-                        //onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
-                        onKeyPress={(e) => {
-                            if (e.key !== 'Enter') {
-                                return;
-                            };
-                            console.log((e.target as any).value);
-                            //TODO check if UNIPROT exists
-                            window.open(`/detail/alphafill/${(e.target as any).value}`, "_blank");
-                            // this.props.state.fullSearch.onNext(void 0);
-                            // updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
-                        }} />
-                    : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }} disabled={true}
-                        value='Initializing search...'  />}
+                {/* {this.state.isAvailable
+                    ?  */}
+                <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for AlphaFill structures via Uniprot ID (e.g. P08686, P10635)'
+                    //onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
+                    onKeyPress={(e) => {
+                        if (e.key !== 'Enter') {
+                            return;
+                        };
+                        console.log((e.target as any).value);
+                        //TODO check if UNIPROT exists
+                        window.open(`/detail/alphafill/${(e.target as any).value}`, "_blank");
+                        // this.props.state.fullSearch.onNext(void 0);
+                        // updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
+                    }} />
+                {/* : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }} disabled={true}
+                    value='Initializing search...' />} */}
             </div>;
         }
     }
@@ -250,7 +252,7 @@ namespace ChannelsDB {
 
         private entry(d: any, i: any) {
             return <div key={d.value + d.var_name + '--' + i}>
-                <a href='#' data-value={d.value} data-var={d.var_name} data-count={d.num_pdb_entries} onClick={this.showEntries} title={`${d.value}`}>{d.value}</a> 
+                <a href='#' data-value={d.value} data-var={d.var_name} data-count={d.num_pdb_entries} onClick={this.showEntries} title={`${d.value}`}>{d.value}</a>
                 <div className='count'>{d.num_pdb_entries}</div>
             </div>;
         }
@@ -262,31 +264,31 @@ namespace ChannelsDB {
                 <div className='group-header'><button className='btn btn-default btn-block' onClick={this.toggle}><span className={`glyphicon glyphicon-${this.state.isExpanded ? 'minus' : 'plus'}`} aria-hidden='true'></span> <span>{g.groupValue}</span> ({g.doclist.numFound})</button></div>
                 <div className='group-list-wrap' style={{ display: this.state.entries ? 'none' : 'block' }}>
                     <div className='group-list' style={{ display: this.state.isExpanded ? 'block' : 'none' }}>
-                        {this.state.docs.map((d: any, i: number) => this.entry(d, i)) }
+                        {this.state.docs.map((d: any, i: number) => this.entry(d, i))}
                         {this.state.docs.length < g.doclist.numFound
                             ? <div style={{ padding: 0, float: 'none', clear: 'both' }}>
                                 <button style={{ width: '100%', display: 'block' }} className='btn btn-xs btn-primary btn-block' disabled={this.state.isLoading ? true : false} onClick={this.loadMore}>{this.state.isLoading ? 'Loading...' : `More (${g.doclist.numFound - this.state.docs.length} remaining)`}</button>
                             </div>
                             : void 0}
                     </div>
-                    <div style={{ clear: 'both' }} />                    
+                    <div style={{ clear: 'both' }} />
                 </div>
-                { this.state.entries && this.state.isExpanded
-                ? <div className='entry-list-wrap'>
-                    <button className='btn btn-block btn-primary' onClick={() => this.setState({ entries: void 0 })}><span className={`glyphicon glyphicon-chevron-left`} aria-hidden='true'></span></button>
-                    <Entries state={this.props.state} {...this.state.entries!} mode='Embed' />
-                  </div>
-                : void 0 }
+                {this.state.entries && this.state.isExpanded
+                    ? <div className='entry-list-wrap'>
+                        <button className='btn btn-block btn-primary' onClick={() => this.setState({ entries: void 0 })}><span className={`glyphicon glyphicon-chevron-left`} aria-hidden='true'></span></button>
+                        <Entries state={this.props.state} {...this.state.entries!} mode='Embed' />
+                    </div>
+                    : void 0}
             </div>;
         }
     }
 
-    class Entry extends React.Component<GlobalProps & { docs: any }, { }> {
+    class Entry extends React.Component<GlobalProps & { docs: any }, {}> {
         render() {
             const docs = this.props.docs;
             const pdbContentMap = ['CSATunnels MOLE', 'CSATunnels Caver', 'ReviewedChannels MOLE', 'ReviewedChannels Caver',
-             'CofactorTunnels MOLE', 'CofactorTunnels Caver', 'TransmembranePores MOLE', 'TransmembranePores Caver', 'ProcognateTunnels MOLE',
-             'ProcognateTunnels Caver'];
+                'CofactorTunnels MOLE', 'CofactorTunnels Caver', 'TransmembranePores MOLE', 'TransmembranePores Caver', 'ProcognateTunnels MOLE',
+                'ProcognateTunnels Caver'];
             const alphafillContentMap = ['AlphaFillTunnels MOLE', 'AlphaFillTunnels Caver'];
             const pdb = this.props.state.dbContent.pdb[toLower(docs.pdb_id)];
             const alphafill = this.props.state.dbContent.alphafill[toLower(docs.pdb_id)];
@@ -307,21 +309,21 @@ namespace ChannelsDB {
                 <ul>
                     <li><b>Experiment Method:</b> {(docs.experimental_method || ['n/a']).join(', ')} | {docs.resolution || 'n/a'} Å</li>
                     <li><b>Organism:</b> <i>{(docs.organism_scientific_name || ['n/a']).join(', ')}</i></li>
-                    { numPdbChannels > 0
+                    {numPdbChannels > 0
                         ? <li><i>{`${numPdbChannels} channel${numPdbChannels !== 1 ? 's' : ''}; ${msgPdb}`}</i></li>
-                        : 
-                      numAlphafillChannels > 0
-                        ? <li><i>{`${numAlphafillChannels} channel${numAlphafillChannels !== 1 ? 's' : ''}; ${msgAlphafill}`}</i></li> : void 0
+                        :
+                        numAlphafillChannels > 0
+                            ? <li><i>{`${numAlphafillChannels} channel${numAlphafillChannels !== 1 ? 's' : ''}; ${msgAlphafill}`}</i></li> : void 0
                     }
                 </ul>
                 <div className='pdb-entry-img-wrap'>
-                    <img src={`/api/download/pdb/${docs.pdb_id.toLowerCase()}/png`}/>
+                    <img src={`/api/download/pdb/${docs.pdb_id.toLowerCase()}/png`} />
                 </div>
             </div>;
         }
     }
 
-    class Entries extends React.Component<GlobalProps & { group?: string, value: string, var_name?: string, count?: number, mode: 'Embed' | 'Full'  }, { isLoading: boolean, entries: any[], count: number, withCount: number, withoutCount: number, showing: number }> {
+    class Entries extends React.Component<GlobalProps & { group?: string, value: string, var_name?: string, count?: number, mode: 'Embed' | 'Full' }, { isLoading: boolean, entries: any[], count: number, withCount: number, withoutCount: number, showing: number }> {
         state = { isLoading: false, entries: [] as any[], count: -1, showing: 0, withCount: -1, withoutCount: -1 };
 
         private fetchEmbed = async () => {
