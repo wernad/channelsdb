@@ -17,7 +17,7 @@ WORKDIR /opt/${APP_NAME}
 
 # Dependencies
 COPY ["requirements.txt", "/opt/${APP_NAME}"]
-RUN --mount=type=bind,source=requirements.txt,target=/${APP_NAME}/requirements.txt,readonly \
+RUN source=requirements.txt,target=/${APP_NAME}/requirements.txt,readonly \
     pip install --no-cache-dir --upgrade --root-user-action=ignore -r requirements.txt
 
 # Copy source files.
@@ -29,4 +29,4 @@ RUN useradd --create-home --shell /bin/bash --user-group ${APP_NAME} \
 USER ${APP_NAME}
 
 # Run app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
