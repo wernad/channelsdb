@@ -1,13 +1,11 @@
 from contextlib import asynccontextmanager
 
+from psycopg2 import OperationalError
 from fastapi import FastAPI, APIRouter
-from fastapi.openapi.docs import get_swagger_ui_html
-from starlette.requests import Request
 
 from app.config import API_PATH
 from app.api.main import api_router
 from app.database.database import create_db_and_tables
-from psycopg2 import OperationalError
 from app.log import logger as log
 
 router = APIRouter()
