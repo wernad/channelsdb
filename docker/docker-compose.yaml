@@ -1,16 +1,16 @@
 name: channelsdb
 
 services:
-  channels_db:
+  pg-channels:
     image: postgres:14
-    container_name: channels_db
+    container_name: pg-channels
     environment:
       POSTGRES_NAME: channelsdb
       POSTGRES_USER: channelsdb
       POSTGRES_PASSWORD: admin
       POSTGRES_PORT: 5432
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "channelsdb"]
+      test: ["CMD", "pg_isready", "-U", "channelsdb", "-d", "channelsdb"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -20,9 +20,9 @@ services:
       channelsnet:
         ipv4_address: 172.20.0.4
 
-  channels_be:
+  be-channels:
     build: ../backend
-    container_name: channels_be
+    container_name: be-channels
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --workers 8
     environment:
       POSTGRES_NAME: channelsdb
@@ -39,11 +39,11 @@ services:
       options:
         tag: channelsdb-backend
     depends_on:
-      channels_db:
+      pg-channels:
         condition: service_healthy
         restart: true
     healthcheck:
-      test: ["CMD", "curl", "-f", "172.20.0.3:8000/api/v1/health/ping"]
+      test: ["CMD", "curl", "-f", "localhost:8000/api/v1/health/ping"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -52,11 +52,11 @@ services:
         ipv4_address: 172.20.0.3
 
 
-  channels_fe:
-    container_name: channels_fe
-    build:
+  fe-channels:
+    container_name: fe-channels
+    build: 
       context: ..
-      dockerfile: ./Dockerfile
+      dockerfile: ./frontend/Dockerfile
     volumes:
       - ./nginx.devel.conf:/etc/nginx/nginx.conf:ro
     ports:
@@ -66,7 +66,7 @@ services:
       options:
         tag: channelsdb-web
     depends_on:
-      channels_be:
+      be-channels:
         condition: service_healthy
         restart: true
     networks:
