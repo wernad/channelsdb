@@ -1,7 +1,5 @@
 from enum import StrEnum
 from fastapi.responses import (
-    FileResponse,
-    RedirectResponse,
     PlainTextResponse,
     Response,
 )
@@ -9,13 +7,6 @@ from fastapi.responses import (
 
 from fastapi import APIRouter
 
-# from app.api.config import config
-from app.api.common import (
-    PDB_ID_Type,
-    Uniprot_ID_Type,
-    uniprot_id_404_response,
-    pdb_id_404_response,
-)
 from app.api.dependencies import ExportServiceDep, IDCheckDep
 from app.api.exceptions import ProteinNotFound, UnknownFileType
 
@@ -31,20 +22,6 @@ class DownloadType(StrEnum):
     vmd = "vmd"
     zip = "zip"
     cif = "cif"
-
-
-@router.get(
-    "/{pdb_id}/{file_format}",
-    name="Download data",
-    description="Download various data about the protein",
-    responses=pdb_id_404_response,
-)
-async def download_pdb(
-    export_service: ExportServiceDep,
-    file_format: DownloadType,
-    pdb_id: PDB_ID_Type,
-):
-    return await download(export_service, file_format, pdb_id)
 
 
 # TODO add output class

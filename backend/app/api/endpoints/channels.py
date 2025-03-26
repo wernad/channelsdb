@@ -4,9 +4,6 @@ from pydantic import BaseModel
 
 from app.api.dependencies import ChannelServiceDep, AnnotationServiceDep, IDCheckDep
 from app.api.exceptions import ProteinNotFound
-from app.api.common import (
-    pdb_id_404_response,
-)
 
 from app.database.models import AnnotationOutput, ChannelOutput
 
@@ -23,7 +20,6 @@ class ChannelsResponse(BaseModel):
     response_model=ChannelsResponse,
     name="Channel data",
     description="Returns information about channels for a given protein",
-    responses=pdb_id_404_response,
 )
 async def get_channels(
     channels_service: ChannelServiceDep,
