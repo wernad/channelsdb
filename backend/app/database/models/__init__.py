@@ -3,7 +3,7 @@ from app.database.models.annotation import (
     AnnotationOutput,
     AnnotationsOutput,
 )
-from app.database.models.category import Category
+from app.database.models.software import Software
 from app.database.models.channel_config import ConfigFile
 from app.database.models.het_residue import HetResidue
 from app.database.models.layer import (

@@ -6,11 +6,11 @@ if TYPE_CHECKING:
     from app.database.models import Channel
 
 
-class CategoryBase(SQLModel):
+class SoftwareBase(SQLModel):
     name: str = Field(index=True)
 
 
-class Category(CategoryBase, table=True):
+class Software(SoftwareBase, table=True):
     id: int = Field(primary_key=True)
 
-    channels: List["Channel"] = Relationship(back_populates="category")
+    channels: List["Channel"] = Relationship(back_populates="software")

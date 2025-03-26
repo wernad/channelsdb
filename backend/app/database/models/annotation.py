@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship, SQLModel
-from pydantic.alias_generators import to_pascal
 
 
 if TYPE_CHECKING:
