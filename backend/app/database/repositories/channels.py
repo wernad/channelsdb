@@ -1,7 +1,7 @@
-from sqlmodel import select, join
+from sqlmodel import func, select, join
 
 from app.database.repositories.base import RepositoryBase
-from app.database.models import Channel
+from app.database.models import Channel, Software, Method
 from app.database.structures import Filter
 
 
@@ -41,3 +41,19 @@ class ChannelRepository(RepositoryBase):
         statement = self._build_filter_statement(Channel, filter)
         channels = self.db.exec(statement).all()
         return channels
+
+    def get_channel_counts_by_software_method(self) -> list[tuple]:
+        statement = (
+            select(
+                Software.name.label("software"),
+                Method.name.label("method"),
+                func.count(Channel.id).label("count"),
+            )
+            .join(Channel, Channel.method_id == Method.id)
+            .group_by(Method.name, Software.name)
+            .order_by(func.count(Channel.id).desc())
+        )
+
+        counts = self.db.exec(statement)
+
+        return counts
