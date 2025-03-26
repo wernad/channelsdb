@@ -23,7 +23,7 @@ services:
   be-channels:
     build: ../backend
     container_name: be-channels
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --workers 8
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --workers 8 --reload
     environment:
       POSTGRES_NAME: channelsdb
       POSTGRES_USER: channelsdb
