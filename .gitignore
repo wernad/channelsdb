@@ -2,3 +2,4 @@
 docker/kubernetes/
 *.cif*
 */calhost
+*.sql
