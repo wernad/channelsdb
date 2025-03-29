@@ -1,15 +1,16 @@
 FROM node:20-slim AS frontend
+
 RUN mkdir -p build
+
 WORKDIR /build
 
-COPY frontend/package.json frontend/package-lock.json /build/
+COPY ../frontend/package.json ./frontend/package-lock.json /build/
 
 RUN npm install
 
-COPY . /build
+COPY ./frontend /build
 
-RUN npx tsc -p ./frontend/tsconfig.json
-RUN ls -la /build
+RUN npx tsc -p tsconfig.json
 
 FROM node:20-slim AS results
 
@@ -28,6 +29,8 @@ FROM nginx:1.26-alpine-slim
 COPY --from=frontend /build/assets /var/www/assets
 
 COPY --from=frontend /build/*.html /var/www/
+
+COPY ./frontend/nginx.devel.conf etc/nginx/nginx.conf
 
 COPY --from=results /build/dist/ChannelsDB /var/www/detail
 
