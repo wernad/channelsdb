@@ -10,13 +10,34 @@ class StatisticsService:
     def __init__(self, db: Session):
         self.repository = ChannelRepository(db)
 
-    def get_channel_counts_by_software_method(self) -> dict:
-        result = self.repository.get_channel_counts_by_software_method()
+    def get_channel_counts_per_category(self) -> dict:
+        result = self.repository.get_channel_counts_per_category()
 
         date = dt.now().date()
         if result:
             entries_count = sum(row.count for row in result)
             entries = {f"{row.label}_{row.software}": row.count for row in result}
+            result = {
+                "date": date,
+                "entries_count": entries_count,
+                "statistics": entries,
+            }
+        else:
+            result = {
+                "date": date,
+                "entries_count": 0,
+                "statistics": {},
+            }
+
+        return result
+
+    def get_channel_counts_by_id(self, structure_id: str) -> dict:
+        result = self.repository.get_channel_counts_by_id(structure_id=structure_id)
+
+        date = dt.now().date()
+        if result:
+            entries_count = sum(row.count for row in result)
+            entries = {f"{row.label} {row.software}": row.count for row in result}
             result = {
                 "date": date,
                 "entries_count": entries_count,

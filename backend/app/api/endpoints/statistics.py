@@ -21,10 +21,29 @@ class StatisticsModel(SQLModel):
     description="Returns summary statistics about the data stored",
     response_model=StatisticsModel,
 )
-async def get_channel_counts_by_software_method(
+async def get_channel_counts_per_category(
     statistics_service: StatisticsServiceDep,
 ):
-    statistics = statistics_service.get_channel_counts_by_software_method()
+    statistics = statistics_service.get_channel_counts_per_category()
+
+    if statistics:
+        result = StatisticsModel(**statistics)
+        return result
+
+    return {}
+
+
+@router.get(
+    "/statistics/{structure_id}",
+    name="General statistics",
+    description="Returns summary statistics about the data stored",
+    response_model=StatisticsModel,
+)
+async def get_channel_counts_by_id(
+    structure_id: str,
+    statistics_service: StatisticsServiceDep,
+):
+    statistics = statistics_service.get_channel_counts_by_id(structure_id)
 
     if statistics:
         result = StatisticsModel(**statistics)
