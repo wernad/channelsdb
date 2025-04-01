@@ -10,8 +10,7 @@ namespace ChannelsDB {
     }
 
     export interface State {
-        dbContent: DBContent;
-        dbContentAvailable: Rx.BehaviorSubject<boolean>;
+        apiAvailable: Rx.BehaviorSubject<boolean>;
         statistics: any;
         statisticsAvailable: Rx.BehaviorSubject<any>;
         searchedTerm: string;
@@ -46,8 +45,7 @@ namespace ChannelsDB {
 
     export function initState(): State {
         const state: State = {
-            dbContent: void 0 as any,
-            dbContentAvailable: new Rx.BehaviorSubject<boolean>(false),
+            apiAvailable: new Rx.BehaviorSubject<boolean>(false),
             statistics: void 0 as any,
             statisticsAvailable: new Rx.BehaviorSubject<any>(void 0),
             searchedTerm: '',
@@ -55,7 +53,7 @@ namespace ChannelsDB {
             viewState: { kind: 'Info' },
             stateUpdated: new Rx.Subject<undefined>(),
             fullSearch: new Rx.Subject<undefined>(),
-            channelsUrl: "/api",
+            channelsUrl: "/api/v1",
         };
 
         const interrupt = Rx.Observable.merge(state.searchTerm as Rx.Observable<any>, state.fullSearch as Rx.Observable<any>);
@@ -75,22 +73,12 @@ namespace ChannelsDB {
                 }
             });
 
-        // TODO add required endpoints to BE
-        // initSearch(state);
-        // getStatistics(state);
+        getStatistics(state);
 
         return state;
     }
 
-    async function initSearch(state: State) {
-        try {
-            const content = await ajaxGetJson(`${state.channelsUrl}/content`);
-            state.dbContent = { pdb: content.PDB, alphafill: content.AlphaFill };
-            state.dbContentAvailable.onNext(true);
-        } catch (e) {
-            setTimeout(() => initSearch(state), 2000);
-        }
-    }
+
 
     async function getStatistics(state: State) {
         try {
@@ -106,9 +94,6 @@ namespace ChannelsDB {
         }
     }
 
-    function sortSearchData(state: State, data: any) {
-
-    }
 
     function search(state: State, term: string) {
         RequestPool.abort('data');
@@ -137,16 +122,19 @@ namespace ChannelsDB {
         return ret;
     }
 
-    function sortGroups(state: State, groups: any) {
-        const withChannels = [], withoutChannels = [];
-        const content = state.dbContent.pdb; //TODO set also alphafill
+    async function sortGroups(state: State, groups: any) {
+        const withChannels = [], withoutChannels = [], counts = [];
 
         for (const group of groups) {
-            if (content[toLower(group.doclist.docs[0].pdb_id)]) withChannels.push(group);
+            const id = group.doclist.docs[0].pdb_id;
+            const url = `${state.channelsUrl}/statistics/${id}`;
+            const fetched = await ajaxGetJson(url);
+            counts.push(fetched);
+            if (fetched.entries_count > 0) withChannels.push(group);
             else withoutChannels.push(group);
         }
 
-        return { entries: withChannels.concat(withoutChannels), withCount: withChannels.length, withoutCount: withoutChannels.length };
+        return { entries: withChannels.concat(withoutChannels), withCount: withChannels.length, withoutCount: withoutChannels.length, counts: counts };
     }
 
     export async function fetchPdbEntries(state: State, var_name: string, value: string) {
@@ -159,4 +147,17 @@ namespace ChannelsDB {
         const data = await ajaxGetJson(`https://www.ebi.ac.uk/pdbe/search/pdb/select?q=*:*&group=true&group.field=pdb_id&start=${0}&rows=${ROW_COUNT}&group.ngroups=true&fl=pdb_id,title,experimental_method,organism_scientific_name,resolution,entry_organism_scientific_name&json.nl=map&fq=text:"${encodeURIComponent(value)}"&sort=overall_quality+desc&wt=json`, 'data');
         return sortGroups(state, data.grouped.pdb_id.groups);
     }
+
+    export async function ping(state: State) {
+        const url = `${state.channelsUrl}/health/ping`;
+        const result = await fetchAjax(url)
+
+        const req = (result.target as XMLHttpRequest);
+        if (req.status == 200) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
