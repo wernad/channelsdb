@@ -1,7 +1,7 @@
 import json
 from statistics import mean
 from string import ascii_uppercase
-from io import BytesIO
+from io import BytesIO, StringIO
 from zipfile import ZipFile
 
 from Bio.PDB.MMCIF2Dict import MMCIF2Dict
@@ -19,13 +19,16 @@ class ExportService:
         self.channel_repo = ChannelRepository(db)
 
     @staticmethod
-    def name_to_index(file_path: str):
+    def name_to_index(content: str):
         """Method loads file with parent CIF and extracts residues with indicies from it based on a key."""
         residue_key = "_atom_site.label_comp_id"
-        parent_cif = MMCIF2Dict(file_path)
+        file = StringIO(content)
+        parent_cif = MMCIF2Dict(file)
         residue_names = parent_cif[residue_key]
         # id + 1 because cif file starts from index 1.
-        name_to_indices = {elem: residue_names.index(elem) + 1 for elem in set(residue_names)}
+        name_to_indices = {
+            elem: residue_names.index(elem) + 1 for elem in set(residue_names)
+        }
 
         return name_to_indices
 
@@ -60,7 +63,9 @@ class ExportService:
                 channel_count += 1
                 name = f"channel{channel_count}"
                 lines.append(f"def {name}(channel_object):")
-                lines.append(f"    channel = channel_object.newResidue('{name}', '', 1, '')")
+                lines.append(
+                    f"    channel = channel_object.newResidue('{name}', '', 1, '')"
+                )
                 for atom in channel["profile"]:
                     line = (
                         f"    add_atom(channel_object, '{name}', channel, "
@@ -71,7 +76,9 @@ class ExportService:
                 lines.append(const.CHIMERA_FOOTER.format(name=name))
 
         for i in range(channel_count):
-            lines.append(f"chimera.runCommand('color {const.CHIMERA_COLORS[i % len(const.CHIMERA_COLORS)]} #{i + 1}')")
+            lines.append(
+                f"chimera.runCommand('color {const.CHIMERA_COLORS[i % len(const.CHIMERA_COLORS)]} #{i + 1}')"
+            )
             lines.append(f"chimera.runCommand('repr cpk: {i + 1}')")
 
         return const.CHIMERA_HEADER + "\n".join(lines) + "\n"
@@ -93,7 +100,7 @@ class ExportService:
                 for current_atom_id, atom in enumerate(profile, start=1):
                     total_atom_id += 1
                     line = (
-                        f'HETATM{total_atom_id:>5d}  X   TUN {ascii_uppercase[(channel_count - 1) % 26]}{current_atom_id:>4}    '
+                        f"HETATM{total_atom_id:>5d}  X   TUN {ascii_uppercase[(channel_count - 1) % 26]}{current_atom_id:>4}    "
                         f'{atom["x"]:>8.3f}{atom["y"]:>8.3f}{atom["z"]:>8.3f}'
                         f'{atom["distance"]:>6.2f}{atom["radius"]:>6.3f}'
                     )
@@ -122,7 +129,10 @@ class ExportService:
                     lines.append(line)
                 lines.append(
                     const.PYMOL_FOOTER.format(
-                        name=name, color=const.PYMOL_COLORS[(channel_count - 1) % len(const.PYMOL_COLORS)]
+                        name=name,
+                        color=const.PYMOL_COLORS[
+                            (channel_count - 1) % len(const.PYMOL_COLORS)
+                        ],
                     )
                 )
 
@@ -142,7 +152,9 @@ class ExportService:
                 name = f"channel{channel_count}"
                 profile = channel["profile"]
                 lines.append(
-                    const.VMD_CHANNEL_START.format(name=name, num_atoms=len(profile), color_id=channel_count % 33)
+                    const.VMD_CHANNEL_START.format(
+                        name=name, num_atoms=len(profile), color_id=channel_count % 33
+                    )
                 )
                 for current_atom_id, atom in enumerate(profile):
                     line = f'add_atom {current_atom_id} {{{{ {atom["x"]:.3f}, {atom["y"]:.3f}, {atom["z"]:.3f} }}}} {atom["radius"]:.3f}'
@@ -151,7 +163,7 @@ class ExportService:
                 lines.append(const.VMD_CHANNEL_END.format(name=name))
         return const.VMD_HEADER + "\n".join(lines) + "display reset view\n"
 
-    def get_cif_file(self, structure_id: str, file_path: str) -> str:
+    def get_cif_file(self, structure_id: str, file: bytes) -> str:
         """Builds CIF file and inserts it into parent file."""
         channels = self.channel_repo.get_channels_by_structure_id(structure_id)
         decimal_places = 3
@@ -159,13 +171,17 @@ class ExportService:
         if not channels:
             return None
 
-        # Keep original file for later concatenation.
-        with open(file_path, "r", encoding="utf-8") as f:
-            original_file = f.read()
-            f.seek(0)
-            res2idx = ExportService.name_to_index(f)
+        file_str = file.decode("utf-8")
+        res2idx = ExportService.name_to_index(file_str)
 
-        loops = {"annotation": [], "channel": [], "het_residue": [], "layer": [], "layer_residue": [], "profile": []}
+        loops = {
+            "annotation": [],
+            "channel": [],
+            "het_residue": [],
+            "layer": [],
+            "layer_residue": [],
+            "profile": [],
+        }
         for channel in channels:
             if channel.annotation:
                 loops["annotation"].append(
@@ -194,12 +210,28 @@ class ExportService:
 
             for layer in channel.layers:
                 charge = sum(lr.residue.charge for lr in layer.layer_residues)
-                negatives = len([1 for lr in layer.layer_residues if lr.residue.charge > 0])
-                positives = len([1 for lr in layer.layer_residues if lr.residue.charge < 0])
-                hydrophobicity = round(mean([lr.residue.hydrophobicity for lr in layer.layer_residues]), decimal_places)
-                hydropathy = round(mean([lr.residue.hydropathy for lr in layer.layer_residues]), decimal_places)
-                polarity = round(mean([lr.residue.polarity for lr in layer.layer_residues]), decimal_places)
-                mutability = round(mean([lr.residue.mutability for lr in layer.layer_residues]), decimal_places)
+                negatives = len(
+                    [1 for lr in layer.layer_residues if lr.residue.charge > 0]
+                )
+                positives = len(
+                    [1 for lr in layer.layer_residues if lr.residue.charge < 0]
+                )
+                hydrophobicity = round(
+                    mean([lr.residue.hydrophobicity for lr in layer.layer_residues]),
+                    decimal_places,
+                )
+                hydropathy = round(
+                    mean([lr.residue.hydropathy for lr in layer.layer_residues]),
+                    decimal_places,
+                )
+                polarity = round(
+                    mean([lr.residue.polarity for lr in layer.layer_residues]),
+                    decimal_places,
+                )
+                mutability = round(
+                    mean([lr.residue.mutability for lr in layer.layer_residues]),
+                    decimal_places,
+                )
                 bottleneck = layer.bottleneck if layer.bottleneck else False
                 loops["layer"].append(
                     f"{layer.id} {layer.channel_id} {ExportService.round_items([layer.layer_order, layer.radius, layer.free_radius, layer.start_distance, layer.end_distance])} {layer.local_minimum} {bottleneck} {charge} {positives} {negatives} {hydrophobicity} {hydropathy} {polarity} {mutability}"
@@ -226,7 +258,7 @@ class ExportService:
             for row in rows:
                 result += f"{row}\n"
 
-        result = f"{original_file}\n# CHANNELSDB \n{result}"
+        result = f"{file_str}\n# CHANNELSDB \n{result}"
         return result
 
     def get_zip_file(self, structure_id: str):
