@@ -143,7 +143,7 @@ namespace ChannelsDB {
         state = { isAvailable: false };
 
         componentDidMount() {
-            this.props.state.dbContentAvailable.subscribe((isAvailable) => this.setState({ isAvailable }));
+            this.props.state.apiAvailable.subscribe((isAvailable) => this.setState({ isAvailable }));
         }
 
         render() {
@@ -169,7 +169,7 @@ namespace ChannelsDB {
         state = { isAvailable: false };
 
         componentDidMount() {
-            this.props.state.dbContentAvailable.subscribe((isAvailable) => this.setState({ isAvailable }));
+            this.props.state.apiAvailable.subscribe((isAvailable) => this.setState({ isAvailable }));
         }
 
         render() {
@@ -283,25 +283,18 @@ namespace ChannelsDB {
         }
     }
 
-    class Entry extends React.Component<GlobalProps & { docs: any }, {}> {
+    class Entry extends React.Component<GlobalProps & { docs: any, data: any }, {}> {
+        state = { isLoading: false };
+
         render() {
             const docs = this.props.docs;
-            const pdbContentMap = ['CSATunnels MOLE', 'CSATunnels Caver', 'ReviewedChannels MOLE', 'ReviewedChannels Caver',
-                'CofactorTunnels MOLE', 'CofactorTunnels Caver', 'TransmembranePores MOLE', 'TransmembranePores Caver', 'ProcognateTunnels MOLE',
-                'ProcognateTunnels Caver'];
-            const alphafillContentMap = ['AlphaFillTunnels MOLE', 'AlphaFillTunnels Caver'];
-            const pdb = this.props.state.dbContent.pdb[toLower(docs.pdb_id)];
-            const alphafill = this.props.state.dbContent.alphafill[toLower(docs.pdb_id)];
-            const numPdbChannels = pdb ? (pdb as number[]).reduce((a, b) => a + b, 0) : -1;
-            const numAlphafillChannels = alphafill ? (alphafill as number[]).reduce((a, b) => a + b, 0) : -1;
-            let pdbContent = numPdbChannels > 0 ? (pdb as number[]).map((el, index) => el > 0 ? pdbContentMap[index] + ' (' + el + ')' : '') : [];
-            let alphafillContent = numAlphafillChannels > 0 ? (pdb as number[]).map((el, index) => el > 0 ? alphafillContentMap[index] + ' (' + el + ')' : '') : [];
-            const msgPdb = numPdbChannels > 0 ? pdbContent.filter((a) => a.length > 0).reduce((a, b) => a + ', ' + b) : '';
-            const msgAlphafill = numAlphafillChannels > 0 ? alphafillContent.filter((a) => a.length > 0).reduce((a, b) => a + ', ' + b) : '';
+            const data = this.props.data;
+            console.log(data);
+            const msg = Object.keys(data).map((key) => `${key} (${data[key]})`).join(', ');
 
             return <div className='well pdb-entry'>
                 <a href={`/detail/pdb/${docs.pdb_id}`} target='_blank'>
-                    <div className='pdb-entry-header' style={{ background: pdb ? '#dfd' : '#ddd' }}>
+                    <div className='pdb-entry-header' style={{ background: data.entry_counts > 0 ? '#dfd' : '#ddd' }}>
                         <div>{docs.pdb_id}</div>
                         <div title={docs.title || 'n/a'}>{docs.title || 'n/a'}</div>
                     </div>
@@ -309,28 +302,25 @@ namespace ChannelsDB {
                 <ul>
                     <li><b>Experiment Method:</b> {(docs.experimental_method || ['n/a']).join(', ')} | {docs.resolution || 'n/a'} Å</li>
                     <li><b>Organism:</b> <i>{(docs.organism_scientific_name || ['n/a']).join(', ')}</i></li>
-                    {numPdbChannels > 0
-                        ? <li><i>{`${numPdbChannels} channel${numPdbChannels !== 1 ? 's' : ''}; ${msgPdb}`}</i></li>
-                        :
-                        numAlphafillChannels > 0
-                            ? <li><i>{`${numAlphafillChannels} channel${numAlphafillChannels !== 1 ? 's' : ''}; ${msgAlphafill}`}</i></li> : void 0
+                    {data.entries_count > 0 &&
+                        <li><i>{`${data.entries_count} channel${data.entries_count !== 1 ? 's' : ''}; ${msg}`}</i></li>
                     }
                 </ul>
                 <div className='pdb-entry-img-wrap'>
-                    <img src={`/api/download/pdb/${docs.pdb_id.toLowerCase()}/png`} />
+                    <img src={`/api/v1/download/${docs.pdb_id.toLowerCase()}?file_format=png`} alt="Image not found." />
                 </div>
             </div>;
         }
     }
 
-    class Entries extends React.Component<GlobalProps & { group?: string, value: string, var_name?: string, count?: number, mode: 'Embed' | 'Full' }, { isLoading: boolean, entries: any[], count: number, withCount: number, withoutCount: number, showing: number }> {
-        state = { isLoading: false, entries: [] as any[], count: -1, showing: 0, withCount: -1, withoutCount: -1 };
+    class Entries extends React.Component<GlobalProps & { group?: string, value: string, var_name?: string, count?: number, mode: 'Embed' | 'Full' }, { isLoading: boolean, entries: any[], count: number, withCount: number, counts: any[], withoutCount: number, showing: number }> {
+        state = { isLoading: false, entries: [] as any[], count: -1, counts: [] as any[], showing: 0, withCount: -1, withoutCount: -1 };
 
         private fetchEmbed = async () => {
             try {
                 this.setState({ isLoading: true });
-                const { entries, withCount, withoutCount } = await fetchPdbEntries(this.props.state, this.props.var_name!, this.props.value);
-                this.setState({ isLoading: false, entries, count: withCount + withoutCount, withCount, withoutCount, showing: this.growFactor });
+                const { entries, withCount, withoutCount, counts } = await fetchPdbEntries(this.props.state, this.props.var_name!, this.props.value);
+                this.setState({ isLoading: false, entries, count: withCount + withoutCount, withCount, withoutCount, counts, showing: this.growFactor });
             } catch (e) {
                 this.setState({ isLoading: false });
             }
@@ -339,8 +329,8 @@ namespace ChannelsDB {
         private fetchFull = async () => {
             try {
                 this.setState({ isLoading: true });
-                const { entries, withCount, withoutCount } = await fetchPdbText(this.props.state, this.props.value);
-                this.setState({ isLoading: false, entries, count: withCount + withoutCount, withCount, withoutCount, showing: this.growFactor });
+                const { entries, withCount, withoutCount, counts } = await fetchPdbText(this.props.state, this.props.value);
+                this.setState({ isLoading: false, entries, count: withCount + withoutCount, withCount, withoutCount, counts, showing: this.growFactor });
             } catch (e) {
                 this.setState({ isLoading: false });
             }
@@ -360,13 +350,14 @@ namespace ChannelsDB {
 
             const entries = [];
             for (let i = 0, _b = Math.min(this.state.showing, this.state.entries.length); i < _b; i++) {
-                entries.push(<Entry key={i} state={this.props.state} docs={groups[i].doclist.docs[0]} />);
+                entries.push(<Entry key={i} state={this.props.state} docs={groups[i].doclist.docs[0]} data={this.state.counts[i]} />);
             }
 
             return <div>
-                {this.props.mode === 'Embed'
-                    ? <h4><b>{this.props.group}</b>: {this.props.value} <small>({this.state.withCount === 0 ? `No systems with channels!` : `${this.state.count}; ${this.state.withCount} with channels`})</small></h4>
-                    : <h4><b>Search</b>: {this.props.value} <small>({this.state.count >= 0 ? `${this.state.count}; ${this.state.withCount} with channels` : '?'})</small></h4>
+                {
+                    this.props.mode === 'Embed'
+                        ? <h4><b>{this.props.group}</b>: {this.props.value} <small>({this.state.withCount === 0 ? `No systems with channels!` : `${this.state.count}; ${this.state.withCount} with channels`})</small></h4>
+                        : <h4><b>Search</b>: {this.props.value} <small>({this.state.count >= 0 ? `${this.state.count}; ${this.state.withCount} with channels` : '?'})</small></h4>
                 }
                 {
                     this.state.isLoading ? <div>Loading...</div> : void 0
@@ -378,7 +369,7 @@ namespace ChannelsDB {
                         ? <button className='btn btn-sm btn-primary btn-block' disabled={this.state.isLoading ? true : false} onClick={this.loadMore}>{this.state.isLoading ? 'Loading...' : `Show more (${this.state.count > 0 ? this.state.count - this.state.showing : '?'} remaining; ${Math.max(this.state.withCount - this.state.showing, 0)} with channels)`}</button>
                         : void 0}
                 </div>
-            </div>;
+            </div >;
         }
     }
 }
