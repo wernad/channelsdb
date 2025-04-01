@@ -57,8 +57,6 @@ services:
     build: 
       context: ..
       dockerfile: ./frontend/Dockerfile
-    volumes:
-      - ./nginx.devel.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "${CHANNELSDB_PORT:-3000}:80"
     logging:
