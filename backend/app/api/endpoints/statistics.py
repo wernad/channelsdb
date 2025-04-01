@@ -16,7 +16,7 @@ class StatisticsModel(SQLModel):
 
 
 @router.get(
-    "/statistics",
+    "/",
     name="General statistics",
     description="Returns summary statistics about the data stored",
     response_model=StatisticsModel,
@@ -34,7 +34,7 @@ async def get_channel_counts_per_category(
 
 
 @router.get(
-    "/statistics/{structure_id}",
+    "/{structure_id}",
     name="General statistics",
     description="Returns summary statistics about the data stored",
     response_model=StatisticsModel,
