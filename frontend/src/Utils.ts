@@ -82,12 +82,18 @@ namespace ChannelsDB {
         }
     }
 
-    export async function ajaxGetJson<T = any>(url: string, key?: string): Promise<T>  {
+    export async function fetchAjax(url: string, key?: string) {
         const xhttp = RequestPool.get(key);
         xhttp.open('get', url, true);
         xhttp.responseType = 'text';
         xhttp.send();
         const e = await readData(xhttp);
+
+        return e;
+    }
+
+    export async function ajaxGetJson<T = any>(url: string, key?: string): Promise<T> {
+        const e = await fetchAjax(url, key);
         return processAjax(e);
     }
 }
