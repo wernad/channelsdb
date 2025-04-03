@@ -3,64 +3,63 @@ import React from "react";
 import { GlobalRouter } from "../SimpleRouter";
 import { Context } from "../Context";
 
-export class DownloadReport extends React.Component<{}, {disabled: boolean}> {
+export class DownloadReport extends React.Component<{}, { disabled: boolean }> {
     state = { disabled: false };
 
-    private apiStatusWaitHandler(){
-        this.setState({disabled: true})
+    private apiStatusWaitHandler() {
+        this.setState({ disabled: true })
     }
-    
+
     componentDidMount() {
         Context.subscribeForApiStatus(this.apiStatusWaitHandler.bind(this));
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
     }
 
     render() {
         return <div id="download-report" className="download-button">
-            <DownloadResultsMenu disabled={this.state.disabled}/>
+            <DownloadResultsMenu disabled={this.state.disabled} />
         </div>
     }
 }
 
-class BootstrapDropDownMenuItem extends React.Component<{link: string, linkText:string, targetBlank: boolean},{}>{
-    render(){
-        return(
-            <li><a target={(this.props.targetBlank)?"_blank":""} href={this.props.link}>{this.props.linkText}</a></li>
+class BootstrapDropDownMenuItem extends React.Component<{ link: string, linkText: string, targetBlank: boolean }, {}> {
+    render() {
+        return (
+            <li><a target={(this.props.targetBlank) ? "_blank" : ""} href={this.props.link}>{this.props.linkText}</a></li>
         );
     }
 }
 
-class BootstrapDropDownMenuElementItem extends React.Component<{link: string, linkElement:JSX.Element, targetBlank: boolean},{}>{
-    render(){
-        return(
-            <li><a target={(this.props.targetBlank)?"_blank":""} href={this.props.link}>{this.props.linkElement}</a></li>
+class BootstrapDropDownMenuElementItem extends React.Component<{ link: string, linkElement: JSX.Element, targetBlank: boolean }, {}> {
+    render() {
+        return (
+            <li><a target={(this.props.targetBlank) ? "_blank" : ""} href={this.props.link}>{this.props.linkElement}</a></li>
         );
     }
 }
 
-class BootstrapDropDownMenuButton extends React.Component<{label: string, items: JSX.Element[], disabled: boolean},{}>{
-    render(){
+class BootstrapDropDownMenuButton extends React.Component<{ label: string, items: JSX.Element[], disabled: boolean }, {}> {
+    render() {
         return <div className="btn-group dropdown">
-                <button type="button" className={this.props.disabled ? "download dropdown-toggle disabled" : "download dropdown-toggle"} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {this.props.label} <span className="glyphicon glyphicon-download"></span>
-                </button>
-                <ul className="dropdown-menu">
-                    {this.props.items}
-                </ul>
-            </div>
+            <button type="button" className={this.props.disabled ? "download dropdown-toggle disabled" : "download dropdown-toggle"} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {this.props.label} <span className="glyphicon glyphicon-download"></span>
+            </button>
+            <ul className="dropdown-menu">
+                {this.props.items}
+            </ul>
+        </div>
     }
 }
 
-class DownloadResultsMenu extends React.Component<{disabled: boolean},{}>{
-    render(){
+class DownloadResultsMenu extends React.Component<{ disabled: boolean }, {}> {
+    render() {
         let pdbid = GlobalRouter.getCurrentPid();
-        let subDB = GlobalRouter.getCurrentDB();
         let url = GlobalRouter.getChannelsURL();
-        let linkBase = subDB === "pdb" ? `${url}/download/${subDB}/${pdbid}` : `${url}/download/${subDB}/${pdbid.toLowerCase()}`;
-        let items:JSX.Element[] = [];
-    
+        let linkBase = `${url}/download/${pdbid}`;
+        let items: JSX.Element[] = [];
+
         items.push(
             <BootstrapDropDownMenuItem linkText=".zip" link={`${linkBase}/zip`} targetBlank={true} />
         );
@@ -82,7 +81,7 @@ class DownloadResultsMenu extends React.Component<{disabled: boolean},{}>{
         items.push(
             <BootstrapDropDownMenuItem linkText="chimera" link={`${linkBase}/chimera`} targetBlank={true} />
         );
-        
+
         return <BootstrapDropDownMenuButton label="Download report" items={items} disabled={this.props.disabled} />
     }
 }
