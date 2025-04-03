@@ -235,10 +235,10 @@ export class GlobalRouter {
         }
 
         const oldPdbIdRegex = RegExp('^[1-9][a-z0-9]{3}$');
-        const newPdbIdRegex = RegExp('^pdb_[0-9]{5}[a-z0-9]{3}$');
+        // const newPdbIdRegex = RegExp('^pdb_[0-9]{5}[a-z0-9]{3}$'); # Might be used but for now not necessary.
         const alphafillRegex = RegExp('^[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}');
 
-        if (oldPdbIdRegex.test(this.currentPid) || newPdbIdRegex.test(this.currentPid)) {
+        if (oldPdbIdRegex.test(this.currentPid) /*|| newPdbIdRegex.test(this.currentPid)*/) {
             return IDType.Pdb;
         }
         else if (alphafillRegex.test(this.currentPid)) {
