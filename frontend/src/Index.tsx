@@ -293,7 +293,7 @@ namespace ChannelsDB {
             const msg = Object.keys(data).map((key) => `${key} (${data[key]})`).join(', ');
 
             return <div className='well pdb-entry'>
-                <a href={`/detail/${docs.pdb_id}`} target='_blank'>
+                <a href={`/detail?pid=${docs.pdb_id}`} target='_blank'>
                     <div className='pdb-entry-header' style={{ background: data.entry_counts > 0 ? '#dfd' : '#ddd' }}>
                         <div>{docs.pdb_id}</div>
                         <div title={docs.title || 'n/a'}>{docs.title || 'n/a'}</div>
