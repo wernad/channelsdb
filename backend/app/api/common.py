@@ -1,6 +1,8 @@
 OLD_PDB_ID_REGEX = "^[1-9][a-z0-9]{3}$"
 NEW_PDB_ID_REGEX = "^pdb_[0-9]{5}[a-z0-9]{3}$"
-UNIPROT_ID_REGEX = "^[a-zA-Z0-9]+$"
+UNIPROT_ID_REGEX = (
+    "[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}$"
+)
 
 
 CHANNEL_TYPES_PDB = {
