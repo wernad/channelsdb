@@ -289,7 +289,6 @@ namespace ChannelsDB {
         render() {
             const docs = this.props.docs;
             const data = this.props.data;
-            console.log(data);
             const msg = Object.keys(data).map((key) => `${key} (${data[key]})`).join(', ');
 
             return <div className='well pdb-entry'>
@@ -356,8 +355,8 @@ namespace ChannelsDB {
             return <div>
                 {
                     this.props.mode === 'Embed'
-                        ? <h4><b>{this.props.group}</b>: {this.props.value} <small>({this.state.withCount === 0 ? `No systems with channels!` : `${this.state.count}; ${this.state.withCount} with channels`})</small></h4>
-                        : <h4><b>Search</b>: {this.props.value} <small>({this.state.count >= 0 ? `${this.state.count}; ${this.state.withCount} with channels` : '?'})</small></h4>
+                        ? <h4><b>{this.props.group}</b>: {this.props.value} <small>({this.state.count <= 0 ? `No systems with channels!` : `${this.state.count}; ${this.state.withCount} with channels`})</small></h4>
+                        : <h4><b>Search</b>: {this.props.value} <small>({this.state.count <= 0 ? `No systems with channels!` : `${this.state.count}; ${this.state.withCount} with channels`})</small></h4>
                 }
                 {
                     this.state.isLoading ? <div>Loading...</div> : void 0
