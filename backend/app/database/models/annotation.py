@@ -4,7 +4,7 @@ from sqlmodel import Field, Relationship, SQLModel
 
 
 if TYPE_CHECKING:
-    from app.database.models import PDBData, Channel
+    from app.database.models import Structure, Channel
 
 
 class AnnotationBase(SQLModel):
@@ -16,10 +16,10 @@ class AnnotationBase(SQLModel):
 
 class Annotation(AnnotationBase, table=True):
     id: int = Field(primary_key=True)
-    structure_id: str = Field(foreign_key="pdbdata.structure_id")
+    structure_id: str = Field(foreign_key="structure.id")
     channel_id: int = Field(foreign_key="channel.id")
 
-    structure: "PDBData" = Relationship(back_populates="annotations")
+    structure: "Structure" = Relationship(back_populates="annotations")
     channel: "Channel" = Relationship(back_populates="annotation")
 
 
