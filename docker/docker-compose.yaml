@@ -57,8 +57,9 @@ services:
     build: 
       context: ..
       dockerfile: ./frontend/Dockerfile
+    # image: cerit.io/wernad/fe-channels:1.0.1
     ports:
-      - "${CHANNELSDB_PORT:-3000}:80"
+      - "${CHANNELSDB_PORT:-3000}:80" # 3000:8080 if using registry image, 3000:80 otherwise
     logging:
       driver: journald
       options:
