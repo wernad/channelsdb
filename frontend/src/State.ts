@@ -123,17 +123,21 @@ namespace ChannelsDB {
     }
 
     async function sortGroups(state: State, groups: any) {
-        const withChannels = [], withoutChannels = [], counts = [];
+        const withChannels = [], withoutChannels = [], counts: {}[] = [];
 
         for (const group of groups) {
             const id = group.doclist.docs[0].pdb_id;
             const url = `${state.channelsUrl}/statistics/${id}`;
+
             const fetched = await ajaxGetJson(url);
             counts.push(fetched);
-            if (fetched.entries_count > 0) withChannels.push(group);
-            else withoutChannels.push(group);
+            if (fetched.entries_count > 0) {
+                withChannels.push(group);
+            }
+            else {
+                withoutChannels.push(group);
+            }
         }
-
         return { entries: withChannels.concat(withoutChannels), withCount: withChannels.length, withoutCount: withoutChannels.length, counts: counts };
     }
 
