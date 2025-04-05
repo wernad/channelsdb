@@ -190,9 +190,7 @@ export class GlobalRouter {
     private static isInitialized: boolean = false;
 
     public static init(routingParameters: RoutingParameters) {
-        console.log("panda1")
         if (!this.isInitialized) {
-            console.log("panda2")
             this.defaultContextPath = routingParameters.defaultContextPath;
             this.defaultPid = routingParameters.defaultPid;
 
