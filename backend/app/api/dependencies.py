@@ -7,13 +7,19 @@ from sqlmodel import Session
 from app.api.common import OLD_PDB_ID_REGEX, NEW_PDB_ID_REGEX, UNIPROT_ID_REGEX
 from app.database.database import engine
 from app.database.repositories import ChannelRepository
-from app.services import AnnotationService, ChannelService, ExportService
-from app.services.statistics import StatisticsService
+from app.services import (
+    AnnotationService,
+    ChannelService,
+    ExportService,
+    StructureService,
+    StatisticsService,
+)
 
 __all__ = [
     "AnnotationServiceDep",
     "ChannelServiceDep",
     "ExportServiceDep",
+    "StructureServiceDep",
     "IDCheckDep",
 ]
 
@@ -69,6 +75,15 @@ def get_statistics_service(db: SessionDep) -> Generator[StatisticsService, None,
 
 
 StatisticsServiceDep = Annotated[StatisticsService, Depends(get_statistics_service)]
+
+# Statistics
+
+
+def get_structure_service(db: SessionDep) -> Generator[StructureService, None, None]:
+    yield StructureService(db)
+
+
+StructureServiceDep = Annotated[StructureService, Depends(get_structure_service)]
 
 # ID handling
 
