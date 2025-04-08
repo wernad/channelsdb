@@ -31,7 +31,7 @@ class ChannelRepository(RepositoryBase):
 
     #     query = query.filter(and_(*range_conditions))
 
-    def get_channels_by_structure_id(self, structure_id: str) -> list[Channel]:
+    def get_channels_by_structure_id(self, structure_id: int) -> list[Channel]:
         statement = select(Channel).where(Channel.structure_id == structure_id)
         channels = self.db.exec(statement).all()
 
@@ -45,32 +45,29 @@ class ChannelRepository(RepositoryBase):
     def get_channel_counts_per_category(self) -> list[tuple]:
         statement = (
             select(
-                Category.name.label("category"),
                 Method.name.label("method"),
                 func.count(Channel.id).label("count"),
             )
             .join(Channel, Channel.method_id == Method.id)
-            .group_by(Method.name, Category.name)
+            .group_by(Method.name)
             .order_by(func.count(Channel.id).desc())
         )
 
-        counts = self.db.exec(statement)
+        counts = self.db.exec(statement).all()
 
         return counts
 
-    def get_channel_counts_by_id(self, structure_id: str) -> list[tuple]:
+    def get_channel_counts_by_id(self, structure_id: int) -> list[tuple]:
         statement = (
             select(
-                Category.name.label("category"),
                 Method.name.label("method"),
                 func.count(Channel.id).label("count"),
             )
             .join(Channel, Channel.method_id == Method.id)
-            .group_by(Method.name, Category.name)
+            .group_by(Method.name)
             .where(Channel.structure_id == structure_id)
             .order_by(func.count(Channel.id).desc())
         )
 
-        counts = self.db.exec(statement)
-
+        counts = self.db.exec(statement).all()
         return counts
