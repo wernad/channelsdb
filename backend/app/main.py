@@ -5,7 +5,7 @@ from fastapi import FastAPI, APIRouter
 
 from app.config import API_PATH
 from app.api.main import api_router
-from app.database.database import create_db_and_tables
+from app.database.database import create_db_and_tables, init_flag_data
 from app.log import logger as log
 
 router = APIRouter()
@@ -16,6 +16,7 @@ router.include_router(api_router, prefix=API_PATH)
 async def lifespan(app: FastAPI):
     try:
         create_db_and_tables()
+        init_flag_data()
     except OperationalError as e:
         log.error(f"An operational error occured white creating tables: {e.pgcode}")
 
