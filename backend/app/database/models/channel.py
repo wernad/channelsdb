@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, Dict, List
 
 from sqlmodel import Field, SQLModel, Relationship
 
@@ -14,17 +14,18 @@ if TYPE_CHECKING:
         Profile,
         ProfileOutput,
         Structure,
+        AnnotationOutput,
     )
 
 
 class ChannelBase(SQLModel):
-    auto: bool
-    cavity: int
+    auto: bool = Field(schema_extra={"serialization_alias": "Auto"})
+    cavity: str = Field(schema_extra={"serialization_alias": "Cavity"})
 
 
 class Channel(ChannelBase, table=True):
     id: int = Field(primary_key=True)
-    structure_id: str = Field(foreign_key="structure.id")
+    structure_id: int = Field(foreign_key="structure.id")
     method_id: int = Field(foreign_key="method.id")
     category_id: int = Field(foreign_key="category.id")
 
@@ -40,7 +41,18 @@ class Channel(ChannelBase, table=True):
 
 
 class ChannelOutput(ChannelBase):
-    id: int
-    type: str
-    profile: list["ProfileOutput"]
-    layers: "Layers"
+    id: str = Field(schema_extra={"serialization_alias": "Id"})
+    type: str = Field(schema_extra={"serialization_alias": "Type"})
+    profile: list["ProfileOutput"] = Field(
+        schema_extra={"serialization_alias": "Profile"}
+    )
+    layers: "Layers" = Field(schema_extra={"serialization_alias": "Layers"})
+
+
+class ChannelsResponse(SQLModel):
+    annotations: List["AnnotationOutput"] = Field(
+        schema_extra={"serialization_alias": "Annotations"}, default_factory=list
+    )
+    channels: Dict[str, List[ChannelOutput]] = Field(
+        schema_extra={"serialization_alias": "Channels"}
+    )

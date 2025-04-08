@@ -1,6 +1,7 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, Annotated, List
 from decimal import Decimal
 
+from pydantic import PlainSerializer
 from sqlmodel import Field, SQLModel, Relationship
 
 if TYPE_CHECKING:
@@ -8,12 +9,26 @@ if TYPE_CHECKING:
 
 
 class LayerBase(SQLModel):
-    radius: Decimal = Field(decimal_places=3)
-    free_radius: Decimal = Field(decimal_places=3)
-    start_distance: Decimal = Field(decimal_places=3)
-    end_distance: Decimal = Field(decimal_places=3)
-    local_minimum: bool
-    bottleneck: bool | None = Field(default=None)
+    radius: Annotated[
+        Decimal,
+        PlainSerializer(lambda x: float(x), return_type=float, when_used="json"),
+    ] = Field(decimal_places=3, schema_extra={"serialization_alias": "Radius"})
+    free_radius: Annotated[
+        Decimal,
+        PlainSerializer(lambda x: float(x), return_type=float, when_used="json"),
+    ] = Field(decimal_places=3, schema_extra={"serialization_alias": "FreeRadius"})
+    start_distance: Annotated[
+        Decimal,
+        PlainSerializer(lambda x: float(x), return_type=float, when_used="json"),
+    ] = Field(decimal_places=3, schema_extra={"serialization_alias": "StartDistance"})
+    end_distance: Annotated[
+        Decimal,
+        PlainSerializer(lambda x: float(x), return_type=float, when_used="json"),
+    ] = Field(decimal_places=3, schema_extra={"serialization_alias": "EndDistance"})
+    local_minimum: bool = Field(schema_extra={"serialization_alias": "LocalMinimum"})
+    bottleneck: bool | None = Field(
+        default=None, schema_extra={"serialization_alias": "Bottleneck"}
+    )
 
 
 class Layer(LayerBase, table=True):
@@ -22,7 +37,9 @@ class Layer(LayerBase, table=True):
     layer_order: int
 
     channel: "Channel" = Relationship(back_populates="layers")
-    layer_residues: List["LayerResidue"] = Relationship(cascade_delete=True, back_populates="layer")
+    layer_residues: List["LayerResidue"] = Relationship(
+        cascade_delete=True, back_populates="layer"
+    )
 
 
 class LayerGeometry(LayerBase):
@@ -30,22 +47,30 @@ class LayerGeometry(LayerBase):
 
 
 class LayerProperties(SQLModel):
-    charge: int
-    num_positives: int
-    num_negatives: int
-    hydrophobicity: float
-    hydropathy: float
-    polarity: float
-    mutability: float
+    charge: int = Field(schema_extra={"serialization_alias": "Charge"})
+    num_positives: int = Field(schema_extra={"serialization_alias": "NumPositives"})
+    num_negatives: int = Field(schema_extra={"serialization_alias": "NumNegatives"})
+    hydrophobicity: float = Field(
+        schema_extra={"serialization_alias": "Hydrophobicity"}
+    )
+    hydropathy: float = Field(schema_extra={"serialization_alias": "Hydropathy"})
+    polarity: float = Field(schema_extra={"serialization_alias": "Polarity"})
+    mutability: float = Field(schema_extra={"serialization_alias": "Mutability"})
 
 
 class LayerInfo(SQLModel):
-    layer_geometry: LayerGeometry
-    residues: list[str]
-    properties: LayerProperties
+    layer_geometry: LayerGeometry = Field(
+        schema_extra={"serialization_alias": "LayerGeometry"}
+    )
+    residues: list[str] = Field(schema_extra={"serialization_alias": "Residues"})
+    properties: LayerProperties = Field(
+        schema_extra={"serialization_alias": "Properties"}
+    )
 
 
 class Layers(SQLModel):
-    residue_flow: list[str]
-    het_residues: list[str]
-    layers_info: list[LayerInfo]
+    residue_flow: list[str] = Field(schema_extra={"serialization_alias": "ResidueFlow"})
+    het_residues: list[str] = Field(schema_extra={"serialization_alias": "HeyResidues"})
+    layers_info: list[LayerInfo] = Field(
+        schema_extra={"serialization_alias": "LayersInfo"}
+    )

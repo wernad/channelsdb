@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, List
 
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import SQLModel, Field, Relationship, UniqueConstraint
 
 
 if TYPE_CHECKING:
@@ -13,9 +13,16 @@ class StructureBase(SQLModel):
 
 
 class Structure(StructureBase, table=True):
-    id: str = Field(primary_key=True)
+    id: int = Field(primary_key=True)
+    external_id: str = Field(nullable=False)
     source_id: int = Field(foreign_key="source.id")
 
     channels: List["Channel"] = Relationship(back_populates="structure")
     annotations: List["Annotation"] = Relationship(back_populates="structure")
     source: "Source" = Relationship(back_populates="structures")
+
+    __table_args__ = (UniqueConstraint("external_id", "version"),)
+
+
+class StructureData(StructureBase):
+    source_id: int

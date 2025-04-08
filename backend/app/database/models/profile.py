@@ -1,5 +1,6 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Annotated
 
+from pydantic import PlainSerializer
 from sqlmodel import Field, Relationship, SQLModel
 from decimal import Decimal
 
@@ -9,14 +10,35 @@ if TYPE_CHECKING:
 
 
 class ProfileBase(SQLModel):
-    radius: Decimal = Field(decimal_places=3)
-    free_radius: Decimal = Field(decimal_places=3)
-    t_value: Decimal = Field(decimal_places=3)
-    coord_x: Decimal = Field(decimal_places=3)
-    coord_y: Decimal = Field(decimal_places=3)
-    coord_z: Decimal = Field(decimal_places=3)
-    distance: Decimal = Field(decimal_places=3)
-    charge: int
+    radius: Annotated[
+        Decimal,
+        PlainSerializer(lambda x: float(x), return_type=float, when_used="json"),
+    ] = Field(decimal_places=3, schema_extra={"serialization_alias": "Radius"})
+    free_radius: Annotated[
+        Decimal,
+        PlainSerializer(lambda x: float(x), return_type=float, when_used="json"),
+    ] = Field(decimal_places=3, schema_extra={"serialization_alias": "FreeRadius"})
+    t_value: Annotated[
+        Decimal,
+        PlainSerializer(lambda x: float(x), return_type=float, when_used="json"),
+    ] = Field(decimal_places=3, schema_extra={"serialization_alias": "T"})
+    coord_x: Annotated[
+        Decimal,
+        PlainSerializer(lambda x: float(x), return_type=float, when_used="json"),
+    ] = Field(decimal_places=3, schema_extra={"serialization_alias": "X"})
+    coord_y: Annotated[
+        Decimal,
+        PlainSerializer(lambda x: float(x), return_type=float, when_used="json"),
+    ] = Field(decimal_places=3, schema_extra={"serialization_alias": "Y"})
+    coord_z: Annotated[
+        Decimal,
+        PlainSerializer(lambda x: float(x), return_type=float, when_used="json"),
+    ] = Field(decimal_places=3, schema_extra={"serialization_alias": "Z"})
+    distance: Annotated[
+        Decimal,
+        PlainSerializer(lambda x: float(x), return_type=float, when_used="json"),
+    ] = Field(decimal_places=3, schema_extra={"serialization_alias": "Distance"})
+    charge: int = Field(schema_extra={"serialization_alias": "Charge"})
 
 
 class Profile(ProfileBase, table=True):

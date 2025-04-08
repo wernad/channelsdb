@@ -16,7 +16,7 @@ class AnnotationBase(SQLModel):
 
 class Annotation(AnnotationBase, table=True):
     id: int = Field(primary_key=True)
-    structure_id: str = Field(foreign_key="structure.id")
+    structure_id: int = Field(foreign_key="structure.id")
     channel_id: int = Field(foreign_key="channel.id")
 
     structure: "Structure" = Relationship(back_populates="annotations")
@@ -28,14 +28,19 @@ class AnnotationOutput(AnnotationBase):
 
 
 class ResidueAnnotationOutput(SQLModel):
-    channels_db: list = Field(default_factory=list, alias="ChannelsDB")
-    uni_prot: list = Field(default_factory=list, alias="UniProt")
+    channels_db: list = Field(
+        default_factory=list, schema_extra={"serialization_alias": "ChannelsDB"}
+    )
+    uni_prot: list = Field(
+        default_factory=list, schema_extra={"serialization_alias": "UniProt"}
+    )
 
 
 class AnnotationsOutput(SQLModel):
     entry_annotations: list[dict] = Field(
-        default_factory=list, alias="EntryAnnotations"
+        default_factory=list, schema_extra={"serialization_alias": "EntryAnnotations"}
     )
     residue_annotations: ResidueAnnotationOutput = Field(
-        default_factory=ResidueAnnotationOutput, alias="ResidueAnnotations"
+        default_factory=ResidueAnnotationOutput,
+        schema_extra={"serialization_alias": "ResidueAnnotations"},
     )
