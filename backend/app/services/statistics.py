@@ -16,7 +16,7 @@ class StatisticsService:
         date = dt.now().date()
         if result:
             entries_count = sum(row.count for row in result)
-            entries = {f"{row.label}_{row.software}": row.count for row in result}
+            entries = {f"{row.method}": row.count for row in result}
             result = {
                 "date": date,
                 "entries_count": entries_count,
@@ -31,13 +31,13 @@ class StatisticsService:
 
         return result
 
-    def get_channel_counts_by_id(self, structure_id: str) -> dict:
+    def get_channel_counts_by_id(self, structure_id: int) -> dict:
         result = self.repository.get_channel_counts_by_id(structure_id=structure_id)
 
         date = dt.now().date()
         if result:
             entries_count = sum(row.count for row in result)
-            entries = {f"{row.label} {row.software}": row.count for row in result}
+            entries = {f"{row.method}": row.count for row in result}
             result = {
                 "date": date,
                 "entries_count": entries_count,

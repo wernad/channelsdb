@@ -3,6 +3,8 @@ from statistics import mean
 from string import ascii_uppercase
 from io import BytesIO, StringIO
 from zipfile import ZipFile
+import string
+import random
 
 from Bio.PDB.MMCIF2Dict import MMCIF2Dict
 from sqlmodel import Session
@@ -37,9 +39,9 @@ class ExportService:
         """Round all values to predefined decimal places and joins them into a string."""
         return " ".join(str(round(x, decimal_places)) for x in values)
 
-    def get_json_file(self, structure_id: str) -> str:
+    def get_json_file(self, internal_id: int) -> str:
         """Creates json file from given channel data using ChannelService."""
-        raw = self.channel_repo.get_channels_by_structure_id(structure_id)
+        raw = self.channel_repo.get_channels_by_structure_id(internal_id)
         if not raw:
             return None
 
@@ -49,9 +51,9 @@ class ExportService:
 
         return channels_json
 
-    def get_chimera_file(self, structure_id: str) -> str:
+    def get_chimera_file(self, internal_id: int) -> str:
         """Builds python that uses chimera package to build required file."""
-        channels = self.channel_repo.get_channels_by_structure_id(structure_id)
+        channels = self.channel_repo.get_channels_by_structure_id(internal_id)
 
         if not channels:
             return None
@@ -83,9 +85,9 @@ class ExportService:
 
         return const.CHIMERA_HEADER + "\n".join(lines) + "\n"
 
-    def get_pdb_file(self, structure_id: str) -> str:
+    def get_pdb_file(self, internal_id: int) -> str:
         """Generates a text file using PDB syntax."""
-        channels = self.channel_repo.get_channels_by_structure_id(structure_id)
+        channels = self.channel_repo.get_channels_by_structure_id(internal_id)
 
         if not channels:
             return None
@@ -108,9 +110,9 @@ class ExportService:
 
         return const.PDB_HEADER + "\n".join(lines) + "\n"
 
-    def get_pymol_file(self, structure_id: str) -> str:
+    def get_pymol_file(self, internal_id: int) -> str:
         """Generates a PyMol string."""
-        channels = self.channel_repo.get_channels_by_structure_id(structure_id)
+        channels = self.channel_repo.get_channels_by_structure_id(internal_id)
 
         if not channels:
             return None
@@ -138,8 +140,8 @@ class ExportService:
 
         return const.PYMOL_HEADER + "\n".join(lines) + "\n"
 
-    def get_vmd_file(self, structure_id: str) -> str:
-        channels = self.channel_repo.get_channels_by_structure_id(structure_id)
+    def get_vmd_file(self, internal_id: int) -> str:
+        channels = self.channel_repo.get_channels_by_structure_id(internal_id)
 
         if not channels:
             return None
@@ -163,9 +165,13 @@ class ExportService:
                 lines.append(const.VMD_CHANNEL_END.format(name=name))
         return const.VMD_HEADER + "\n".join(lines) + "display reset view\n"
 
-    def get_cif_file(self, structure_id: str, file: bytes) -> str:
+    @staticmethod
+    def id_generator(size=5, chars=string.ascii_lowercase):
+        return "".join(random.choice(chars) for _ in range(size))
+
+    def get_cif_file(self, internal_id: int, file: bytes) -> str:
         """Builds CIF file and inserts it into parent file."""
-        channels = self.channel_repo.get_channels_by_structure_id(structure_id)
+        channels = self.channel_repo.get_channels_by_structure_id(internal_id)
         decimal_places = 3
 
         if not channels:
@@ -183,19 +189,20 @@ class ExportService:
             "profile": [],
         }
         for channel in channels:
+            new_channel_id = ExportService.id_generator()
             if channel.annotation:
                 loops["annotation"].append(
-                    f'{channel.annotation.channel_id} "{channel.annotation.name}" "{channel.annotation.description}" "{channel.annotation.reference}" {channel.annotation.reference_type}'
+                    f'{new_channel_id} "{channel.annotation.name}" "{channel.annotation.description}" "{channel.annotation.reference}" {channel.annotation.reference_type}'
                 )
             method, software = channel.method.name.split("_")
             loops["channel"].append(
-                f"{channel.id} {channel.category.name} {method} {software} {channel.auto} {channel.cavity}"
+                f"{new_channel_id} {channel.category.name} {method} {software} {channel.auto} {channel.cavity}"
             )
 
             het_id = len(loops["het_residue"])
             loops["het_residue"].extend(
                 [
-                    f"{het_id + idx + 1} {res.channel_id} {res.residue.name.upper()} {res.sequence_number} {res.chain_id} {res.backbone}"
+                    f"{het_id + idx + 1} {new_channel_id} {res.residue.name.upper()} {res.sequence_number} {res.chain_id} {res.backbone}"
                     for idx, res in enumerate(channel.het_residues)
                 ]
             )
@@ -203,7 +210,7 @@ class ExportService:
             profile_id = len(loops["profile"])
             loops["profile"].extend(
                 [
-                    f"{profile_id + idx + 1} {p.channel_id} {ExportService.round_items([p.radius, p.free_radius,p.distance,p.t_value,p.coord_x, p.coord_y, p.coord_z])} {p.charge}"
+                    f"{profile_id + idx + 1} {new_channel_id} {ExportService.round_items([p.radius, p.free_radius,p.distance,p.t_value,p.coord_x, p.coord_y, p.coord_z])} {p.charge}"
                     for idx, p in enumerate(channel.profiles)
                 ]
             )
@@ -216,6 +223,7 @@ class ExportService:
                 positives = len(
                     [1 for lr in layer.layer_residues if lr.residue.charge < 0]
                 )
+
                 hydrophobicity = round(
                     mean([lr.residue.hydrophobicity for lr in layer.layer_residues]),
                     decimal_places,
@@ -234,7 +242,7 @@ class ExportService:
                 )
                 bottleneck = layer.bottleneck if layer.bottleneck else False
                 loops["layer"].append(
-                    f"{layer.id} {layer.channel_id} {ExportService.round_items([layer.layer_order, layer.radius, layer.free_radius, layer.start_distance, layer.end_distance])} {layer.local_minimum} {bottleneck} {charge} {positives} {negatives} {hydrophobicity} {hydropathy} {polarity} {mutability}"
+                    f"{layer.id} {new_channel_id} {ExportService.round_items([layer.layer_order, layer.radius, layer.free_radius, layer.start_distance, layer.end_distance])} {layer.local_minimum} {bottleneck} {charge} {positives} {negatives} {hydrophobicity} {hydropathy} {polarity} {mutability}"
                 )
 
                 loops["layer_residue"].extend(
@@ -261,9 +269,9 @@ class ExportService:
         result = f"{file_str}\n# CHANNELSDB \n{result}"
         return result
 
-    def get_zip_file(self, structure_id: str):
+    def get_zip_file(self, external_id: str, internal_id: int):
         """Generate and zip all supported files and return said zip file."""
-        channels = self.channel_repo.get_channels_by_structure_id(structure_id)
+        channels = self.channel_repo.get_channels_by_structure_id(internal_id)
 
         if not channels:
             return None
@@ -272,9 +280,9 @@ class ExportService:
 
         content = BytesIO()
         zf = ZipFile(content, mode="w")
-        zf.writestr(f"{structure_id}_chimera.py", self.get_chimera_file(channels))
-        zf.writestr(f"{structure_id}_pymol.py", self.get_pymol_file(channels))
-        zf.writestr(f"{structure_id}_vmd.tk", self.get_vmd_file(channels))
-        zf.writestr(f"{structure_id}_report.json", channels_dict)
-        zf.writestr(f"{structure_id}_channels.pdb", self.get_pdb_file(channels))
+        zf.writestr(f"{external_id}_chimera.py", self.get_chimera_file(channels))
+        zf.writestr(f"{external_id}_pymol.py", self.get_pymol_file(channels))
+        zf.writestr(f"{external_id}_vmd.tk", self.get_vmd_file(channels))
+        zf.writestr(f"{external_id}_report.json", channels_dict)
+        zf.writestr(f"{external_id}_channels.pdb", self.get_pdb_file(channels))
         zf.close()

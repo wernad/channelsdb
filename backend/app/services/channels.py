@@ -25,15 +25,15 @@ class ChannelService:
         result = {}
 
         for channel in channels:
-            method = channel.method.name.upper()
+            method = channel.method.name
             if method not in result:
                 result[method] = []
 
             result[method].append(
                 ChannelOutput(
                     type=channel.category.name,
-                    id=channel.id,
-                    cavity=channel.cavity,
+                    id=f"{channel.id}",
+                    cavity=f"{channel.cavity}",
                     auto=channel.auto,
                     profile=[ProfileOutput(**dict(p)) for p in channel.profiles],
                     layers=Layers(
@@ -125,7 +125,9 @@ class ChannelService:
         return result
 
     # TODO fix residues order in channels.
-    def get_channels_with_annotations_by_structure(self, structure_id: str):
+    def get_channels_with_annotations_by_structure(
+        self, structure_id: str
+    ) -> dict | None:
         """Fetches all necessary data about structure's channels and returns them as a dict."""
         channels = self.repository.get_channels_by_structure_id(structure_id)
 
