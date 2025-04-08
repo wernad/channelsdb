@@ -1,6 +1,6 @@
-import json
 from enum import StrEnum
 import aiohttp
+import gzip
 
 from fastapi.responses import (
     PlainTextResponse,
@@ -9,8 +9,8 @@ from fastapi.responses import (
 )
 from fastapi import APIRouter, HTTPException
 
-from app.api.dependencies import ExportServiceDep, IDCheckDep
-from app.api.exceptions import ProteinNotFound, UnknownFileType
+from app.api.dependencies import StructureServiceDep, ExportServiceDep, IDCheckDep
+from app.api.exceptions import ProteinNotFound, UnknownFileType, NoChannelsInProtein
 from app.config import (
     PDB_HTTP_FILE_URL,
     ALPHAFILL_HTTP_FILE_URL,
@@ -18,6 +18,7 @@ from app.config import (
     PDB_HTTP_IMAGE_URL,
 )
 from app.log import logger as log
+from app.database.models import StructureData, Sources
 
 router = APIRouter()
 
@@ -97,13 +98,30 @@ async def get_assembly_id(pdb_id: str) -> str | None:
                 )
 
 
-# TODO add fetch of pdb file
+async def fetch_from_url(url: str) -> bytes:
+    """Fetches file from given url.
+
+    Args:
+        url: resource URL
+    Returns:
+        file in bytes format
+    """
+
+    log.debug(f"Fetching file from url: {url}")
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            if resp.status == 200:
+                log.debug("File fetched successfuly.")
+                return await resp.read()
+
+
 @router.get(
     "/{structure_id}",
     name="General statistics",
     description="Returns summary statistics about the data stored",
 )
 async def download(
+    structure_service: StructureServiceDep,
     export_service: ExportServiceDep,
     file_format: DownloadType,
     structure_id: IDCheckDep,
@@ -111,6 +129,11 @@ async def download(
     headers = {
         "Content-Disposition": f'attachment; filename="channelsdb_{structure_id}.{file_format.value}"'
     }
+    internal_id = structure_service.get_internal_id_if_has_channels(
+        structure_id=structure_id
+    )
+    if not internal_id:
+        raise NoChannelsInProtein(protein_id=structure_id)
 
     # TODO Alphafill png ?
     match file_format:
@@ -145,15 +168,15 @@ async def download(
                 headers=headers,
             )
         case DownloadType.pdb:
-            result = export_service.get_pdb_file(structure_id)
+            result = export_service.get_pdb_file(internal_id)
         case DownloadType.pymol:
-            result = export_service.get_pymol_file(structure_id)
+            result = export_service.get_pymol_file(internal_id)
         case DownloadType.chimera:
-            result = export_service.get_chimera_file(structure_id)
+            result = export_service.get_chimera_file(internal_id)
         case DownloadType.vmd:
-            result = export_service.get_vmd_file(structure_id)
+            result = export_service.get_vmd_file(internal_id)
         case DownloadType.zip:
-            result = export_service.get_zip_file(structure_id)
+            result = export_service.get_zip_file(structure_id, internal_id)
             if not result:
                 raise ProteinNotFound(protein_id=structure_id)
             return Response(
@@ -161,12 +184,20 @@ async def download(
                 media_type="application/zip",
                 headers=headers,
             )
-        # TODO
         case DownloadType.cif:
+            structure_data: StructureData = (
+                structure_service.get_source_and_version_by_id(external_id=structure_id)
+            )
 
-            file = None
-            # file_path = f"/home/chiro/Documents/DP/channelsdb/backend/app/services/{structure_id}.cif"
-            result = export_service.get_cif_file(structure_id, file)
+            if structure_data.source_id == Sources.PDB.value:
+                file_url = get_file_url(id=structure_id, version=structure_data.version)
+            else:
+                file_url = get_file_url(id=structure_id)
+
+            file = await fetch_from_url(file_url)
+            if file:
+                extracted = gzip.decompress(file)
+            result = export_service.get_cif_file(internal_id, extracted)
         case _:
             raise UnknownFileType(DownloadType.value)
 
