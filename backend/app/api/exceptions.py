@@ -7,6 +7,12 @@ class ProteinNotFound(HTTPException):
         self.detail = f"Protein with ID '{protein_id}' not found in ChannelsDB."
 
 
+class NoChannelsInProtein(HTTPException):
+    def __init__(self, protein_id: str):
+        self.status_code = 404
+        self.detail = f"Protein with ID '{protein_id}' has no channels."
+
+
 class UnknownFileType(HTTPException):
     def __init__(self, file_type: str):
         self.status_code = 404
