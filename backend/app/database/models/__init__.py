@@ -14,7 +14,7 @@ from app.database.models.layer import (
     LayerProperties,
 )
 from app.database.models.layer_residue import LayerResidue
-from app.database.models.method import Method, Methods
+from app.database.models.method import Method, Methods, METHODS_NAMES
 from app.database.models.structure import Structure, StructureData
 from app.database.models.source import Source, Sources
 from app.database.models.profile import Profile, ProfileOutput
