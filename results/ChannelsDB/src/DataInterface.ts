@@ -27,13 +27,11 @@ export interface Layerweightedproperties {
 export interface LayersInfo {
     LayerGeometry: LayerGeometry,
     Residues: string[],
-    FlowIndices: string[],
     Properties: Properties
 };
 export interface LayersInfoCaver {
     LayerGeometry: LayerGeometryCaver,
     Residues: string[],
-    FlowIndices: string[],
     Properties: Properties
 };
 export interface Layers {
