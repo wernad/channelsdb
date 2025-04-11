@@ -1,7 +1,9 @@
 from datetime import datetime as dt
 
 from sqlmodel import Session
+
 from app.database.repositories.channels import ChannelRepository
+from app.database.models import METHODS_NAMES
 
 
 class StatisticsService:
@@ -37,7 +39,10 @@ class StatisticsService:
         date = dt.now().date()
         if result:
             entries_count = sum(row.count for row in result)
-            entries = {f"{row.method}": row.count for row in result}
+            entries = {method: 0 for method in METHODS_NAMES.values()}
+            for row in result:
+                entries[row.method] = row.count
+
             result = {
                 "date": date,
                 "entries_count": entries_count,

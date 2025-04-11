@@ -2,11 +2,11 @@ from statistics import mean
 
 from sqlmodel import Session
 from app.database.repositories.channels import ChannelRepository
-
 from app.database.models import (
     Channel,
     ChannelOutput,
     ProfileOutput,
+    METHODS_NAMES,
     Layers,
     LayerInfo,
     LayerGeometry,
@@ -130,8 +130,14 @@ class ChannelService:
     ) -> dict | None:
         """Fetches all necessary data about structure's channels and returns them as a dict."""
         channels = self.repository.get_channels_by_structure_id(structure_id)
-
+        print(channels)
         if not channels:
             return None
 
-        return ChannelService.channels_with_annotations_as_model(channels)
+        formatted_channels = ChannelService.channels_with_annotations_as_model(channels)
+
+        for method in METHODS_NAMES.values():
+            if method not in formatted_channels:
+                formatted_channels[method] = []
+
+        return formatted_channels
