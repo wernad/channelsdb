@@ -1,7 +1,4 @@
-from typing import List, Dict
 from fastapi import APIRouter
-from pydantic import BaseModel
-from sqlmodel import Field
 
 from app.api.dependencies import (
     ChannelServiceDep,
