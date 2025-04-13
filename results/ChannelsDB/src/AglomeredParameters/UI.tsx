@@ -10,18 +10,18 @@ import { SimpleObservable } from "../CommonUtils/Observable";
 
 let DGTABLE_COLS_COUNT = 7;
 
-declare function $(p:any): any;
-declare function datagridOnResize(str:string):any;
+declare function $(p: any): any;
+declare function datagridOnResize(str: string): any;
 
-interface State{
+interface State {
     data: Tunnel[] | null,
     app: AglomeredParameters,
     isWaitingForData: boolean
 };
 
-export class AglomeredParameters extends React.Component<{controller: Context }, State> {
+export class AglomeredParameters extends React.Component<{ controller: Context }, State> {
 
-    state:State = {
+    state: State = {
         data: null,
         app: this,
         isWaitingForData: false
@@ -31,7 +31,7 @@ export class AglomeredParameters extends React.Component<{controller: Context },
         const checkDataAvailability = () => {
             return this.props.controller.data as ChannelsDBData;
         };
-    
+
         const onDataLoaded = (data: ChannelsDBData) => {
             if (data) {
                 let toShow: Tunnel[] = [];
@@ -47,23 +47,23 @@ export class AglomeredParameters extends React.Component<{controller: Context },
                 toShow = toShow.concat(data.Channels.ProcognateTunnels_Caver);
                 toShow = toShow.concat(data.Channels.AlphaFillTunnels_MOLE);
                 toShow = toShow.concat(data.Channels.AlphaFillTunnels_Caver);
-    
+
                 this.setState({ data: toShow });
             }
         };
-    
+
         const simpleObservable = new SimpleObservable(checkDataAvailability, onDataLoaded);
         simpleObservable.subscribe();
     }
 
-    private dataWaitHandler(){
+    private dataWaitHandler() {
         let state = this.state;
         state.isWaitingForData = false;
         this.setState(state);
     }
 
-    public invokeDataWait(){
-        if(this.state.isWaitingForData){
+    public invokeDataWait() {
+        if (this.state.isWaitingForData) {
             return;
         }
 
@@ -73,35 +73,35 @@ export class AglomeredParameters extends React.Component<{controller: Context },
         AnnotationDataProvider.subscribeForData(this.dataWaitHandler.bind(this));
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
     }
 
     render() {
-        $('.init-agp-tooltip').tooltip({container:'body'});
-        return(
+        $('.init-agp-tooltip').tooltip({ container: 'body' });
+        return (
             <div>
                 <DGTable {...this.state} />
             </div>
-            );
-    }
-}  
-
-class DGTable extends React.Component<State,{}>{
-    render(){
-        return (<div className="datagrid" id="dg-aglomered-parameters">
-                    <div className="header">
-                        <DGHead {...this.props}/>			
-                    </div>
-                    <div className="body">
-                        <DGBody {...this.props} />
-                    </div>
-                </div>);
+        );
     }
 }
 
-class DGHead extends React.Component<State,{}>{
-    render(){
-        return(
+class DGTable extends React.Component<State, {}> {
+    render() {
+        return (<div className="datagrid" id="dg-aglomered-parameters">
+            <div className="header">
+                <DGHead {...this.props} />
+            </div>
+            <div className="body">
+                <DGBody {...this.props} />
+            </div>
+        </div>);
+    }
+}
+
+class DGHead extends React.Component<State, {}> {
+    render() {
+        return (
             <table>
                 <tr>
                     <th title="Name" className="col col-1 ATable-header-identifier init-agp-tooltip" data-toggle="tooltip" data-placement="bottom">
@@ -124,109 +124,109 @@ class DGHead extends React.Component<State,{}>{
                     </th>
                     <th title={getMessageOrLeaveText("tooltip-agl-Mutability")} className="col col-7 ATable-header-mutability init-agp-tooltip" data-toggle="tooltip" data-placement="bottom">
                         <span className="glyphicon glyphicon-scissors" /> <span className="ATable-label">Mutability</span>
-                    </th>                     
+                    </th>
                 </tr>
             </table>
         );
     };
 }
 
-class DGBody extends React.Component<State,{}>{
-    
-    private generateMockData(){
-        if(this.props.data === null){
+class DGBody extends React.Component<State, {}> {
+
+    private generateMockData() {
+        if (this.props.data === null) {
             return <tr><td colSpan={DGTABLE_COLS_COUNT} >There are no data to be displayed...</td></tr>;
         }
 
         let rows = [];
 
-        for(let tunnel of this.props.data){
+        for (let tunnel of this.props.data) {
             rows.push(
                 <DGRow tunnel={tunnel} app={this.props.app} />
             );
         }
 
-        if(rows.length===0){
+        if (rows.length === 0) {
             return rows;
         }
 
-        for(let i=rows.length;i<100;i++){
+        for (let i = rows.length; i < 100; i++) {
             rows.push(rows[0]);
-        }            
+        }
 
-        rows.push(<DGRowEmpty columnsCount={DGTABLE_COLS_COUNT}/>);
+        rows.push(<DGRowEmpty columnsCount={DGTABLE_COLS_COUNT} />);
 
         return rows;
     }
-    
-    private generateRows(){
-        if(this.props.data === null || this.props.data.length == 0){
+
+    private generateRows() {
+        if (this.props.data === null || this.props.data.length == 0) {
             return [
                 <tr><td colSpan={DGTABLE_COLS_COUNT} >There are no data to be displayed...</td></tr>,
-                <DGRowEmpty columnsCount={DGTABLE_COLS_COUNT}/>
+                <DGRowEmpty columnsCount={DGTABLE_COLS_COUNT} />
             ]
         }
 
         let rows = [];
 
-        for(let tunnel of this.props.data){
+        for (let tunnel of this.props.data) {
             rows.push(
-                <DGRow tunnel={tunnel} app={this.props.app}/>
+                <DGRow tunnel={tunnel} app={this.props.app} />
             );
         }
 
-        rows.push(<DGRowEmpty columnsCount={DGTABLE_COLS_COUNT}/>);
+        rows.push(<DGRowEmpty columnsCount={DGTABLE_COLS_COUNT} />);
 
         return rows;
     }
 
-    render(){
+    render() {
         let rows = this.generateRows();
-        
-        return(
+
+        return (
             <table>
                 {rows}
             </table>
         );
     };
 }
-    
-class DGRow extends React.Component<{tunnel: Tunnel, app: AglomeredParameters},{}>{
-    
-    render(){
+
+class DGRow extends React.Component<{ tunnel: Tunnel, app: AglomeredParameters }, {}> {
+    render() {
         let tunnelID = this.props.tunnel.Type;
         let annotation = AnnotationDataProvider.getChannelAnnotation(this.props.tunnel.Id);
-        if(annotation!== void 0 && annotation !== null){
+        if (annotation !== void 0 && annotation !== null) {
             tunnelID = annotation.text;
         }
 
-        if(annotation === void 0){
+        if (annotation === void 0) {
             this.props.app.invokeDataWait();
         }
         return (
-                <tr>
-                    <td className="col col-1">
-                        {tunnelID}
-                    </td>
-                    <td className="col col-2">
-                        {Tunnels.getLength(this.props.tunnel)} Å
-                    </td>
-                    <td className="col col-3">
-                        {Tunnels.getBottleneck(this.props.tunnel)} Å
-                    </td>
-                    <td className="col col-4">
-                        {Numbers.roundToDecimal(this.props.tunnel.Properties.Hydropathy,2)}
-                    </td>
-                    <td className="col col-5">
-                        {Numbers.roundToDecimal(this.props.tunnel.Properties.Charge,2)}
-                    </td>
-                    <td className="col col-6">
-                        {Numbers.roundToDecimal(this.props.tunnel.Properties.Polarity,2)}
-                    </td>
-                    <td className="col col-7">
-                        {Numbers.roundToDecimal(this.props.tunnel.Properties.Mutability,2)}
-                    </td>                     
-                </tr>);
+            <tr>
+                <td className="col col-1">
+                    {tunnelID}
+                </td>
+                <td className="col col-2">
+                    {Tunnels.getLength(this.props.tunnel)} Å
+                </td>
+                <td className="col col-3">
+                    {Tunnels.getBottleneck(this.props.tunnel)} Å
+                </td>
+
+                {/* <td className="col col-4">
+                    {Numbers.roundToDecimal(this.props.tunnel.Properties.Hydropathy, 2)}
+                </td>
+                <td className="col col-5">
+                    {Numbers.roundToDecimal(this.props.tunnel.Properties.Charge, 2)}
+                </td>
+                <td className="col col-6">
+                    {Numbers.roundToDecimal(this.props.tunnel.Properties.Polarity, 2)}
+                </td>
+                <td className="col col-7">
+                    {Numbers.roundToDecimal(this.props.tunnel.Properties.Mutability, 2)}
+                </td> */}
+            </tr>);
     }
 }
 
