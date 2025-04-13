@@ -2,8 +2,8 @@ import { Shape } from "molstar/lib/mol-model/shape"
 import { Color } from "molstar/lib/mol-util/color"
 
 export interface LayerGeometry {
-    MinRadius: number,
-    MinFreeRadius: number,
+    Radius: number,
+    FreeRadius: number,
     StartDistance: number,
     EndDistance: number,
     LocalMinimum: boolean,
@@ -11,18 +11,12 @@ export interface LayerGeometry {
     bottleneck: boolean
 };
 export interface LayerGeometryCaver {
-    MinRadius: number,
-    MinFreeRadius: number,
+    Radius: number,
+    FreeRadius: number,
     StartDistance: number,
     EndDistance: number,
     LocalMinimum: boolean,
     bottleneck: boolean
-};
-export interface Layerweightedproperties {
-    Hydrophobicity: number,
-    Hydropathy: number,
-    Polarity: number,
-    Mutability: number
 };
 export interface LayersInfo {
     LayerGeometry: LayerGeometry,
@@ -37,13 +31,11 @@ export interface LayersInfoCaver {
 export interface Layers {
     ResidueFlow: string[],
     HetResidues: any[], //Not Used
-    LayerWeightedProperties: Layerweightedproperties
     LayersInfo: LayersInfo[]
 };
 export interface LayersCaver {
     ResidueFlow: string[],
     HetResidues: any[], //Not Used
-    LayerWeightedProperties: Layerweightedproperties
     LayersInfo: LayersInfoCaver[]
 };
 export interface Profile {
@@ -144,8 +136,8 @@ export interface AnnotationObject {
 export interface LayerData {
     StartDistance: number,
     EndDistance: number,
-    MinRadius: number,
-    MinFreeRadius: number,
+    Radius: number,
+    FreeRadius: number,
     Properties: any,
     Residues: any
 };
@@ -158,8 +150,8 @@ export function convertLayersToLayerData(layersObject: Layers): LayerData[] {
     export interface LayerData{
     StartDistance: number,
     EndDistance: number,
-    MinRadius: number,
-    MinFreeRadius: number,
+    Radius: number,
+    FreeRadius: number,
     Properties: any,
     Residues: any
     */
@@ -171,20 +163,12 @@ export function convertLayersToLayerData(layersObject: Layers): LayerData[] {
         Polarity: number,
         Mutability: number
         */
-        let properties = {
-            Charge: layersObject.LayersInfo[i].Properties.Charge,
-            NumPositives: layersObject.LayersInfo[i].Properties.NumPositives,
-            NumNegatives: layersObject.LayersInfo[i].Properties.NumNegatives,
-            Hydrophobicity: layersObject.LayerWeightedProperties.Hydrophobicity,
-            Hydropathy: layersObject.LayerWeightedProperties.Hydropathy,
-            Polarity: layersObject.LayerWeightedProperties.Polarity,
-            Mutability: layersObject.LayerWeightedProperties.Mutability
-        };
+
         layersData.push({
             StartDistance: layersObject.LayersInfo[i].LayerGeometry.StartDistance,
             EndDistance: layersObject.LayersInfo[i].LayerGeometry.EndDistance,
-            MinRadius: layersObject.LayersInfo[i].LayerGeometry.MinRadius,
-            MinFreeRadius: layersObject.LayersInfo[i].LayerGeometry.MinFreeRadius,
+            Radius: layersObject.LayersInfo[i].LayerGeometry.Radius,
+            FreeRadius: layersObject.LayersInfo[i].LayerGeometry.FreeRadius,
             Properties: layersObject.LayersInfo[i].Properties,//? Proc sem davat weighted properties?
             Residues: layersObject.LayersInfo[i].Residues
         });

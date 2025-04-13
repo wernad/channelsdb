@@ -8,18 +8,18 @@ import { Context } from "../Context";
 let DGTABLE_COLS_COUNT = 2;
 let NO_DATA_MESSAGE = "Hover over channel(2D) for details...";
 
-declare function $(p:any): any;
-declare function datagridOnResize(str:string):any;
+declare function $(p: any): any;
+declare function datagridOnResize(str: string): any;
 
-interface State{
+interface State {
     data: LayersInfo[] | null,
     app: LayerProperties,
     layerIdx: number
 };
 
-export class LayerProperties extends React.Component<{controller: Context }, State> {
+export class LayerProperties extends React.Component<{ controller: Context }, State> {
 
-    state:State = {
+    state: State = {
         data: null,
         app: this,
         layerIdx: -1
@@ -28,81 +28,81 @@ export class LayerProperties extends React.Component<{controller: Context }, Sta
     layerIdx = -1;
 
     componentDidMount() {
-        $( window ).on('layerTriggered', this.layerTriggerHandler.bind(this));
+        $(window).on('layerTriggered', this.layerTriggerHandler.bind(this));
     }
 
-    private layerTriggerHandler(event:any,layerIdx:number){
+    private layerTriggerHandler(event: any, layerIdx: number) {
 
         this.layerIdx = layerIdx;
 
         let data = SelectionHelper.getSelectedChannelData();
 
         let state = this.state;
-        if(data!==null){
+        if (data !== null) {
             state.layerIdx = layerIdx;
             state.data = data.LayersInfo
             this.setState(state);
         }
-        else{
+        else {
             state.layerIdx = layerIdx;
             this.setState(state);
         }
 
-        setTimeout(function(){
-            $( window ).trigger('contentResize');
-        },1);
+        setTimeout(function () {
+            $(window).trigger('contentResize');
+        }, 1);
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
     }
 
     render() {
-        if (this.state.data !== null && this.state.layerIdx>=0) {
-            return(
+        if (this.state.data !== null && this.state.layerIdx >= 0) {
+            return (
                 <div>
                     <DGTable {...this.state} />
                 </div>
-                );
-        } 
-        
+            );
+        }
+
         return <div>
-                    <DGNoData {...this.state} />
-                </div>
-    }
-}  
-
-class DGNoData extends React.Component<State,{}>{
-    render(){
-        return (<div className="datagrid" id="dg-layer-properties">
-                    <div className="header">
-                        <DGHead {...this.props}/>			
-                    </div>
-                    <div className="body">
-                        <table>
-                            <DGNoDataInfoRow columnsCount={DGTABLE_COLS_COUNT} infoText={NO_DATA_MESSAGE}/>
-                            <DGRowEmpty columnsCount={DGTABLE_COLS_COUNT}/>
-                        </table>
-                    </div>
-                </div>);
+            <DGNoData {...this.state} />
+        </div>
     }
 }
 
-class DGTable extends React.Component<State,{}>{
-    render(){
+class DGNoData extends React.Component<State, {}> {
+    render() {
         return (<div className="datagrid" id="dg-layer-properties">
-                    <div className="header">
-                        <DGHead {...this.props}/>			
-                    </div>
-                    <div className="body">
-                        <DGBody {...this.props} />
-                    </div>
-                </div>);
+            <div className="header">
+                <DGHead {...this.props} />
+            </div>
+            <div className="body">
+                <table>
+                    <DGNoDataInfoRow columnsCount={DGTABLE_COLS_COUNT} infoText={NO_DATA_MESSAGE} />
+                    <DGRowEmpty columnsCount={DGTABLE_COLS_COUNT} />
+                </table>
+            </div>
+        </div>);
     }
 }
 
-class DGHead extends React.Component<State,{}>{
-    render(){
-        return(
+class DGTable extends React.Component<State, {}> {
+    render() {
+        return (<div className="datagrid" id="dg-layer-properties">
+            <div className="header">
+                <DGHead {...this.props} />
+            </div>
+            <div className="body">
+                <DGBody {...this.props} />
+            </div>
+        </div>);
+    }
+}
+
+class DGHead extends React.Component<State, {}> {
+    render() {
+        return (
             <table>
                 <tr>
                     <th title="Property" className="col col-1">
@@ -110,80 +110,80 @@ class DGHead extends React.Component<State,{}>{
                     </th>
                     <th title="Value" className="col col-2">
                         Value
-                    </th>                     
+                    </th>
                 </tr>
             </table>
         );
     };
 }
 
-class DGBody extends React.Component<State,{}>{        
-    private generateRows(){
-        if(this.props.data === null){
-            return <DGNoDataInfoRow columnsCount={DGTABLE_COLS_COUNT} infoText={NO_DATA_MESSAGE}/>;
+class DGBody extends React.Component<State, {}> {
+    private generateRows() {
+        if (this.props.data === null) {
+            return <DGNoDataInfoRow columnsCount={DGTABLE_COLS_COUNT} infoText={NO_DATA_MESSAGE} />;
         }
 
         let layerData = this.props.data[this.props.layerIdx].Properties;
 
         let rows = [];
-        
-        let charge = `${Numbers.roundToDecimal(layerData.Charge,2).toString()} (+${Numbers.roundToDecimal(layerData.NumPositives,2).toString()}/-${Numbers.roundToDecimal(layerData.NumNegatives,2).toString()})`;
-        let minRadius = this.props.data[this.props.layerIdx].LayerGeometry.MinRadius;
-        
+
+        let charge = `${Numbers.roundToDecimal(layerData.Charge, 2).toString()} (+${Numbers.roundToDecimal(layerData.NumPositives, 2).toString()}/-${Numbers.roundToDecimal(layerData.NumNegatives, 2).toString()})`;
+        let Radius = this.props.data[this.props.layerIdx].LayerGeometry.Radius;
+
         rows.push(
-                <DGElementRow columns={[<span><span className="glyphicon glyphicon-tint properties-icon" />{"Hydropathy"}</span>,<span>{Numbers.roundToDecimal(layerData.Hydropathy,2).toString()}</span>]} />
-            );
-        rows.push(
-                <DGElementRow columns={[<span><span className="glyphicon glyphicon-plus properties-icon" />{"Polarity"}</span>,<span>{Numbers.roundToDecimal(layerData.Polarity,2).toString()}</span>]} />
-            );
-        rows.push(
-                <DGElementRow columns={[<span><span className="glyphicon glyphicon-tint properties-icon upside-down" />{"Hydrophobicity"}</span>,<span>{Numbers.roundToDecimal(layerData.Hydrophobicity,2).toString()}</span>]} />
-            );
-        rows.push(
-                <DGElementRow columns={[<span><span className="glyphicon glyphicon-scissors properties-icon" />{"Mutability"}</span>,<span>{Numbers.roundToDecimal(layerData.Mutability,2).toString()}</span>]} />
-            );
-        rows.push(
-                <DGElementRow columns={[<span><span className="glyphicon glyphicon-flash properties-icon" />{"Charge"}</span>,<span>{charge}</span>]} />
+            <DGElementRow columns={[<span><span className="glyphicon glyphicon-tint properties-icon" />{"Hydropathy"}</span>, <span>{Numbers.roundToDecimal(layerData.Hydropathy, 2).toString()}</span>]} />
         );
         rows.push(
-                <DGElementRow columns={[<span><span className="icon bottleneck black properties-icon" />{"Radius"}</span>,<span>{Numbers.roundToDecimal(minRadius,1)}</span>]} />
+            <DGElementRow columns={[<span><span className="glyphicon glyphicon-plus properties-icon" />{"Polarity"}</span>, <span>{Numbers.roundToDecimal(layerData.Polarity, 2).toString()}</span>]} />
         );
-        rows.push(<DGRowEmpty columnsCount={DGTABLE_COLS_COUNT}/>);
+        rows.push(
+            <DGElementRow columns={[<span><span className="glyphicon glyphicon-tint properties-icon upside-down" />{"Hydrophobicity"}</span>, <span>{Numbers.roundToDecimal(layerData.Hydrophobicity, 2).toString()}</span>]} />
+        );
+        rows.push(
+            <DGElementRow columns={[<span><span className="glyphicon glyphicon-scissors properties-icon" />{"Mutability"}</span>, <span>{Numbers.roundToDecimal(layerData.Mutability, 2).toString()}</span>]} />
+        );
+        rows.push(
+            <DGElementRow columns={[<span><span className="glyphicon glyphicon-flash properties-icon" />{"Charge"}</span>, <span>{charge}</span>]} />
+        );
+        rows.push(
+            <DGElementRow columns={[<span><span className="icon bottleneck black properties-icon" />{"Radius"}</span>, <span>{Numbers.roundToDecimal(Radius, 1)}</span>]} />
+        );
+        rows.push(<DGRowEmpty columnsCount={DGTABLE_COLS_COUNT} />);
 
         return rows;
     }
 
-    render(){
+    render() {
         let rows = this.generateRows();
-        
-        return(
+
+        return (
             <table>
                 {rows}
             </table>
         );
     };
 }
-    
-class DGRow extends React.Component<{columns: string[]},{}>{
-    
-    private generateRow(columns: string[]){
+
+class DGRow extends React.Component<{ columns: string[] }, {}> {
+
+    private generateRow(columns: string[]) {
         let tds = [];
-        for(let i=0;i<columns.length;i++){
+        for (let i = 0; i < columns.length; i++) {
             tds.push(
-                <td className={`col col-${i+1}`}>
+                <td className={`col col-${i + 1}`}>
                     {columns[i]}
-                </td>    
+                </td>
             );
         }
 
         return tds;
     }
 
-    render(){
+    render() {
         return (
-                <tr>
-                    {this.generateRow(this.props.columns)}                     
-                </tr>);
+            <tr>
+                {this.generateRow(this.props.columns)}
+            </tr>);
     }
 }
 

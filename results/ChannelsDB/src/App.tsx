@@ -40,7 +40,7 @@ import { SbNcbrTunnels } from "molstar/lib/extensions/sb-ncbr";
         useColorMinMax: true,
         skipMiddleColor: false,
         topMargin: 0,
-        customRadiusProperty: "MinRadius"
+        customRadiusProperty: "Radius"
     }
 
     GlobalRouter.init(ROUTING_OPTIONS[ROUTING_MODE]);
