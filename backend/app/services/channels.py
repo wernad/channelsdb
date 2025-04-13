@@ -130,7 +130,7 @@ class ChannelService:
     ) -> dict | None:
         """Fetches all necessary data about structure's channels and returns them as a dict."""
         channels = self.repository.get_channels_by_structure_id(structure_id)
-        print(channels)
+
         if not channels:
             return None
 
