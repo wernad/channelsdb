@@ -10,3 +10,4 @@ uvicorn==0.23.2
 email-validator==2.0.0.post2
 biopython==1.84
 aiohttp==3.11.14
+isort==6.0.1
