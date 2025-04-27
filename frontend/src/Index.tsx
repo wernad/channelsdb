@@ -289,7 +289,7 @@ namespace ChannelsDB {
         render() {
             const docs = this.props.docs;
             const data = this.props.data;
-            const msg = Object.keys(data).map((key) => `${key} (${data[key]})`).join(', ');
+            const msg = Object.keys(data.statistics).filter((key) => data.statistics[key] > 0).map((key) => `${key} (${data.statistics[key]})`).join(', ');
 
             return <div className='well pdb-entry'>
                 <a href={`/detail?pid=${docs.pdb_id}`} target='_blank'>
