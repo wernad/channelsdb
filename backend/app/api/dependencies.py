@@ -4,16 +4,11 @@ from typing import Annotated
 from fastapi import Depends, Path
 from sqlmodel import Session
 
-from app.api.common import OLD_PDB_ID_REGEX, NEW_PDB_ID_REGEX, UNIPROT_ID_REGEX
+from app.api.common import NEW_PDB_ID_REGEX, OLD_PDB_ID_REGEX, UNIPROT_ID_REGEX
 from app.database.database import engine
 from app.database.repositories import ChannelRepository
-from app.services import (
-    AnnotationService,
-    ChannelService,
-    ExportService,
-    StructureService,
-    StatisticsService,
-)
+from app.services import (AnnotationService, ChannelService, ExportService,
+                          StatisticsService, StructureService)
 
 __all__ = [
     "AnnotationServiceDep",
@@ -87,6 +82,24 @@ StructureServiceDep = Annotated[StructureService, Depends(get_structure_service)
 
 # ID handling
 
-IDCheckDep = Annotated[
-    str, Path(pattern=f"{OLD_PDB_ID_REGEX}|{NEW_PDB_ID_REGEX}|{UNIPROT_ID_REGEX}")
-]
+
+def validate_id(
+    structure_id: Annotated[
+        str, Path(pattern=f"{OLD_PDB_ID_REGEX}|{NEW_PDB_ID_REGEX}|{UNIPROT_ID_REGEX}")
+    ],
+) -> str:
+    """Validates passed identifier and if it is in old PDB format transforms it into the new format.
+
+    Args:
+        structure_id: id to validate
+    Returns:
+        Same or updated string id value.
+    """
+
+    if len(structure_id) == 4:
+        structure_id = f"pdb_0000{structure_id}"
+
+    return structure_id
+
+
+IDCheckDep = Annotated[str, Depends(validate_id)]
