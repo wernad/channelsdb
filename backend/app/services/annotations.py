@@ -1,6 +1,7 @@
 from sqlmodel import Session
-from app.database.repositories import AnnotationRepository
+
 from app.database.models import AnnotationOutput
+from app.database.repositories import AnnotationRepository
 
 
 class AnnotationService:

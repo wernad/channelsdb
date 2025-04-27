@@ -1,6 +1,10 @@
-from app.services.channels import ChannelService
+from app.services import constants
 from app.services.annotations import AnnotationService
+from app.services.channel import ChannelService
 from app.services.export import ExportService
-from app.services.structure import StructureService
+from app.services.het_residue import HetResidueService
+from app.services.layer import LayerService
+from app.services.layer_residue import LayerResidueService
+from app.services.profile import ProfileService
 from app.services.statistics import StatisticsService
-import app.services.constants
+from app.services.structure import StructureService

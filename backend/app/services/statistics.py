@@ -2,8 +2,8 @@ from datetime import datetime as dt
 
 from sqlmodel import Session
 
-from app.database.repositories.channels import ChannelRepository
 from app.database.models import METHODS_NAMES
+from app.database.repositories.channel import ChannelRepository
 
 
 class StatisticsService:

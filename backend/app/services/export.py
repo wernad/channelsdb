@@ -1,17 +1,18 @@
 import json
+import random
+import string
+from io import BytesIO, StringIO
 from statistics import mean
 from string import ascii_uppercase
-from io import BytesIO, StringIO
 from zipfile import ZipFile
-import string
-import random
 
 from Bio.PDB.MMCIF2Dict import MMCIF2Dict
-from sqlmodel import Session
 from fastapi.encoders import jsonable_encoder
+from sqlmodel import Session
 
-from app.services import constants as const, ChannelService
-from app.database.repositories.channels import ChannelRepository
+from app.database.repositories.channel import ChannelRepository
+from app.services import ChannelService
+from app.services import constants as const
 
 
 class ExportService:
