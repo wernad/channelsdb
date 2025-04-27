@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
-from sqlalchemy import UniqueConstraint
-from sqlmodel import Field, SQLModel, Relationship
+
+from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from app.database.models import Channel, Residue
@@ -12,19 +12,16 @@ class HetResidueBase(SQLModel):
     backbone: bool
 
 
-class HetResidue(HetResidueBase, table=True):
-    id: int = Field(primary_key=True)
-    residue_id: int = Field(foreign_key="residue.id")
+class HetResidueInsert(HetResidueBase):
+    residue_id: int | None = Field(foreign_key="residue.id", nullable=True)
     channel_id: int = Field(foreign_key="channel.id")
+
+
+class HetResidue(HetResidueInsert, table=True):
+    id: int = Field(primary_key=True)
 
     residue: "Residue" = Relationship(back_populates="het_residues")
     channel: "Channel" = Relationship(back_populates="het_residues")
-
-    __table_args__ = (
-        UniqueConstraint(
-            "channel_id", "residue_id", "sequence_number", "chain_id", "backbone"
-        ),
-    )
 
 
 class HetResidueOutput(HetResidueBase):

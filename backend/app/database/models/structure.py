@@ -1,10 +1,9 @@
 from typing import TYPE_CHECKING, List
 
-from sqlmodel import SQLModel, Field, Relationship, UniqueConstraint
-
+from sqlmodel import Field, Relationship, SQLModel, UniqueConstraint
 
 if TYPE_CHECKING:
-    from app.database.models import Channel, Annotation, Source
+    from app.database.models import Annotation, Channel, Source
 
 
 class StructureBase(SQLModel):
@@ -12,10 +11,13 @@ class StructureBase(SQLModel):
     version: int = Field(nullable=True)
 
 
-class Structure(StructureBase, table=True):
-    id: int = Field(primary_key=True)
+class StructureInsert(StructureBase):
     external_id: str = Field(nullable=False)
     source_id: int = Field(foreign_key="source.id")
+
+
+class Structure(StructureInsert, table=True):
+    id: int = Field(primary_key=True)
 
     channels: List["Channel"] = Relationship(back_populates="structure")
     annotations: List["Annotation"] = Relationship(back_populates="structure")

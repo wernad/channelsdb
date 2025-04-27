@@ -2,9 +2,8 @@ from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship, SQLModel
 
-
 if TYPE_CHECKING:
-    from app.database.models import Structure, Channel
+    from app.database.models import Channel, Structure
 
 
 class AnnotationBase(SQLModel):

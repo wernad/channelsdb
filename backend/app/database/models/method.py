@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import TYPE_CHECKING, List
-from sqlmodel import Field, SQLModel, Relationship
+
+from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from app.database.models import Channel

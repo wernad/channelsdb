@@ -1,9 +1,8 @@
+from decimal import Decimal
 from typing import TYPE_CHECKING, Annotated
 
 from pydantic import PlainSerializer
 from sqlmodel import Field, Relationship, SQLModel
-from decimal import Decimal
-
 
 if TYPE_CHECKING:
     from app.database.models import Channel
@@ -41,9 +40,12 @@ class ProfileBase(SQLModel):
     charge: int = Field(schema_extra={"serialization_alias": "Charge"})
 
 
-class Profile(ProfileBase, table=True):
-    id: int = Field(primary_key=True)
+class ProfileInsert(ProfileBase):
     channel_id: int = Field(foreign_key="channel.id")
+
+
+class Profile(ProfileInsert, table=True):
+    id: int = Field(primary_key=True)
 
     channel: "Channel" = Relationship(back_populates="profiles")
 

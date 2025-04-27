@@ -1,21 +1,11 @@
 from typing import TYPE_CHECKING, Dict, List
 
-from sqlmodel import Field, SQLModel, Relationship
-
+from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from app.database.models import (
-        Annotation,
-        Method,
-        Category,
-        Layer,
-        Layers,
-        HetResidue,
-        Profile,
-        ProfileOutput,
-        Structure,
-        AnnotationOutput,
-    )
+    from app.database.models import (Annotation, AnnotationOutput, Category,
+                                     HetResidue, Layer, Layers, Method,
+                                     Profile, ProfileOutput, Structure)
 
 
 class ChannelBase(SQLModel):
@@ -23,11 +13,14 @@ class ChannelBase(SQLModel):
     cavity: str = Field(schema_extra={"serialization_alias": "Cavity"})
 
 
-class Channel(ChannelBase, table=True):
-    id: int = Field(primary_key=True)
+class ChannelInsert(ChannelBase):
     structure_id: int = Field(foreign_key="structure.id")
     method_id: int = Field(foreign_key="method.id")
     category_id: int = Field(foreign_key="category.id")
+
+
+class Channel(ChannelInsert, table=True):
+    id: int = Field(primary_key=True)
 
     annotation: "Annotation" = Relationship(back_populates="channel")
     structure: "Structure" = Relationship(back_populates="channels")

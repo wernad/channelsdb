@@ -1,8 +1,8 @@
-from typing import TYPE_CHECKING, Annotated, List
 from decimal import Decimal
+from typing import TYPE_CHECKING, Annotated, List
 
 from pydantic import PlainSerializer
-from sqlmodel import Field, SQLModel, Relationship
+from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from app.database.models import Channel, LayerResidue
@@ -31,10 +31,13 @@ class LayerBase(SQLModel):
     )
 
 
-class Layer(LayerBase, table=True):
-    id: int = Field(primary_key=True)
+class LayerInsert(LayerBase):
     channel_id: int = Field(foreign_key="channel.id")
     layer_order: int
+
+
+class Layer(LayerInsert, table=True):
+    id: int = Field(primary_key=True)
 
     channel: "Channel" = Relationship(back_populates="layers")
     layer_residues: List["LayerResidue"] = Relationship(
