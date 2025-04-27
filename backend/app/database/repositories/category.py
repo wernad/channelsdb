@@ -1,11 +1,8 @@
 from sqlmodel import insert, select
+
+from app.database.models import CATEGORIES_ID_TO_NAME, Categories, Category
 from app.database.repositories.base import RepositoryBase
-from app.database.models import Category, Categories
-
-from app.log import logger as log
-
-
-CATEGORIES_NAMES = {Categories.Tunnel: "Tunnel"}
+from app.log import log
 
 
 class CategoryRepository(RepositoryBase):
@@ -22,7 +19,7 @@ class CategoryRepository(RepositoryBase):
             return False
 
         values = [
-            {"id": category.value, "name": CATEGORIES_NAMES[category]}
+            {"id": category.value, "name": CATEGORIES_ID_TO_NAME[category]}
             for category in Categories
         ]
         statement = insert(Category).values(values)

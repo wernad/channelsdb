@@ -1,11 +1,10 @@
 from sqlmodel import insert, select
-from app.database.repositories.base import RepositoryBase
+
 from app.database.models import Source, Sources
+from app.database.repositories.base import RepositoryBase
+from app.log import log
 
-from app.log import logger as log
-
-
-SOURCES_NAMES = {Sources.PDB: "pdb", Sources.Alphafill: "alphafill"}
+SOURCES_NAMES = {Sources.PDB: "pdb", Sources.ALPHAFILL: "alphafill"}
 
 
 class SourceRepository(RepositoryBase):

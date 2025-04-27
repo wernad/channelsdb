@@ -1,6 +1,7 @@
 from sqlmodel import select
-from app.database.repositories.base import RepositoryBase
+
 from app.database.models import Annotation
+from app.database.repositories.base import RepositoryBase
 
 
 class AnnotationRepository(RepositoryBase):

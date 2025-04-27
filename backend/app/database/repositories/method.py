@@ -1,8 +1,8 @@
 from sqlmodel import insert, select
-from app.database.repositories.base import RepositoryBase
-from app.database.models import Method, Methods, METHODS_NAMES
 
-from app.log import logger as log
+from app.database.models import METHODS_NAMES, Method, Methods
+from app.database.repositories.base import RepositoryBase
+from app.log import log
 
 
 class MethodRepository(RepositoryBase):

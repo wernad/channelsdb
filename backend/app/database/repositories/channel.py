@@ -1,7 +1,7 @@
-from sqlmodel import func, select, join
+from sqlmodel import func, insert, select
 
+from app.database.models import Channel, ChannelInsert, Method
 from app.database.repositories.base import RepositoryBase
-from app.database.models import Channel, Category, Method
 from app.database.structures import Filter
 
 
@@ -31,15 +31,15 @@ class ChannelRepository(RepositoryBase):
 
     #     query = query.filter(and_(*range_conditions))
 
+    # def get_channels_by_params(self, filter: Filter):
+    #     statement = self._build_filter_statement(Channel, filter)
+    #     channels = self.db.exec(statement).all()
+    #     return channels
+
     def get_channels_by_structure_id(self, structure_id: int) -> list[Channel]:
         statement = select(Channel).where(Channel.structure_id == structure_id)
         channels = self.db.exec(statement).all()
 
-        return channels
-
-    def get_channels_by_params(self, filter: Filter):
-        statement = self._build_filter_statement(Channel, filter)
-        channels = self.db.exec(statement).all()
         return channels
 
     def get_channel_counts_per_category(self) -> list[tuple]:
@@ -71,3 +71,26 @@ class ChannelRepository(RepositoryBase):
 
         counts = self.db.exec(statement).all()
         return counts
+
+    def insert_in_bulk(self, values: list[ChannelInsert]) -> list[int]:
+        """Inserts new channel rows in bulk."""
+        values = [value.model_dump() for value in values]
+        statement = insert(Channel).values(values).returning(Channel.id)
+        result = self.db.exec(statement)
+        self.db.commit()
+
+        ids = [id[0] for id in result.all()]
+
+        return ids
+
+    def insert_entry(self, values: ChannelInsert) -> int:
+        """Inserts a new channel entry."""
+
+        statement = insert(Channel).values(values.model_dump()).returning(Channel.id)
+        result = self.db.exec(statement)
+        self.db.commit()
+
+        id = result.first()
+        if id:
+            id = id[0]
+        return id
