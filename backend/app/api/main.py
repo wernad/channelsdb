@@ -1,11 +1,6 @@
 from fastapi import APIRouter
-from app.api.endpoints import (
-    ping,
-    annotations,
-    channels,
-    download,
-    statistics,
-)
+
+from app.api.endpoints import annotations, channels, download, ping, statistics
 
 api_router = APIRouter()
 api_router.include_router(ping.router, tags=["health"], prefix="/health")

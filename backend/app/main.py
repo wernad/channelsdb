@@ -1,12 +1,12 @@
 from contextlib import asynccontextmanager
 
+from fastapi import APIRouter, FastAPI
 from psycopg2 import OperationalError
-from fastapi import FastAPI, APIRouter
 
-from app.config import API_PATH
 from app.api.main import api_router
+from app.config import API_PATH
 from app.database.database import create_db_and_tables, init_flag_data
-from app.log import logger as log
+from app.log import log
 
 router = APIRouter()
 router.include_router(api_router, prefix=API_PATH)
