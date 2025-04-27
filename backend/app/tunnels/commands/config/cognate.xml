@@ -1,0 +1,19 @@
+<Tunnels>
+  <Input></Input>
+  <WorkingDirectory></WorkingDirectory>
+  <Params>
+    <Cavity IgnoreHETAtoms="1" InteriorThreshold="1.1" ProbeRadius="5" />
+    <Tunnel BottleneckRadius="1.2" BottleneckTolerance="3" MaxTunnelSimilarity="0.7" OriginRadius="4" SurfaceCoverRadius="10" />
+  </Params>
+  <Export>
+    <Formats JSON="1"/>
+    <Types Cavities="1" Tunnels="1" />
+    <PyMol SurfaceType="Surface" />
+  </Export>
+
+  <Origins Auto="0">
+     <Origin>
+     </Origin>
+
+  </Origins>
+</Tunnels>
