@@ -1,17 +1,11 @@
 from statistics import mean
 
 from sqlmodel import Session
-from app.database.repositories.channels import ChannelRepository
-from app.database.models import (
-    Channel,
-    ChannelOutput,
-    ProfileOutput,
-    METHODS_NAMES,
-    Layers,
-    LayerInfo,
-    LayerGeometry,
-    LayerProperties,
-)
+
+from app.database.models import (METHODS_NAMES, Channel, ChannelInsert,
+                                 ChannelOutput, LayerGeometry, LayerInfo,
+                                 LayerProperties, Layers, ProfileOutput)
+from app.database.repositories.channel import ChannelRepository
 
 
 class ChannelService:
@@ -20,6 +14,7 @@ class ChannelService:
     def __init__(self, db: Session):
         self.repository = ChannelRepository(db)
 
+    # TODO fix residues order in channels, use layer order with layer_residue.
     @staticmethod
     def channels_with_annotations_as_model(channels: list["Channel"]) -> dict:
         result = {}
@@ -28,7 +23,6 @@ class ChannelService:
             method = channel.method.name
             if method not in result:
                 result[method] = []
-
             result[method].append(
                 ChannelOutput(
                     type=channel.category.name,
@@ -45,10 +39,8 @@ class ChannelService:
                             )
                         ],
                         het_residues=[
-                            f"{hr.residue.name.upper()} {hr.sequence_number} {hr.chain_id}{' Backbone' if hr.backbone else ''}"
-                            for hr in sorted(
-                                channel.het_residues, key=lambda x: x.sequence_number
-                            )
+                            f"{hr.residue.name.upper() if hr.residue else 'unknown'} {hr.sequence_number} {hr.chain_id}{' Backbone' if hr.backbone else ''}"
+                            for hr in channel.het_residues
                         ],
                         layers_info=[
                             LayerInfo(
@@ -63,7 +55,7 @@ class ChannelService:
                                 residues=list(
                                     set(
                                         [
-                                            f"{lr.residue.name.upper()} {lr.sequence_number} {lr.chain_id}{' Backbone' if lr.backbone else ''}"
+                                            f"{lr.residue.name.upper() if lr.residue else 'unknown'} {lr.sequence_number} {lr.chain_id}{' Backbone' if lr.backbone else ''}"
                                             for lr in sorted(
                                                 layer.layer_residues,
                                                 key=lambda lr: lr.sequence_number,
@@ -124,7 +116,6 @@ class ChannelService:
             )
         return result
 
-    # TODO fix residues order in channels.
     def get_channels_with_annotations_by_structure(
         self, structure_id: str
     ) -> dict | None:
@@ -141,3 +132,22 @@ class ChannelService:
                 formatted_channels[method] = []
 
         return formatted_channels
+
+    def insert_in_bulk(self, values: list[ChannelInsert]) -> list[int] | None:
+        """Inserts channels in bluk and returns ids of new rows, if successfull."""
+        result = self.repository.insert_in_bulk(values)
+
+        if result:
+            return result
+
+        return None
+
+    def insert_entry(self, values: ChannelInsert) -> int | None:
+        """Inserts a single row into channel table."""
+
+        result = self.repository.insert_entry(values=values)
+
+        if result:
+            return result
+
+        return None
