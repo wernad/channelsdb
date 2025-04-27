@@ -1,24 +1,18 @@
-from enum import StrEnum
-import aiohttp
 import gzip
+from enum import StrEnum
 
-from fastapi.responses import (
-    PlainTextResponse,
-    RedirectResponse,
-    Response,
-)
+import aiohttp
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import PlainTextResponse, RedirectResponse, Response
 
-from app.api.dependencies import StructureServiceDep, ExportServiceDep, IDCheckDep
-from app.api.exceptions import ProteinNotFound, UnknownFileType, NoChannelsInProtein
-from app.config import (
-    PDB_HTTP_FILE_URL,
-    ALPHAFILL_HTTP_FILE_URL,
-    PDB_HTTP_ASSEMBLY_URL,
-    PDB_HTTP_IMAGE_URL,
-)
-from app.log import logger as log
-from app.database.models import StructureData, Sources
+from app.api.dependencies import (ExportServiceDep, IDCheckDep,
+                                  StructureServiceDep)
+from app.api.exceptions import (NoChannelsInProtein, ProteinNotFound,
+                                UnknownFileType)
+from app.config import (ALPHAFILL_HTTP_FILE_URL, PDB_HTTP_ASSEMBLY_URL,
+                        PDB_HTTP_FILE_URL, PDB_HTTP_IMAGE_URL)
+from app.database.models import Sources, StructureData
+from app.log import log
 
 router = APIRouter()
 

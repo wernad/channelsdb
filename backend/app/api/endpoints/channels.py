@@ -1,13 +1,8 @@
 from fastapi import APIRouter
 
-from app.api.dependencies import (
-    ChannelServiceDep,
-    AnnotationServiceDep,
-    StructureServiceDep,
-    IDCheckDep,
-)
+from app.api.dependencies import (AnnotationServiceDep, ChannelServiceDep,
+                                  IDCheckDep, StructureServiceDep)
 from app.api.exceptions import NoChannelsInProtein, ProteinNotFound
-
 from app.database.models import ChannelsResponse
 
 router = APIRouter()

@@ -3,8 +3,8 @@ from datetime import date
 from fastapi import APIRouter
 from sqlmodel import SQLModel
 
-from app.api.dependencies import StatisticsServiceDep, StructureServiceDep
-
+from app.api.dependencies import (IDCheckDep, StatisticsServiceDep,
+                                  StructureServiceDep)
 from app.api.exceptions import NoChannelsInProtein
 
 router = APIRouter()
@@ -41,7 +41,7 @@ async def get_channel_counts_per_category(
     response_model=StatisticsModel,
 )
 async def get_channel_counts_by_id(
-    structure_id: str,
+    structure_id: IDCheckDep,
     structure_service: StructureServiceDep,
     statistics_service: StatisticsServiceDep,
 ):

@@ -1,12 +1,12 @@
 import gzip
-import requests
 import xml.etree.ElementTree as ET
-from fastapi import HTTPException, APIRouter
 
+import requests
+from fastapi import APIRouter, HTTPException
 
-from app.database.models.annotation import AnnotationsOutput
-from app.log import logger as log
 from app.api.dependencies import IDCheckDep
+from app.database.models.annotation import AnnotationsOutput
+from app.log import log
 
 router = APIRouter()
 
