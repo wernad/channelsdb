@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, List
 from sqlmodel import Field, Relationship, SQLModel, UniqueConstraint
 
 if TYPE_CHECKING:
-    from app.database.models import Annotation, Channel, Source
+    from app.database.models import Channel, Source
 
 
 class StructureBase(SQLModel):
@@ -20,7 +20,6 @@ class Structure(StructureInsert, table=True):
     id: int = Field(primary_key=True)
 
     channels: List["Channel"] = Relationship(back_populates="structure")
-    annotations: List["Annotation"] = Relationship(back_populates="structure")
     source: "Source" = Relationship(back_populates="structures")
 
     __table_args__ = (UniqueConstraint("external_id", "version"),)

@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from app.database.models import Channel, Structure
+    from app.database.models import Channel
 
 
 class AnnotationBase(SQLModel):
@@ -13,13 +13,14 @@ class AnnotationBase(SQLModel):
     reference_type: str
 
 
-class Annotation(AnnotationBase, table=True):
-    id: int = Field(primary_key=True)
-    structure_id: int = Field(foreign_key="structure.id")
+class AnnotationInsert(AnnotationBase):
     channel_id: int = Field(foreign_key="channel.id")
 
-    structure: "Structure" = Relationship(back_populates="annotations")
-    channel: "Channel" = Relationship(back_populates="annotation")
+
+class Annotation(AnnotationInsert, table=True):
+    id: int = Field(primary_key=True)
+
+    channel: "Channel" = Relationship(back_populates="annotations")
 
 
 class AnnotationOutput(AnnotationBase):

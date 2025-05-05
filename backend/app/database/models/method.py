@@ -22,7 +22,7 @@ class Methods(Enum):
     ALPHAFILL_TUNNELS_CAVER = 12
 
 
-METHODS_NAMES = {
+METHODS_IDS_TO_NAMES = {
     Methods.CSA_TUNNELS_MOLE: "CSATunnels_MOLE",
     Methods.CSA_TUNNELS_CAVER: "CSATunnels_Caver",
     Methods.REVIEWED_CHANNELS_MOLE: "ReviewedChannels_MOLE",
@@ -35,6 +35,21 @@ METHODS_NAMES = {
     Methods.PROCOGNATE_TUNNELS_CAVER: "ProcognateTunnels_Caver",
     Methods.ALPHAFILL_TUNNELS_MOLE: "AlphaFillTunnels_MOLE",
     Methods.ALPHAFILL_TUNNELS_CAVER: "AlphaFillTunnels_Caver",
+}
+
+METHODS_NAMES_TO_IDS = {
+    "CSATunnels_MOLE": Methods.CSA_TUNNELS_MOLE,
+    "CSATunnels_Caver": Methods.CSA_TUNNELS_CAVER,
+    "ReviewedChannels_MOLE": Methods.REVIEWED_CHANNELS_MOLE,
+    "ReviewedChannels_Caver": Methods.REVIEWED_CHANNELS_CAVER,
+    "CofactorTunnels_MOLE": Methods.COFACTOR_TUNNELS_MOLE,
+    "CofactorTunnels_Caver": Methods.COFACTOR_TUNNELS_CAVER,
+    "TransmembranePores_MOLE": Methods.TRANSMEMBRANE_PORES_MOLE,
+    "TransmembranePores_Caver": Methods.TRANSMEMBRANE_PORES_CAVER,
+    "ProcognateTunnels_MOLE": Methods.PROCOGNATE_TUNNELS_MOLE,
+    "ProcognateTunnels_Caver": Methods.PROCOGNATE_TUNNELS_CAVER,
+    "AlphaFillTunnels_MOLE": Methods.ALPHAFILL_TUNNELS_MOLE,
+    "AlphaFillTunnels_Caver": Methods.ALPHAFILL_TUNNELS_CAVER,
 }
 
 

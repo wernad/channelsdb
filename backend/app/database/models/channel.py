@@ -3,9 +3,18 @@ from typing import TYPE_CHECKING, Dict, List
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from app.database.models import (Annotation, AnnotationOutput, Category,
-                                     HetResidue, Layer, Layers, Method,
-                                     Profile, ProfileOutput, Structure)
+    from app.database.models import (
+        Annotation,
+        AnnotationOutput,
+        Category,
+        HetResidue,
+        Layer,
+        Layers,
+        Method,
+        Profile,
+        ProfileOutput,
+        Structure,
+    )
 
 
 class ChannelBase(SQLModel):
@@ -22,7 +31,7 @@ class ChannelInsert(ChannelBase):
 class Channel(ChannelInsert, table=True):
     id: int = Field(primary_key=True)
 
-    annotation: "Annotation" = Relationship(back_populates="channel")
+    annotations: list["Annotation"] = Relationship(back_populates="channel")
     structure: "Structure" = Relationship(back_populates="channels")
     method: "Method" = Relationship(back_populates="channels")
     category: "Category" = Relationship(back_populates="channels")
@@ -49,3 +58,16 @@ class ChannelsResponse(SQLModel):
     channels: Dict[str, List[ChannelOutput]] = Field(
         schema_extra={"serialization_alias": "Channels"}
     )
+
+
+class ChannelFilter(SQLModel):
+    model_config = {"extra": "forbid"}
+
+    min_radius: float | None = Field(None, ge=0)
+    max_radius: float | None = Field(None, ge=0)
+    min_distance: float | None = Field(None, ge=0)
+    max_distance: float | None = Field(None, ge=0)
+    min_bottleneck: float | None = Field(None, ge=0)
+
+    limit: int = Field(100, gt=0, le=10000)
+    offset: int = Field(0, ge=0)
