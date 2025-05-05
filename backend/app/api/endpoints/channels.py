@@ -1,9 +1,15 @@
-from fastapi import APIRouter
+from typing import Annotated
 
-from app.api.dependencies import (AnnotationServiceDep, ChannelServiceDep,
-                                  IDCheckDep, StructureServiceDep)
-from app.api.exceptions import NoChannelsInProtein, ProteinNotFound
-from app.database.models import ChannelsResponse
+from fastapi import APIRouter, Query
+
+from app.api.dependencies import (
+    AnnotationServiceDep,
+    ChannelServiceDep,
+    IDCheckDep,
+    StructureServiceDep,
+)
+from app.api.exceptions import NoChannelsInProtein, ProteinNotFound, NoChannelWithFilter
+from app.database.models import ChannelsResponse, ChannelFilter
 
 router = APIRouter()
 
@@ -26,7 +32,7 @@ async def get_channels(
     )
 
     if internal_id:
-        channels = channels_service.get_channels_with_annotations_by_structure(
+        channels = channels_service.get_channels_with_by_structure(
             structure_id=internal_id,
         )
         if not channels:
@@ -39,11 +45,23 @@ async def get_channels(
     return ChannelsResponse(annotations=annotations, channels=channels)
 
 
-# @router.get(
-#     path="/channels/filter",
-#     response_model=list[Channels],
-#     name="Filtered channels",
-#     tags=["PDB", "Alphafil"],
-#     description="Returns list of channels based on passed filter.",
-# )
-# async def get_channels_filter(filter: ChannelsFilter): ...
+@router.get(
+    path="/filter/",
+    response_model=list[str],
+    name="Filtered proteins",
+    description="Returns list of protein ids based on passed filter.",
+)
+async def get_channels_filtered(
+    structure_service: StructureServiceDep,
+    channels_service: ChannelServiceDep,
+    filter: Annotated[ChannelFilter, Query()],
+):
+
+    internal_ids = channels_service.get_channels_by_filter(filter)
+
+    if internal_ids:
+        external_ids = structure_service.get_external_from_internal_bulk(internal_ids)
+
+        return external_ids
+
+    raise NoChannelWithFilter()

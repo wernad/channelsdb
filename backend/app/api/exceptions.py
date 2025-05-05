@@ -23,3 +23,15 @@ class UnsupportedIDFormat(HTTPException):
     def __init__(self, protein_id: str):
         self.status_code = 400
         self.detail = f"Given protein id is in unsupported format ({protein_id}). Expected format examples: 11ba (PDB), pdb_000011ba (PDB), P12345 (UniProt)."
+
+
+class NoChannelWithFilter(HTTPException):
+    def __init__(self):
+        self.status_code = 404
+        self.detail = "No channels found using given filter."
+
+
+class NoStatistics(HTTPException):
+    def __init__(self):
+        self.status_code = 404
+        self.detail = "Not enough data to calculate statistics."
