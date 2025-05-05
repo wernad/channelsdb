@@ -1,11 +1,11 @@
 from app.database.models import Methods
 from app.log import log
-from app.tunnels.commands.mole_base import MoleTemplate
+from app.channels.commands.mole_base import MoleTemplate
 
 
-class MoleCofactor(MoleTemplate):
-    TUNNEL_TYPE = "cofactor"
-    METHOD_ID = Methods.COFACTOR_TUNNELS_MOLE
+class MoleCSA(MoleTemplate):
+    TUNNEL_TYPE = "csa"
+    METHOD_ID = Methods.CSA_TUNNELS_MOLE
 
     def configure(self, protein: str) -> None:
         """Creates configuration file for Mole software.
@@ -14,7 +14,7 @@ class MoleCofactor(MoleTemplate):
             protein: name of protein
         """
         log.debug(
-            f"Worker {self.worker_id} {self.TUNNEL_TYPE.upper()}-- Creating XML configuration file for {protein}."
+            f"Worker {self.worker_id} {self.TUNNEL_TYPE.upper()} -- Creating XML configuration file for {protein}.."
         )
         self._finalize_configuration(protein)
 

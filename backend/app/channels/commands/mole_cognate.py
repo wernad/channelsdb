@@ -2,8 +2,8 @@ from xml.etree.ElementTree import SubElement
 
 from app.database.models import Methods
 from app.log import log
-from app.tunnels.commands.config.cognate_points import POINTS
-from app.tunnels.commands.mole_base import MoleTemplate
+from app.channels.commands.config.cognate_points import POINTS
+from app.channels.commands.mole_base import MoleTemplate
 
 
 class MoleCognate(MoleTemplate):

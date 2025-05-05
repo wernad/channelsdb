@@ -4,7 +4,7 @@ from queue import Empty
 
 from app.config import MANAGER_LIMIT, QUEUE_TIMEOUT
 from app.log import log
-from app.tunnels.fetch.workers import create_mole_workers
+from app.channels.fetch.workers.command_worker import create_mole_workers
 
 
 def worker_manager(

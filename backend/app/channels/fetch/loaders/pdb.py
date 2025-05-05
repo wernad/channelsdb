@@ -11,12 +11,16 @@ from time import sleep
 
 from requests import get
 
-from app.config import (OUTPUT_PATH, PDB_SEARCH_API_LIMIT, QUEUE_SIZE,
-                        WORKER_LIMIT)
+from app.channels.fetch.workers import create_inserter, create_managers
+from app.config import OUTPUT_PATH, PDB_SEARCH_API_LIMIT, WORKER_LIMIT, QUEUE_SIZE
 from app.log import log
-from app.tunnels.fetch.common import (get_file, get_file_url, get_full_id,
-                                      get_last_version, get_search_url)
-from app.tunnels.fetch.workers import create_inserter, create_managers
+from app.channels.fetch.common import (
+    get_file,
+    get_file_url,
+    get_full_id,
+    get_last_version,
+    get_search_url,
+)
 
 
 def fetch_ids(start: int, limit: int) -> list[str]:
@@ -156,7 +160,7 @@ def get_linspace(total: int):
     return step, starts
 
 
-def _create_output_directory() -> None:
+def create_output_directory() -> None:
     """Creates output folder for workers."""
     log.debug("Creating output folder structure.")
 
@@ -174,8 +178,16 @@ def _create_output_directory() -> None:
         log.error(f"An error occurred: {e}")
 
 
-# TODO handle remote and mirror fetching
-def run(start: int | None, pdb: str):
+def create_queues() -> list[mp.Queue]:
+    """Creates queues for data and results."""
+
+    data_queue = mp.Queue(maxsize=QUEUE_SIZE)
+    result_queue = mp.Queue()
+
+    return data_queue, result_queue
+
+
+def run(start: int | None):
     """Creates and starts child processes for fetching file data.
 
     Args:
@@ -186,7 +198,7 @@ def run(start: int | None, pdb: str):
 
     response = get(url)
 
-    _create_output_directory()
+    create_output_directory()
 
     if response.status_code == 200:
         total = response.json()["total_count"]
@@ -194,8 +206,8 @@ def run(start: int | None, pdb: str):
         actual_start = start if start else 0
 
         log.debug("Creating managers...")
-        data_queue = mp.Queue(maxsize=QUEUE_SIZE)
-        result_queue = mp.Queue()
+
+        data_queue, result_queue = create_queues()
 
         managers = create_managers(data_queue=data_queue, result_queue=result_queue)
         inserter = create_inserter(result_queue=result_queue)
@@ -217,7 +229,3 @@ def run(start: int | None, pdb: str):
         log.info("Script finished.")
     else:
         log.error(f"Received unexpected status code: {response.status_code}")
-
-
-if __name__ == "__main__":
-    run()
