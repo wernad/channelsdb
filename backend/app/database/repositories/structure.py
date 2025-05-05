@@ -1,4 +1,4 @@
-from sqlmodel import insert, select
+from sqlmodel import insert, select, update
 
 from app.database.models import Structure, StructureInsert
 from app.database.repositories.base import RepositoryBase
@@ -20,6 +20,28 @@ class StructureRepository(RepositoryBase):
         result = self.db.exec(statement).first()
 
         return result
+
+    def get_external_from_internal_bulk(self, internal_ids: list[int]) -> list[str]:
+        """Return a list of external ids from internal ids."""
+
+        statement = select(Structure.external_id).where(Structure.id.in_(internal_ids))
+
+        result = self.db.exec(statement).all()
+
+        return result
+
+    def update_has_channels_by_internal_id(
+        self, internal_id: int, has_channels: bool
+    ) -> None:
+        """Updates has_channels column of protein with given internal id."""
+
+        statement = select(Structure).where(Structure.id == internal_id)
+        result = self.db.exec(statement).one()
+
+        if result:
+            result.has_channels = has_channels
+            self.db.add(result)
+            self.db.commit()
 
     def insert_in_bulk(self, values: list[StructureInsert]) -> list[int]:
         """Inserts new structure rows in bulk."""
@@ -46,4 +68,5 @@ class StructureRepository(RepositoryBase):
 
         if id:
             id = id[0]
+
         return id

@@ -1,6 +1,6 @@
 from sqlmodel import insert, select
 
-from app.database.models import METHODS_NAMES, Method, Methods
+from app.database.models import METHODS_IDS_TO_NAMES, Method, Methods
 from app.database.repositories.base import RepositoryBase
 from app.log import log
 
@@ -19,7 +19,8 @@ class MethodRepository(RepositoryBase):
             return False
 
         values = [
-            {"id": method.value, "name": METHODS_NAMES[method]} for method in Methods
+            {"id": method.value, "name": METHODS_IDS_TO_NAMES[method]}
+            for method in Methods
         ]
         statement = insert(Method).values(values)
 

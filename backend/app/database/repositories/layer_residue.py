@@ -1,5 +1,4 @@
 from sqlmodel import insert
-
 from app.database.models import LayerResidue, LayerResidueInsert
 from app.database.repositories.base import RepositoryBase
 
