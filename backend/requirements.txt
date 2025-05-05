@@ -1,7 +1,5 @@
-# asyncpg==0.30.0
-# psycopg==3.2.3
 psycopg2==2.9.10 
-fastapi==0.102.0
+fastapi==0.115.12
 sqlmodel==0.0.22
 requests==2.31.0
 httpx==0.24.1

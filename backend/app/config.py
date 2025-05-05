@@ -36,6 +36,6 @@ WORKER_LIMIT = 100
 CRON_JOB_DAY = 3  # 0-6 (Mon - Sun).
 
 # DIRECTORIES
-CONFIG_PATH = "./app/tunnels/commands/config"
-OUTPUT_PATH = "./app/tunnels/output"
-RELATIVE_MOLE_PATH = "../../mole2/mole2.exe"
+CONFIG_PATH = "./app/channels/commands/config"
+OUTPUT_PATH = "./app/channels/output"
+RELATIVE_MOLE_PATH = "../../commands/mole2/mole2.exe"
