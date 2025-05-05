@@ -1,6 +1,6 @@
 from sqlmodel import Session
 
-from app.database.models import AnnotationOutput
+from app.database.models import AnnotationOutput, AnnotationInsert
 from app.database.repositories import AnnotationRepository
 
 
@@ -29,3 +29,21 @@ class AnnotationService:
             )
 
         return result
+
+    def insert_bulk(self, values: list[AnnotationInsert]) -> list[int]:
+        """Inserts values into annotation table in bulk."""
+        result = self.repository.insert_in_bulk(values=values)
+
+        if result:
+            return result
+        return None
+
+    def insert_entry(self, values: AnnotationInsert) -> int:
+        """Inserts a single row into annotation table."""
+
+        result = self.repository.insert_entry(values=values)
+
+        if result:
+            return result
+
+        return None
