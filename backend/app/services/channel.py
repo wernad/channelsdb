@@ -2,9 +2,18 @@ from statistics import mean
 
 from sqlmodel import Session
 
-from app.database.models import (METHODS_NAMES, Channel, ChannelInsert,
-                                 ChannelOutput, LayerGeometry, LayerInfo,
-                                 LayerProperties, Layers, ProfileOutput)
+from app.database.models import (
+    METHODS_IDS_TO_NAMES,
+    Channel,
+    ChannelInsert,
+    ChannelOutput,
+    LayerGeometry,
+    LayerInfo,
+    LayerProperties,
+    Layers,
+    ProfileOutput,
+    ChannelFilter,
+)
 from app.database.repositories.channel import ChannelRepository
 
 
@@ -14,9 +23,8 @@ class ChannelService:
     def __init__(self, db: Session):
         self.repository = ChannelRepository(db)
 
-    # TODO fix residues order in channels, use layer order with layer_residue.
     @staticmethod
-    def channels_with_annotations_as_model(channels: list["Channel"]) -> dict:
+    def channels_with_as_model(channels: list["Channel"]) -> dict:
         result = {}
 
         for channel in channels:
@@ -35,7 +43,7 @@ class ChannelService:
                             f"{lr.residue.name.upper()} {lr.sequence_number} {lr.chain_id}{' Backbone' if lr.backbone else ''}"
                             for layer in channel.layers
                             for lr in sorted(
-                                layer.layer_residues, key=lambda x: x.sequence_number
+                                layer.layer_residues, key=lambda x: x.flow_id
                             )
                         ],
                         het_residues=[
@@ -58,7 +66,7 @@ class ChannelService:
                                             f"{lr.residue.name.upper() if lr.residue else 'unknown'} {lr.sequence_number} {lr.chain_id}{' Backbone' if lr.backbone else ''}"
                                             for lr in sorted(
                                                 layer.layer_residues,
-                                                key=lambda lr: lr.sequence_number,
+                                                key=lambda lr: lr.flow_id,
                                             )
                                         ]
                                     )
@@ -116,22 +124,29 @@ class ChannelService:
             )
         return result
 
-    def get_channels_with_annotations_by_structure(
-        self, structure_id: str
-    ) -> dict | None:
+    def get_channels_with_by_structure(self, structure_id: str) -> dict | None:
         """Fetches all necessary data about structure's channels and returns them as a dict."""
         channels = self.repository.get_channels_by_structure_id(structure_id)
 
         if not channels:
             return None
 
-        formatted_channels = ChannelService.channels_with_annotations_as_model(channels)
+        formatted_channels = ChannelService.channels_with_as_model(channels)
 
-        for method in METHODS_NAMES.values():
+        for method in METHODS_IDS_TO_NAMES.values():
             if method not in formatted_channels:
                 formatted_channels[method] = []
 
         return formatted_channels
+
+    def get_channels_by_filter(self, filter: ChannelFilter) -> list[str] | None:
+        """Returns list of internal ids of protein with filtered channels."""
+        result = self.repository.get_channels_filtered(filter)
+
+        if result:
+            return result
+
+        return None
 
     def insert_in_bulk(self, values: list[ChannelInsert]) -> list[int] | None:
         """Inserts channels in bluk and returns ids of new rows, if successfull."""

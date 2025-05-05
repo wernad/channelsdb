@@ -191,9 +191,9 @@ class ExportService:
         }
         for channel in channels:
             new_channel_id = ExportService.id_generator()
-            if channel.annotation:
+            for ann in channel.annotations:
                 loops["annotation"].append(
-                    f'{new_channel_id} "{channel.annotation.name}" "{channel.annotation.description}" "{channel.annotation.reference}" {channel.annotation.reference_type}'
+                    f'{new_channel_id} "{ann.name}" "{ann.description}" "{ann.reference}" {ann.reference_type}'
                 )
             method, software = channel.method.name.split("_")
             loops["channel"].append(
