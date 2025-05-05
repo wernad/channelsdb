@@ -7,8 +7,12 @@ from pydantic_core import MultiHostUrl
 from sqlmodel import Session, SQLModel, create_engine, inspect, text
 
 from app.config import DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER
-from app.database.repositories import (CategoryRepository, MethodRepository,
-                                       ResidueRepository, SourceRepository)
+from app.database.repositories import (
+    CategoryRepository,
+    MethodRepository,
+    ResidueRepository,
+    SourceRepository,
+)
 from app.log import log
 
 __all__ = ["db_context", "create_db_and_tables", "get_session"]
