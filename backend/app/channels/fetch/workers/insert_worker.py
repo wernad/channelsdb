@@ -38,18 +38,21 @@ def insert_worker(result_queue: mp.Queue) -> None:
                 full_id=full_id, version=version, has_channels=has_channels
             )
 
-            channels_ids = insert_channels(
-                structure_id=structure_id, method_id=method_id, data=channels
-            )
+            if structure_id:
+                channels_ids = insert_channels(
+                    structure_id=structure_id, method_id=method_id, data=channels
+                )
 
-            insert_profiles(channels_ids=channels_ids, data=channels)
-            layers_ids = insert_layers(channels_ids=channels_ids, data=channels)
+                insert_profiles(channels_ids=channels_ids, data=channels)
+                layers_ids = insert_layers(channels_ids=channels_ids, data=channels)
 
-            insert_layer_residues(layers_ids=layers_ids, data=channels)
-            insert_het_residues(channels_ids=channels_ids, data=channels)
-            log.debug(
-                f"INSERTER -- Finished inserting channel data for: {full_id=}, {method_id=}"
-            )
+                insert_layer_residues(layers_ids=layers_ids, data=channels)
+                insert_het_residues(channels_ids=channels_ids, data=channels)
+                log.debug(
+                    f"INSERTER -- Finished inserting channel data for: {full_id=}, {method_id=}"
+                )
+            else:
+                continue
         except Empty:
             log.debug("INSERTER -- Result queue is empty, waiting...")
             time.sleep(QUEUE_TIMEOUT)

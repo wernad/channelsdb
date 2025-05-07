@@ -11,7 +11,6 @@ from app.services import (
 
 from app.database.database import db_context
 from app.database.models import (
-    CATEGORIES_NAME_TO_ID,
     RESIDUE_NAME_TO_ID,
     ChannelInsert,
     AnnotationInsert,
@@ -242,7 +241,9 @@ def get_het_residue_values(
     return values
 
 
-def insert_structure_if_missing(full_id: str, version: int, has_channels: bool) -> int:
+def insert_structure_if_missing(
+    full_id: str, version: int, has_channels: bool
+) -> int | None:
     """Inserts a new structure row if it's not in the database.
 
     Args:
@@ -250,7 +251,7 @@ def insert_structure_if_missing(full_id: str, version: int, has_channels: bool) 
         version: Version of structure.
         has_channels: if protein has channels.
     Returns:
-        integer id of structure entry.
+        integer id of structure entry or None if structure exists.
     """
 
     with db_context() as session:
@@ -259,12 +260,7 @@ def insert_structure_if_missing(full_id: str, version: int, has_channels: bool) 
         structure = structure_service.check_if_exists_by_external_id(full_id)
 
         if structure is not None:
-            structure_id = structure.id
-
-            if structure.has_channels != has_channels:
-                structure_service.update_has_channels_by_internal_id(
-                    structure_id, has_channels
-                )
+            return None
 
         else:
             new_structure = StructureInsert(
