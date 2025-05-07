@@ -25,10 +25,10 @@ class UnsupportedIDFormat(HTTPException):
         self.detail = f"Given protein id is in unsupported format ({protein_id}). Expected format examples: 11ba (PDB), pdb_000011ba (PDB), P12345 (UniProt)."
 
 
-class NoChannelWithFilter(HTTPException):
+class NoStructuresWithFilter(HTTPException):
     def __init__(self):
         self.status_code = 404
-        self.detail = "No channels found using given filter."
+        self.detail = "No structures found using given filter."
 
 
 class NoStatistics(HTTPException):

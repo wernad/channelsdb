@@ -1,9 +1,17 @@
 from fastapi import APIRouter
 
-from app.api.endpoints import annotations, channels, download, ping, statistics
+from app.api.endpoints import (
+    annotations,
+    channels,
+    download,
+    ping,
+    statistics,
+    structure,
+)
 
 api_router = APIRouter()
 api_router.include_router(ping.router, tags=["health"], prefix="/health")
+api_router.include_router(structure.router, tags=["structures"], prefix="/structures")
 api_router.include_router(
     annotations.router, tags=["annotations"], prefix="/annotations"
 )
