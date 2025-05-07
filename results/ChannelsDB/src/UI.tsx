@@ -9,7 +9,7 @@ import { showDefaultVisuals } from "./State";
 import { Events } from "./Bridge";
 import { SelectionHelper } from "./CommonUtils/Selection";
 import { Tunnels } from "./CommonUtils/Tunnels";
-import { ChannelsDBData, Tunnel, TunnelMetaInfo } from "./DataInterface";
+import { ChannelsDBData, IDType, Tunnel, TunnelMetaInfo } from "./DataInterface";
 import { Context } from "./Context";
 import { Subscription } from "rxjs"
 
@@ -43,12 +43,19 @@ export class UI extends React.Component<{ plugin: Context }, { isLoading?: boole
     }
 
     load() {
-        this.currentProteinId = GlobalRouter.getCurrentPid();
+        const currentProteinIdType = GlobalRouter.getCurrentPidType()
+        if (currentProteinIdType == IDType.Alphafill) {
+            this.currentProteinId = GlobalRouter.getCurrentPid().toUpperCase();
+        }
+        else {
+            this.currentProteinId = GlobalRouter.getCurrentPid().toLowerCase();
+        }
+        
         const channelsURL = GlobalRouter.getChannelsURL();
 
         this.setState({ isLoading: true, error: void 0 });
         AnnotationDataProvider.subscribeToPluginContext(this.props.plugin);
-        this.props.plugin.loadChannelData(channelsURL, this.currentProteinId.toLowerCase())
+        this.props.plugin.loadChannelData(channelsURL, this.currentProteinId)
             .then(data => {
                 if ((data as any).Error !== void 0) {
                     this.setState({ isLoading: false, error: (data as any).Error.detail ? (data as any).Error.detail as string : JSON.stringify((data as any).Error), apiStatus: (data as any).apiStatus });
@@ -62,7 +69,7 @@ export class UI extends React.Component<{ plugin: Context }, { isLoading?: boole
                 this.setState({ isLoading: false, error: e.message }); //'Application was unable to load data. Please try again later.'
             })
 
-        this.props.plugin.loadAnnotations(channelsURL, this.currentProteinId.toLowerCase())
+        this.props.plugin.loadAnnotations(channelsURL, this.currentProteinId)
             .catch(e => {
                 console.log(`ERR on loading: ${e}`);
             })

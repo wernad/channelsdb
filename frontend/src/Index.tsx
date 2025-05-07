@@ -185,7 +185,7 @@ namespace ChannelsDB {
                         };
                         console.log((e.target as any).value);
                         //TODO check if UNIPROT exists
-                        window.open(`/detail/alphafill/${(e.target as any).value}`, "_blank");
+                        window.open(`/detail?pid=${(e.target as any).value}`, "_blank");
                         // this.props.state.fullSearch.onNext(void 0);
                         // updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
                     }} />
