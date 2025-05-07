@@ -76,14 +76,12 @@ def get_channel_values(
     values = []
 
     for channel in data:
-        type_ = channel["Type"]
-        category_id = CATEGORIES_NAME_TO_ID[type_]
         entry = ChannelInsert(
             auto=channel["Auto"],
             cavity=channel["Cavity"],
+            type=channel["Type"],
             structure_id=structure_id,
             method_id=method_id,
-            category_id=category_id,
         )
         values.append(entry)
 
