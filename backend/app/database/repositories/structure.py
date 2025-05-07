@@ -1,7 +1,17 @@
-from sqlmodel import insert, select, update
+from sqlmodel import insert, select, func, and_
 
-from app.database.models import Structure, StructureInsert
+from app.database.models import (
+    Structure,
+    Channel,
+    StructureInsert,
+    Profile,
+    Layer,
+    ChannelFilter,
+)
 from app.database.repositories.base import RepositoryBase
+
+
+from app.log import log
 
 
 class StructureRepository(RepositoryBase):
@@ -29,6 +39,90 @@ class StructureRepository(RepositoryBase):
         result = self.db.exec(statement).all()
 
         return result
+
+    def _build_filter_statement(self, filter: ChannelFilter) -> str:
+        """Build query using passed filter argument.
+
+        Args:
+            filter: dataclass with variables to filter by.
+
+        Returns:
+            query object.
+        """
+        log.debug(f"Building filter statement with params: {filter}")
+
+        # Layer related conditions.
+        layer_conditions = []
+        filters = [
+            filter.min_radius,
+            filter.max_radius,
+            filter.min_distance,
+            filter.max_distance,
+        ]
+
+        if any(filter_ is not None for filter_ in filters):
+            statement = (
+                select(
+                    Structure.external_id,
+                    func.max(Layer.end_distance).label("length"),
+                )
+                .join(Channel, Channel.structure_id == Structure.id)
+                .join(Layer, Layer.channel_id == Channel.id)
+                .group_by(
+                    Structure.external_id,
+                )
+            )
+        else:
+            select(
+                Structure.id,
+                Layer.channel_id,
+                func.max(Layer.end_distance).label("length"),
+            ).join(Channel, Channel.structure_id == Structure.id)
+
+        if filter.min_radius is not None:
+            layer_conditions.append(Profile.radius >= filter.min_radius)
+        if filter.max_radius is not None:
+            layer_conditions.append(Profile.radius <= filter.max_radius)
+
+        if filter.min_distance is not None:
+            layer_conditions.append(Profile.distance >= filter.min_distance)
+        if filter.max_distance is not None:
+            layer_conditions.append(Profile.distance <= filter.max_distance)
+
+        # Layer related conditions.
+        bottleneck_condition = None
+
+        if filter.min_bottleneck is not None:
+            bottleneck_condition = and_(
+                Layer.bottleneck, Layer.radius >= filter.min_bottleneck
+            )
+
+        # Apply conditions, if any.
+        if layer_conditions:
+            for cond in layer_conditions:
+                statement.filter(cond)
+
+        if bottleneck_condition:
+            statement = statement.join(Layer, Layer.channel_id == Channel.id)
+
+        # Offset and limit.
+        statement = statement.offset(filter.offset).limit(filter.limit)
+
+        # Remove duplicates.
+        statement = statement.distinct()
+
+        log.debug("Statement build successfully.")
+        return statement
+
+    def get_structures_by_channel_filter(self, filter: ChannelFilter):
+        statement = self._build_filter_statement(filter)
+        result = self.db.exec(statement).all()
+
+        external_ids = []
+        if result:
+            external_ids = [external_id for external_id, _ in result]
+
+        return external_ids
 
     def update_has_channels_by_internal_id(
         self, internal_id: int, has_channels: bool

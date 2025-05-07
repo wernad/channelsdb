@@ -1,5 +1,4 @@
 from app.database.repositories.annotations import AnnotationRepository
-from app.database.repositories.category import CategoryRepository
 from app.database.repositories.channel import ChannelRepository
 from app.database.repositories.het_residue import HetResidueRepository
 from app.database.repositories.layer import LayerRepository

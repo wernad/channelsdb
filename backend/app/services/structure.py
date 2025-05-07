@@ -1,6 +1,6 @@
 from sqlmodel import Session
 
-from app.database.models import StructureData, StructureInsert, Structure
+from app.database.models import StructureData, StructureInsert, Structure, ChannelFilter
 from app.database.repositories import StructureRepository
 
 
@@ -32,6 +32,11 @@ class StructureService:
             return result
 
         return None
+
+    def get_structures_by_filter(self, filter: ChannelFilter) -> list[str]:
+        result = self.repository.get_structures_by_channel_filter(filter)
+
+        return result
 
     def get_source_and_version_by_id(self, external_id: str) -> StructureData:
         result = self.repository.get_structure_by_external_id(external_id=external_id)

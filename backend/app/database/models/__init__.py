@@ -4,12 +4,13 @@ from app.database.models.annotation import (
     AnnotationsOutput,
     AnnotationInsert,
 )
-from app.database.models.category import (
-    CATEGORIES_ID_TO_NAME,
-    CATEGORIES_NAME_TO_ID,
-    Categories,
-    Category,
-)
+
+# from app.database.models.category import (
+#     CATEGORIES_ID_TO_NAME,
+#     CATEGORIES_NAME_TO_ID,
+#     Categories,
+#     Category,
+# )
 from app.database.models.channel import (
     Channel,
     ChannelInsert,

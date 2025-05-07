@@ -8,7 +8,6 @@ from sqlmodel import Session, SQLModel, create_engine, inspect, text
 
 from app.config import DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER
 from app.database.repositories import (
-    CategoryRepository,
     MethodRepository,
     ResidueRepository,
     SourceRepository,
@@ -41,7 +40,6 @@ db_context = contextmanager(get_session)
 
 REQUIRED_TABLES = [
     "annotation",
-    "category",
     "channel",
     "configfile",
     "hetresidue",
@@ -115,12 +113,10 @@ def init_flag_data():
                     f"Fill DB -- WORKER {getpid()} -- Lock acquired, inserting data..."
                 )
                 method_repo = MethodRepository(db)
-                category_repo = CategoryRepository(db)
                 source_repo = SourceRepository(db)
                 residue_repo = ResidueRepository(db)
 
                 method_repo.init_table()
-                category_repo.init_table()
                 source_repo.init_table()
                 residue_repo.init_table()
 
