@@ -4,13 +4,16 @@ RUN mkdir -p build
 
 WORKDIR /build
 
-COPY ../frontend/package.json ./frontend/package-lock.json /build/
+COPY ./frontend/package.json ./frontend/package-lock.json /build/
 
-RUN npm install
+RUN npm i install
 
 COPY ./frontend /build
 
+RUN npm run build 
+
 RUN npx tsc -p tsconfig.json
+
 
 FROM node:20-slim AS results
 
@@ -27,6 +30,8 @@ RUN npm run build
 FROM nginx:1.26-alpine-slim
 
 COPY --from=frontend /build/assets /var/www/assets
+
+COPY --from=frontend /build/assets/js/search.js /var/www/assets/js/search.js
 
 COPY --from=frontend /build/*.html /var/www/
 

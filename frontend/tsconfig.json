@@ -8,15 +8,16 @@
     "declaration": false,
     "strictNullChecks": true,
     "noImplicitThis": true,
-    "lib": [ "es6", "dom" ],
+    "esModuleInterop": true,
+    "lib": ["es6", "dom"],
     "target": "es5",
     "jsx": "react",
-    "module": "none",
-    "types": [ "rx", "react", "react-dom" ],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "types": ["rx", "react", "react-dom", "react-charts"],
     "skipDefaultLibCheck": true,
-    "out": "assets/js/search.js"
+    "skipLibCheck": true
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/node_modules/*", "dist"]
 }
