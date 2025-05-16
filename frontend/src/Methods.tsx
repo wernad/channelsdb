@@ -2,8 +2,8 @@
  * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
  */
 
-import React = require("react");
-import { ScrollButton } from "./ScrollButton";
+import React = require('react');
+import { ScrollButton } from './ScrollButton';
 
 export class Methods extends React.Component<{}, {}> {
     render() {
@@ -25,10 +25,10 @@ export class Methods extends React.Component<{}, {}> {
                 <div className='col-md-7'>
                     <h2 className='featurette-heading'>Channels</h2>
                     <p style={justify}>
-                        Channels (tunnels and pores) are highly important structural pathways within proteins and other biomacromolecules. Tunnels connect internal spaces of 
+                        Channels (tunnels and pores) are highly important structural pathways within proteins and other biomacromolecules. Tunnels connect internal spaces of
                         biomacromolecules with exterior enabling, e.g., substrate/product transport towards enzymes’ active sites, nascent synthetized proteins to leave
                             ribosomal proteosynthetic center via ribosomal exit tunnel, etc. Pores are channels passing through the whole biomacromolecular structure, typically
-                            facilitating transport of ions or molecules through cellular biomembranes.                    
+                            facilitating transport of ions or molecules through cellular biomembranes.
                     </p>
                     <p style={justify}>
                         Channel walls are made from surrounding amino acids making up for a specific micro-environment (see e.g. <a href='https://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >Pravda and Berka et al.</a>),
@@ -38,7 +38,7 @@ export class Methods extends React.Component<{}, {}> {
                     <p style={justify}>
                         In the database a channel is represented by its centerline (3D natural spline of a given volume), physicochemical properties and lining residues. Channel volume
                         is formed by the distance to the closest protein atom and decomposed into discrete regions called layers. Each layer is defined by the residues lining it.
-                        A new layer starts whenever there is a change in residues lining it along its length. Their size and composition is in turn used for estimating channel's 
+                        A new layer starts whenever there is a change in residues lining it along its length. Their size and composition is in turn used for estimating channel's
                         physicochemical properties. These are especially important for local minima and a bottleneck (the narrowest part of the channel).
                     </p>
                     <p style={reference}><small><a href='https://dx.doi.org/10.1186/s12859-014-0379-x' target='_blank' >
@@ -56,8 +56,8 @@ export class Methods extends React.Component<{}, {}> {
                 <div className='col-md-7 col-md-push-5'>
                     <p style={justify}>MOLE is a software tool used for channel identification throughout the ChannelsDB. First, the algorithm calculates Delaunay triangulation/Voronoi diagram of the atomic centers
                         (see step (1) in the figure). Next, regions suitable for channel identification are calculated using a set of predefined parameters (2,3). Channel starting and end points
-                        are identified in these cavity diagrams (4,5) and the most favourable channels are identified among a set of starting points and ending points (6). 
-                    </p> 
+                        are identified in these cavity diagrams (4,5) and the most favourable channels are identified among a set of starting points and ending points (6).
+                    </p>
                     <p style={justify}>
                         Once the channels have been identified a unique set of residues surrounding channel volume is retrieved. Given this set of residues, a physicochemical properties such as Hydropathy
                         are computed for each channel and its parts. Individual steps of the algorithm are highlighted at the picture below  and more details on the channel identification can be found
@@ -66,7 +66,7 @@ export class Methods extends React.Component<{}, {}> {
                     </p>
                     <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1186/1758-2946-5-39'>
                             Sehnal,D., et al. <span style={{ fontStyle: 'italic' }}>MOLE 2.0: advanced approach for analysis of biomacromolecular channels.</span>
-                                J. Cheminform., 5, 39. (2013)</a></small></p>  
+                                J. Cheminform., 5, 39. (2013)</a></small></p>
                     <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1093/nar/gks363'>
                     Berka,K. et al. <i>MOLEonline 2.0: interactive web-based analysis of biomacromolecular channels</i>.
                     Nucleic Acids Res., 40, W222-7. (2012)</a></small></p>
@@ -82,28 +82,28 @@ export class Methods extends React.Component<{}, {}> {
                 <h2 className='featurette-heading'>CAVER</h2>
                 <div className='col-md-7 col-md-push-5'>
                     <p style={justify}>CAVER is a software tool for the detection of tunnels and channels in the protein structures and their ensembles. In the first step, the Voronoi diagram representation
-                        of the molecule (A) is constructed and the cost for each Voronoi edge is calculated with respect to its width (B). In the second step, too narrow edges are filtered out and the Djikstra’s 
-                        algorithm is used to find all shortest paths to the protein surface (C). In the third step, the tunnels are clustered and too similar tunnels are removed. In the last step, the characteristics 
-                        like length and throughput are calculated for all tunnels and their spherical representation is saved (D). CAVER is available as an <a href="https://loschmidt.chemi.muni.cz/caverweb/" target="_blank">online </a>
-                        tool, as a <a href="https://caver.cz/" target="_blank">command-line </a>program, analytical <a href="https://caver.cz/index.php?sid=199" target="_blank">software suite </a>
-                        CAVER Analyst, or as a PyMOL <a href="https://pymolwiki.org/index.php/Caver3" target="_blank">plugin. </a>
-                    </p> 
+                        of the molecule (A) is constructed and the cost for each Voronoi edge is calculated with respect to its width (B). In the second step, too narrow edges are filtered out and the Djikstra’s
+                        algorithm is used to find all shortest paths to the protein surface (C). In the third step, the tunnels are clustered and too similar tunnels are removed. In the last step, the characteristics
+                        like length and throughput are calculated for all tunnels and their spherical representation is saved (D). CAVER is available as an <a href='https://loschmidt.chemi.muni.cz/caverweb/' target='_blank'>online </a>
+                        tool, as a <a href='https://caver.cz/' target='_blank'>command-line </a>program, analytical <a href='https://caver.cz/index.php?sid=199' target='_blank'>software suite </a>
+                        CAVER Analyst, or as a PyMOL <a href='https://pymolwiki.org/index.php/Caver3' target='_blank'>plugin. </a>
+                    </p>
                     <p style={reference}><small><a target='_blank' href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3475669/'>
-                    Chovancova E, Pavelka A, Benes P, Strnad O, Brezovsky J, Kozlikova B, Gora A, Sustr V, Klvana M, Medek P, Biedermannova L, Sochor J, Damborsky J. 
-                    <span style={{ fontStyle: 'italic' }}>CAVER 3.0: a tool for the analysis of transport pathways in dynamic protein structures. PLoS Comput Biol. 
+                    Chovancova E, Pavelka A, Benes P, Strnad O, Brezovsky J, Kozlikova B, Gora A, Sustr V, Klvana M, Medek P, Biedermannova L, Sochor J, Damborsky J.
+                    <span style={{ fontStyle: 'italic' }}>CAVER 3.0: a tool for the analysis of transport pathways in dynamic protein structures. PLoS Comput Biol.
                     2012;8(10):e1002708. doi: 10.1371/journal.pcbi.1002708.
-                    </span></a></small></p>  
+                    </span></a></small></p>
                 </div>
                     <div className='col-md-5 col-md-pull-7'>
                     <img className='featurette-image img-responsive center-block' src={'assets/img/figure_caver.jpg'} width='500' height='500' alt='Channel details' />
                 </div>
             </div>
 
-            <hr className='featurette-divider' style={{ margin: '50px 0' }} />                
+            <hr className='featurette-divider' style={{ margin: '50px 0' }} />
 
             <div className='row'>
                 <h2 className='featurette-heading'>Physicochemical properties</h2>
-                <p>Altogether with the position and radius of a channel a set of unique residues constituting the channel walls is reported. This set is in turn used for estimation 
+                <p>Altogether with the position and radius of a channel a set of unique residues constituting the channel walls is reported. This set is in turn used for estimation
                     of a various physicochemical properties.
                 </p>
             </div>
@@ -116,7 +116,7 @@ export class Methods extends React.Component<{}, {}> {
                                 <p>The scale is symmetrical in interval from -4.5 (Arg) to 4.5 (Ile).</p>
                         <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1016/0022-2836(82)90515-0'>
                             Kyte, J. &amp; Doolittle, R. F. <span style={{ fontStyle: 'italic' }}>A simple method for displaying the hydropathic character of a protein.</span>
-                                J. Mol. Biol. 157, 105–132 (1982)</a></small></p>  
+                                J. Mol. Biol. 157, 105–132 (1982)</a></small></p>
                     </div>
                     <div className='col-md-6'>
                         <h2 className='featurette-heading'>Polarity</h2>
@@ -126,9 +126,9 @@ export class Methods extends React.Component<{}, {}> {
                                 <p>The scale ranges from 0 for small aliphatic amino acids (Ala, Gly) to 51.6 (His).</p>
                             <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1016/0022-5193(68)90069-6'>
                                 Zimmerman, J. M., Eliezer, N. &amph; Simha, R <span style={{ fontStyle: 'italic' }}>The characterization of amino acid sequences in proteins by statistical methods.</span>
-                                J. Theor. Biol. 21, 170–201 (1968).</a></small></p>  
-                    </div>                      
-                </div>                              
+                                J. Theor. Biol. 21, 170–201 (1968).</a></small></p>
+                    </div>
+                </div>
             <div className='row'>
                 <div className='col-md-6'>
                     <h2 className='featurette-heading'>Mutability</h2>
@@ -138,12 +138,12 @@ export class Methods extends React.Component<{}, {}> {
                             i.e. substrate binding or catalytic activity. Alanine has a normalized value of 100.</p>
                     <p style={reference}><small><a target='_blank' href='https://dx.doi.org/10.1093/bioinformatics/8.3.275'>
                         Jones, D. T., Taylor, W. R. &amph; Thornton, J. M. <span style={{ fontStyle: 'italic' }}>The rapid generation of mutation data matrices from protein sequences.</span>
-                        Bioinformatics 8, 275–282 (1992)</a></small></p>  
+                        Bioinformatics 8, 275–282 (1992)</a></small></p>
                 </div>
                 <div className='col-md-6'>
                     <h2 className='featurette-heading'>Charge</h2>
                         <p style={justify}>Some amino acids can be (de)protonated based on the pH and, therefore, charged. At physiological pH, lysine and arginine are positively
-                            charged, whereas aspartic and glutamic acids are negatively charged. On the other hand, the protonation state of histidine is dependent on its 
+                            charged, whereas aspartic and glutamic acids are negatively charged. On the other hand, the protonation state of histidine is dependent on its
                             micro-environment. In this study, all histidines are treated as positively charged.</p>
                             <p>Charge property is a sum of all positively and negatively charged amino acids.</p>
                 </div>
@@ -160,9 +160,9 @@ export class Methods extends React.Component<{}, {}> {
                         </thead>
                         <tbody>
                             <tr><td>Ala</td><td>0</td><td>1.8</td><td>0</td><td>100</td></tr>
-                            <tr><td>Arg</td><td>1</td><td>-4.5</td><td>52</td><td>83</td></tr>                         
+                            <tr><td>Arg</td><td>1</td><td>-4.5</td><td>52</td><td>83</td></tr>
                             <tr><td>Asn</td><td>0</td><td>-3.5</td><td>3.38</td><td>104</td></tr>
-                            <tr><td>Asp</td><td>-1</td><td>-3.5</td><td>49.7</td><td>86</td></tr>                         
+                            <tr><td>Asp</td><td>-1</td><td>-3.5</td><td>49.7</td><td>86</td></tr>
                             <tr><td>Cys</td><td>0</td><td>2.5</td><td>1.48</td><td>44</td></tr>
                             <tr><td>Glu</td><td>-1</td><td>-3.5</td><td>49.9</td><td>77</td></tr>
                             <tr><td>Gln</td><td>0</td><td>-3.5</td><td>3.53</td><td>84</td></tr>
@@ -179,11 +179,11 @@ export class Methods extends React.Component<{}, {}> {
                             <tr><td>Trp</td><td>0</td><td>-0.9</td><td>2.1</td><td>25</td></tr>
                             <tr><td>Tyr</td><td>0</td><td>-1.3</td><td>1.61</td><td>50</td></tr>
                             <tr><td>Val</td><td>0</td><td>4.2</td><td>0.13</td><td>98</td></tr>
-                        </tbody>                        
-                    </table>      
-                    </div>              
-            </div>    
-            <ScrollButton scrollStepInPx='50' delayInMs='10'/>                                          
+                        </tbody>
+                    </table>
+                    </div>
+            </div>
+            <ScrollButton scrollStepInPx='50' delayInMs='10'/>
         </div>;
     }
 }

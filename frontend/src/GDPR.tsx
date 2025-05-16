@@ -1,4 +1,4 @@
-import React = require("react");
+import React = require('react');
 
 export class GDPR extends React.Component<{}, {}> {
     render() {
@@ -30,6 +30,6 @@ export class GDPR extends React.Component<{}, {}> {
                 <p>Thank you for understanding, our main goal is to help you to carry out your research in accordance with the personal data protection regulation.</p>
             <hr style={{ marginBottom: '4px' }} />
 
-        </div>
+        </div>;
     }
 }

@@ -3,7 +3,7 @@
  */
 
 
-import React = require("react");
+import React = require('react');
 
 export class Menu extends React.Component<{}, {}> {
     render() {
@@ -17,9 +17,9 @@ export class Menu extends React.Component<{}, {}> {
                         <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='index.html'>Search</a></li>
                         <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='methods.html'>Methods</a></li>
                         <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='/api' target='_blank'>API</a></li>
-                        <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='documentation.html'>Documentation</a></li>                            
-                        <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='https://mole.upol.cz' target='_blank'>MOLE</a></li>                            
-                        <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='https://loschmidt.chemi.muni.cz/caverweb/' target='_blank'>CAVER</a></li>                            
+                        <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='documentation.html'>Documentation</a></li>
+                        <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='https://mole.upol.cz' target='_blank'>MOLE</a></li>
+                        <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='https://loschmidt.chemi.muni.cz/caverweb/' target='_blank'>CAVER</a></li>
                         <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='contribute.html'>Contribute</a></li>
                         <li style={{marginTop: '12px', fontSize: '120%', fontWeight: 'bold'}}><a href='about.html'>About</a></li>
                     </ul>

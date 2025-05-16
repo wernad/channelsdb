@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
  */
-import React = require("react");
-import { ScrollButton } from "./ScrollButton";
+import React = require('react');
+import { ScrollButton } from './ScrollButton';
 
 export class Documentation extends React.Component<{}, {}> {
     render() {
@@ -13,7 +13,7 @@ export class Documentation extends React.Component<{}, {}> {
 
         return <div style={{ margin: '60px 0 0 20px' }}>
 
-            <h1 className='text-center'>Documentation</h1>                
+            <h1 className='text-center'>Documentation</h1>
 
             <h2>Table of content</h2>
             <div className='list-group well-sm'>
@@ -36,15 +36,15 @@ export class Documentation extends React.Component<{}, {}> {
                 <a href='#db-cofactors' className='list-group-item'>
                     <h4 className='list-group-item-heading'>Cofactors</h4>
                     <p className='list-group-item-text'>List of cofactors used for channel calculation.</p>
-                </a>                    
+                </a>
                 <a href='#db-results' className='list-group-item'>
                     <h4 className='list-group-item-heading'>Results view</h4>
                     <p className='list-group-item-text'>How to read the results page?</p>
-                </a>                    
+                </a>
                 <a href='#db-api' className='list-group-item'>
                     <h4 className='list-group-item-heading'>API</h4>
                     <p className='list-group-item-text'>How to access content of the database programatically.</p>
-                </a>                                        
+                </a>
             </div>
 
             <hr className='featurette-divider' style={{ margin: '50px 0' }} />
@@ -70,12 +70,12 @@ export class Documentation extends React.Component<{}, {}> {
                 </div>
             </div>
 
-            <hr className='featurette-divider' style={{ margin: '50px 0' }} />                
+            <hr className='featurette-divider' style={{ margin: '50px 0' }} />
 
             {React.createElement('a' as any, { 'name': 'db-nomenclature' })}
             <div className='row'>
                     <h2 className='featurette-heading'>Channel nomenclature</h2>
-                    <p>Unless the channel has been given a particular name in literature, which is the case e.g. for a group of <a href='https://dx.doi.org/10.1016/j.bbagen.2006.07.005' target='_blank'>cytochrome P450s</a>, 
+                    <p>Unless the channel has been given a particular name in literature, which is the case e.g. for a group of <a href='https://dx.doi.org/10.1016/j.bbagen.2006.07.005' target='_blank'>cytochrome P450s</a>,
                     names are given to accordingly the following controlled vocabulary:</p>
                     <div className='row table-responsive col-md-8 col-md-offset-2'>
                         <table className='table table-condensed active'>
@@ -101,7 +101,7 @@ export class Documentation extends React.Component<{}, {}> {
                             <tr>
                                 <td>Solvent tunnel</td>
                                 <td>Tunnel transporting water molecules, which are consumed/egressed during a chemical reaction</td>
-                            </tr>                               
+                            </tr>
                             <tr>
                                 <td>Substrate tunnel</td>
                                 <td>Tunnel transporting various chemical species consumed in a chemical reaction</td>
@@ -109,7 +109,7 @@ export class Documentation extends React.Component<{}, {}> {
                             <tr>
                                 <td>Substrate/Product tunnel</td>
                                 <td>Single tunnel facilitating transport of all chemical species to/from the catalytic site.</td>
-                            </tr>                                
+                            </tr>
                             <tr>
                                 <td>Product tunnel</td>
                                 <td>Tunnel transporting chemical species that are an outcome of chemical reaction</td>
@@ -117,25 +117,25 @@ export class Documentation extends React.Component<{}, {}> {
                             <tr>
                                 <td>Water channel</td>
                                 <td>Tunnel transporting water molecules; mainly found in aquaporins.</td>
-                            </tr>                                
+                            </tr>
                             <tr>
                                 <td>Ion channel</td>
                                 <td>Pore providing a pathway for ion and other charged chemical species to pass through lipid bilayer</td>
-                            </tr>                          
-                            <tr>  
+                            </tr>
+                            <tr>
                                 <td>Hydrophobic channel</td>
                                 <td>Pore providing a pathway for apolar chemical species to pass through lipid bilayer</td>
                             </tr>
-                            <tr>  
+                            <tr>
                                 <td>Peptide channel</td>
                                 <td>Channel enabling a passage of polypeptides</td>
                             </tr>
-                            <tr>  
+                            <tr>
                                 <td>Nucleotide channel</td>
                                 <td>Channel enabling a passage of nucleotides</td>
-                            </tr>                                
-                        </tbody>                        
-                    </table>    
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -146,7 +146,7 @@ export class Documentation extends React.Component<{}, {}> {
                 <h2 className='featurette-heading'>MOLE settings</h2>
                 <p style={justify}>Throughout the ChannelsDB the following settings of the MOLE algorithm have been used for individual types of channels.</p>
                 <h4 className='featurette-heading'>Reviewed channels</h4>
-                <p style={justify}>Each calculation has been independently adjusted, in order to extract deemed channels.</p>                        
+                <p style={justify}>Each calculation has been independently adjusted, in order to extract deemed channels.</p>
                 <div className='row table-responsive col-md-4 col-md-offset-1'>
                     <h2 className='featurette-heading'>CSA tunnels</h2>
                     <table className='table table-condensed active'>
@@ -180,11 +180,11 @@ export class Documentation extends React.Component<{}, {}> {
                             <tr>
                                 <td><i>MaxTunnelSimilarity</i></td>
                                 <td>0.7</td>
-                            </tr>                                                                                                
+                            </tr>
                             <tr>
                                 <td><i>NonActiveParts</i></td>
                                 <td data-toggle='tooltip' data-placement='bottom' title='HetResidues().Filter(lambda m: m.IsNotConnectedTo(AminoAcids()))'>Query</td>
-                            </tr>                                                                                                
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -226,11 +226,11 @@ export class Documentation extends React.Component<{}, {}> {
                             <tr>
                                 <td><i>MaxTunnelSimilarity</i></td>
                                 <td>0.7</td>
-                            </tr>                                                                                                
+                            </tr>
                             <tr>
                                 <td><i>NonActiveParts</i></td>
                                 <td data-toggle='tooltip' data-placement='bottom' title='Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))'>Query</td>
-                            </tr>                                                                                                
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -272,11 +272,11 @@ export class Documentation extends React.Component<{}, {}> {
                             <tr>
                                 <td><i>MaxTunnelSimilarity</i></td>
                                 <td>0.7</td>
-                            </tr>                                                                                                
+                            </tr>
                             <tr>
                                 <td><i>NonActiveParts</i></td>
                                 <td data-toggle='tooltip' data-placement='bottom' title='Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))'>Query</td>
-                            </tr>                                                                                                
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -318,11 +318,11 @@ export class Documentation extends React.Component<{}, {}> {
                             <tr>
                                 <td><i>MaxTunnelSimilarity</i></td>
                                 <td>0.7</td>
-                            </tr>                                                                                                
+                            </tr>
                             <tr>
                                 <td><i>NonActiveParts</i></td>
                                 <td data-toggle='tooltip' data-placement='bottom' title='Various queries e.g. Atoms("Fe").Inside(Residues("HEM", "HEC", "HEA"))'>Query</td>
-                            </tr>                                                                                                
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -373,7 +373,7 @@ export class Documentation extends React.Component<{}, {}> {
                         <tr>
                             <th>Group</th>
                             <th>Origin</th>
-                            <th>Ligand list</th>                                
+                            <th>Ligand list</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -396,7 +396,7 @@ export class Documentation extends React.Component<{}, {}> {
                                 <td>Nucleotides</td>
                                 <td>PA atom (<i>auth_atom_id</i>)</td>
                                 <td><i>ATP, CTP, UTP, GTP, TTP, ADP, CDP, UDP, GDP, TDP, AMP, CMP, ANP</i></td>
-                            </tr>                               
+                            </tr>
                             <tr>
                                 <td>Vitamin B2</td>
                                 <td>N5 (<i>auth_atom_id</i>)</td>
@@ -411,28 +411,28 @@ export class Documentation extends React.Component<{}, {}> {
                                 <td>Vitamin B12</td>
                                 <td>CO (<i>auth_atom_id</i>)</td>
                                 <td><i>B12</i></td>
-                            </tr>         
+                            </tr>
                             <tr>
                                 <td>Biotin</td>
                                 <td>C3 (<i>auth_atom_id</i>)</td>
                                 <td><i>BTN</i></td>
-                            </tr>                                                                
+                            </tr>
                             <tr>
                                 <td>Coenzym</td>
                                 <td>S1P (<i>auth_atom_id</i>)</td>
                                 <td><i>COA, ACO</i></td>
-                            </tr>                                
+                            </tr>
                             <tr>
                                 <td>Glutathione</td>
                                 <td>SG2 (<i>auth_atom_id</i>)</td>
                                 <td><i>GSH, GDS</i></td>
-                            </tr>                          
-                        </tbody>                        
-                    </table>    
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <hr className='featurette-divider' style={{ margin: '50px 0' }} />                
+            <hr className='featurette-divider' style={{ margin: '50px 0' }} />
 
             {React.createElement('a' as any, { 'name': 'db-results' })}
             <div className='row featurette'>
@@ -462,21 +462,21 @@ export class Documentation extends React.Component<{}, {}> {
                             </li>
                             <li> Protein annotations from the UniProt resource.</li>
                         </ol>
-                        
-                    </div>                    
+
+                    </div>
                 <div className='col-md-7'>
                     <img className='featurette-image img-responsive center-block' src={'assets/img/web-fig1.png'} width='500' height='500' alt='Result window detail' />
-                </div>                    
+                </div>
             </div>
 
             <div style={{ margin: '50px 0' }} className='row featurette col-md-12'>
                     <img className='featurette-image img-responsive center-block' src={'assets/img/web-fig2.png'} width='800' alt='2D detailed channel view' />
-            </div>  
+            </div>
 
             {React.createElement('a' as any, { 'name': 'db-api' })}
             <div className='channelsdb-api-docs'>
                     <h2 className='featurette-heading'>API </h2>
-                <p> The entire database is powered by the API with an interactive <a href="/api">documentation</a> available.
+                <p> The entire database is powered by the API with an interactive <a href='/api'>documentation</a> available.
                     Therefore, all the channel-related information can be programmatically retrieved and used for further processing. The returned content is <i>application/json</i> object
                     and all the properties are self-explanatory. Should you have further questions or comments, do not hesitate to <a href='mailto:webchemistryhelp@gmail.com?subject=ChannelsDB2 - API'>contact us.</a></p>
                 </div>

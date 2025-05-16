@@ -2,7 +2,7 @@
  * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
  */
 
-import React = require("react");
+import React = require('react');
 
 const SUBMIT_URL = 'https://webchem.ncbr.muni.cz/API/ChannelsDB/UploadAnnotations/';
 
@@ -380,7 +380,7 @@ export class Contribute extends React.Component<{}, { state: 'editing' | 'submit
         }
         return <div style={{ margin: '60px 0 0 20px' }}>
             <h1 className='text-center'>Contribute</h1>
-            
+
             {ui()}
         </div>;
     }

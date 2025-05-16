@@ -1,4 +1,4 @@
-import React = require("react");
+import React = require('react');
 
 export class ScrollButton extends React.Component<{}, {}> {
     props: any;

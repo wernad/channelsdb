@@ -2,7 +2,7 @@
  * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
  */
 
-import React = require("react");
+import React = require('react');
 
 export class About extends React.Component<{}, {}> {
     render() {
@@ -25,7 +25,7 @@ export class About extends React.Component<{}, {}> {
                     </dd>
                 </dl>
             </div>
-                
+
             <div className='tab-pane'>
                 <p>Data annotations are taken from scientific literature, which is properly linked with a given PDB entry. Other than that the ChannelsDB uses the following services: </p>
                 <dl className='publications-list'>
@@ -37,7 +37,7 @@ export class About extends React.Component<{}, {}> {
                     <dt>CAVER</dt>
                     <dd>
                         <p>Chovancova E, Pavelka A, Benes P, Strnad O, Brezovsky J, Kozlikova B, Gora A, Sustr V, Klvana M, Medek P, Biedermannova L, Sochor J, Damborsky J. &nbsp;
-                        <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3475669/" target="_blank">CAVER 3.0: a tool for the analysis of transport pathways in dynamic protein structures</a>
+                        <a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3475669/' target='_blank'>CAVER 3.0: a tool for the analysis of transport pathways in dynamic protein structures</a>
                         . PLoS Comput Biol. 2012;8(10):e1002708. doi: 10.1371/journal.pcbi.1002708.</p>
                     </dd>
                     <dt>LiteMol suite</dt>
