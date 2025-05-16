@@ -19,7 +19,7 @@ class StatisticsModel(StatisticsRaw):
 
 
 @router.get(
-    "/",
+    "/methods",
     name="General statistics",
     description="Returns summary statistics about the data stored",
     response_model=StatisticsModel,
@@ -37,12 +37,12 @@ async def get_channel_counts_per_method(
 
 
 @router.get(
-    "/structure/{structure_id}",
-    name="General statistics",
-    description="Returns summary statistics about the data stored",
+    "/methods/{structure_id}",
+    name="Overall channel counts per method.",
+    description="Returns channel counts for each calculation method.",
     response_model=StatisticsModel,
 )
-async def get_channel_counts_by_id(
+async def get_channel_counts_per_methods_by_id(
     structure_id: IDCheckDep,
     structure_service: StructureServiceDep,
     statistics_service: StatisticsServiceDep,
@@ -50,7 +50,9 @@ async def get_channel_counts_by_id(
     internal_id = structure_service.get_internal_id_if_has_channels(structure_id)
 
     if internal_id:
-        statistics = statistics_service.get_channel_counts_by_id(internal_id)
+        statistics = statistics_service.get_channel_counts_per_methods_by_id(
+            internal_id
+        )
 
         if statistics:
             result = StatisticsModel(**statistics)
@@ -96,16 +98,16 @@ async def get_bottleneck_stats(
 
 
 @router.get(
-    "/top_categories",
-    name="Top 5 categories as ratios",
-    description="Returns ratios of categories with top 5 categories specified.",
+    "/top_types",
+    name="Top 5 types",
+    description="Returns top 5 channel counts per channel type.",
     response_model=StatisticsRaw,
 )
 async def get_top_categories(
     statistics_service: StatisticsServiceDep,
 ):
 
-    statistics = statistics_service.get_top_5_categories_as_ratios()
+    statistics = statistics_service.get_top_5_types_by_channel_count()
 
     if statistics:
         result = StatisticsRaw(statistics=statistics)
@@ -141,7 +143,7 @@ async def get_top_residues(
     statistics_service: StatisticsServiceDep,
 ):
 
-    statistics = statistics_service.get_top_5_residues_by_channel()
+    statistics = statistics_service.get_top_5_residues_by_channel_count()
 
     if statistics:
         result = StatisticsRaw(statistics=statistics)
