@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
   entry: "./src/Index.tsx",
-  mode: "development",
+  mode: "production",
   output: {
     path: path.resolve(__dirname, "assets/js"),
     filename: "search.js",

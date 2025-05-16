@@ -14,7 +14,7 @@
     "jsx": "react",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "types": ["rx", "react", "react-dom", "react-charts"],
+    "types": ["rx", "react", "react-dom"],
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
   },
