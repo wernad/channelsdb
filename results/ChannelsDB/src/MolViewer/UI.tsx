@@ -17,9 +17,12 @@ export class Viewer extends React.Component<{ context: Context }> {
         const pidType = GlobalRouter.getCurrentPidType();
         this.props.context.canvas.setBgColor({ r: 0, g: 0, b: 0 })
 
-        if (pidType === IDType.Pdb) {
+        if (pidType === IDType.PdbOld) {
             this.props.context.load(`https://models.rcsb.org/${pid}.bcif`, true)
             // this.props.context.load(`https://www.ebi.ac.uk/pdbe/entry-files/download/${pid}.bcif`)
+        } else if (pidType === IDType.PdbNew) {
+            const oldFormat = GlobalRouter.tryGetOldPdbId();
+            this.props.context.load(`https://models.rcsb.org/${oldFormat}.bcif`, true)
         } else {
             this.props.context.load(`https://alphafill.eu/v1/aff/${pid.toLocaleUpperCase()}`, false);
         }

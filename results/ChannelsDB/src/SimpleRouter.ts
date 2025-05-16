@@ -227,18 +227,29 @@ export class GlobalRouter {
         return this.currentPid;
     }
 
+    public static tryGetOldPdbId() {
+        if(this.getCurrentPidType() === IDType.PdbNew) {
+            const old = this.currentPid.substring(this.currentPid.length - 4);
+            return old;
+        }
+        return this.currentPid;
+    }
+
     public static getCurrentPidType() {
         if (!this.isInitialized) {
             throw new Error("GlobalRouter is not inititalised! Call init(..) function before use!");
         }
 
         const oldPdbIdRegex = RegExp('^[1-9][a-z0-9]{3}$');
-        // const newPdbIdRegex = RegExp('^pdb_[0-9]{5}[a-z0-9]{3}$'); # Might be used but for now not necessary.
+        const newPdbIdRegex = RegExp('^pdb_[0-9]{5}[a-z0-9]{3}$'); 
         const alphafillRegex = RegExp('^[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}');
 
-        if (oldPdbIdRegex.test(this.currentPid) /*|| newPdbIdRegex.test(this.currentPid)*/) {
-            return IDType.Pdb;
+        if (oldPdbIdRegex.test(this.currentPid)) {
+            return IDType.PdbOld;
         }
+        else if (newPdbIdRegex.test(this.currentPid)) {
+            return IDType.PdbNew;
+        } 
         else if (alphafillRegex.test(this.currentPid)) {
             return IDType.Alphafill;
         }

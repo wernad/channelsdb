@@ -205,6 +205,7 @@ export namespace Annotations {
 }
 
 export enum IDType {
-    Pdb,
+    PdbOld,
+    PdbNew,
     Alphafill,
 }
