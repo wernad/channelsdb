@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 * {
     box-sizing: border-box;
 }
@@ -178,6 +180,15 @@
     height: 30px;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.pdb-entry-header > div:only-child {
+  float: left;
+  margin-left: 150px;
+  padding-left: 10px;
+  font-weight: bold;
+  height: 30px;
+  line-height: 30px;
 }
 
 .pdb-entry > ul {
