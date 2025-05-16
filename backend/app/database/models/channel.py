@@ -66,5 +66,5 @@ class ChannelFilter(SQLModel):
     max_distance: float | None = Field(None, ge=0)
     min_bottleneck: float | None = Field(None, ge=0)
 
-    limit: int = Field(100, gt=0, le=10000)
+    limit: int = Field(100, gt=0, le=1000000)
     offset: int = Field(0, ge=0)
