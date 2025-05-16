@@ -52,7 +52,7 @@ class StructureRepository(RepositoryBase):
         log.debug(f"Building filter statement with params: {filter}")
 
         # Layer related conditions.
-        layer_conditions = []
+        conditions = []
         filters = [
             filter.min_radius,
             filter.max_radius,
@@ -60,56 +60,42 @@ class StructureRepository(RepositoryBase):
             filter.max_distance,
         ]
 
+        statement = select(
+            Structure.external_id,
+            func.max(Layer.end_distance).label("length"),
+        ).join(Channel, Channel.structure_id == Structure.id)
+
         if any(filter_ is not None for filter_ in filters):
-            statement = (
-                select(
-                    Structure.external_id,
-                    func.max(Layer.end_distance).label("length"),
-                )
-                .join(Channel, Channel.structure_id == Structure.id)
-                .join(Layer, Layer.channel_id == Channel.id)
-                .group_by(
-                    Structure.external_id,
-                )
-            )
-        else:
-            select(
-                Structure.id,
-                Layer.channel_id,
-                func.max(Layer.end_distance).label("length"),
-            ).join(Channel, Channel.structure_id == Structure.id)
-
-        if filter.min_radius is not None:
-            layer_conditions.append(Profile.radius >= filter.min_radius)
-        if filter.max_radius is not None:
-            layer_conditions.append(Profile.radius <= filter.max_radius)
-
-        if filter.min_distance is not None:
-            layer_conditions.append(Profile.distance >= filter.min_distance)
-        if filter.max_distance is not None:
-            layer_conditions.append(Profile.distance <= filter.max_distance)
-
-        # Layer related conditions.
-        bottleneck_condition = None
+            statement = statement.join(Profile, Profile.channel_id == Channel.id)
 
         if filter.min_bottleneck is not None:
-            bottleneck_condition = and_(
-                Layer.bottleneck, Layer.radius >= filter.min_bottleneck
+            statement = statement.join(Layer, Layer.channel_id == Channel.id).group_by(
+                Structure.external_id
             )
+            conditions.extend([Layer.bottleneck, Layer.radius >= filter.min_bottleneck])
+
+        if filter.min_radius is not None:
+            conditions.append(Profile.radius >= filter.min_radius)
+        if filter.max_radius is not None:
+            conditions.append(Profile.radius <= filter.max_radius)
+
+        if filter.min_distance is not None:
+            conditions.append(Profile.distance >= filter.min_distance)
+        if filter.max_distance is not None:
+            conditions.append(Profile.distance <= filter.max_distance)
 
         # Apply conditions, if any.
-        if layer_conditions:
-            for cond in layer_conditions:
-                statement.filter(cond)
-
-        if bottleneck_condition:
-            statement = statement.join(Layer, Layer.channel_id == Channel.id)
+        if conditions:
+            statement = statement.filter(and_(*conditions))
 
         # Offset and limit.
         statement = statement.offset(filter.offset).limit(filter.limit)
 
-        # Remove duplicates.
-        statement = statement.distinct()
+        statement = statement.group_by(
+            Structure.external_id,
+        )
+
+        print("@", statement)
 
         log.debug("Statement build successfully.")
         return statement

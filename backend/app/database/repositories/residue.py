@@ -48,7 +48,6 @@ class ResidueRepository(RepositoryBase):
             .order_by(func.count(distinct(Layer.channel_id)).desc())
             .limit(limit)
         )
-        print(statement)
         result = self.db.exec(statement).all()
 
         if result:

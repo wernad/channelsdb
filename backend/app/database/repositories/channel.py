@@ -13,6 +13,13 @@ from app.log import log
 class ChannelRepository(RepositoryBase):
     """Repository for DB operations related to ."""
 
+    def get_total_channels(self) -> int:
+        """Returns total number of channels."""
+        statement = select(func.count(Channel.id))
+        total = self.db.exec(statement).first()
+
+        return total
+
     def get_channels_by_structure_id(self, structure_id: int) -> list[Channel]:
         statement = select(Channel).where(Channel.structure_id == structure_id)
         channels = self.db.exec(statement).all()
@@ -34,7 +41,7 @@ class ChannelRepository(RepositoryBase):
 
         return counts
 
-    def get_channel_counts_by_id(self, structure_id: int) -> list[tuple]:
+    def get_channel_counts_per_methods_by_id(self, structure_id: int) -> list[tuple]:
         statement = (
             select(
                 Method.name.label("method"),
@@ -67,16 +74,16 @@ class ChannelRepository(RepositoryBase):
         )
 
         result = self.db.exec(statement).all()
-
+        total = total = self.get_total_channels()
         if result:
             counts = {name: count for name, count in result}
-
+            counts["total"] = total
             return counts
 
-        return None
+        return {}
 
-    def get_top_channel_counts_per_type_ratio(self, limit: int = 5) -> dict:
-        """Returns ratio of top N channel types based on channel counts.
+    def get_top_n_channel_counts_per_type(self, limit: int = 5) -> dict:
+        """Returns ratio of top N channel types by channel counts.
 
         Args:
             limit: limits number of entries.
@@ -92,12 +99,11 @@ class ChannelRepository(RepositoryBase):
         )
 
         result = self.db.exec(statement).mappings().all()
-        statement = select(func.count(Channel.id))
-        total_result = self.db.exec(statement).first()
+        total = self.get_total_channels()
 
         if result:
-            counts = {entry["name"]: entry["count"] for entry in result}
-            counts["total"] = total_result
+            counts = {entry["type"]: entry["count"] for entry in result}
+            counts["total"] = total
 
             return counts
         return None
