@@ -49,6 +49,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    if all(x is None for x in [args.file, args.pdb, args.start]):
+        parser.error("Set source databse or source file to start data loader.")
+
     if args.file and (args.pdb or args.start):
         parser.error("Can not combine file path argument with fetch related arguments.")
 
