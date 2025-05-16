@@ -2,9 +2,10 @@
  * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
  */
 
-import * as React from "react";
-import { State } from "./State";
-import { ScrollButton } from "./ScrollButton";
+import * as React from 'react';
+import { ScrollButton } from './ScrollButton';
+import { State } from './State';
+import { Statistics } from './statistics/Statistics';
 
 export class Intro extends React.Component<{ state: State }, { statistics: any, statisticsExpanded: boolean }> {
     private sub: Rx.IDisposable | undefined = void 0;
@@ -37,57 +38,17 @@ export class Intro extends React.Component<{ state: State }, { statistics: any, 
 
         return <div>
             <div className='row' >
-                <div className='well row table-responsive' style={{ marginTop: '0', marginBottom: '40px', paddingLeft: '5%', paddingRight: '5%' }}>
-                    <div className="text-center">
+                <div className='well row table-responsive mb-2' style={{ marginTop: '0', marginBottom: '40px', paddingLeft: '5%', paddingRight: '5%' }}>
+                    <div className='text-center'>
                         ChannelsDB last update on <b>{stats ? stats.date : 'n/a'}</b>
                         &nbsp;<small>contains:</small><b> {stats ? stats.entries_count : 'n/a'}</b> protein entries
-                        &nbsp;{this.state.statisticsExpanded ? <a href="_blank" onClick={e => this.setStatistics(e, false)}>Hide details</a> : <a href="_blank" onClick={e => this.setStatistics(e, true)}>Show details</a>}
+                        &nbsp;{this.state.statisticsExpanded ? <a href='_blank' onClick={(e) => this.setStatistics(e, false)}>Hide details</a> : <a href='_blank' onClick={(e) => this.setStatistics(e, true)}>Show details</a>}
                     </div>
-                    <table className="table table-condensed active w-auto" style={{ display: this.state.statisticsExpanded ? 'table' : 'none' }}>
-                        <thead>
-                            <tr>
-                                <th><b>Channel type</b></th>
-                                <th className="text-right"><b>MOLE</b></th>
-                                <th className="text-right"><b>CAVER</b></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Reviewed</td>
-                                <td className="text-right"><b>{stats && stats.statistics.ReviewedChannels_MOLE ? stats.statistics.ReviewedChannels_MOLE : 'n/a'}</b></td>
-                                <td className="text-right"><b>{stats && stats.statistics.ReviewedChannels_Caver ? stats.statistics.ReviewedChannels_Caver : 'n/a'}</b></td>
-                            </tr>
-                            <tr>
-                                <td>CSA</td>
-                                <td className="text-right"><b>{stats && stats.statistics.CSATunnels_MOLE ? stats.statistics.CSATunnels_MOLE : 'n/a'}</b></td>
-                                <td className="text-right"><b>{stats && stats.statistics.CSATunnels_Caver ? stats.statistics.CSATunnels_Caver : 'n/a'}</b></td>
-                            </tr>
-                            <tr>
-                                <td>Cofactor</td>
-                                <td className="text-right"><b>{stats && stats.statistics.CofactorTunnels_MOLE ? stats.statistics.CofactorTunnels_MOLE : 'n/a'}</b></td>
-                                <td className="text-right"><b>{stats && stats.statistics.CofactorTunnels_Caver ? stats.statistics.CofactorTunnels_Caver : 'n/a'}</b></td>
-                            </tr>
-                            <tr>
-                                <td>Transmembrane pores</td>
-                                <td className="text-right"><b>{stats && stats.statistics.TransmembranePores_MOLE ? stats.statistics.TransmembranePores_MOLE : 'n/a'}</b></td>
-                                <td className="text-right"><b>{stats && stats.statistics.TransmembranePores_Caver ? stats.statistics.TransmembranePores_Caver : 'n/a'}</b></td>
-                            </tr>
-                            <tr>
-                                <td>Cognate</td>
-                                <td className="text-right"><b>{stats && stats.statistics.ProcognateTunnels_MOLE ? stats.statistics.ProcognateTunnels_MOLE : 'n/a'}</b></td>
-                                <td className="text-right"><b>{stats && stats.statistics.ProcognateTunnels_Caver ? stats.statistics.ProcognateTunnels_Caver : 'n/a'}</b></td>
-                            </tr>
-                            <tr>
-                                <td>AlphaFill</td>
-                                <td className="text-right"><b>{stats && stats.statistics.AlphaFillTunnels_MOLE ? stats.statistics.AlphaFillTunnels_MOLE : 'n/a'}</b></td>
-                                <td className="text-right"><b>{stats && stats.statistics.AlphaFillTunnels_Caver ? stats.statistics.AlphaFillTunnels_Caver : 'n/a'}</b></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    {this.state.statisticsExpanded ? <Statistics statistics={this.state.statistics}/> : ''}
                 </div>
                 <div className='col-lg-9' style={{ textAlign: 'left', textJustify: 'inter-word', padding: '0' }}>
 
-                    <p className="lead">ChannelsDB 2.0 is a comprehensive and regularly updated resource of channels, pores and tunnels found in biomacromolecules deposited in the <a target="_blank" href="https://www.ebi.ac.uk/pdbe/">Protein Data Bank</a> and <a target="_blank" href="https://alphafill.eu/">AlphaFill</a> / <a target="_blank" href="https://alphafold.ebi.ac.uk/">AlphaFold</a> databases. As such, it is a unique service for channel-related analyses. Pathways were calculated using an algorithms <a target="_blank" href="https://loschmidt.chemi.muni.cz/caverweb/">CAVER</a> and <a target="_blank" href="https://mole.upol.cz/">MOLE</a>.</p>
+                    <p className='lead'>ChannelsDB 2.0 is a comprehensive and regularly updated resource of channels, pores and tunnels found in biomacromolecules deposited in the <a target='_blank' href='https://www.ebi.ac.uk/pdbe/'>Protein Data Bank</a> and <a target='_blank' href='https://alphafill.eu/'>AlphaFill</a> / <a target='_blank' href='https://alphafold.ebi.ac.uk/'>AlphaFold</a> databases. As such, it is a unique service for channel-related analyses. Pathways were calculated using an algorithms <a target='_blank' href='https://loschmidt.chemi.muni.cz/caverweb/'>CAVER</a> and <a target='_blank' href='https://mole.upol.cz/'>MOLE</a>.</p>
 
                     <p className='text-justify'>
                         The database contains information about channel positions, geometry and physicochemical properties. Additionally, all the entries are crosslinked with
@@ -123,7 +84,7 @@ export class Info extends React.Component<{ state: State }, {}> {
         let justify = {
             textAlign: 'justify',
             textJustify: 'inter-word',
-        };
+        } as React.CSSProperties;
 
         let reference = {
             borderLeft: '2px solid #AAA',
@@ -298,10 +259,10 @@ export class Info extends React.Component<{ state: State }, {}> {
             <hr className='featurette-divider' style={{ margin: '20px 0' }} />
 
             <img className='img' src={'assets/img/elixirlogo.png'} alt='ELIXIR logo' height='70' />
-            <img className="img" src={'assets/img/kfc.png'} alt="KFC logo" height="70" />
-            <img className="img" src={'assets/img/upol.png'} alt="UPOL logo" height="70"/>
-            <img className="img" src={'assets/img/recetox.png'} alt="RECETOX logo" height="70"/>
-            <img className="img" src={'assets/img/ceitec.png'} alt="CEITEC logo" height="70"/>
+            <img className='img' src={'assets/img/kfc.png'} alt='KFC logo' height='70' />
+            <img className='img' src={'assets/img/upol.png'} alt='UPOL logo' height='70'/>
+            <img className='img' src={'assets/img/recetox.png'} alt='RECETOX logo' height='70'/>
+            <img className='img' src={'assets/img/ceitec.png'} alt='CEITEC logo' height='70'/>
             <div className='row well well-sm featurette text-center' style={{ marginTop: '10px' }}>
                 ChannelsDB is a part of services provided by <a href='https://www.elixir-czech.cz/' target='_blank'>ELIXIR</a> &ndash;
                     European research infrastructure for biological information. This work was supported by ELIXIR CZ and RECETOX RI research infrastructure projects (MEYS) [LM2023055; LM2023069]

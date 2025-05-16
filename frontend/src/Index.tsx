@@ -2,27 +2,28 @@
  * Copyright (c) 2017 David Sehnal, licensed under Apache 2.0, See LICENSE file for more info.
  */
 
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { About } from './About';
+import { Contribute } from './Contribute';
+import { Documentation } from './Documentation';
+import { GDPR } from './GDPR';
+import { Info } from './Info';
+import { Menu } from './Menu';
+import { Methods } from './Methods';
 import {
-  State,
-  ViewState,
-  updateViewState,
-  searchPdbCategory,
-  fetchPdbEntries,
-  fetchPdbText,
-  initState,
-} from "./State";
-import { Menu } from "./Menu";
-import { Methods } from "./Methods";
-import { Documentation } from "./Documentation";
-import { Contribute } from "./Contribute";
-import { About } from "./About";
-import { GDPR } from "./GDPR";
-import { Charts } from "./Charts";
-import { Info } from "./Info";
+    fetchPdbEntries,
+    fetchPdbText,
+    initState,
+    searchPdbCategory,
+    updateViewState,
+    State,
+    ViewState,
+} from './State';
+import { AdvancedSearch } from './advanced_search/AdvancedSearch';
+import { ajaxGetJson } from './Utils';
 
-type pageType = 'Search' | 'Methods' | 'Documentation' | 'Contribute' | 'About' | 'GDPR' | 'Charts';
+type pageType = 'Search' | 'Methods' | 'Documentation' | 'Contribute' | 'About' | 'GDPR';
 
 export function renderUI(target: HTMLElement, kind: pageType) {
     switch (kind) {
@@ -111,23 +112,11 @@ class AboutMain extends React.Component<{}, {}> {
     }
 }
 
-// class ChartsMain extends React.Component<{}, {}> {
-//     render() {
-//       return (
-//         <div className="container">
-//           <Menu />
-//           <Charts />
-//           <Footer />
-//         </div>
-//       );
-//     }
-//   }
-
 class Footer extends React.Component<{}, {}> {
     render() {
         return <footer>
             <hr className='featurette-divider' />
-            <p className='pull-right' style={{ color: '#999', fontSize: 'smaller', marginBottom: '30px' }}>&copy; 2018 Lukáš Pravda &amp; David Sehnal;  2023 Anna Špačková & Václav Bazgier | <a href="gdpr.html">Terms of Use &amp; GDPR </a></p>
+            <p className='pull-right' style={{ color: '#999', fontSize: 'smaller', marginBottom: '30px' }}>&copy; 2018 Lukáš Pravda &amp; David Sehnal;  2023 Anna Špačková & Václav Bazgier | <a href='gdpr.html'>Terms of Use &amp; GDPR </a></p>
         </footer>;
     }
 }
@@ -136,6 +125,9 @@ class SearchView extends React.Component<GlobalProps, {}> {
 
     render() {
         return <div style={{ marginTop: '20px' }}>
+            <div className='row'>
+                <div className='col-lg-12'><AdvancedSearchBox {...this.props} /></div>
+            </div>
             <div className='row'>
                 <div className='col-lg-12'><SearchBox {...this.props} /></div>
             </div>
@@ -162,12 +154,34 @@ class StateView extends React.Component<GlobalProps, {}> {
                 case 'Loading': return <div>{state.message}</div>;
                 case 'Searched': return <SearchResults {...this.props} />;
                 case 'Entries': return <Entries {...this.props} mode='Full' value={state.term} />;
+                case 'Filter': return <FilterEntries {...this.props} mode='Full' />;
                 case 'Error': return <div>Error: {state.message}</div>;
-                default: return <div>Should not happen ;)</div>;
+                default: return <div>Should not happen ;</div>;
             }
         } catch (e) {
             return <div>Error: {'' + e}</div>;
         }
+    }
+}
+
+class AdvancedSearchBox extends React.Component<GlobalProps, { isAvailable: boolean }> {
+    state = { isAvailable: false };
+
+    componentDidMount() {
+        this.props.state.apiAvailable.subscribe((isAvailable) => this.setState({ isAvailable }));
+    }
+
+    render() {
+        return (
+            <div>
+                {this.state.isAvailable === true ?
+                    <div className='form-group form-group-lg'>
+                        <img className='img' src='assets/img/channelsdb2_logo.png' alt='channelsdb2_logo' height='30' />
+                        <AdvancedSearch state={this.props.state} />
+                    </div>
+                    : "Loading..."}
+            </div>
+        );
     }
 }
 
@@ -180,24 +194,24 @@ class SearchBox extends React.Component<GlobalProps, { isAvailable: boolean }> {
 
     render() {
         return <div className='form-group form-group-lg'>
-            <img className="img" src="assets/img/pdbe_logo.png" alt="pdbe_logo" height="30" />
-            {/* {this.state.isAvailable 
-                ? */}
-            <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for experimental structures using name or IDs (e.g. cytochrome P450, 5ebl, KcsA, P08686)'
-                onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
-                onKeyPress={(e) => {
-                    if (e.key !== 'Enter') return;
-                    this.props.state.fullSearch.onNext(void 0);
-                    updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
-                }} />
-            {/* : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }} disabled={true}
-                    value='Initializing search...'  />} */}
+            <img className='img' src='assets/img/pdbe_logo.png' alt='pdbe_logo' height='30' />
+            {this.state.isAvailable
+                ?
+                <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for experimental structures using name or IDs (e.g. cytochrome P450, 5ebl, KcsA, P08686)'
+                    onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
+                    onKeyPress={(e) => {
+                        if (e.key !== 'Enter') return;
+                        this.props.state.fullSearch.onNext(void 0);
+                        updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
+                    }} />
+                : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }} disabled={true}
+                    value='Initializing search...' />}
         </div>;
     }
 }
 
 class AlphaFillSearchBox extends React.Component<GlobalProps, { isAvailable: boolean }> {
-    //TODO initialize with search of AlphaFill molecules
+    // TODO initialize with search of AlphaFill molecules
     state = { isAvailable: false };
 
     componentDidMount() {
@@ -206,23 +220,22 @@ class AlphaFillSearchBox extends React.Component<GlobalProps, { isAvailable: boo
 
     render() {
         return <div className='form-group form-group-lg'>
-            <img className="img" src="assets/img/alphafill-logo.png" alt="alphafill_logo" height="50" />
-            {/* {this.state.isAvailable
-                ?  */}
-            <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for AlphaFill structures via Uniprot ID (e.g. P08686, P10635)'
-                //onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
-                onKeyPress={(e) => {
-                    if (e.key !== 'Enter') {
-                        return;
-                    };
-                    console.log((e.target as any).value);
-                    //TODO check if UNIPROT exists
-                    window.open(`/detail?pid=${(e.target as any).value}`, "_blank");
-                    // this.props.state.fullSearch.onNext(void 0);
-                    // updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
-                }} />
-            {/* : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }} disabled={true}
-                value='Initializing search...' />} */}
+            <img className='img' src='assets/img/alphafill-logo.png' alt='alphafill_logo' height='50' />
+            {this.state.isAvailable ?
+                <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for AlphaFill structures via Uniprot ID (e.g. P08686, P10635)'
+                    // onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
+                    onKeyPress={(e) => {
+                        if (e.key !== 'Enter') {
+                            return;
+                        }
+                        console.log((e.target as any).value);
+                        // TODO check if UNIPROT exists
+                        window.open(`/detail?pid=${(e.target as any).value}`, '_blank');
+                        // this.props.state.fullSearch.onNext(void 0);
+                        // updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
+                    }} />
+                : <input key={'placeholder'} type='text' className='form-control' style={{ fontWeight: 'bold', textAlign: 'left', borderColor: 'darkgreen' }} disabled={true}
+                    value='Initializing search...' />}
         </div>;
     }
 }
@@ -338,7 +351,7 @@ class Entry extends React.Component<GlobalProps & { docs: any, data: any }, {}> 
                 }
             </ul>
             <div className='pdb-entry-img-wrap'>
-                <img src={`/api/v1/download/${docs.pdb_id.toLowerCase()}?file_format=png`} alt="Image not found." />
+                <img src={`/api/v1/download/${docs.pdb_id.toLowerCase()}?file_format=png`} alt='Image not found.' />
             </div>
         </div>;
     }
@@ -403,3 +416,91 @@ class Entries extends React.Component<GlobalProps & { group?: string, value: str
         </div >;
     }
 }
+
+class FilterEntry extends React.Component<GlobalProps & { structure_id: string }, { isLoading: boolean, count: number, statistics: {} }> {
+    state = { isLoading: false, count: 0, statistics: {} as any };
+
+    private fetchCounts = async () => {
+        this.setState({ isLoading: true });
+        const url = `${this.props.state.channelsUrl}/statistics/${this.props.structure_id}`;
+        const fetched = await ajaxGetJson(url);
+        this.setState({ isLoading: true, count: fetched.entries_count, statistics: fetched.statistics });
+    };
+
+    componentDidMount() {
+        this.fetchCounts();
+    }
+
+    render() {
+        const structure_id = this.props.structure_id;
+        const old_structure_id = structure_id.substring(structure_id.length - 4);
+        const count = this.state.count;
+        const statistics = this.state.statistics;
+        const msg = Object.keys(statistics).filter((key) => statistics[key] > 0).map((key) => `${key} (${statistics[key]})`).join(', ');
+
+
+        return <div className='well pdb-entry'>
+            <a href={`/detail?pid=${structure_id}`} target='_blank'>
+                <div className='pdb-entry-header' style={{ background: count > -1 ? '#dfd' : '#ddd' }}>
+                    <div>{structure_id}</div>
+                </div>
+            </a>
+            <ul>
+                {count > 0 &&
+                    <li><i>{`${count} channel${count !== 1 ? 's' : ''}; ${msg}`}</i></li>
+                }
+            </ul>
+            <div className='pdb-entry-img-wrap'>
+                <img src={`/api/v1/download/${old_structure_id.toLowerCase()}?file_format=png`} alt='Image not found.' />
+            </div>
+        </div>;
+    }
+}
+
+class FilterEntries extends React.Component<GlobalProps & { count?: number, mode: 'Embed' | 'Full' }, { isLoading: boolean, entries: string[], count: number, showing: number }> {
+    state = { isLoading: false, entries: [] as any[], count: -1, showing: 0, withCount: -1, withoutCount: -1 };
+
+    private setData = () => {
+        this.setState({ isLoading: true });
+        const viewState = this.props.state.viewState;
+        if (viewState.kind === 'Filter') {
+            const data = viewState.term;
+            const count = data.length;
+            this.setState({ isLoading: false, entries: data, count, showing: this.growFactor });
+        } else {
+            console.log("Unexpected error while loading filter search results.")
+            this.setState({ isLoading: false });
+        }
+    }
+
+
+    private loadMore = () => this.setState({ showing: this.state.showing + this.growFactor });
+
+    private growFactor = this.props.mode === 'Embed' ? 6 : 12;
+
+    componentDidMount() {
+        this.setData();
+    }
+
+    render() {
+        const groups = this.state.entries;
+
+        const entries = [];
+        for (let i = 0, _b = Math.min(this.state.showing, this.state.entries.length); i < _b; i++) {
+            entries.push(<FilterEntry key={i} state={this.props.state} structure_id={this.state.entries[i]} />);
+        }
+
+        return <div>
+            {this.state.isLoading ? <div>Loading...</div> :
+                <div style={{ marginTop: '15px', position: 'relative' }}>
+                    {entries}
+                    <div style={{ clear: 'both' }} />
+                    {this.state.showing < this.state.count
+                        ? <button className='btn btn-sm btn-primary btn-block' disabled={this.state.isLoading ? true : false} onClick={this.loadMore}>{this.state.isLoading ? 'Loading...' : `Show more (${this.state.count > 0 ? this.state.count - this.state.showing : '?'} remaining; ${Math.max(this.state.withCount - this.state.showing, 0)} with channels)`}</button>
+                        : void 0}
+                </div>
+            }
+        </div >;
+    }
+}
+

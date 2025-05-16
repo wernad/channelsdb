@@ -9,6 +9,19 @@ export interface DBContent {
     alphafill: { [id: string]: any };
 }
 
+export type GenericStatistics = { [key: string]: number };
+
+export type StatisticsData = {
+    "methods": GenericStatistics,
+    "length": GenericStatistics,
+    "bottleneck": GenericStatistics,
+    "top_types": GenericStatistics,
+    "top_proteins": GenericStatistics,
+    "top_residues": GenericStatistics,
+    "date": string,
+    "entries_count": number
+}
+
 export interface State {
     apiAvailable: Rx.BehaviorSubject<boolean>;
     statistics: any;
@@ -28,13 +41,24 @@ export interface EntryGroup {
     value: string;
 }
 
-export type ViewState = ViewState.Info | ViewState.Seached | ViewState.Entries | ViewState.Loading | ViewState.Error;
+export type ViewState = ViewState.Info | ViewState.Seached | ViewState.Entries | ViewState.Filter | ViewState.Loading | ViewState.Error;
+
+export type FilterData = {
+  min_radius?: number,
+  max_radius?: number,
+  min_distance?: number,
+  max_distance?: number,
+  min_bottleneck?: number,
+  limit?: number,
+  offset?: number
+}
 
 export namespace ViewState {
     export type Info = { kind: 'Info' };
     export type Loading = { kind: 'Loading', message: string };
     export type Seached = { kind: 'Searched', data: any };
     export type Entries = { kind: 'Entries', term: string };
+    export type Filter = { kind: 'Filter', term: string[]};
     export type Error = { kind: 'Error', message: string };
 }
 
@@ -72,13 +96,34 @@ export function initState(): State {
                 updateViewState(state, { kind: 'Info' });
             }
         });
-
+    
+    checkAPI(state);
     getStatistics(state);
 
     return state;
 }
 
-
+async function fetchAndHandleNotFound(url: string) {
+    try {
+        const result =  await ajaxGetJson(url)
+        return result;
+    } catch (e) {
+        const result = undefined;
+        return result;
+    }
+}
+async function checkAPI(state: State) {
+    try {
+        
+        const result = await ping(state);
+        if (result === true) {
+            state.apiAvailable.onNext(true);
+        }
+    } catch (e) {
+        console.log(`Unable to ping API, re-trying in 2 seconds. Error: ${e}`)
+        setTimeout(() => checkAPI(state), 2000);
+    }    
+}
 
 async function getStatistics(state: State) {
     try {
@@ -86,9 +131,27 @@ async function getStatistics(state: State) {
             state.statisticsAvailable.onNext(state.statistics);
             return;
         }
-        const content = await ajaxGetJson(`${state.channelsUrl}/statistics`);
-        state.statistics = content;
-        state.statisticsAvailable.onNext(content);
+
+        const methods = await fetchAndHandleNotFound(`${state.channelsUrl}/statistics/methods`);
+        const length = await fetchAndHandleNotFound(`${state.channelsUrl}/statistics/length`);
+        const bottleneck = await fetchAndHandleNotFound(`${state.channelsUrl}/statistics/bottleneck`);
+        const topTypes = await fetchAndHandleNotFound(`${state.channelsUrl}/statistics/top_types`);
+        const topProteins = await fetchAndHandleNotFound(`${state.channelsUrl}/statistics/top_proteins`);
+        const topResidues = await fetchAndHandleNotFound(`${state.channelsUrl}/statistics/top_residues`);
+        
+        const data = {
+            "entries_count": methods !== undefined ? methods.entries_count : undefined,
+            "date": methods !== undefined ? methods.date : undefined,
+            "methods": methods !== undefined ? methods.statistics : undefined,
+            "length": length !== undefined ? length.statistics : undefined,
+            "bottleneck": bottleneck !== undefined ? bottleneck.statistics : undefined,
+            "top_types": topTypes !== undefined ? topTypes.statistics : undefined,
+            "top_proteins": topProteins !== undefined ? topProteins.statistics : undefined,
+            "top_residues": topResidues !== undefined ? topResidues.statistics : undefined,
+        };
+
+        state.statistics = data;
+        state.statisticsAvailable.onNext(data);
     } catch (e) {
         setTimeout(() => getStatistics(state), 2000);
     }
@@ -152,14 +215,33 @@ export async function fetchPdbText(state: State, value: string) {
     return sortGroups(state, data.grouped.pdb_id.groups);
 }
 
+export async function fetchFilter(state: State, filter: FilterData) {
+    const params = new URLSearchParams();
+
+    for (const key in filter) {
+        if (filter.hasOwnProperty(key)) {
+            const value = filter[key as keyof FilterData];
+            if (value !== undefined && value !== null) {
+                params.append(key, value.toString());
+            }
+        }
+    };
+
+    params.append('limit', ROW_COUNT.toString())
+    
+    const url = `${state.channelsUrl}/structures/filter?${params.toString()}`
+    const data = await ajaxGetJson(url);
+    return data;
+}
+
 export async function ping(state: State) {
     const url = `${state.channelsUrl}/health/ping`;
     const result = await fetchAjax(url)
 
     const req = (result.target as XMLHttpRequest);
-    if (req.status == 200) {
-        return true;
-    } else {
-        return false;
+    if (req.status !== 200) {
+        throw Error('API is not available.')
     }
+
+    return true;
 }
