@@ -76,7 +76,7 @@ def fetch_ids(start: int, limit: int, remote: bool = True) -> list[str]:
     if remote:
         url = get_search_url(start=start, limit=limit)
     else:
-        url = f"{MIRROR_API_PATH}"
+        url = f"{MIRROR_API_PATH}proteins/all?limit={limit}&offset={start}"
     response = get(url)
 
     if response.status_code == 200:
@@ -96,21 +96,26 @@ def create_queues() -> list[mp.Queue]:
     return data_queue, result_queue
 
 
-def get_file_url(id: str, version: str) -> str:
+def get_file_url(id: str, version: str = None, remote: bool = True) -> str:
     """Create file url based on id and version.
 
     Parameters:
         id: structure id
-        version: version to fetch
+        version: version to fetch.
+        remote: flag to use remote or mirror pdb.
+
     Returns:
         tuple of bytes and error code
     """
     log.debug(f"Creating url for file - {id=} {version=}.")
-    id = id.lower()
-    full_id = get_full_id(id)
-    category = id[1:3]
-    file_name = f"{full_id}_xyz_v{version}.cif.gz"
-    url = f"{PDB_HTTP_FILE_URL}{category}/{full_id}/{file_name}"
+    if remote:
+        id = id.lower()
+        full_id = get_full_id(id)
+        category = id[1:3]
+        file_name = f"{full_id}_xyz_v{version}.cif.gz"
+        url = f"{PDB_HTTP_FILE_URL}{category}/{full_id}/{file_name}"
+    else:
+        url = f"{MIRROR_API_PATH}files/{id}/latest"
     log.debug(f"Created file url: {url}")
     return url
 

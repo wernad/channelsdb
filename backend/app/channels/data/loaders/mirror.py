@@ -69,6 +69,7 @@ def fetch_all(start: int, total: int, data_queue: mp.Queue) -> None:
 
     logging.getLogger("requests").setLevel(logging.WARNING)
     logging.getLogger("urllib3").setLevel(logging.WARNING)
+
     starts = [x for x in range(start, total, MIRROR_API_LIMIT)]
     log.debug(f"Created range starts: {starts}")
 
@@ -79,12 +80,14 @@ def fetch_all(start: int, total: int, data_queue: mp.Queue) -> None:
         ids_with_versions = fetch_ids(
             start=start, limit=MIRROR_API_LIMIT, remote=False
         )["data"]
+        print("@@@@", ids_with_versions)
         if ids_with_versions:
             ids = [entry["id"] for entry in ids_with_versions]
             log.debug(f"Received {len(ids_with_versions)} ids.")
 
             file_urls = get_file_urls(ids)
 
+            print("panda")
             id_to_version = {
                 entry["id"]: entry["version"] for entry in ids_with_versions
             }

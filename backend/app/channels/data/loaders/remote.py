@@ -134,15 +134,6 @@ def fetch_all(start: int, total: int, data_queue: mp.Queue) -> None:
     logging.getLogger("urllib3").setLevel(logging.DEBUG)
 
 
-def get_linspace(total: int):
-    "Helper method to calculate step and starts for each worker."
-
-    step = int(ceil(total / WORKER_LIMIT))
-    starts = (0 + i * step for i in range(WORKER_LIMIT))
-
-    return step, starts
-
-
 def run(start: int | None):
     """Creates and starts child processes for fetching file data.
 
@@ -155,31 +146,33 @@ def run(start: int | None):
     create_output_directory()
 
     if response is not None:
-        total = response["total_count"]
-        log.debug(f"Total number of entries: {total}")
-        actual_start = start if start else 0
+        try:
+            total = response["total_count"]
+            log.debug(f"Total number of entries: {total}")
+            actual_start = start if start else 0
 
-        log.debug("Creating managers...")
+            log.debug("Creating managers...")
 
-        data_queue, result_queue = create_queues()
+            data_queue, result_queue = create_queues()
 
-        managers = create_managers(data_queue=data_queue, result_queue=result_queue)
-        inserter = create_inserter(result_queue=result_queue)
+            managers = create_managers(data_queue=data_queue, result_queue=result_queue)
+            inserter = create_inserter(result_queue=result_queue)
 
-        log.debug("Workers created, starting main function...")
-        fetch_all(start=actual_start, total=total, data_queue=data_queue)
+            log.debug("Workers created, starting main function...")
+            fetch_all(start=actual_start, total=total, data_queue=data_queue)
 
-        log.debug(
-            "Tunnels calculations complete. Passing shutdown message to queues..."
-        )
-        data_queue.put(None)
-        result_queue.put(None)
+            log.debug(
+                "Tunnels calculations complete. Passing shutdown message to queues..."
+            )
+        finally:
+            data_queue.put(None)
+            result_queue.put(None)
 
-        log.debug("Waiting for workers to stop.")
-        for manager in managers:
-            manager.join()
+            log.debug("Waiting for workers to stop.")
+            for manager in managers:
+                manager.join()
 
-        inserter.join()
-        log.info("Script finished.")
+            inserter.join()
+            log.info("Script finished.")
     else:
         log.error(f"Received unexpected status code: {response.status_code}")
