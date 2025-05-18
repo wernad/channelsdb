@@ -1,8 +1,6 @@
 import concurrent.futures as cf
 import logging
 import multiprocessing as mp
-import os
-import shutil
 from gzip import GzipFile
 from io import BytesIO
 from math import ceil
@@ -11,34 +9,19 @@ from time import sleep
 
 from requests import get
 
-from app.channels.fetch.workers import create_inserter, create_managers
-from app.config import OUTPUT_PATH, PDB_SEARCH_API_LIMIT, WORKER_LIMIT, QUEUE_SIZE
+from app.channels.data.workers import create_inserter, create_managers
+from app.config import PDB_SEARCH_API_LIMIT, WORKER_LIMIT
 from app.log import log
-from app.channels.fetch.common import (
+from app.channels.data.utils import (
+    create_output_directory,
     get_file,
     get_file_url,
     get_full_id,
+    fetch_ids,
     get_last_version,
     get_search_url,
+    create_queues,
 )
-
-
-def fetch_ids(start: int, limit: int) -> list[str]:
-    """Fetches a list of ids based on start and limit.
-
-    Parameters:
-        start: sequence start
-        limit: number of ids
-    Return:
-        list[str]
-    """
-
-    url = get_search_url(start=start, limit=limit)
-
-    response = get(url)
-
-    if response.status_code == 200:
-        return response.json()
 
 
 def get_latest_versions(ids: list[str]) -> dict:
@@ -160,33 +143,6 @@ def get_linspace(total: int):
     return step, starts
 
 
-def create_output_directory() -> None:
-    """Creates output folder for workers."""
-    log.debug("Creating output folder structure.")
-
-    try:
-        os.mkdir(OUTPUT_PATH)
-        log.debug("Directory created successfully.")
-    except FileExistsError:
-        shutil.rmtree(OUTPUT_PATH)
-        log.debug(f"Directory '{OUTPUT_PATH}' already exists, cleaning up.")
-        os.mkdir(OUTPUT_PATH)
-        log.debug("Directory re-created successfully.")
-    except PermissionError:
-        log.error(f"Permission denied: Unable to create '{OUTPUT_PATH}'.")
-    except Exception as e:
-        log.error(f"An error occurred: {e}")
-
-
-def create_queues() -> list[mp.Queue]:
-    """Creates queues for data and results."""
-
-    data_queue = mp.Queue(maxsize=QUEUE_SIZE)
-    result_queue = mp.Queue()
-
-    return data_queue, result_queue
-
-
 def run(start: int | None):
     """Creates and starts child processes for fetching file data.
 
@@ -194,14 +150,12 @@ def run(start: int | None):
         start: starting id for fetching.
     """
     log.info("Beggining fetch of all PDB entries.")
-    url = get_search_url(start=0, limit=0)
-
-    response = get(url)
+    response = fetch_ids(start=0, limit=0)
 
     create_output_directory()
 
-    if response.status_code == 200:
-        total = response.json()["total_count"]
+    if response is not None:
+        total = response["total_count"]
         log.debug(f"Total number of entries: {total}")
         actual_start = start if start else 0
 

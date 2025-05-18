@@ -1,5 +1,5 @@
 from app.log import log
-from app.channels.fetch.loaders import pdb, from_file
+from app.channels.data.loaders import run_file, run_mirror, run_remote
 
 
 def load_from_pdb(start: int, fetch_source: str) -> None:
@@ -11,9 +11,9 @@ def load_from_pdb(start: int, fetch_source: str) -> None:
 
     log.debug(f"Starting protein loading from '{fetch_source}' PDB database.")
     if fetch_source == "remote":
-        pdb.run(start=start)
-    else:  # TODO
-        ...
+        run_remote(start=start)
+    else:
+        run_mirror(start=start)
 
 
 def load_from_file(file_path: str) -> None:
@@ -24,4 +24,4 @@ def load_from_file(file_path: str) -> None:
     """
 
     log.debug(f"Starting protein loading from local file: {file_path}.")
-    from_file.run(file_path)
+    run_file(file_path)

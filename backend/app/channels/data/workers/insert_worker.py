@@ -4,7 +4,7 @@ from queue import Empty
 
 from app.config import QUEUE_TIMEOUT
 from app.log import log
-from app.channels.fetch.workers.insert_utils import (
+from app.channels.data.workers.insert_utils import (
     insert_structure_if_missing,
     insert_channels,
     insert_profiles,

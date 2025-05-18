@@ -3,9 +3,9 @@ import sys
 from pathlib import Path
 
 from app.database.models import METHODS_NAMES_TO_IDS
-from app.channels.fetch.common import get_full_id
+from app.channels.data.utils import get_full_id
 
-from app.channels.fetch.workers.insert_utils import (
+from app.channels.data.workers.insert_utils import (
     insert_structure_if_missing,
     insert_channels,
     insert_annotations,

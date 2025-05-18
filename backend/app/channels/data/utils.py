@@ -1,16 +1,54 @@
 import json
+import os
+import shutil
 from urllib.parse import quote_plus
+import multiprocessing as mp
 
 from requests import Response, get
 from requests.exceptions import ConnectTimeout
 
-from app.config import PDB_DATA_API_URL, PDB_HTTP_FILE_URL, PDB_SEARCH_API_URL
+from app.config import (
+    MIRROR_API_PATH,
+    OUTPUT_PATH,
+    PDB_DATA_API_URL,
+    PDB_HTTP_FILE_URL,
+    PDB_SEARCH_API_URL,
+    QUEUE_SIZE,
+)
 from app.log import log
 
 
 def get_full_id(id: str):
     """Returns 12-character id of given 4-character id."""
     return f"pdb_0000{id.lower()}"
+
+
+def fetch_total_count() -> int:
+    """Fetches total number of entires in PDB mirror."""
+    url = f"{MIRROR_API_PATH}proteins/total_count"
+
+    response = get(url)
+
+    if response.status_code == 200:
+        return response.json()["total_count"]
+
+
+def create_output_directory() -> None:
+    """Creates output folder for workers."""
+    log.debug("Creating output folder structure.")
+
+    try:
+        os.mkdir(OUTPUT_PATH)
+        log.debug("Directory created successfully.")
+    except FileExistsError:
+        shutil.rmtree(OUTPUT_PATH)
+        log.debug(f"Directory '{OUTPUT_PATH}' already exists, cleaning up.")
+        os.mkdir(OUTPUT_PATH)
+        log.debug("Directory re-created successfully.")
+    except PermissionError:
+        log.error(f"Permission denied: Unable to create '{OUTPUT_PATH}'.")
+    except Exception as e:
+        log.error(f"An error occurred: {e}")
 
 
 def get_error_message(response: Response) -> str:
@@ -22,6 +60,40 @@ def get_error_message(response: Response) -> str:
         message = response.text
 
     return message
+
+
+def fetch_ids(start: int, limit: int, remote: bool = True) -> list[str]:
+    """Fetches a list of ids based on start and limit.
+
+    Parameters:
+        start: sequence start
+        limit: number of ids
+        remote: if it should use URL for remote or mirror of PDB.
+    Return:
+        list[str]
+    """
+
+    if remote:
+        url = get_search_url(start=start, limit=limit)
+    else:
+        url = f"{MIRROR_API_PATH}"
+    response = get(url)
+
+    if response.status_code == 200:
+        return response.json()
+
+    log.error(f"Received unexpected status code: {response.status_code}")
+
+    return None
+
+
+def create_queues() -> list[mp.Queue]:
+    """Creates queues for data and results."""
+
+    data_queue = mp.Queue(maxsize=QUEUE_SIZE)
+    result_queue = mp.Queue()
+
+    return data_queue, result_queue
 
 
 def get_file_url(id: str, version: str) -> str:

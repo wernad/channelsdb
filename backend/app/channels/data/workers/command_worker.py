@@ -9,7 +9,7 @@ from defusedxml import ElementTree
 from app.config import CONFIG_PATH, OUTPUT_PATH, QUEUE_TIMEOUT
 from app.log import log
 from app.channels.commands import MoleCofactor, MoleCognate, MoleCSA
-from app.channels.fetch.types import MoleClass
+from app.channels.data.types import MoleClass
 
 
 def _load_config_file(file_name: str) -> ElementTree:

@@ -257,7 +257,9 @@ def insert_structure_if_missing(
     with db_context() as session:
         structure_service = StructureService(session)
         log.debug(f"INSERTER -- Checking if structure {full_id} exists.")
-        structure = structure_service.check_if_exists_by_external_id(full_id)
+        structure = structure_service.check_if_exists_by_external_id_and_version(
+            full_id, version
+        )
 
         if structure is not None:
             return None
