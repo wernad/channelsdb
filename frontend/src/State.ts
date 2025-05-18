@@ -190,7 +190,7 @@ async function sortGroups(state: State, groups: any) {
 
     for (const group of groups) {
         const id = group.doclist.docs[0].pdb_id;
-        const url = `${state.channelsUrl}/statistics/${id}`;
+        const url = `${state.channelsUrl}/statistics/methods/${id}`;
 
         const fetched = await ajaxGetJson(url);
         counts.push(fetched);
@@ -217,12 +217,15 @@ export async function fetchPdbText(state: State, value: string) {
 
 export async function fetchFilter(state: State, filter: FilterData) {
     const params = new URLSearchParams();
+    
+    const camelToSnakeCase = (str: string) => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);   
 
     for (const key in filter) {
         if (filter.hasOwnProperty(key)) {
             const value = filter[key as keyof FilterData];
-            if (value !== undefined && value !== null) {
-                params.append(key, value.toString());
+            if (value !== undefined && value !== null && value.toString() !== '') {
+                const snakeKey = camelToSnakeCase(key);
+                params.append(snakeKey, value.toString());
             }
         }
     };

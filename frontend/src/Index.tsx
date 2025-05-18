@@ -254,7 +254,8 @@ class SearchResults extends React.Component<GlobalProps, {}> {
     render() {
         try {
             const data = (this.props.state.viewState as ViewState.Seached).data;
-            if (!data.grouped.category.groups.length) return this.empty();
+            console.log(data);
+            if (data === undefined || data.length === 0 || !data.grouped.category.groups.length) return this.empty();
             return <div>
                 <div style={{ padding: '0 0 15px 0', marginTop: '-15px', fontStyle: 'italic', textAlign: 'right' }}><small>Press 'Enter' for full-text search.</small></div>
                 <div>{this.groups()}</div>
@@ -422,7 +423,7 @@ class FilterEntry extends React.Component<GlobalProps & { structure_id: string }
 
     private fetchCounts = async () => {
         this.setState({ isLoading: true });
-        const url = `${this.props.state.channelsUrl}/statistics/${this.props.structure_id}`;
+        const url = `${this.props.state.channelsUrl}/statistics/methods/${this.props.structure_id}`;
         const fetched = await ajaxGetJson(url);
         this.setState({ isLoading: true, count: fetched.entries_count, statistics: fetched.statistics });
     };
@@ -465,7 +466,7 @@ class FilterEntries extends React.Component<GlobalProps & { count?: number, mode
         const viewState = this.props.state.viewState;
         if (viewState.kind === 'Filter') {
             const data = viewState.term;
-            const count = data.length;
+            const count = data !== undefined ? data.length : 0;
             this.setState({ isLoading: false, entries: data, count, showing: this.growFactor });
         } else {
             console.log("Unexpected error while loading filter search results.")
