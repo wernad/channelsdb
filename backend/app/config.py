@@ -9,6 +9,9 @@ DB_PASSWORD = "admin"
 # API
 API_PATH = "/api/v1"
 
+# MIRROR API
+MIRROR_API_PATH = "http://172.17.0.1:8001/api/v1/"
+MIRROR_API_LIMIT = 10
 
 # PDB API
 PDB_HTTP_FILE_URL = (
