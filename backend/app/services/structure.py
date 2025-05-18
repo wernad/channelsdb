@@ -10,9 +10,13 @@ class StructureService:
     def __init__(self, db: Session):
         self.repository = StructureRepository(db)
 
-    def check_if_exists_by_external_id(self, external_id: str) -> Structure | None:
-        """Checks if given structure exists using external id."""
-        result = self.repository.get_structure_by_external_id(external_id)
+    def check_if_exists_by_external_id_and_version(
+        self, external_id: str, version: int
+    ) -> Structure | None:
+        """Checks if given structure exists with external id and version."""
+        result = self.repository.get_structure_by_external_id_and_version(
+            external_id, version
+        )
 
         if result:
             return result
@@ -43,8 +47,10 @@ class StructureService:
 
         return StructureData.model_validate(result)
 
-    def get_internal_id_if_has_channels(self, structure_id: str) -> int:
-        structure = self.repository.get_structure_with_channels_by_external_id(
+    def get_newest_structure_with_channels_by_external_id(
+        self, structure_id: str
+    ) -> int:
+        structure = self.repository.get_newest_structure_with_channels_by_external_id(
             structure_id=structure_id
         )
 
@@ -72,3 +78,15 @@ class StructureService:
             return result
 
         return None
+
+    def get_latest_version_by_external_id(self, external_id: str) -> int:
+        result = self.repository.get_latest_version_by_external_id(
+            external_id=external_id
+        )
+
+        return result
+
+    def delete_structure_by_external_id(self, external_id: str) -> None:
+        internal_id = self.repository.delete_structure(external_id)
+
+        return internal_id

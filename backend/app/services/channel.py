@@ -12,7 +12,6 @@ from app.database.models import (
     LayerProperties,
     Layers,
     ProfileOutput,
-    ChannelFilter,
 )
 from app.database.repositories.channel import ChannelRepository
 
@@ -33,7 +32,7 @@ class ChannelService:
                 result[method] = []
             result[method].append(
                 ChannelOutput(
-                    type=channel.category.name,
+                    type=channel.type,
                     id=f"{channel.id}",
                     cavity=f"{channel.cavity}",
                     auto=channel.auto,
@@ -124,9 +123,9 @@ class ChannelService:
             )
         return result
 
-    def get_channels_with_by_structure(self, structure_id: str) -> dict | None:
+    def get_channels_with_by_structure(self, internal_id: str) -> dict | None:
         """Fetches all necessary data about structure's channels and returns them as a dict."""
-        channels = self.repository.get_channels_by_structure_id(structure_id)
+        channels = self.repository.get_channels_by_internal_id(internal_id)
 
         if not channels:
             return None
@@ -138,15 +137,6 @@ class ChannelService:
                 formatted_channels[method] = []
 
         return formatted_channels
-
-    def get_channels_by_filter(self, filter: ChannelFilter) -> list[str] | None:
-        """Returns list of internal ids of protein with filtered channels."""
-        result = self.repository.get_channels_filtered(filter)
-
-        if result:
-            return result
-
-        return None
 
     def insert_in_bulk(self, values: list[ChannelInsert]) -> list[int] | None:
         """Inserts channels in bluk and returns ids of new rows, if successfull."""

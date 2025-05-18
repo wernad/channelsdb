@@ -42,11 +42,11 @@ class ExportService:
 
     def get_json_file(self, internal_id: int) -> str:
         """Creates json file from given channel data using ChannelService."""
-        raw = self.channel_repo.get_channels_by_structure_id(internal_id)
+        raw = self.channel_repo.get_channels_by_internal_id(internal_id)
         if not raw:
             return None
 
-        channels = ChannelService.channels_with_annotations_as_model(raw)
+        channels = ChannelService.channels_with_as_model(raw)
         json_compatible = jsonable_encoder(channels)
         channels_json = json.dumps(json_compatible)
 
@@ -54,22 +54,24 @@ class ExportService:
 
     def get_chimera_file(self, internal_id: int) -> str:
         """Builds python that uses chimera package to build required file."""
-        channels = self.channel_repo.get_channels_by_structure_id(internal_id)
+        channels = self.channel_repo.get_channels_by_internal_id(internal_id)
 
         if not channels:
             return None
 
         channel_count = 0
         lines = []
-        for channels_data in channels.values():
-            for channel in channels_data:
+
+        channels_dict = ChannelService.channels_with_as_model(channels)
+        for channels in channels_dict.values():
+            for channel in channels:
                 channel_count += 1
                 name = f"channel{channel_count}"
                 lines.append(f"def {name}(channel_object):")
                 lines.append(
                     f"    channel = channel_object.newResidue('{name}', '', 1, '')"
                 )
-                for atom in channel["profile"]:
+                for atom in channel.profile:
                     line = (
                         f"    add_atom(channel_object, '{name}', channel, "
                         f"{atom.coord_x:.3f}, {atom.coord_y:.3f}, {atom.coord_z:.3f}, {atom.free_radius:.3f})"
@@ -88,7 +90,7 @@ class ExportService:
 
     def get_pdb_file(self, internal_id: int) -> str:
         """Generates a text file using PDB syntax."""
-        channels = self.channel_repo.get_channels_by_structure_id(internal_id)
+        channels = self.channel_repo.get_channels_by_internal_id(internal_id)
 
         if not channels:
             return None
@@ -96,16 +98,18 @@ class ExportService:
         total_atom_id = 0
         channel_count = 0
         lines = []
-        for channel_type in channels["channels"]:
-            for channel in channels["channels"][channel_type]:
+        channels_dict = ChannelService.channels_with_as_model(channels)
+
+        for channels in channels_dict.values():
+            for channel in channels:
                 channel_count += 1
-                profile = channel["profile"]
+                profile = channel.profile
                 for current_atom_id, atom in enumerate(profile, start=1):
                     total_atom_id += 1
                     line = (
                         f"HETATM{total_atom_id:>5d}  X   TUN {ascii_uppercase[(channel_count - 1) % 26]}{current_atom_id:>4}    "
-                        f'{atom["x"]:>8.3f}{atom["y"]:>8.3f}{atom["z"]:>8.3f}'
-                        f'{atom["distance"]:>6.2f}{atom["radius"]:>6.3f}'
+                        f"{atom.coord_x:>8.3f}{atom.coord_y:>8.3f}{atom.coord_z:>8.3f}"
+                        f"{atom.distance:>6.2f}{atom.radius:>6.3f}"
                     )
                     lines.append(line)
 
@@ -113,22 +117,25 @@ class ExportService:
 
     def get_pymol_file(self, internal_id: int) -> str:
         """Generates a PyMol string."""
-        channels = self.channel_repo.get_channels_by_structure_id(internal_id)
+        channels = self.channel_repo.get_channels_by_internal_id(internal_id)
 
         if not channels:
             return None
 
         channel_count = 0
         lines = []
-        for channel_type in channels["channels"]:
-            for channel in channels["channels"][channel_type]:
+        channels_dict = ChannelService.channels_with_as_model(channels)
+
+        for channels in channels_dict.values():
+            for channel in channels:
+                channel_count += 1
                 channel_count += 1
                 name = f"channel{channel_count}"
                 lines.append(f"def {name}():")
                 lines.append("    model = chempy.models.Indexed()")
-                profile = channel["profile"]
+                profile = channel.profile
                 for current_atom_id, atom in enumerate(profile):
-                    line = f'    add_atom(model, \'{current_atom_id}\', {atom["radius"]:.3f}, {atom["x"]:.3f}, {atom["y"]:.3f}, {atom["z"]:.3f})'
+                    line = f"    add_atom(model, '{current_atom_id}', {atom.radius:.3f}, {atom.coord_x:.3f}, {atom.coord_y:.3f}, {atom.coord_z:.3f})"
                     lines.append(line)
                 lines.append(
                     const.PYMOL_FOOTER.format(
@@ -142,25 +149,27 @@ class ExportService:
         return const.PYMOL_HEADER + "\n".join(lines) + "\n"
 
     def get_vmd_file(self, internal_id: int) -> str:
-        channels = self.channel_repo.get_channels_by_structure_id(internal_id)
+        channels = self.channel_repo.get_channels_by_internal_id(internal_id)
 
         if not channels:
             return None
 
         channel_count = 0
         lines = []
-        for channel_type in channels["channels"]:
-            for channel in channels["channels"][channel_type]:
+        channels_dict = ChannelService.channels_with_as_model(channels)
+
+        for channels in channels_dict.values():
+            for channel in channels:
                 channel_count += 1
                 name = f"channel{channel_count}"
-                profile = channel["profile"]
+                profile = channel.profile
                 lines.append(
                     const.VMD_CHANNEL_START.format(
                         name=name, num_atoms=len(profile), color_id=channel_count % 33
                     )
                 )
                 for current_atom_id, atom in enumerate(profile):
-                    line = f'add_atom {current_atom_id} {{{{ {atom["x"]:.3f}, {atom["y"]:.3f}, {atom["z"]:.3f} }}}} {atom["radius"]:.3f}'
+                    line = f"add_atom {current_atom_id} {{{{ {atom.coord_x:.3f}, {atom.coord_y:.3f}, {atom.coord_z:.3f} }}}} {atom.radius:.3f}"
                     lines.append(line)
 
                 lines.append(const.VMD_CHANNEL_END.format(name=name))
@@ -172,7 +181,7 @@ class ExportService:
 
     def get_cif_file(self, internal_id: int, file: bytes) -> str:
         """Builds CIF file and inserts it into parent file."""
-        channels = self.channel_repo.get_channels_by_structure_id(internal_id)
+        channels = self.channel_repo.get_channels_by_internal_id(internal_id)
         decimal_places = 3
 
         if not channels:
@@ -197,13 +206,14 @@ class ExportService:
                 )
             method, software = channel.method.name.split("_")
             loops["channel"].append(
-                f"{new_channel_id} {channel.category.name} {method} {software} {channel.auto} {channel.cavity}"
+                f"{new_channel_id} {channel.type} {method} {software} {channel.auto} {channel.cavity}"
             )
 
             het_id = len(loops["het_residue"])
+
             loops["het_residue"].extend(
                 [
-                    f"{het_id + idx + 1} {new_channel_id} {res.residue.name.upper()} {res.sequence_number} {res.chain_id} {res.backbone}"
+                    f"{het_id + idx + 1} {new_channel_id} {res.residue.name.upper() if res.residue else ''} {res.sequence_number} {res.chain_id} {res.backbone}"
                     for idx, res in enumerate(channel.het_residues)
                 ]
             )
@@ -272,18 +282,22 @@ class ExportService:
 
     def get_zip_file(self, external_id: str, internal_id: int):
         """Generate and zip all supported files and return said zip file."""
-        channels = self.channel_repo.get_channels_by_structure_id(internal_id)
+        channels = self.channel_repo.get_channels_by_internal_id(internal_id)
 
         if not channels:
             return None
 
-        channels_dict = ChannelService.channels_with_annotations_dict(channels)
+        channels_dict = ChannelService.channels_with_as_model(channels)
+        json_compatible = jsonable_encoder(channels_dict)
+        channels_json = json.dumps(json_compatible)
 
         content = BytesIO()
         zf = ZipFile(content, mode="w")
-        zf.writestr(f"{external_id}_chimera.py", self.get_chimera_file(channels))
-        zf.writestr(f"{external_id}_pymol.py", self.get_pymol_file(channels))
-        zf.writestr(f"{external_id}_vmd.tk", self.get_vmd_file(channels))
-        zf.writestr(f"{external_id}_report.json", channels_dict)
-        zf.writestr(f"{external_id}_channels.pdb", self.get_pdb_file(channels))
+        zf.writestr(f"{external_id}_chimera.py", self.get_chimera_file(internal_id))
+        zf.writestr(f"{external_id}_pymol.py", self.get_pymol_file(internal_id))
+        zf.writestr(f"{external_id}_vmd.tk", self.get_vmd_file(internal_id))
+        zf.writestr(f"{external_id}_report.json", channels_json)
+        zf.writestr(f"{external_id}_channels.pdb", self.get_pdb_file(internal_id))
         zf.close()
+
+        return content

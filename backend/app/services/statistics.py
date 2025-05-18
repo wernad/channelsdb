@@ -46,9 +46,9 @@ class StatisticsService:
 
         return result
 
-    def get_channel_counts_per_methods_by_id(self, structure_id: int) -> dict:
+    def get_channel_counts_per_methods_by_id(self, internal_id: int) -> dict:
         result = self.channel_repository.get_channel_counts_per_methods_by_id(
-            structure_id=structure_id
+            internal_id=internal_id
         )
 
         log.debug("Building statistics result.")
