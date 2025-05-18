@@ -41,7 +41,9 @@ class ChannelRepository(RepositoryBase):
 
         return counts
 
-    def get_channel_counts_per_methods_by_id(self, structure_id: int) -> list[tuple]:
+    def get_channel_counts_per_methods_by_internal_id(
+        self, internal_id: int
+    ) -> list[tuple]:
         statement = (
             select(
                 Method.name.label("method"),
@@ -49,7 +51,7 @@ class ChannelRepository(RepositoryBase):
             )
             .join(Channel, Channel.method_id == Method.id)
             .group_by(Method.name)
-            .where(Channel.structure_id == structure_id)
+            .where(Channel.structure_id == internal_id)
             .order_by(func.count(Channel.id).desc())
         )
 

@@ -30,8 +30,8 @@ async def get_channels(
     )
 
     if internal_id:
-        channels = channels_service.get_channels_with_by_structure(
-            structure_id=internal_id,
+        channels = channels_service.get_channels_with_by_structure_internal_id(
+            internal_id=internal_id,
         )
         if not channels:
             raise ProteinNotFound(protein_id=structure_id)

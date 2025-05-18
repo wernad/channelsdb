@@ -223,7 +223,7 @@ def fetch_files(urls: list[str]) -> list[bytes]:
     return files
 
 
-def get_file(url: list[str]) -> list[bytes]:
+def fetch_file(url: list[str]) -> list[bytes]:
     """Fetches files from given urls.
 
     Parameters:

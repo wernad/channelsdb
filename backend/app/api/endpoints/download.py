@@ -131,12 +131,11 @@ async def download(
         "Content-Disposition": f'attachment; filename="channelsdb_{structure_id}.{file_format.value}"'
     }
     internal_id = structure_service.get_newest_structure_with_channels_by_external_id(
-        structure_id=structure_id
+        external_id=structure_id
     )
     if not internal_id:
         raise NoChannelsInProtein(protein_id=structure_id)
 
-    # TODO Alphafill png ?
     match file_format:
         case DownloadType.png:
             fetch_url = PDB_HTTP_IMAGE_URL
@@ -187,15 +186,17 @@ async def download(
             )
         case DownloadType.cif:
             structure_data: StructureData = (
-                structure_service.get_source_and_version_by_id(external_id=structure_id)
+                structure_service.get_source_and_version_by_external_id(
+                    external_id=structure_id
+                )
             )
 
             if structure_data.source_id == Sources.PDB.value:
                 file_url = get_file_url(id=structure_id, version=structure_data.version)
             else:
                 file_url = get_file_url(id=structure_id)
-
             file = await fetch_from_url(file_url)
+
             if file:
                 extracted = gzip.decompress(file)
 

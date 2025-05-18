@@ -123,7 +123,9 @@ class ChannelService:
             )
         return result
 
-    def get_channels_with_by_structure(self, internal_id: str) -> dict | None:
+    def get_channels_with_by_structure_internal_id(
+        self, internal_id: str
+    ) -> dict | None:
         """Fetches all necessary data about structure's channels and returns them as a dict."""
         channels = self.repository.get_channels_by_internal_id(internal_id)
 

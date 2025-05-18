@@ -25,5 +25,6 @@ class Structure(StructureInsert, table=True):
     __table_args__ = (UniqueConstraint("external_id", "version"),)
 
 
-class StructureData(StructureBase):
+class StructureData(SQLModel):
     source_id: int
+    version: int

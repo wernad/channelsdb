@@ -14,7 +14,7 @@ from app.config import PDB_SEARCH_API_LIMIT, WORKER_LIMIT
 from app.log import log
 from app.channels.data.utils import (
     create_output_directory,
-    get_file,
+    fetch_file,
     get_file_url,
     get_full_id,
     fetch_ids,
@@ -48,7 +48,7 @@ def fetch_files(file_urls: dict, id_to_version: dict) -> tuple[list, list]:
     """Fetches files from given urls and returns SQLModel objects for insertion, also returns ids that failed."""
     with cf.ThreadPoolExecutor(max_workers=WORKER_LIMIT) as executor:
         id_to_data = dict(
-            zip(file_urls.keys(), executor.map(get_file, file_urls.values()))
+            zip(file_urls.keys(), executor.map(fetch_file, file_urls.values()))
         )
 
     failed = []

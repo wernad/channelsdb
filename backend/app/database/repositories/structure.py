@@ -25,18 +25,29 @@ class StructureRepository(RepositoryBase):
 
         return result
 
-    def get_newest_structure_with_channels_by_external_id(
-        self, structure_id: str
+    def get_newest_structure_has_channels_by_external_id(
+        self, external_id: str
     ) -> Structure:
         statement = (
             select(Structure.id, func.max(Structure.version))
-            .where(and_(Structure.external_id == structure_id, Structure.has_channels))
+            .where(and_(Structure.external_id == external_id, Structure.has_channels))
             .group_by(Structure.id)
         )
 
         result = self.db.exec(statement).first()
 
         return result
+
+    def get_source_and_version_by_external_id(self, external_id: str) -> dict:
+        """Returns source and version of given structure."""
+        version = self.get_latest_version_by_external_id(external_id)
+        statement = select(Structure.source_id).where(
+            Structure.external_id == external_id
+        )
+
+        result = self.db.exec(statement).first()
+
+        return {"source_id": result, "version": version}
 
     def get_external_from_internal_bulk(self, internal_ids: list[int]) -> list[str]:
         """Return a list of external ids from internal ids."""
@@ -166,3 +177,12 @@ class StructureRepository(RepositoryBase):
             self.db.commit()
         else:
             log.error(f"Structure doesn't exist, can not delete: {external_id=}")
+
+    def get_latest_version_by_external_id(self, external_id: str) -> int:
+        statement = select(func.max(Structure.version)).where(
+            Structure.external_id == external_id
+        )
+
+        result = self.db.exec(statement).first()
+
+        return result

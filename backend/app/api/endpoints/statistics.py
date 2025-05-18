@@ -48,7 +48,7 @@ async def get_channel_counts_per_methods_by_id(
     statistics_service: StatisticsServiceDep,
 ):
     internal_id = structure_service.get_newest_structure_with_channels_by_external_id(
-        structure_id=structure_id
+        external_id=structure_id
     )
 
     if internal_id:

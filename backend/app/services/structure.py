@@ -42,16 +42,18 @@ class StructureService:
 
         return result
 
-    def get_source_and_version_by_id(self, external_id: str) -> StructureData:
-        result = self.repository.get_structure_by_external_id(external_id=external_id)
+    def get_source_and_version_by_external_id(self, external_id: str) -> StructureData:
+        result = self.repository.get_source_and_version_by_external_id(
+            external_id=external_id
+        )
 
-        return StructureData.model_validate(result)
+        return StructureData(**result)
 
     def get_newest_structure_with_channels_by_external_id(
-        self, structure_id: str
+        self, external_id: str
     ) -> int:
-        structure = self.repository.get_newest_structure_with_channels_by_external_id(
-            structure_id=structure_id
+        structure = self.repository.get_newest_structure_has_channels_by_external_id(
+            external_id=external_id
         )
 
         if structure:
