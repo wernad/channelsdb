@@ -25,7 +25,7 @@ async def get_channels(
     ann_service: AnnotationServiceDep,
     structure_id: IDCheckDep,
 ):
-    internal_id = structure_service.get_internal_id_if_has_channels(
+    internal_id = structure_service.get_newest_structure_with_channels_by_external_id(
         structure_id=structure_id
     )
 

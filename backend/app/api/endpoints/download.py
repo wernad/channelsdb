@@ -5,12 +5,19 @@ import aiohttp
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import PlainTextResponse, RedirectResponse, Response
 
-from app.api.dependencies import (ExportServiceDep, IDCheckDep,
-                                  StructureServiceDep)
-from app.api.exceptions import (NoChannelsInProtein, ProteinNotFound,
-                                UnknownFileType)
-from app.config import (ALPHAFILL_HTTP_FILE_URL, PDB_HTTP_ASSEMBLY_URL,
-                        PDB_HTTP_FILE_URL, PDB_HTTP_IMAGE_URL)
+from app.api.dependencies import (
+    AnnotationServiceDep,
+    ExportServiceDep,
+    IDCheckDep,
+    StructureServiceDep,
+)
+from app.api.exceptions import NoChannelsInProtein, ProteinNotFound, UnknownFileType
+from app.config import (
+    ALPHAFILL_HTTP_FILE_URL,
+    PDB_HTTP_ASSEMBLY_URL,
+    PDB_HTTP_FILE_URL,
+    PDB_HTTP_IMAGE_URL,
+)
 from app.database.models import Sources, StructureData
 from app.log import log
 
@@ -123,7 +130,7 @@ async def download(
     headers = {
         "Content-Disposition": f'attachment; filename="channelsdb_{structure_id}.{file_format.value}"'
     }
-    internal_id = structure_service.get_internal_id_if_has_channels(
+    internal_id = structure_service.get_newest_structure_with_channels_by_external_id(
         structure_id=structure_id
     )
     if not internal_id:
@@ -152,7 +159,7 @@ async def download(
             return RedirectResponse(fetch_url)
 
         case DownloadType.json:
-            result = export_service.get_json_file(structure_id)
+            result = export_service.get_json_file(internal_id)
             if not result:
                 raise ProteinNotFound(protein_id=structure_id)
 
@@ -174,7 +181,7 @@ async def download(
             if not result:
                 raise ProteinNotFound(protein_id=structure_id)
             return Response(
-                content=result,
+                content=result.getvalue(),
                 media_type="application/zip",
                 headers=headers,
             )
@@ -191,7 +198,10 @@ async def download(
             file = await fetch_from_url(file_url)
             if file:
                 extracted = gzip.decompress(file)
-            result = export_service.get_cif_file(internal_id, extracted)
+
+            result = export_service.get_cif_file(
+                internal_id=internal_id, file=extracted
+            )
         case _:
             raise UnknownFileType(DownloadType.value)
 
