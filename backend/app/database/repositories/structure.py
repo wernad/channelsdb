@@ -15,18 +15,25 @@ from app.log import log
 
 
 class StructureRepository(RepositoryBase):
-    def get_structure_by_external_id(self, external_id: str) -> tuple:
-        statement = select(Structure).where(Structure.external_id == external_id)
+    def get_structure_by_external_id_and_version(
+        self, external_id: str, version: int
+    ) -> tuple:
+        statement = select(Structure).where(
+            and_(Structure.external_id == external_id, Structure.version == version)
+        )
         result = self.db.exec(statement).first()
 
         return result
 
-    def get_structure_with_channels_by_external_id(
+    def get_newest_structure_with_channels_by_external_id(
         self, structure_id: str
     ) -> Structure:
-        statement = select(Structure).where(
-            Structure.external_id == structure_id and Structure.has_channels
+        statement = (
+            select(Structure.id, func.max(Structure.version))
+            .where(and_(Structure.external_id == structure_id, Structure.has_channels))
+            .group_by(Structure.id)
         )
+
         result = self.db.exec(statement).first()
 
         return result
@@ -62,16 +69,14 @@ class StructureRepository(RepositoryBase):
 
         statement = select(
             Structure.external_id,
-            func.max(Layer.end_distance).label("length"),
+            func.max(Structure.version).label("version"),
         ).join(Channel, Channel.structure_id == Structure.id)
 
         if any(filter_ is not None for filter_ in filters):
             statement = statement.join(Profile, Profile.channel_id == Channel.id)
 
         if filter.min_bottleneck is not None:
-            statement = statement.join(Layer, Layer.channel_id == Channel.id).group_by(
-                Structure.external_id
-            )
+            statement = statement.join(Layer, Layer.channel_id == Channel.id)
             conditions.extend([Layer.bottleneck, Layer.radius >= filter.min_bottleneck])
 
         if filter.min_radius is not None:
@@ -91,7 +96,7 @@ class StructureRepository(RepositoryBase):
         # Offset and limit.
         statement = statement.offset(filter.offset).limit(filter.limit)
 
-        statement = statement.group_by(
+        statement = statement.order_by(Structure.external_id).group_by(
             Structure.external_id,
         )
 
@@ -150,3 +155,14 @@ class StructureRepository(RepositoryBase):
             id = id[0]
 
         return id
+
+    def delete_structure(self, external_id: str) -> None:
+
+        statement = select(Structure).where(Structure.external_id == external_id)
+        structure = self.db.exec(statement).first()
+
+        if structure:
+            self.db.delete(structure)
+            self.db.commit()
+        else:
+            log.error(f"Structure doesn't exist, can not delete: {external_id=}")

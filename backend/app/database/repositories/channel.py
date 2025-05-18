@@ -20,8 +20,8 @@ class ChannelRepository(RepositoryBase):
 
         return total
 
-    def get_channels_by_structure_id(self, structure_id: int) -> list[Channel]:
-        statement = select(Channel).where(Channel.structure_id == structure_id)
+    def get_channels_by_internal_id(self, internal_id: int) -> list[Channel]:
+        statement = select(Channel).where(Channel.structure_id == internal_id)
         channels = self.db.exec(statement).all()
 
         return channels
