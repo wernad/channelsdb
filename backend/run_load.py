@@ -1,4 +1,4 @@
-from app.channels.fetch import load
+from app.channels.data import load
 import argparse
 
 
