@@ -3,7 +3,6 @@ import logging
 import multiprocessing as mp
 from gzip import GzipFile
 from io import BytesIO
-from math import ceil
 from queue import Full
 from time import sleep
 
