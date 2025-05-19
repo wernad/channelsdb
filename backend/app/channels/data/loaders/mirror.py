@@ -83,14 +83,13 @@ def fetch_all(start: int, total: int, data_queue: mp.Queue) -> None:
         ids_with_versions = fetch_ids(
             start=start, limit=MIRROR_API_LIMIT, remote=False
         )["data"]
-        print("@@@@", ids_with_versions)
+
         if ids_with_versions:
             ids = [entry["id"] for entry in ids_with_versions]
             log.debug(f"Received {len(ids_with_versions)} ids.")
 
             file_urls = get_file_urls(ids)
 
-            print("panda")
             id_to_version = {
                 entry["id"]: entry["version"] for entry in ids_with_versions
             }
@@ -156,7 +155,9 @@ def run(start: int | None):
                 "Tunnels calculations complete. Passing shutdown message to queues..."
             )
         finally:
-            data_queue.put(None)
+            for _ in managers:
+                data_queue.put(None)
+
             result_queue.put(None)
 
             log.debug("Waiting for workers to stop.")

@@ -124,14 +124,19 @@ def process_valid():
         log.error(f"SCHEDULER - An unexpected error occured: {e}")
     finally:
         log.debug("SCHEDULER - Shutting down managers.")
-        data_queue.put(None)
+        for _ in managers:
+            data_queue.put(None)
+
         result_queue.put(None)
 
         log.debug("SCHEDULER - Waiting for managers to stop.")
         for manager in managers:
             manager.join()
 
+        log.debug("SCHEDULER - Waiting for inserter to stop.")
         inserter.join()
+        log.info("Script finished.")
+
         log.info("SCHEDULER - Added/Modified entry processing finished.")
 
 
