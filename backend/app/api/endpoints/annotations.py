@@ -53,7 +53,7 @@ def get_uniprot_entry_annotations(uniprot_id: str, tree: ET) -> dict:
     """Builds annotations from given XML data.
 
     Args:
-        uniprot_id: identifier of structure.
+        uniprot_id: Identifier of structure.
         tree: XML data in ET object.
     Returns:
         Dict with annotations."""
@@ -83,10 +83,10 @@ def get_uniprot_residue_annotations(
     """Retrieves residue anotations from XML data.
 
     Args:
-        mapping: data with information about residues.
+        mapping: Data with information about residues.
         tree: XML data object.
     Returns:
-        list of dictionaries with residue annotations.
+        List of dictionaries with residue annotations.
 
     """
     ns = {"": "http://uniprot.org/uniprot"}
@@ -160,7 +160,7 @@ def get_channelsdb_residue_annotations(
     """Extracts annotations from mapping.
 
     Args:
-        mapping: original data with annotations.
+        mapping: Original data with annotations.
     Returns:
         List of annotations in dicts."""
 
@@ -182,9 +182,9 @@ def fill_annotations_by_uniprot_id(
     """Fetches XMML data and fills annotations dict with them.
 
     Args:
-        annotations: container for annotations.
-        mapping: data with annotations.
-        uniprot_ud: identifier of protein.
+        annotations: Container for annotations.
+        mapping: Data with annotations.
+        uniprot_id: Identifier of protein.
     """
     req = requests.get(
         f"https://www.ebi.ac.uk/proteins/api/proteins/{uniprot_id}",
@@ -217,9 +217,9 @@ def is_pdb_id(pdb_id: str) -> bool:
     """Checks if ID is in pdb format.
 
     Args:
-        pdb_id: id to check.
+        pdb_id: Id to check.
     Returns:
-        True if it is pdb idb.
+        True if it is pdb id.
     """
     length = len(pdb_id)
     return length == 4 or length == 12
@@ -255,9 +255,9 @@ async def get_annotations_pdb(structure_id: IDCheckDep):
     """Endpoints that fetches annotations for given protein id.
 
     Args:
-        structure_id: identifier in UniProt or PDB format.
+        structure_id: Identifier in UniProt or PDB format.
     Returns:
-        dict of annotations.
+        Dict of annotations.
     """
     annotations = AnnotationsOutput().model_dump()
 

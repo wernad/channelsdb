@@ -1,3 +1,9 @@
+"""Database models for channel detection methods.
+
+This module defines SQLModel classes for storing and retrieving channel detection methods,
+including enumerations for different method types and their mappings to database records.
+"""
+
 from enum import Enum
 from typing import TYPE_CHECKING, List
 
@@ -8,6 +14,12 @@ if TYPE_CHECKING:
 
 
 class Methods(Enum):
+    """Enumeration of available channel detection methods.
+
+    Each method represents a specific combination of detection algorithm (MOLE/Caver)
+    and channel type (CSA tunnels, reviewed channels, etc.).
+    """
+
     CSA_TUNNELS_MOLE = 1
     CSA_TUNNELS_CAVER = 2
     REVIEWED_CHANNELS_MOLE = 3
@@ -22,6 +34,7 @@ class Methods(Enum):
     ALPHAFILL_TUNNELS_CAVER = 12
 
 
+# Mapping of method IDs to their display names
 METHODS_IDS_TO_NAMES = {
     Methods.CSA_TUNNELS_MOLE: "CSATunnels_MOLE",
     Methods.CSA_TUNNELS_CAVER: "CSATunnels_Caver",
@@ -37,6 +50,7 @@ METHODS_IDS_TO_NAMES = {
     Methods.ALPHAFILL_TUNNELS_CAVER: "AlphaFillTunnels_Caver",
 }
 
+# Mapping of method display names to their IDs
 METHODS_NAMES_TO_IDS = {
     "CSATunnels_MOLE": Methods.CSA_TUNNELS_MOLE,
     "CSATunnels_Caver": Methods.CSA_TUNNELS_CAVER,
@@ -54,10 +68,23 @@ METHODS_NAMES_TO_IDS = {
 
 
 class MethodBase(SQLModel):
+    """Base model for channel detection methods.
+
+    Attributes:
+        name: Name of the detection method.
+    """
+
     name: str = Field(index=True)
 
 
 class Method(MethodBase, table=True):
+    """Database model for channel detection methods.
+
+    Attributes:
+        id: Primary key for the method.
+        channels: List of channels detected using this method.
+    """
+
     id: int = Field(primary_key=True)
 
     channels: List["Channel"] = Relationship(back_populates="method")

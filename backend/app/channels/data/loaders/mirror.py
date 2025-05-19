@@ -26,9 +26,9 @@ def get_file_urls(ids: list[str]) -> list[str]:
     """Creates urls for given ids.
 
     Args:
-        ids: list of strings.
+        ids: List of strings.
     Returns:
-        list of string urls.
+        List of string urls.
     """
 
     urls = {}
@@ -45,11 +45,11 @@ def fetch_files(
     """Fetches files from given urls and returns SQLModel objects for insertion, also returns ids that failed.
 
     Args:
-        file_urls: list of urls.
-        id_to_version: dict for getting versions of proteins.
-        worker_limit: how many workers to use for fetching.
+        file_urls: List of urls.
+        id_to_version: Dict for getting versions of proteins.
+        worker_limit: How many workers to use for fetching.
     Returns:
-        two lists of files and failed ids. Files are tuples with protein id, version and binary files.
+        Two lists of files and failed ids. Files are tuples with protein id, version and binary files.
     """
     log.debug("MAIN - Fetching files from provided urls.")
     with cf.ThreadPoolExecutor(max_workers=worker_limit) as executor:
@@ -80,8 +80,8 @@ def fetch_all(start: int, total: int, data_queue: mp.Queue) -> None:
     Uses explicit timeouut to avoid overwhelming PDB APIs.
 
     Args:
-        start: starting id.
-        total: total number of ids to work with.
+        start: Starting id.
+        total: Total number of ids to work with.
         data_queue: Queue for data processing.
     """
     log.debug("Entry fetching started.")
@@ -144,7 +144,7 @@ def run(start: int | None) -> None:
     """Creates and starts child processes for fetching file data.
 
     Args:
-        start: starting id for fetching.
+        start: Starting id for fetching.
     """
     log.info("Beggining fetch of all PDB entries.")
     total = fetch_total_count()

@@ -1,3 +1,9 @@
+"""Constants module for various file formats and visualization tools.
+
+This module defines string templates and constants used for generating output files
+in different formats (CIF, PDB) and for visualization tools (Chimera, PyMOL, VMD).
+"""
+
 # TODO Add ids to loops that dont have identification.
 # ============ CIF ============
 CIF_ANNOTATION = """

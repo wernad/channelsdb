@@ -1,3 +1,9 @@
+"""Database module providing database connection and session management.
+
+Provides functionality for creating and initializing the database
+with initializes flag-like data (method, source, residue) into the database.
+"""
+
 from contextlib import contextmanager
 from os import environ, getpid
 from time import sleep
@@ -32,6 +38,11 @@ engine = create_engine(DATABASE_URL)
 
 
 def get_session() -> Generator[Session, None, None]:
+    """Creates and yields a database session.
+
+    Returns:
+        Generator yielding a SQLModel Session object.
+    """
     with Session(engine) as session:
         yield session
 
@@ -55,6 +66,11 @@ REQUIRED_TABLES = [
 
 
 def check_if_tables_exist():
+    """Checks if all required database tables exist.
+
+    Returns:
+        bool: True if all required tables exist, False otherwise.
+    """
     inspector = inspect(engine)
 
     for table in REQUIRED_TABLES:
@@ -65,6 +81,12 @@ def check_if_tables_exist():
 
 
 def create_db_and_tables():
+    """Creates all required database tables if they don't exist.
+
+    Uses advisory locking to ensure only one process creates the tables
+    while others wait for completion. Implements waiting mechanism for
+    concurrent initialization scenarios.
+    """
     with engine.begin() as conn:
         log.debug(f"Create DB -- WORKER {getpid()} -- Attempting to acquire lock...")
         try:
@@ -99,7 +121,12 @@ def create_db_and_tables():
 
 
 def init_flag_data():
-    """Insert rows into tables with flag-like data (method, category, source)."""
+    """Initializes flag-like data in the database.
+
+    Inserts initial data into method, source, and residue tables.
+    Uses advisory locking to ensure only one process performs the initialization
+    while others wait for completion.
+    """
     with db_context() as db:
         log.debug(f"Fill DB -- WORKER {getpid()} -- Attempting to acquire lock...")
         try:

@@ -1,3 +1,14 @@
+"""Configuration module containing all application settings and constants.
+
+This module defines configuration values for:
+- Database connection
+- API endpoints and paths
+- PDB mirror and remote API settings
+- AlphaFill integration
+- Multiprocessing parameters
+- Directory paths and file locations
+"""
+
 # DATABASE
 # DB_HOST = "172.17.0.1"
 DB_HOST = "localhost"

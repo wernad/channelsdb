@@ -6,7 +6,12 @@ from app.channels.commands.mole_base import MoleTemplate
 
 
 class MoleCSA(MoleTemplate):
-    """Mole command class for running Mole software with CSA configuration."""
+    """Mole command class for running Mole software with CSA configuration.
+
+    Attributes:
+        TUNNEL_TYPE: Type of tunnel to detect.
+        METHOD_ID: ID of the method to use.
+    """
 
     TUNNEL_TYPE = "csa"
     METHOD_ID = Methods.CSA_TUNNELS_MOLE

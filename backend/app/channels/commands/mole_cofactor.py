@@ -6,7 +6,12 @@ from app.channels.commands.mole_base import MoleTemplate
 
 
 class MoleCofactor(MoleTemplate):
-    """Mole command class for running Mole with cofactor configuration."""
+    """Mole command class for running Mole with cofactor configuration.
+
+    Attributes:
+        TUNNEL_TYPE: Type of tunnel to detect.
+        METHOD_ID: ID of the method to use.
+    """
 
     TUNNEL_TYPE = "cofactor"
     METHOD_ID = Methods.COFACTOR_TUNNELS_MOLE

@@ -26,8 +26,8 @@ async def get_structures_filtered(
     """Returns protein ids based on parameters of their channels.
 
     Args:
-        structure_service: service object to retrieve structure data.
-        filter: parameter to filter by.
+        structure_service: Service object to retrieve structure data.
+        filter: Parameter to filter by.
     Returns:
         List of strings.
     """

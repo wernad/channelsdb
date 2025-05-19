@@ -21,8 +21,8 @@ def insert_worker(result_queue: mp.Queue) -> None:
 
     Transforms processed data into insert SQLModel models.
     Args:
-        result_queue: queue with results from other workers.
-        timeout: how long to wait for queue.
+        result_queue: Queue with results from other workers.
+        timeout: How long to wait for queue.
     """
     log.debug("INSERTER -- Starting main process.")
     while True:
@@ -66,7 +66,7 @@ def create_inserter(result_queue: mp.Queue) -> mp.Process:
     """Creates a worker responsible for inserting processed data into database.
 
     Args:
-        result_queue: queue used by workers to push processed data into.
+        result_queue: Queue used by workers to push processed data into.
     Returns:
         Process instance.
     """

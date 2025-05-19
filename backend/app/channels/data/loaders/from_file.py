@@ -44,9 +44,10 @@ def get_annotations_ids(annotations: list[dict]) -> dict:
     """Extracts ids of annotatated channels and correspoding annotations' ids.
 
     Args:
-        annotations: list of annotations.
+        annotations: List of annotations.
+
     Returns:
-        dictionary of channel ids as key and indices of annotations as values.
+        Dictionary of channel ids as key and indices of annotations as values.
     """
 
     result = {}
@@ -65,7 +66,7 @@ def run(file_path: str) -> None:
     """Loads JSON file from given path and starts loading channels into database.
 
     Args:
-        file_path: path to JSON file.
+        file_path: Path to JSON file.
     """
 
     external_id = Path(file_path).name.split(".")[0]

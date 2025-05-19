@@ -1,3 +1,11 @@
+"""Database models for protein residues.
+
+This module defines SQLModel classes for storing and retrieving protein residue data,
+including amino acid properties and their relationships with channels and layers.
+It also provides enumerations and mappings for standard amino acid residues and their
+physical-chemical properties.
+"""
+
 from decimal import Decimal
 from enum import Enum
 from typing import TYPE_CHECKING, List
@@ -10,6 +18,12 @@ if TYPE_CHECKING:
 
 # TODO ignore unknown residues for now.
 class Residues(Enum):
+    """Enumeration of standard amino acid residues.
+
+    This enum provides a mapping between three-letter amino acid codes and their
+    corresponding numeric IDs used in the database.
+    """
+
     ALA = 1
     ARG = 2
     ASN = 3
@@ -220,6 +234,17 @@ RESIDUES_VALUES = {
 
 
 class ResidueBase(SQLModel):
+    """Base model for residue data.
+
+    Attributes:
+        name: Three-letter code of the amino acid.
+        charge: Net charge of the residue.
+        hydropathy: Hydropathy index of the residue.
+        hydrophobicity: Hydrophobicity score of the residue.
+        polarity: Polarity score of the residue.
+        mutability: Relative mutability score of the residue.
+    """
+
     name: str
     charge: int | None = Field(index=True, default=None)
     hydropathy: Decimal | None = Field(index=True, decimal_places=3, default=None)
@@ -229,6 +254,14 @@ class ResidueBase(SQLModel):
 
 
 class Residue(ResidueBase, table=True):
+    """Database model for residues.
+
+    Attributes:
+        id: Primary key for the residue.
+        layer_residues: Associated layer residues.
+        het_residues: Associated hetero residues.
+    """
+
     id: int = Field(primary_key=True)
 
     layer_residues: List["LayerResidue"] = Relationship(back_populates="residue")
@@ -236,4 +269,6 @@ class Residue(ResidueBase, table=True):
 
 
 class ResidueOutput(ResidueBase):
+    """Model for residue data in API responses."""
+
     pass

@@ -1,3 +1,5 @@
+"""Command-line script for loading channel data from JSON file or PDB database."""
+
 from app.channels.data import load
 import argparse
 
@@ -17,6 +19,7 @@ def non_negative_int(value: int) -> int:
 
 
 def usage_msg():
+    """Returns usage message for the script used by argparse."""
     return "run_load.py [-h] (-f FILE | [-s START] [-p {remote,mirror}])"
 
 

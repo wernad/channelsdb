@@ -1,3 +1,10 @@
+"""Service module for managing protein channels.
+
+This module provides the ChannelService class for handling business logic related to
+protein channels, including retrieving channel data, formatting channel information,
+and inserting new channels in bulk or individually.
+"""
+
 from statistics import mean
 
 from sqlmodel import Session
@@ -17,13 +24,39 @@ from app.database.repositories.channel import ChannelRepository
 
 
 class ChannelService:
+    """Service for managing protein channels.
+
+    This class provides methods for retrieving and formatting channel data, including
+    layer information, residue properties, and geometric measurements. It also handles
+    channel insertions and acts as a business logic layer between the API and the
+    database repository.
+    """
+
     repository: ChannelRepository
 
     def __init__(self, db: Session):
+        """Initialize the ChannelService with a database session.
+
+        Args:
+            db: SQLModel database session for database operations.
+        """
         self.repository = ChannelRepository(db)
 
     @staticmethod
     def channels_with_as_model(channels: list["Channel"]) -> dict:
+        """Formats channel data into a structured dictionary.
+
+        Processes channel data to include method-specific information, profiles,
+        layer geometries, and residue properties. Calculates various statistics
+        for each layer including charge, hydrophobicity, and mutability.
+
+        Args:
+            channels: List of Channel objects to format.
+
+        Returns:
+            Dictionary mapping method names to lists of formatted ChannelOutput objects,
+            each containing detailed information about the channel's properties and layers.
+        """
         result = {}
 
         for channel in channels:
@@ -126,7 +159,15 @@ class ChannelService:
     def get_channels_with_by_structure_internal_id(
         self, internal_id: str
     ) -> dict | None:
-        """Fetches all necessary data about structure's channels and returns them as a dict."""
+        """Retrieves and formats all channel data for a given structure.
+
+        Args:
+            internal_id: Internal ID of the structure.
+
+        Returns:
+            Dictionary mapping method names to lists of formatted ChannelOutput objects,
+            or None if no channels are found.
+        """
         channels = self.repository.get_channels_by_internal_id(internal_id)
 
         if not channels:
@@ -141,7 +182,14 @@ class ChannelService:
         return formatted_channels
 
     def insert_in_bulk(self, values: list[ChannelInsert]) -> list[int] | None:
-        """Inserts channels in bluk and returns ids of new rows, if successfull."""
+        """Inserts multiple channel records in a single operation.
+
+        Args:
+            values: List of ChannelInsert objects containing channel data to insert.
+
+        Returns:
+            List of IDs for the newly inserted channels, or None if insertion failed.
+        """
         result = self.repository.insert_in_bulk(values)
 
         if result:
@@ -150,8 +198,14 @@ class ChannelService:
         return None
 
     def insert_entry(self, values: ChannelInsert) -> int | None:
-        """Inserts a single row into channel table."""
+        """Inserts a single channel record.
 
+        Args:
+            values: ChannelInsert object containing the channel data to insert.
+
+        Returns:
+            ID of the newly inserted channel, or None if insertion failed.
+        """
         result = self.repository.insert_entry(values=values)
 
         if result:

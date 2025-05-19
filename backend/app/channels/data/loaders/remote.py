@@ -29,9 +29,9 @@ def get_latest_versions(ids: list[str]) -> dict:
     """Returns dictionary of latest versions of each protein ID.
 
     Args:
-        ids: list of strings.
+        ids: List of strings.
     Returns:
-        dictionary with ids as keys and integers as values.
+        Dictionary with ids as keys and integers as values.
     """
 
     with cf.ThreadPoolExecutor(max_workers=WORKER_LIMIT) as executor:
@@ -44,10 +44,10 @@ def get_file_urls(ids: list[str], id_to_version: dict) -> dict[str, str]:
     """Returns url for fetching latest file for each protein ID.
 
     Args:
-        ids: list of strings.
-        id_to_version: dict to get version for protein id.
+        ids: List of strings.
+        id_to_version: Dict to get version for protein id.
     Returns:
-        dict of urls for given protein ids."""
+        Dict of urls for given protein ids."""
 
     file_urls = {}
     for id in ids:
@@ -60,8 +60,8 @@ def get_file_urls(ids: list[str], id_to_version: dict) -> dict[str, str]:
 def fetch_files(file_urls: dict, id_to_version: dict) -> tuple[list, list]:
     """Fetches files from given urls and returns SQLModel objects for insertion, also returns ids that failed.
     Args:
-        file_urlsl: dict of proteins and their urls.
-        id_to_version: dict to get version for protein id.
+        file_urls: Dict of proteins and their urls.
+        id_to_version: Dict to get version for protein id.
     Returns:
         List of files and list of failed ids."""
 
@@ -95,8 +95,8 @@ def fetch_all(start: int, total: int, data_queue: mp.Queue) -> None:
     Uses explicit timeouut to avoid overwhelming PDB APIs.
 
     Args:
-        start: starting id.
-        total: total number of ids to work with.
+        start: Starting id.
+        total: Total number of ids to work with.
         data_queue: Queue for data processing.
     """
     log.debug("Entry fetching started.")
@@ -157,7 +157,7 @@ def run(start: int | None):
     """Creates and starts child processes for fetching file data.
 
     Args:
-        start: starting id for fetching.
+        start: Starting id for fetching.
     """
     log.info("Beggining fetch of all PDB entries.")
     response = fetch_ids(start=0, limit=0)

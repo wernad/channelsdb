@@ -40,7 +40,7 @@ def get_full_pdb_id(id: str) -> str:
     """Returns 12-character id of given 4-character id.
 
     Args:
-        id: identifier of protein.
+        id: Identifier of protein.
     Returns:
         12-character PDB id.
     """
@@ -51,7 +51,7 @@ def is_pdb(id: str) -> bool:
     """Checks if id is in PDB format or not.
 
     Args:
-        id: id to check.
+        id: Id to check.
     Returns:
         True if it is pdb id.
     """
@@ -64,10 +64,10 @@ def get_file_url(id: str, version: str = None) -> str:
     """Create PDB entry url based on id and version.
 
     Parameters:
-        id: structure id
-        version: version to fetch, if any.
+        id: Structure id
+        version: Version to fetch, if any.
     Returns:
-        url as string.
+        Url as string.
     """
     log.debug(f"Creating url for file - {id=} {version=}.")
 
@@ -90,7 +90,7 @@ async def get_assembly_id(pdb_id: str) -> str | None:
     """Helper method to retrieve assembly id corresponding to given PDB id.
 
     Args:
-        pdb_id: protein identifier.
+        pdb_id: Protein identifier.
     Returns:
         Assembly id as string.
     """
@@ -122,7 +122,7 @@ async def fetch_from_url(url: str) -> bytes:
     """Fetches file from given url.
 
     Args:
-        url: resource URL.
+        url: Resource URL.
     Returns:
         File in bytes format.
     """
@@ -149,10 +149,10 @@ async def download(
     """Returns channel data in required format.
 
     Args:
-        structure_service: service object for working with structure data.
-        export_service: service object for working with export data.
-        file_format: required format of file.
-        structure_id: id of protein.
+        structure_service: Service object for working with structure data.
+        export_service: Service object for working with export data.
+        file_format: Required format of file.
+        structure_id: Id of protein.
     Returns:
         File in required format (png, zip, json, etc)
     """

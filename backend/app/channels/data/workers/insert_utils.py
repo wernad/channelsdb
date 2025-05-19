@@ -31,10 +31,10 @@ def get_profile_values(
     """Creates values for profile table insertion.
 
     Args:
-        channels_ids: list of internal channel ids.
-        data: channel data
+        channels_ids: List of internal channel ids.
+        data: Channel data
     Returns:
-        list of ProfileInsert objects.
+        List of ProfileInsert objects.
     """
     log.debug(
         f"INSERTER -- Creating channel values for insert statement for channels: {channels_ids}"
@@ -65,10 +65,10 @@ def get_channel_values(
     """Creates values list for inserting all channel entries.
 
     Args:
-        structure_id: internal protein id
-        data: list of channels as dicts.
+        structure_id: Internal protein id
+        data: List of channels as dicts.
     Returns:
-        list of ChannelInsert objects.
+        List of ChannelInsert objects.
     """
     log.debug(
         f"INSERTER -- Creating channel values for insert statement for structure: {structure_id}"
@@ -95,11 +95,11 @@ def get_annotation_values(
     """Creates values for insert for annotations for given channel and structure.
 
     Args:
-        structure_id: internal protein id.
-        channel_id: id of a channel.
-        annotations: list of annotations in dict form.
+        structure_id: Internal protein id.
+        channel_id: Id of a channel.
+        annotations: List of annotations in dict form.
     Returns:
-        list of AnnotationInsert objects.
+        List of AnnotationInsert objects.
     """
 
     log.debug(
@@ -129,10 +129,10 @@ def get_layer_values(
     """Creates values for insert for layer table per channel.
 
     Args:
-        channels_ids: list of new internal channel ids.
-        layers: layer data.
+        channels_ids: List of new internal channel ids.
+        layers: Layer data.
     Returns:
-        list of ChannelInsert object.
+        List of ChannelInsert object.
     """
     log.debug(
         f"INSERTER -- Creating layers values for insert statement for channels: {channels_ids}"
@@ -167,10 +167,10 @@ def get_layer_residue_values(
     """Generates values for layer residue values of given layers.
 
     Args:
-        layers_ids: internal ids of new layers.
-        layer_residues: list of residues in a layer.
+        layers_ids: Internal ids of new layers.
+        layer_residues: List of residues in a layer.
     Returns:
-        list of LayerResidueInsert object.
+        List of LayerResidueInsert object.
     """
 
     log.debug(
@@ -209,10 +209,10 @@ def get_het_residue_values(
     """Generates values for het residue values of given channels.
 
     Args:
-        channels_ids: list of internal ids for channels.
-        het_residues: list of het residues in a layer.
+        channels_ids: List of internal ids for channels.
+        het_residues: List of het residues in a layer.
     Returns:
-        list of HetResidueInsert object.
+        List of HetResidueInsert object.
     """
 
     log.debug(
@@ -249,11 +249,11 @@ def insert_structure_if_missing(
     """Inserts a new structure row if it's not in the database.
 
     Args:
-        full_id: full identifier of structure.
+        full_id: Full identifier of structure.
         version: Version of structure.
-        has_channels: if protein has channels.
+        has_channels: If protein has channels.
     Returns:
-        integer id of structure entry or None if structure exists.
+        Integer id of structure entry or None if structure exists.
     """
 
     with db_context() as session:
@@ -284,8 +284,8 @@ def insert_profiles(channels_ids: list[int], data: list[dict]) -> None:
     """Inserts new profile entries for each new channel.
 
     Args:
-        channels_ids: list of new internal channel ids.
-        data: channel data.
+        channels_ids: List of new internal channel ids.
+        data: Channel data.
     """
 
     log.debug(f"INSERTER -- Inserting profiles for channels: {channels_ids}")
@@ -311,11 +311,11 @@ def insert_channels(structure_id: int, method_id: int, data: dict) -> list[int] 
     If protein entry doesn't exist, insert it as well.
 
     Args:
-        structure_id: internal id of protein entry.
-        method_id: method used to calculate channels.
-        data: channels data from command worker.
+        structure_id: Internal id of protein entry.
+        method_id: Method used to calculate channels.
+        data: Channels data from command worker.
     Returns:
-        list of newly added ids.
+        List of newly added ids.
     """
 
     log.debug(
@@ -344,8 +344,8 @@ def insert_annotations(channel_id: int, annotation_data: dict) -> None:
     """Inserts annotation data for given channel.
 
     Args:
-        channel_id: internal id of channel.
-        annotation_data: dict with annotation data.
+        channel_id: Internal id of channel.
+        annotation_data: Dict with annotation data.
     """
 
     log.debug(f"INSERTER -- Inserting annotations for channel: {channel_id}")
@@ -367,10 +367,10 @@ def insert_layers(channels_ids: list[int], data: list[dict]) -> list[int] | None
     """Inserts new layers for new channels.
 
     Args:
-        channels_ids: list of new internal channel ids.
-        data: channel data.
+        channels_ids: List of new internal channel ids.
+        data: Channel data.
     Returns:
-        list of newly added layers per channel.
+        List of newly added layers per channel.
     """
     log.debug(f"INSERTER -- Inserting layers for these channels: {channels_ids}")
 
@@ -395,8 +395,8 @@ def insert_layer_residues(layers_ids: list[int], data: list[dict]) -> None:
     """Inserts new layer residue entries for each layer.
 
     Args:
-        layers_ids: list of internal layer ids.
-        data: channel data.
+        layers_ids: List of internal layer ids.
+        data: Channel data.
     """
 
     log.debug(f"INSERTER -- Inserting layer residues for these layers: {layers_ids}")
@@ -426,8 +426,8 @@ def insert_het_residues(channels_ids: list[int], data: list[dict]) -> None:
     """Inserts new het residue entries for each layer.
 
     Args:
-        channels_ids: list of internal channel ids.
-        data: channel data.
+        channels_ids: List of internal channel ids.
+        data: Channel data.
     """
 
     log.debug(f"INSERTER -- Inserting het residues for these channels: {channels_ids}")

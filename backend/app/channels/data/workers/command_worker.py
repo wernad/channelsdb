@@ -18,7 +18,7 @@ def _load_config_file(file_name: str) -> ElementTree:
     """Loads xml configuration file, parses it and returns it.
 
     Args:
-        file_name: name of file as string.
+        file_name: Name of file as string.
     Returns:
         Parsed XML ElementTree.
     """
@@ -33,7 +33,7 @@ def _prepare_work_dir(worker_id: str) -> None:
     """Creates a new folder and updates working directory for given worker.
 
     Args:
-        worker_id: id of worker.
+        worker_id: Id of worker.
     """
 
     work_dir = f"{OUTPUT_PATH}/{worker_id}"
@@ -78,9 +78,9 @@ def command_worker(
     Args:
         worker_id: Identifier for this worker.
         manager_id: Identifier of manager process.
-        mole_class: subclass to use for Mole execution.
+        mole_class: Subclass to use for Mole execution.
         data_queue: Queue to retrieve tasks from.
-        result_queue: used to send results back to manager.
+        result_queue: Used to send results back to manager.
     """
     worker_id = f"M{manager_id}_W{worker_id}"
     config_file = _load_config_file(mole_class.TUNNEL_TYPE)
@@ -155,11 +155,11 @@ def create_mole_workers(
 
     Args:
         manager_id: Identifier of manager process.
-        mole_class: subclass to use for Mole execution.
+        mole_class: Subclass to use for Mole execution.
         data_queue: Queue to retrieve tasks from.
-        result_queue: used to send results back to manager.
+        result_queue: Used to send results back to manager.
     Returns:
-        list of process objects.
+        List of process objects.
     """
 
     log.debug(f"MANAGER {manager_id} -- Creating workers.")

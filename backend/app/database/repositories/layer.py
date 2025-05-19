@@ -1,3 +1,10 @@
+"""Repository module for managing channel layers.
+
+This module provides the LayerRepository class for database operations related to
+channel layers, including retrieving layer statistics and inserting new layers
+in bulk or individually.
+"""
+
 from sqlmodel import insert, select, func
 
 from app.database.models import Layer, LayerInsert
@@ -6,10 +13,21 @@ from app.log import log
 
 
 class LayerRepository(RepositoryBase):
-    """Repository for DB operations related to layers."""
+    """Repository for managing channel layers.
+
+    This class provides methods for retrieving layer statistics (such as length
+    and bottleneck radius statistics) and inserting new layers into the database.
+    """
 
     def get_length_statistics(self) -> dict:
-        """Returns statistics like mean, median, min, max and standard deviation of channel lengths."""
+        """Returns statistics about channel lengths.
+
+        Calculates mean, median, minimum, maximum, and standard deviation of
+        channel lengths based on layer end distances.
+
+        Returns:
+            Dictionary containing statistical measures of channel lengths.
+        """
         log.debug("Building length statistics result.")
         cte_statement = (
             select(Layer.channel_id, func.max(Layer.end_distance).label("length"))
@@ -32,7 +50,14 @@ class LayerRepository(RepositoryBase):
         return result
 
     def get_bottleneck_radius_statistics(self) -> dict:
-        """Returns statistics like mean, median, min, max and standard deviation of channel bottleneck radii."""
+        """Returns statistics about channel bottleneck radii.
+
+        Calculates mean, median, minimum, maximum, and standard deviation of
+        channel bottleneck radii.
+
+        Returns:
+            Dictionary containing statistical measures of bottleneck radii.
+        """
         statement = select(
             func.avg(Layer.radius).label("avg"),
             func.min(Layer.radius).label("min"),
@@ -46,8 +71,14 @@ class LayerRepository(RepositoryBase):
         return result
 
     def insert_in_bulk(self, values: list[LayerInsert]) -> list[int]:
-        """Inserts new layer rows in bulk."""
+        """Inserts multiple layer records in a single database operation.
 
+        Args:
+            values: List of LayerInsert objects to insert.
+
+        Returns:
+            List of IDs for the newly inserted layers.
+        """
         values = [value.model_dump() for value in values]
         statement = insert(Layer).values(values).returning(Layer.id)
         result = self.db.exec(statement)
@@ -58,8 +89,14 @@ class LayerRepository(RepositoryBase):
         return ids
 
     def insert_entry(self, values: LayerInsert) -> int:
-        """Inserts a new layer entry."""
+        """Inserts a single layer record.
 
+        Args:
+            values: LayerInsert object containing the layer data.
+
+        Returns:
+            ID of the newly inserted layer.
+        """
         statement = insert(Layer).values(values.model_dump()).returning(Layer.id)
         result = self.db.exec(statement)
         self.db.commit()

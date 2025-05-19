@@ -1,4 +1,7 @@
-"""Contains functions for running scheduler tasks for loading new data from mirror database."""
+"""Contains functions for running scheduler tasks for loading new data from mirror database.
+
+Creates and configures a new scheduler with processing tasks.
+"""
 
 from enum import StrEnum
 from queue import Full
@@ -39,10 +42,10 @@ def get_changes(from_date: str, change_type: Action) -> list[str]:
     """Fetches changes of new, updated or removed entries.
 
     Args:
-        from_date: starting date for fetching.
-        change_type: type of files to find (added, modified, obsolete)
+        from_date: Starting date for fetching.
+        change_type: Type of files to find (added, modified, obsolete)
     Returns:
-        list of protein ids.
+        List of protein ids.
     """
     log.debug(f"Trying to fetch changes for '{change_type.value}' entries.")
     api = environ.get("PDB_MIRROR_API_URL", MIRROR_API_URL)
@@ -71,8 +74,8 @@ def send_to_process(data_queue: mp.Queue, files_to_process: list[tuple]) -> int:
     """Sends files to given queue for workers to process.
 
     Args:
-        data_queue: main queue for data handling.
-        files_to_process: files in binary form with version and protein id.
+        data_queue: Main queue for data handling.
+        files_to_process: Files in binary form with version and protein id.
     """
     log.debug("SCHEDULER - Sending filesto data queue")
     while len(files_to_process) > 0:
@@ -184,7 +187,7 @@ def event_listener(event: SchedulerEvent):
     """Event handler for checking event status.
 
     Args:
-        event: event object sent by scheduler.
+        event: Event object sent by scheduler.
     """
     if event.code == EVENT_JOB_ERROR:
         log.error(
@@ -202,7 +205,7 @@ def get_scheduler() -> BackgroundScheduler:
     """Creates and configures a new scheduler with processing tasks.
 
     Returns:
-        scheduler object.
+        Scheduler object.
     """
     log.debug(f"SCHEDULER - Creating background tasks with day of week {CRON_JOB_DAY}.")
     scheduler = BackgroundScheduler()

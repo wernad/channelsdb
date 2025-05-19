@@ -61,7 +61,7 @@ def create_managers(data_queue: mp.Queue, result_queue: mp.Queue) -> list[mp.Pro
     """Creates manager processes and starts them.
 
     Returns:
-        list of process objects."""
+        List of process objects."""
     managers: list[mp.Process] = []
 
     for i in range(MANAGER_LIMIT):

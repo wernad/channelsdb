@@ -32,9 +32,9 @@ async def get_channel_counts_per_method(
     """Returns counts of channels per method used.
 
     Args:
-        statistics_service: service for getting data from database via repository object.
+        statistics_service: Service for getting data from database via repository object.
     Returns:
-        dict with statistics, current date and total count.
+        Dict with statistics, current date and total count.
     """
     statistics = statistics_service.get_channel_counts_per_method()
 
@@ -59,11 +59,11 @@ async def get_channel_counts_per_methods_by_id(
     """Returns counts of channels per method used for given protein id.
 
     Args:
-        structure_id: id of protein to check.
-        structure_service: service for getting structure data from database via repository object
-        statistics_service: service for getting statistics data from database via repository object.
+        structure_id: Id of protein to check.
+        structure_service: Service for getting structure data from database via repository object
+        statistics_service: Service for getting statistics data from database via repository object.
     Returns:
-        dict with statistics, current date and total count.
+        Dict with statistics, current date and total count.
     """
     internal_id = structure_service.get_newest_structure_with_channels_by_external_id(
         external_id=structure_id
@@ -93,9 +93,9 @@ async def get_length_stats(
     """Returns statistics about length of channels like mean, median, etc.
 
     Args:
-        statistics_service: service for getting statistics data from database via repository object.
+        statistics_service: Service for getting statistics data from database via repository object.
     Returns:
-        mean, standard deviation, average, median, minimum and maximum in dict
+        Mean, standard deviation, average, median, minimum and maximum in dict
     """
     statistics = statistics_service.get_channel_length_stats()
 
@@ -117,9 +117,9 @@ async def get_bottleneck_stats(
     """Returns statistics about lengths of bottleneck layer in channels like mean, median, etc.
 
     Args:
-        statistics_service: service for getting statistics data from database via repository object.
+        statistics_service: Service for getting statistics data from database via repository object.
     Returns:
-        mean, standard deviation, average, median, minimum and maximum in dict
+        Mean, standard deviation, average, median, minimum and maximum in dict
     """
     statistics = statistics_service.get_channel_bottleneck_stats()
 
@@ -141,9 +141,9 @@ async def get_top_categories(
     """Returns top 5 types of channels (Tunnel, Pore, etc).
 
     Args:
-        statistics_service: service for getting statistics data from database via repository object.
+        statistics_service: Service for getting statistics data from database via repository object.
     Returns:
-        dict with counts per type.
+        Dict with counts per type.
     """
 
     statistics = statistics_service.get_top_5_types_by_channel_count()
@@ -166,9 +166,9 @@ async def get_top_proteins(
     """Returns top 5 proteins by channel count.
 
     Args:
-        statistics_service: service for getting statistics data from database via repository object.
+        statistics_service: Service for getting statistics data from database via repository object.
     Returns:
-        dict with counts per type.
+        Dict with counts per type.
     """
     statistics = statistics_service.get_top_5_proteins_by_channel_count()
 
@@ -190,9 +190,9 @@ async def get_top_residues(
     """Returns top 5 residues by occurence in channels.
 
     Args:
-        statistics_service: service for getting statistics data from database via repository object.
+        statistics_service: Service for getting statistics data from database via repository object.
     Returns:
-        dict with counts per type.
+        Dict with counts per type.
     """
     statistics = statistics_service.get_top_5_residues_by_channel_count()
 

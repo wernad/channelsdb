@@ -1,3 +1,9 @@
+"""Logging configuration module for the application.
+
+This module sets up the basic logging configuration with a standard format
+and creates a logger instance for use throughout the application.
+"""
+
 import logging
 
 __all__ = ["log"]

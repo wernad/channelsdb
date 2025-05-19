@@ -24,7 +24,7 @@ def get_full_id(id: str) -> str:
     """Returns 12-character id of given 4-character id.
 
     Args:
-        id: id of protein
+        id: Id of protein
     Returns:
         12-char format id.
     """
@@ -66,7 +66,7 @@ def get_error_message(response: Response) -> str | dict:
     Args:
         response; Response object for processing.
     Returns:
-        reponse content as string or dict."""
+        Response content as string or dict."""
     log.debug("Extractng error message.")
     try:
         message = response.json()
@@ -80,11 +80,11 @@ def fetch_ids(start: int, limit: int, remote: bool = True) -> list[str]:
     """Fetches a list of ids based on start and limit.
 
     Parameters:
-        start: sequence start
-        limit: number of ids
-        remote: if it should use URL for remote or mirror of PDB.
+        start: Sequence start
+        limit: Number of ids
+        remote: If it should use URL for remote or mirror of PDB.
     Return:
-        list[str]
+        List of ids.
     """
 
     if remote:
@@ -106,7 +106,7 @@ def create_queues() -> list[mp.Queue]:
     """Creates queues for data and results.
 
     Returns:
-        list of Queue object.
+        List of Queue objects.
     """
     log.debug("MAIN - Creating queues.")
     data_queue = mp.Queue(maxsize=QUEUE_SIZE)
@@ -119,12 +119,12 @@ def get_file_url(id: str, version: str = None, remote: bool = True) -> str:
     """Create file url based on id and version.
 
     Parameters:
-        id: structure id
-        version: version to fetch.
-        remote: flag to use remote or mirror pdb.
+        id: Structure id
+        version: Version to fetch.
+        remote: Flag to use remote or mirror pdb.
 
     Returns:
-        tuple of bytes and error code
+        Tuple of bytes and error code.
     """
     log.debug(f"Creating url for file - {id=} {version=}.")
     if remote:
@@ -144,9 +144,9 @@ def get_graphql_query(id: str) -> str:
     """Helper method to create url encoded string for Data API.
 
     Args:
-        id: protein id.
+        id: Protein id.
     Returns:
-        url as string.
+        Url as string.
     """
     log.debug(f"Generating GraphQL query string for id {id}")
 
@@ -163,10 +163,10 @@ def get_search_url(start: int = 0, limit: int = 1000) -> str:
     """Helper method to create a url encoded string for Search API.
 
     Args:
-        start: id to start from.
-        limit: number of entries to fetch.
-    Retuns:
-        url as string.
+        start: Id to start from.
+        limit: Number of entries to fetch.
+    Returns:
+        Url as string.
     """
     log.debug(f"Creating search query string with these params: {start=}, {limit=}")
     params = {
@@ -193,10 +193,10 @@ def get_last_version(id: str) -> int | None:
     """Fetches latest version number of given file ID.
 
     Args:
-        id: protein id.
+        id: Protein id.
 
     Returns:
-        version as numer of None if error occured.
+        Version as number or None if error occured.
     """
     log.debug(f"Fetching latest version of a file with ID {id}.")
 
@@ -221,10 +221,10 @@ def get_all_versions(id: str) -> set[int]:
     """Fetches all versions of given structure, if any.
 
     Args:
-        id: id of entry.
+        id: Id of entry.
 
     Returns:
-        version in a set of integers.
+        Version in a set of integers.
     """
 
     log.debug(f"Fetching all versions of file with ID {id}.")
@@ -252,9 +252,9 @@ def fetch_files(urls: list[str]) -> list[bytes]:
     """Fetches files from given urls.
 
     Parameters:
-        urls: list of urls
+        urls: List of urls
     Returns:
-        list of bytes
+        List of bytes
     """
     log.debug(f"Fetching {len(urls)} files.")
     files = []
@@ -272,9 +272,9 @@ def fetch_file(url: list[str]) -> list[bytes]:
     """Fetches files from given urls.
 
     Parameters:
-        urls: list of urls
+        urls: List of urls
     Returns:
-        list of bytes
+        List of bytes
     """
     log.debug(f"Fetching file from url: {url}")
     finished = False
@@ -298,9 +298,9 @@ def fetch_file_at_version(id: str, version: str) -> tuple:
 
     Parameters:
         id: 12-character structure id
-        version: version to fetch
+        version: Version to fetch
     Returns:
-        tuple of bytes and error code
+        Tuple of bytes and error code
     """
 
     category = id[1:3].lower()

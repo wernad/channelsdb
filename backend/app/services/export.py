@@ -1,3 +1,5 @@
+"""Export service module for generating various file formats from channel data."""
+
 import json
 import random
 import string
@@ -16,14 +18,39 @@ from app.services import constants as const
 
 
 class ExportService:
+    """Service for exporting channel data to various file formats.
+
+    This service provides methods to convert channel data into different file formats
+    used by molecular visualization tools (Chimera, PyMOL, VMD) and standard formats
+    (JSON, PDB, CIF).
+
+    Attributes:
+        channel_repo: Repository for accessing channel data.
+    """
+
     channel_repo: ChannelRepository
 
     def __init__(self, db: Session):
+        """Initialize the export service with a database session.
+
+        Args:
+            db: SQLModel database session for accessing channel data.
+        """
         self.channel_repo = ChannelRepository(db)
 
     @staticmethod
     def name_to_index(content: str):
-        """Method loads file with parent CIF and extracts residues with indicies from it based on a key."""
+        """Extract residue indices from a CIF file.
+
+        Method loads file with parent CIF and extracts residues with indices from it
+        based on a key. The indices are 1-based as per CIF file convention.
+
+        Args:
+            content: Content of the CIF file as a string.
+
+        Returns:
+            Mapping of residue names to their indices in the CIF file.
+        """
         residue_key = "_atom_site.label_comp_id"
         file = StringIO(content)
         parent_cif = MMCIF2Dict(file)
@@ -37,11 +64,29 @@ class ExportService:
 
     @staticmethod
     def round_items(values: list[float], decimal_places: int = 3):
-        """Round all values to predefined decimal places and joins them into a string."""
+        """Round values and join them into a space-separated string.
+
+        Args:
+            values: List of floating point numbers to round.
+            decimal_places: Number of decimal places to round to.
+
+        Returns:
+            Space-separated string of rounded values.
+        """
         return " ".join(str(round(x, decimal_places)) for x in values)
 
     def get_json_file(self, internal_id: int) -> str:
-        """Creates json file from given channel data using ChannelService."""
+        """Create a JSON file from channel data.
+
+        Creates a JSON representation of channel data for a given structure using
+        ChannelService to format the data.
+
+        Args:
+            internal_id: Internal ID of the structure.
+
+        Returns:
+            JSON string containing channel data, or None if no channels found.
+        """
         raw = self.channel_repo.get_channels_by_internal_id(internal_id)
         if not raw:
             return None
@@ -53,7 +98,17 @@ class ExportService:
         return channels_json
 
     def get_chimera_file(self, internal_id: int) -> str:
-        """Builds python that uses chimera package to build required file."""
+        """Generate a Chimera visualization script.
+
+        Builds a Python script that uses the Chimera package to visualize channels.
+        The script creates channel objects with atoms representing channel points.
+
+        Args:
+            internal_id: Internal ID of the structure.
+
+        Returns:
+            Python script for Chimera visualization, or None if no channels found.
+        """
         channels = self.channel_repo.get_channels_by_internal_id(internal_id)
 
         if not channels:
@@ -89,7 +144,17 @@ class ExportService:
         return const.CHIMERA_HEADER + "\n".join(lines) + "\n"
 
     def get_pdb_file(self, internal_id: int) -> str:
-        """Generates a text file using PDB syntax."""
+        """Generate a PDB format file.
+
+        Creates a text file using PDB syntax to represent channel data. Each channel
+        point is represented as a HETATM record with coordinates and radius information.
+
+        Args:
+            internal_id: Internal ID of the structure.
+
+        Returns:
+            PDB format string containing channel data, or None if no channels found.
+        """
         channels = self.channel_repo.get_channels_by_internal_id(internal_id)
 
         if not channels:
@@ -116,7 +181,17 @@ class ExportService:
         return const.PDB_HEADER + "\n".join(lines) + "\n"
 
     def get_pymol_file(self, internal_id: int) -> str:
-        """Generates a PyMol string."""
+        """Generate a PyMOL visualization script.
+
+        Creates a Python script that uses PyMOL to visualize channels. The script
+        creates channel objects with atoms representing channel points.
+
+        Args:
+            internal_id: Internal ID of the structure.
+
+        Returns:
+            Python script for PyMOL visualization, or None if no channels found.
+        """
         channels = self.channel_repo.get_channels_by_internal_id(internal_id)
 
         if not channels:
@@ -149,6 +224,17 @@ class ExportService:
         return const.PYMOL_HEADER + "\n".join(lines) + "\n"
 
     def get_vmd_file(self, internal_id: int) -> str:
+        """Generate a VMD visualization script.
+
+        Creates a TCL script that uses VMD to visualize channels. The script creates
+        channel objects with atoms representing channel points.
+
+        Args:
+            internal_id: Internal ID of the structure.
+
+        Returns:
+            TCL script for VMD visualization, or None if no channels found.
+        """
         channels = self.channel_repo.get_channels_by_internal_id(internal_id)
 
         if not channels:
@@ -177,10 +263,31 @@ class ExportService:
 
     @staticmethod
     def id_generator(size=5, chars=string.ascii_lowercase):
+        """Generate a random string ID.
+
+        Args:
+            size: Length of the generated string.
+            chars: Character set to use.
+
+        Returns:
+            Random string of specified length.
+        """
         return "".join(random.choice(chars) for _ in range(size))
 
     def get_cif_file(self, internal_id: int, file: bytes) -> str:
-        """Builds CIF file and inserts it into parent file."""
+        """Generate a CIF format file with channel data.
+
+        Builds a CIF file by inserting channel data into a parent CIF file. The
+        channel data includes annotations, channel properties, hetero residues,
+        layers, and profile points.
+
+        Args:
+            internal_id: Internal ID of the structure.
+            file: Parent CIF file content as bytes.
+
+        Returns:
+            CIF format string containing channel data, or None if no channels found.
+        """
         channels = self.channel_repo.get_channels_by_internal_id(internal_id)
         decimal_places = 3
 
@@ -281,7 +388,14 @@ class ExportService:
         return result
 
     def get_zip_file(self, external_id: str, internal_id: int):
-        """Generate and zip all supported files and return said zip file."""
+        """Generate and zip all supported files and return said zip file.
+
+        Args:
+            external_id: External ID of the structure.
+            internal_id: Internal ID of the structure.
+
+        Returns:
+        """
         channels = self.channel_repo.get_channels_by_internal_id(internal_id)
 
         if not channels:

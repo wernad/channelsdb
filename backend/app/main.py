@@ -1,3 +1,5 @@
+"""Main FastAPI application module that sets up the API server and its lifecycle."""
+
 from contextlib import asynccontextmanager
 
 from fastapi import APIRouter, FastAPI
@@ -16,6 +18,11 @@ router.include_router(api_router, prefix=API_PATH)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Manages the application lifecycle including database initialization and scheduler.
+
+    Args:
+        app: FastAPI application instance.
+    """
     try:
         create_db_and_tables()
         init_flag_data()

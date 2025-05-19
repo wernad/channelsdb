@@ -10,7 +10,12 @@ from app.channels.commands.mole_base import MoleTemplate
 
 class MoleCognate(MoleTemplate):
     """Class runs Mole software for cognate configuration.
-    It requires additional configuration file with starting coordinates for proteins."""
+    It requires additional configuration file with starting coordinates for proteins.
+
+    Attributes:
+        TUNNEL_TYPE: Type of tunnel to detect.
+        METHOD_ID: ID of the method to use.
+    """
 
     TUNNEL_TYPE = "cognate"
     METHOD_ID = Methods.PROCOGNATE_TUNNELS_MOLE

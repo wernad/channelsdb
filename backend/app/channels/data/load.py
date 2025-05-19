@@ -8,7 +8,7 @@ def load_from_pdb(start: int, fetch_source: str) -> None:
     """Starts loading proteins from PDB database. User can specify mirror or remote
 
     Args:
-        fetch_source: type of PDB database to use.
+        fetch_source: Type of PDB database to use.
     """
 
     log.debug(f"Starting protein loading from '{fetch_source}' PDB database.")

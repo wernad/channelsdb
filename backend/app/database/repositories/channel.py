@@ -1,3 +1,10 @@
+"""Repository module for managing channel data.
+
+This module provides the ChannelRepository class for database operations related to
+channels, including retrieving channel counts, filtering by structure ID, and inserting
+new channels in bulk or individually.
+"""
+
 from sqlmodel import func, insert, select
 
 from app.database.models import (
@@ -11,22 +18,45 @@ from app.log import log
 
 
 class ChannelRepository(RepositoryBase):
-    """Repository for DB operations related to ."""
+    """Repository for managing channel data.
+
+    This class provides methods for retrieving channel statistics, filtering channels
+    by various criteria, and inserting new channels. It supports operations like
+    counting channels per method, finding top channels by protein, and bulk insertions.
+    """
 
     def get_total_channels(self) -> int:
-        """Returns total number of channels."""
+        """Returns the total number of channels in the database.
+
+        Returns:
+            Total count of channels.
+        """
         statement = select(func.count(Channel.id))
         total = self.db.exec(statement).first()
 
         return total
 
     def get_channels_by_internal_id(self, internal_id: int) -> list[Channel]:
+        """Retrieves all channels for a given structure.
+
+        Args:
+            internal_id: The internal ID of the structure.
+
+        Returns:
+            List of Channel objects associated with the structure.
+        """
         statement = select(Channel).where(Channel.structure_id == internal_id)
         channels = self.db.exec(statement).all()
 
         return channels
 
     def get_channel_counts_per_method(self) -> list[tuple]:
+        """Retrieves the count of channels for each detection method.
+
+        Returns:
+            List of tuples containing method names and their channel counts,
+            ordered by count in descending order.
+        """
         statement = (
             select(
                 Method.name.label("method"),
@@ -44,6 +74,15 @@ class ChannelRepository(RepositoryBase):
     def get_channel_counts_per_methods_by_internal_id(
         self, internal_id: int
     ) -> list[tuple]:
+        """Retrieves channel counts per method for a specific structure.
+
+        Args:
+            internal_id: The internal ID of the structure.
+
+        Returns:
+            List of tuples containing method names and their channel counts for the structure,
+            ordered by count in descending order.
+        """
         statement = (
             select(
                 Method.name.label("method"),
@@ -62,11 +101,12 @@ class ChannelRepository(RepositoryBase):
         """Returns top N channel counts per protein.
 
         Args:
-            limit: limits number of entries.
-        Returns:
-            result as dictionary with protein external ids as keys and counts as values.
-        """
+            limit: Maximum number of entries to return.
 
+        Returns:
+            Dictionary with protein external IDs as keys and channel counts as values,
+            including a 'total' key with the overall channel count.
+        """
         statement = (
             select(Structure.external_id, func.count(Channel.id).label("count"))
             .join(Channel, Channel.structure_id == Structure.id)
@@ -76,7 +116,7 @@ class ChannelRepository(RepositoryBase):
         )
 
         result = self.db.exec(statement).all()
-        total = total = self.get_total_channels()
+        total = self.get_total_channels()
         if result:
             counts = {name: count for name, count in result}
             counts["total"] = total
@@ -88,11 +128,12 @@ class ChannelRepository(RepositoryBase):
         """Returns ratio of top N channel types by channel counts.
 
         Args:
-            limit: limits number of entries.
-        Returns:
-            result as dictionary with names as keys and counts as values.
-        """
+            limit: Maximum number of channel types to return.
 
+        Returns:
+            Dictionary with channel types as keys and counts as values,
+            including a 'total' key with the overall channel count.
+        """
         statement = (
             select(Channel.type, func.count(Channel.id).label("count"))
             .group_by(Channel.type)
@@ -111,7 +152,14 @@ class ChannelRepository(RepositoryBase):
         return None
 
     def insert_in_bulk(self, values: list[ChannelInsert]) -> list[int]:
-        """Inserts new channel rows in bulk."""
+        """Inserts multiple channel records in a single database operation.
+
+        Args:
+            values: List of ChannelInsert objects to insert.
+
+        Returns:
+            List of IDs for the newly inserted channels.
+        """
         values = [value.model_dump() for value in values]
         statement = insert(Channel).values(values).returning(Channel.id)
         result = self.db.exec(statement)
@@ -122,8 +170,14 @@ class ChannelRepository(RepositoryBase):
         return ids
 
     def insert_entry(self, values: ChannelInsert) -> int:
-        """Inserts a new channel entry."""
+        """Inserts a single channel record.
 
+        Args:
+            values: ChannelInsert object containing the channel data.
+
+        Returns:
+            ID of the newly inserted channel.
+        """
         statement = insert(Channel).values(values.model_dump()).returning(Channel.id)
         result = self.db.exec(statement)
         self.db.commit()

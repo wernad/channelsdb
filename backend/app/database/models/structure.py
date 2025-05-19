@@ -1,3 +1,9 @@
+"""Database models for protein structures.
+
+This module defines SQLModel classes for storing and retrieving protein structure data,
+including their relationships with channels and sources, and versioning information.
+"""
+
 from typing import TYPE_CHECKING, List
 
 from sqlmodel import Field, Relationship, SQLModel, UniqueConstraint
@@ -7,16 +13,38 @@ if TYPE_CHECKING:
 
 
 class StructureBase(SQLModel):
+    """Base model for structure data.
+
+    Attributes:
+        has_channels: Whether the structure contains any channels.
+        version: Version number of the structure.
+    """
+
     has_channels: bool
     version: int = Field(nullable=True)
 
 
 class StructureInsert(StructureBase):
+    """Model for inserting new structures.
+
+    Attributes:
+        external_id: External identifier for the structure (e.g., PDB ID).
+        source_id: Foreign key reference to the structure source.
+    """
+
     external_id: str = Field(nullable=False)
     source_id: int = Field(foreign_key="source.id")
 
 
 class Structure(StructureInsert, table=True):
+    """Database model for structures.
+
+    Attributes:
+        id: Primary key for the structure.
+        channels: Associated channels in this structure.
+        source: Source of the structure.
+    """
+
     id: int = Field(primary_key=True)
 
     channels: List["Channel"] = Relationship(back_populates="structure")
@@ -26,5 +54,12 @@ class Structure(StructureInsert, table=True):
 
 
 class StructureData(SQLModel):
+    """Model for structure data in API requests.
+
+    Attributes:
+        source_id: ID of the structure source.
+        version: Version number of the structure.
+    """
+
     source_id: int
     version: int
