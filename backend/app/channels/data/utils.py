@@ -42,10 +42,9 @@ def create_output_directory() -> None:
         os.mkdir(OUTPUT_PATH)
         log.debug("Directory created successfully.")
     except FileExistsError:
-        print("####", OUTPUT_PATH)
-        # shutil.rmtree(OUTPUT_PATH)
-        # log.debug(f"Directory '{OUTPUT_PATH}' already exists, cleaning up.")
-        # os.mkdir(OUTPUT_PATH)
+        shutil.rmtree(OUTPUT_PATH)
+        log.debug(f"Directory '{OUTPUT_PATH}' already exists, cleaning up.")
+        os.mkdir(OUTPUT_PATH)
         log.debug("Directory re-created successfully.")
     except PermissionError:
         log.error(f"Permission denied: Unable to create '{OUTPUT_PATH}'.")
