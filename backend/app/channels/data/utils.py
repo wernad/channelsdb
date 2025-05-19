@@ -8,7 +8,7 @@ from requests import Response, get
 from requests.exceptions import ConnectTimeout
 
 from app.config import (
-    MIRROR_API_PATH,
+    MIRROR_API_URL,
     OUTPUT_PATH,
     PDB_DATA_API_URL,
     PDB_HTTP_FILE_URL,
@@ -25,7 +25,7 @@ def get_full_id(id: str):
 
 def fetch_total_count() -> int:
     """Fetches total number of entires in PDB mirror."""
-    api_url = os.environ.get("PDB_MIRROR_API_URL", MIRROR_API_PATH)
+    api_url = os.environ.get("PDB_MIRROR_API_URL", MIRROR_API_URL)
     url = f"{api_url}proteins/total_count"
 
     response = get(url)
@@ -77,7 +77,7 @@ def fetch_ids(start: int, limit: int, remote: bool = True) -> list[str]:
     if remote:
         url = get_search_url(start=start, limit=limit)
     else:
-        api_url = os.environ.get("PDB_MIRROR_API_URL", MIRROR_API_PATH)
+        api_url = os.environ.get("PDB_MIRROR_API_URL", MIRROR_API_URL)
         url = f"{api_url}proteins/all?limit={limit}&offset={start}"
     response = get(url)
 
@@ -117,7 +117,7 @@ def get_file_url(id: str, version: str = None, remote: bool = True) -> str:
         file_name = f"{full_id}_xyz_v{version}.cif.gz"
         url = f"{PDB_HTTP_FILE_URL}{category}/{full_id}/{file_name}"
     else:
-        api_url = os.environ.get("PDB_MIRROR_API_URL", MIRROR_API_PATH)
+        api_url = os.environ.get("PDB_MIRROR_API_URL", MIRROR_API_URL)
         url = f"{api_url}files/{id}/latest"
     log.debug(f"Created file url: {url}")
     return url

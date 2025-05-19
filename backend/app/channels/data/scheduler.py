@@ -16,7 +16,7 @@ from apscheduler.triggers.cron import CronTrigger
 from arrow import utcnow
 from requests import get
 
-from app.config import CRON_JOB_DAY, MIRROR_API_PATH
+from app.config import CRON_JOB_DAY, MIRROR_API_URL
 from app.database.database import db_context
 from app.log import log
 from app.channels.data.utils import create_output_directory, create_queues
@@ -36,7 +36,7 @@ class Action(StrEnum):
 def get_changes(from_date: str, change_type: Action) -> list[str]:
     """Fetches changes of new, updated or removed entries."""
     log.debug(f"Trying to fetch changes for '{change_type.value}' entries.")
-    api = environ.get("MIRROR_API_URL", MIRROR_API_PATH)
+    api = environ.get("MIRROR_API_URL", MIRROR_API_URL)
     url = f"{api}proteins/changes/{change_type.value}/{from_date}"
     response = get(url)
 
