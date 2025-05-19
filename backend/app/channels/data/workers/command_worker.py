@@ -34,16 +34,21 @@ def _prepare_work_dir(worker_id: str) -> None:
 
     work_dir = f"{OUTPUT_PATH}/{worker_id}"
 
+    log.debug(f"WORKER {worker_id} - Preparing working directory: {work_dir}.")
     try:
         os.mkdir(f"{work_dir}")
         os.chdir(work_dir)
-        log.debug("Working directory created and set successfully.")
+        log.debug(
+            f"WORKER {worker_id} - Working directory created and set successfully."
+        )
     except FileExistsError:
-        log.error(f"Directory '{work_dir}' already exists.")
+        log.error(f"WORKER {worker_id} - Directory '{work_dir}' already exists.")
     except PermissionError:
-        log.error(f"Permission denied: Unable to create '{work_dir}'.")
+        log.error(
+            f"WORKER {worker_id} - Permission denied: Unable to create '{work_dir}'."
+        )
     except Exception as e:
-        log.error(f"An unexpected error occurred: {e}")
+        log.error(f"WORKER {worker_id} - An unexpected error occurred: {e}")
 
 
 def _cleanup() -> None:
