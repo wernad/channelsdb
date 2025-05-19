@@ -31,10 +31,12 @@ def get_file_urls(ids: list[str]) -> list[str]:
     return urls
 
 
-def fetch_files(file_urls: dict, id_to_version: dict) -> tuple[list, list]:
+def fetch_files(
+    file_urls: dict, id_to_version: dict, worker_limit: int = WORKER_LIMIT
+) -> tuple[list, list]:
     """Fetches files from given urls and returns SQLModel objects for insertion, also returns ids that failed."""
     log.debug("MAIN - Fetching files from provided urls.")
-    with cf.ThreadPoolExecutor(max_workers=WORKER_LIMIT) as executor:
+    with cf.ThreadPoolExecutor(max_workers=worker_limit) as executor:
         id_to_data = dict(
             zip(file_urls.keys(), executor.map(fetch_file, file_urls.values()))
         )
