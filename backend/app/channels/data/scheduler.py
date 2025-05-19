@@ -56,7 +56,7 @@ def get_last_date():
 
 
 def send_to_process(data_queue: mp.Queue, files_to_process: list[tuple]) -> int:
-
+    log.debug("Sending filesto data queue")
     while len(files_to_process) > 0:
         try:
             file = files_to_process.pop(0)
@@ -78,52 +78,60 @@ def process_valid():
     try:
         data_queue, result_queue = create_queues()
 
-        log.debug("Creating managers...")
+        log.debug("MAIN - Creating managers...")
         managers = create_managers(data_queue=data_queue, result_queue=result_queue)
         inserter = create_inserter(result_queue=result_queue)
+        log.debug("MAIN - Managers created.")
 
         # Added
-
-        file_urls = get_file_urls(added)
-        id_to_version = {id: 1 for id in added}
-        files_to_process, failed_batch = fetch_files(file_urls, id_to_version)
+        log.debug("MAIN - Processing 'added' entries.")
+        ids_added = [entry["id"] for entry in added]
+        file_urls = get_file_urls(ids_added)
+        id_to_version_added = {id: 1 for id in ids_added}
+        files_to_process, failed_batch = fetch_files(file_urls, id_to_version_added)
 
         send_to_process(data_queue=data_queue, files_to_process=files_to_process)
 
         if added:
-            log.debug("Finished processing new entries.")
+            log.debug("MAIN - Finished processing 'added' entries.")
 
         total_failed = len(failed_batch)
         total_processed = len(added)
 
         log.debug(
-            f"Finished processing added files: {total_processed=}, {total_failed=}"
+            f"MAIN - Finished processing 'added' files: {total_processed=}, {total_failed=}"
         )
 
         # Modified
-        ids = [entry["id"] for entry in modified]
-        file_urls = get_file_urls(ids)
-        id_to_version = {entry["id"]: entry["version"] for entry in modified}
-        files_to_process, failed_batch = fetch_files(file_urls, id_to_version)
+        log.debug("MAIN - Processing 'modified' entries.")
+        ids_modified = [entry["id"] for entry in modified]
+        file_urls = get_file_urls(ids_modified)
+        id_to_version_modified = {entry["id"]: entry["version"] for entry in modified}
+        files_to_process, failed_batch = fetch_files(file_urls, id_to_version_modified)
 
         send_to_process(data_queue=data_queue, files_to_process=files_to_process)
+
+        if modified:
+            log.debug("MAIN - Finished processing 'modified' entries.")
 
         total_processed = len(modified)
         total_failed = len(failed_batch)
 
         log.debug(
-            f"Finished processing modified files: {total_processed=}, {total_failed=}"
+            f"MAIN - Finished processing modified files: {total_processed=}, {total_failed=}"
         )
+    except Exception as e:
+        log.error(f"MAIN - Unexpected error occured: {e}")
     finally:
         data_queue.put(None)
         result_queue.put(None)
 
-        log.debug("Waiting for workers to stop.")
+        log.debug("MAIN - Waiting for workers to stop.")
         for manager in managers:
             manager.join()
 
         inserter.join()
-        log.info("Added/Modified entry processing finished.")
+        log.info("MAIN - Added/Modified entry processing finished.")
 
 
 def process_obsolete() -> None:
@@ -133,7 +141,7 @@ def process_obsolete() -> None:
     with db_context() as session:
         structure_service = StructureService(session)
 
-        obsolete = get_changes(last_date, "obsolete")
+        obsolete = get_changes(last_date, Action.OBSOLETE)
         failed = []
 
         for id in obsolete:

@@ -119,17 +119,17 @@ class MoleTemplate(ABC):
 
         for item in os.listdir("./"):
             item_path = os.path.join("./", item)
-
-            try:
-                if os.path.isfile(item_path):
-                    os.unlink(item_path)
-                elif os.path.isdir(item_path):
-                    shutil.rmtree(item_path)
-            except Exception as e:
-                log.error(
-                    f"WORKER {self.worker_id} {self.TUNNEL_TYPE.upper()} -- Failed to delete {item_path}. Reason: {e}"
-                )
-
+            print("#######", item_path)
+            # try:
+            #     if os.path.isfile(item_path):
+            #         os.unlink(item_path)
+            #     elif os.path.isdir(item_path):
+            #         shutil.rmtree(item_path)
+            # except Exception as e:
+            #     log.error(
+            #         f"WORKER {self.worker_id} {self.TUNNEL_TYPE.upper()} -- Failed to delete {item_path}. Reason: {e}"
+            #     )
+            return False
         log.info(
             f"WORKER {self.worker_id} {self.TUNNEL_TYPE.upper()} -- Working directory has been deleted."
         )

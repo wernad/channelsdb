@@ -25,7 +25,8 @@ def get_full_id(id: str):
 
 def fetch_total_count() -> int:
     """Fetches total number of entires in PDB mirror."""
-    url = f"{MIRROR_API_PATH}proteins/total_count"
+    api_url = os.environ.get("PDB_MIRROR_API_URL", MIRROR_API_PATH)
+    url = f"{api_url}proteins/total_count"
 
     response = get(url)
 
@@ -41,9 +42,10 @@ def create_output_directory() -> None:
         os.mkdir(OUTPUT_PATH)
         log.debug("Directory created successfully.")
     except FileExistsError:
-        shutil.rmtree(OUTPUT_PATH)
-        log.debug(f"Directory '{OUTPUT_PATH}' already exists, cleaning up.")
-        os.mkdir(OUTPUT_PATH)
+        print("####", OUTPUT_PATH)
+        # shutil.rmtree(OUTPUT_PATH)
+        # log.debug(f"Directory '{OUTPUT_PATH}' already exists, cleaning up.")
+        # os.mkdir(OUTPUT_PATH)
         log.debug("Directory re-created successfully.")
     except PermissionError:
         log.error(f"Permission denied: Unable to create '{OUTPUT_PATH}'.")
@@ -76,7 +78,8 @@ def fetch_ids(start: int, limit: int, remote: bool = True) -> list[str]:
     if remote:
         url = get_search_url(start=start, limit=limit)
     else:
-        url = f"{MIRROR_API_PATH}proteins/all?limit={limit}&offset={start}"
+        api_url = os.environ.get("PDB_MIRROR_API_URL", MIRROR_API_PATH)
+        url = f"{api_url}proteins/all?limit={limit}&offset={start}"
     response = get(url)
 
     if response.status_code == 200:
@@ -89,10 +92,10 @@ def fetch_ids(start: int, limit: int, remote: bool = True) -> list[str]:
 
 def create_queues() -> list[mp.Queue]:
     """Creates queues for data and results."""
-
+    log.debug("MAIN - Creating queues.")
     data_queue = mp.Queue(maxsize=QUEUE_SIZE)
     result_queue = mp.Queue()
-
+    log.debug("MAIN - Queues created.")
     return data_queue, result_queue
 
 
@@ -115,7 +118,8 @@ def get_file_url(id: str, version: str = None, remote: bool = True) -> str:
         file_name = f"{full_id}_xyz_v{version}.cif.gz"
         url = f"{PDB_HTTP_FILE_URL}{category}/{full_id}/{file_name}"
     else:
-        url = f"{MIRROR_API_PATH}files/{id}/latest"
+        api_url = os.environ.get("PDB_MIRROR_API_URL", MIRROR_API_PATH)
+        url = f"{api_url}files/{id}/latest"
     log.debug(f"Created file url: {url}")
     return url
 

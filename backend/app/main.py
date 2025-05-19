@@ -21,10 +21,10 @@ async def lifespan(app: FastAPI):
         init_flag_data()
     except OperationalError as e:
         log.error(f"An operational error occured white creating tables: {e.pgcode}")
-    # scheduler = get_scheduler()
-    # scheduler.start()
+    scheduler = get_scheduler()
+    scheduler.start()
     yield
-    # scheduler.shutdown()
+    scheduler.shutdown()
 
 
 app = FastAPI(
