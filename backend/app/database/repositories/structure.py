@@ -1,3 +1,5 @@
+"""Repository module for managing protein structures."""
+
 from sqlmodel import insert, select, func, and_
 
 from app.database.models import (
@@ -9,15 +11,28 @@ from app.database.models import (
     ChannelFilter,
 )
 from app.database.repositories.base import RepositoryBase
-
-
 from app.log import log
 
 
 class StructureRepository(RepositoryBase):
+    """Repository for managing protein structures.
+
+    This class provides methods for retrieving, filtering, and managing protein structures,
+    including version control, channel filtering, and bulk operations.
+    """
+
     def get_structure_by_external_id_and_version(
         self, external_id: str, version: int
     ) -> tuple:
+        """Retrieves a structure by its external ID and version.
+
+        Args:
+            external_id: External identifier of the structure (e.g., PDB ID).
+            version: Version number of the structure.
+
+        Returns:
+            Row object matching the criteria.
+        """
         statement = select(Structure).where(
             and_(Structure.external_id == external_id, Structure.version == version)
         )
@@ -27,7 +42,15 @@ class StructureRepository(RepositoryBase):
 
     def get_newest_structure_has_channels_by_external_id(
         self, external_id: str
-    ) -> Structure:
+    ) -> tuple:
+        """Retrieves the newest version of a structure that has channels.
+
+        Args:
+            external_id: External identifier of the structure.
+
+        Returns:
+            Tuple containing the structure ID and the highest version number that has channels.
+        """
         statement = (
             select(Structure.id, func.max(Structure.version))
             .where(and_(Structure.external_id == external_id, Structure.has_channels))
@@ -39,7 +62,14 @@ class StructureRepository(RepositoryBase):
         return result
 
     def get_source_and_version_by_external_id(self, external_id: str) -> dict:
-        """Returns source and version of given structure."""
+        """Returns source and version information for a structure.
+
+        Args:
+            external_id: External identifier of the structure.
+
+        Returns:
+            Dictionary containing source_id and version of the structure.
+        """
         version = self.get_latest_version_by_external_id(external_id)
         statement = select(Structure.source_id).where(
             Structure.external_id == external_id
@@ -50,8 +80,14 @@ class StructureRepository(RepositoryBase):
         return {"source_id": result, "version": version}
 
     def get_external_from_internal_bulk(self, internal_ids: list[int]) -> list[str]:
-        """Return a list of external ids from internal ids."""
+        """Converts internal IDs to external IDs.
 
+        Args:
+            internal_ids: List of internal structure IDs.
+
+        Returns:
+            List of corresponding external IDs.
+        """
         statement = select(Structure.external_id).where(Structure.id.in_(internal_ids))
 
         result = self.db.exec(statement).all()
@@ -59,13 +95,13 @@ class StructureRepository(RepositoryBase):
         return result
 
     def _build_filter_statement(self, filter: ChannelFilter) -> str:
-        """Build query using passed filter argument.
+        """Builds a query statement based on channel filter criteria.
 
         Args:
-            filter: dataclass with variables to filter by.
+            filter: ChannelFilter object containing filtering criteria.
 
         Returns:
-            query object.
+            SQL query statement for filtering structures by channel properties.
         """
         log.debug(f"Building filter statement with params: {filter}")
 
@@ -117,6 +153,14 @@ class StructureRepository(RepositoryBase):
         return statement
 
     def get_structures_by_channel_filter(self, filter: ChannelFilter):
+        """Retrieves structures based on channel filter criteria.
+
+        Args:
+            filter: ChannelFilter object containing filtering criteria.
+
+        Returns:
+            List of external IDs for structures matching the filter criteria.
+        """
         statement = self._build_filter_statement(filter)
         result = self.db.exec(statement).all()
 
@@ -129,8 +173,12 @@ class StructureRepository(RepositoryBase):
     def update_has_channels_by_internal_id(
         self, internal_id: int, has_channels: bool
     ) -> None:
-        """Updates has_channels column of protein with given internal id."""
+        """Updates the has_channels flag for a structure.
 
+        Args:
+            internal_id: Internal ID of the structure.
+            has_channels: New value for the has_channels flag.
+        """
         statement = select(Structure).where(Structure.id == internal_id)
         result = self.db.exec(statement).one()
 
@@ -140,8 +188,14 @@ class StructureRepository(RepositoryBase):
             self.db.commit()
 
     def insert_in_bulk(self, values: list[StructureInsert]) -> list[int]:
-        """Inserts new structure rows in bulk."""
+        """Inserts multiple structure records in a single database operation.
 
+        Args:
+            values: List of StructureInsert objects to insert.
+
+        Returns:
+            List of IDs for the newly inserted structures.
+        """
         values = [value.model_dump() for value in values]
         statement = insert(Structure).values(values).returning(Structure.id)
         result = self.db.exec(statement)
@@ -152,8 +206,14 @@ class StructureRepository(RepositoryBase):
         return ids
 
     def insert_entry(self, values: StructureInsert) -> int:
-        """Inserts a new structure entry."""
+        """Inserts a single structure record.
 
+        Args:
+            values: StructureInsert object containing the structure data.
+
+        Returns:
+            ID of the newly inserted structure.
+        """
         statement = (
             insert(Structure).values(values.model_dump()).returning(Structure.id)
         )
@@ -168,7 +228,11 @@ class StructureRepository(RepositoryBase):
         return id
 
     def delete_structure(self, external_id: str) -> None:
+        """Deletes a structure and its associated data.
 
+        Args:
+            external_id: External identifier of the structure to delete.
+        """
         statement = select(Structure).where(Structure.external_id == external_id)
         structure = self.db.exec(statement).first()
 
@@ -179,6 +243,14 @@ class StructureRepository(RepositoryBase):
             log.error(f"Structure doesn't exist, can not delete: {external_id=}")
 
     def get_latest_version_by_external_id(self, external_id: str) -> int:
+        """Retrieves the latest version number for a structure.
+
+        Args:
+            external_id: External identifier of the structure.
+
+        Returns:
+            Latest version number for the structure.
+        """
         statement = select(func.max(Structure.version)).where(
             Structure.external_id == external_id
         )
