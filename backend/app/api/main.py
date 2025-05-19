@@ -1,3 +1,5 @@
+"""Main router for endpoints."""
+
 from fastapi import APIRouter
 
 from app.api.endpoints import (

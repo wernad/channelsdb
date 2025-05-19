@@ -1,3 +1,5 @@
+"""Contains functions for running scheduler tasks for loading new data from mirror database."""
+
 from enum import StrEnum
 from queue import Full
 from time import sleep
@@ -34,7 +36,14 @@ class Action(StrEnum):
 
 
 def get_changes(from_date: str, change_type: Action) -> list[str]:
-    """Fetches changes of new, updated or removed entries."""
+    """Fetches changes of new, updated or removed entries.
+
+    Args:
+        from_date: starting date for fetching.
+        change_type: type of files to find (added, modified, obsolete)
+    Returns:
+        list of protein ids.
+    """
     log.debug(f"Trying to fetch changes for '{change_type.value}' entries.")
     api = environ.get("PDB_MIRROR_API_URL", MIRROR_API_URL)
     url = f"{api}proteins/changes/{change_type.value}/{from_date}"
@@ -48,14 +57,23 @@ def get_changes(from_date: str, change_type: Action) -> list[str]:
     return []
 
 
-def get_last_date():
-    """Gets last date when files were updated (currently Friday)."""
+def get_last_date() -> str:
+    """Gets last date when files were updated (currently Friday).
+
+    Returns:
+        Current date in proper format."""
     today = utcnow()
     last_date = today.shift(weeks=-1, weekday=5).format("YYYYMMDD")
     return last_date
 
 
 def send_to_process(data_queue: mp.Queue, files_to_process: list[tuple]) -> int:
+    """Sends files to given queue for workers to process.
+
+    Args:
+        data_queue: main queue for data handling.
+        files_to_process: files in binary form with version and protein id.
+    """
     log.debug("SCHEDULER - Sending filesto data queue")
     while len(files_to_process) > 0:
         try:
@@ -163,7 +181,11 @@ def process_obsolete() -> None:
 
 
 def event_listener(event: SchedulerEvent):
-    """Event handler for checking event status."""
+    """Event handler for checking event status.
+
+    Args:
+        event: event object sent by scheduler.
+    """
     if event.code == EVENT_JOB_ERROR:
         log.error(
             f"Fetching job crashed because of: {event.exception}\n{event.traceback}"
@@ -176,8 +198,12 @@ def event_listener(event: SchedulerEvent):
         )
 
 
-def get_scheduler():
-    """Creates and configures a new scheduler and returns in."""
+def get_scheduler() -> BackgroundScheduler:
+    """Creates and configures a new scheduler with processing tasks.
+
+    Returns:
+        scheduler object.
+    """
     log.debug(f"SCHEDULER - Creating background tasks with day of week {CRON_JOB_DAY}.")
     scheduler = BackgroundScheduler()
 

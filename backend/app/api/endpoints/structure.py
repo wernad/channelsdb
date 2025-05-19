@@ -1,3 +1,7 @@
+"""Endpoints for filtering structures based on their parameters
+and parameters of related tables (channel, layer, etc).
+"""
+
 from typing import Annotated
 
 from fastapi import APIRouter, Query
@@ -19,7 +23,14 @@ async def get_structures_filtered(
     structure_service: StructureServiceDep,
     filter: Annotated[ChannelFilter, Query()],
 ):
+    """Returns protein ids based on parameters of their channels.
 
+    Args:
+        structure_service: service object to retrieve structure data.
+        filter: parameter to filter by.
+    Returns:
+        List of strings.
+    """
     external_ids = structure_service.get_structures_by_filter(filter)
 
     if external_ids:

@@ -1,3 +1,5 @@
+"""Utility module with functions related to  fetching data from PDB databases."""
+
 import json
 import os
 import shutil
@@ -18,12 +20,18 @@ from app.config import (
 from app.log import log
 
 
-def get_full_id(id: str):
-    """Returns 12-character id of given 4-character id."""
+def get_full_id(id: str) -> str:
+    """Returns 12-character id of given 4-character id.
+
+    Args:
+        id: id of protein
+    Returns:
+        12-char format id.
+    """
     return f"pdb_0000{id.lower()}"
 
 
-def fetch_total_count() -> int:
+def fetch_total_count():
     """Fetches total number of entires in PDB mirror."""
     api_url = os.environ.get("PDB_MIRROR_API_URL", MIRROR_API_URL)
     url = f"{api_url}proteins/total_count"
@@ -52,8 +60,13 @@ def create_output_directory() -> None:
         log.error(f"An error occurred: {e}")
 
 
-def get_error_message(response: Response) -> str:
-    """Extracts error message if any given, otherwise returns plain text."""
+def get_error_message(response: Response) -> str | dict:
+    """Extracts error message if any given, otherwise returns plain text.
+
+    Args:
+        response; Response object for processing.
+    Returns:
+        reponse content as string or dict."""
     log.debug("Extractng error message.")
     try:
         message = response.json()
@@ -90,7 +103,11 @@ def fetch_ids(start: int, limit: int, remote: bool = True) -> list[str]:
 
 
 def create_queues() -> list[mp.Queue]:
-    """Creates queues for data and results."""
+    """Creates queues for data and results.
+
+    Returns:
+        list of Queue object.
+    """
     log.debug("MAIN - Creating queues.")
     data_queue = mp.Queue(maxsize=QUEUE_SIZE)
     result_queue = mp.Queue()
@@ -124,7 +141,13 @@ def get_file_url(id: str, version: str = None, remote: bool = True) -> str:
 
 
 def get_graphql_query(id: str) -> str:
-    """Helper method to create url encoded string for Data API."""
+    """Helper method to create url encoded string for Data API.
+
+    Args:
+        id: protein id.
+    Returns:
+        url as string.
+    """
     log.debug(f"Generating GraphQL query string for id {id}")
 
     query = (
@@ -137,7 +160,14 @@ def get_graphql_query(id: str) -> str:
 
 
 def get_search_url(start: int = 0, limit: int = 1000) -> str:
-    """Helper method to create a url encoded string for Search API."""
+    """Helper method to create a url encoded string for Search API.
+
+    Args:
+        start: id to start from.
+        limit: number of entries to fetch.
+    Retuns:
+        url as string.
+    """
     log.debug(f"Creating search query string with these params: {start=}, {limit=}")
     params = {
         "query": {
@@ -160,7 +190,14 @@ def get_search_url(start: int = 0, limit: int = 1000) -> str:
 
 
 def get_last_version(id: str) -> int | None:
-    """Fetches latest version number of given file ID."""
+    """Fetches latest version number of given file ID.
+
+    Args:
+        id: protein id.
+
+    Returns:
+        version as numer of None if error occured.
+    """
     log.debug(f"Fetching latest version of a file with ID {id}.")
 
     url = get_graphql_query(id)

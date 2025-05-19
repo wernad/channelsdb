@@ -1,3 +1,5 @@
+"""Endpoints for retrieving channel data for proteins."""
+
 from fastapi import APIRouter
 
 from app.api.dependencies import (
@@ -25,6 +27,14 @@ async def get_channels(
     ann_service: AnnotationServiceDep,
     structure_id: IDCheckDep,
 ):
+    """Returns channels and annotations of them for given protein id.
+
+    Args:
+        structure_service: service object for retrieving structure data from database.
+        channels_service: service object for retrieving channel data from database.
+        ann_service: service object for retrieving annotation data from database.
+        structure_id: id of structure in PDB or UniProt format.
+    """
     internal_id = structure_service.get_newest_structure_with_channels_by_external_id(
         structure_id=structure_id
     )

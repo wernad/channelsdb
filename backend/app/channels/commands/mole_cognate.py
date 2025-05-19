@@ -1,3 +1,5 @@
+"""Class for Mole class for running Mole software with Cognate configuration."""
+
 from xml.etree.ElementTree import SubElement
 
 from app.database.models import Methods
@@ -7,6 +9,9 @@ from app.channels.commands.mole_base import MoleTemplate
 
 
 class MoleCognate(MoleTemplate):
+    """Class runs Mole software for cognate configuration.
+    It requires additional configuration file with starting coordinates for proteins."""
+
     TUNNEL_TYPE = "cognate"
     METHOD_ID = Methods.PROCOGNATE_TUNNELS_MOLE
 

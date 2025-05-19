@@ -1,3 +1,5 @@
+"""Wraps run methods for given load approach (JSON, remote database, mirror database)"""
+
 from app.log import log
 from app.channels.data.loaders import run_file, run_mirror, run_remote
 

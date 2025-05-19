@@ -1,3 +1,5 @@
+"""Script for loading files for channel calculation from remote PDB database."""
+
 import concurrent.futures as cf
 import logging
 import multiprocessing as mp
@@ -24,7 +26,13 @@ from app.channels.data.utils import (
 
 
 def get_latest_versions(ids: list[str]) -> dict:
-    """Returns dictionary of latest versions of each protein ID."""
+    """Returns dictionary of latest versions of each protein ID.
+
+    Args:
+        ids: list of strings.
+    Returns:
+        dictionary with ids as keys and integers as values.
+    """
 
     with cf.ThreadPoolExecutor(max_workers=WORKER_LIMIT) as executor:
         id_to_version = dict(zip(ids, executor.map(get_last_version, ids)))
@@ -33,7 +41,13 @@ def get_latest_versions(ids: list[str]) -> dict:
 
 
 def get_file_urls(ids: list[str], id_to_version: dict) -> dict[str, str]:
-    """Returns url for fetching latest file for each protein ID."""
+    """Returns url for fetching latest file for each protein ID.
+
+    Args:
+        ids: list of strings.
+        id_to_version: dict to get version for protein id.
+    Returns:
+        dict of urls for given protein ids."""
 
     file_urls = {}
     for id in ids:
@@ -44,7 +58,13 @@ def get_file_urls(ids: list[str], id_to_version: dict) -> dict[str, str]:
 
 
 def fetch_files(file_urls: dict, id_to_version: dict) -> tuple[list, list]:
-    """Fetches files from given urls and returns SQLModel objects for insertion, also returns ids that failed."""
+    """Fetches files from given urls and returns SQLModel objects for insertion, also returns ids that failed.
+    Args:
+        file_urlsl: dict of proteins and their urls.
+        id_to_version: dict to get version for protein id.
+    Returns:
+        List of files and list of failed ids."""
+
     with cf.ThreadPoolExecutor(max_workers=WORKER_LIMIT) as executor:
         id_to_data = dict(
             zip(file_urls.keys(), executor.map(fetch_file, file_urls.values()))

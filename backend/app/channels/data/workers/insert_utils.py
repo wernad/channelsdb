@@ -1,3 +1,5 @@
+"""Methods for inserting values used by inserter worker."""
+
 from app.log import log
 from app.services import (
     ChannelService,

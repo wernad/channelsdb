@@ -1,3 +1,5 @@
+"""Constants used by endpoints."""
+
 OLD_PDB_ID_REGEX = "^[1-9][a-z0-9]{3}$"
 NEW_PDB_ID_REGEX = "^pdb_[0-9]{5}[a-z0-9]{3}$"
 UNIPROT_ID_REGEX = (

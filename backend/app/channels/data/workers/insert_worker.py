@@ -1,3 +1,5 @@
+"""Contains methods for creating and running inserter worker."""
+
 import multiprocessing as mp
 import time
 from queue import Empty

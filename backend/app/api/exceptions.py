@@ -1,3 +1,5 @@
+"""Custom exceptions for API."""
+
 from fastapi import HTTPException
 
 

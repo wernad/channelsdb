@@ -1,3 +1,5 @@
+"""Script for loading file data for calculation of tunnel from mirror of PDB."""
+
 import concurrent.futures as cf
 import logging
 import multiprocessing as mp
@@ -21,7 +23,13 @@ from app.channels.data.utils import (
 
 
 def get_file_urls(ids: list[str]) -> list[str]:
-    """Creates urls for given ids."""
+    """Creates urls for given ids.
+
+    Args:
+        ids: list of strings.
+    Returns:
+        list of string urls.
+    """
 
     urls = {}
 
@@ -34,7 +42,15 @@ def get_file_urls(ids: list[str]) -> list[str]:
 def fetch_files(
     file_urls: dict, id_to_version: dict, worker_limit: int = WORKER_LIMIT
 ) -> tuple[list, list]:
-    """Fetches files from given urls and returns SQLModel objects for insertion, also returns ids that failed."""
+    """Fetches files from given urls and returns SQLModel objects for insertion, also returns ids that failed.
+
+    Args:
+        file_urls: list of urls.
+        id_to_version: dict for getting versions of proteins.
+        worker_limit: how many workers to use for fetching.
+    Returns:
+        two lists of files and failed ids. Files are tuples with protein id, version and binary files.
+    """
     log.debug("MAIN - Fetching files from provided urls.")
     with cf.ThreadPoolExecutor(max_workers=worker_limit) as executor:
         id_to_data = dict(
@@ -124,7 +140,7 @@ def fetch_all(start: int, total: int, data_queue: mp.Queue) -> None:
     logging.getLogger("urllib3").setLevel(logging.DEBUG)
 
 
-def run(start: int | None):
+def run(start: int | None) -> None:
     """Creates and starts child processes for fetching file data.
 
     Args:

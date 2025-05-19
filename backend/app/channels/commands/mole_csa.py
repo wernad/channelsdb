@@ -1,9 +1,13 @@
+"""Contains Mole class for running Mole software with CSA configuration."""
+
 from app.database.models import Methods
 from app.log import log
 from app.channels.commands.mole_base import MoleTemplate
 
 
 class MoleCSA(MoleTemplate):
+    """Mole command class for running Mole software with CSA configuration."""
+
     TUNNEL_TYPE = "csa"
     METHOD_ID = Methods.CSA_TUNNELS_MOLE
 

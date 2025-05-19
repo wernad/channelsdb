@@ -1,3 +1,5 @@
+"""Annotation endpoint for retrieving annotations for proteins."""
+
 import gzip
 import xml.etree.ElementTree as ET
 
@@ -12,6 +14,13 @@ router = APIRouter()
 
 
 def parse_sifts_data(xml_data: str) -> dict[str, tuple[str, dict[str, str]]]:
+    """Parses residue data from xml data.
+
+    Args:
+        xml_data: XML data in string format.
+    Returns:
+        Dict of parsed values with UniProt ids as keys.
+    """
     tree = ET.fromstring(xml_data)
     data = {}
     ns = {"": "http://www.ebi.ac.uk/pdbe/docs/sifts/eFamily.xsd"}
@@ -41,6 +50,13 @@ def parse_sifts_data(xml_data: str) -> dict[str, tuple[str, dict[str, str]]]:
 
 
 def get_uniprot_entry_annotations(uniprot_id: str, tree: ET) -> dict:
+    """Builds annotations from given XML data.
+
+    Args:
+        uniprot_id: identifier of structure.
+        tree: XML data in ET object.
+    Returns:
+        Dict with annotations."""
     ns = {"": "http://uniprot.org/uniprot"}
 
     entry = {"UniProtId": uniprot_id, "Function": "", "Catalytics": [], "Name": ""}
@@ -64,6 +80,15 @@ def get_uniprot_entry_annotations(uniprot_id: str, tree: ET) -> dict:
 def get_uniprot_residue_annotations(
     mapping: tuple[str, dict[str, str]] | None, tree: ET
 ) -> list[dict]:
+    """Retrieves residue anotations from XML data.
+
+    Args:
+        mapping: data with information about residues.
+        tree: XML data object.
+    Returns:
+        list of dictionaries with residue annotations.
+
+    """
     ns = {"": "http://uniprot.org/uniprot"}
 
     references: dict[str, tuple[str, str]] = {}
@@ -132,6 +157,12 @@ def get_uniprot_residue_annotations(
 def get_channelsdb_residue_annotations(
     mapping: tuple[str, dict[str, str]] | None,
 ) -> list[dict]:
+    """Extracts annotations from mapping.
+
+    Args:
+        mapping: original data with annotations.
+    Returns:
+        List of annotations in dicts."""
 
     data = []
     if mapping is None:
@@ -148,6 +179,13 @@ def get_channelsdb_residue_annotations(
 def fill_annotations_by_uniprot_id(
     annotations: dict, mapping: tuple[str, dict[str, str]] | None, uniprot_id: str
 ):
+    """Fetches XMML data and fills annotations dict with them.
+
+    Args:
+        annotations: container for annotations.
+        mapping: data with annotations.
+        uniprot_ud: identifier of protein.
+    """
     req = requests.get(
         f"https://www.ebi.ac.uk/proteins/api/proteins/{uniprot_id}",
         headers={"accept": "application/xml"},
@@ -176,6 +214,13 @@ def fill_annotations_by_uniprot_id(
 
 
 def is_pdb_id(pdb_id: str) -> bool:
+    """Checks if ID is in pdb format.
+
+    Args:
+        pdb_id: id to check.
+    Returns:
+        True if it is pdb idb.
+    """
     length = len(pdb_id)
     return length == 4 or length == 12
 
@@ -207,6 +252,13 @@ def process_pdb_file(pdb_id: str) -> dict:
     description="Returns annotations of individual protein and its residues",
 )
 async def get_annotations_pdb(structure_id: IDCheckDep):
+    """Endpoints that fetches annotations for given protein id.
+
+    Args:
+        structure_id: identifier in UniProt or PDB format.
+    Returns:
+        dict of annotations.
+    """
     annotations = AnnotationsOutput().model_dump()
 
     if is_pdb_id(structure_id):

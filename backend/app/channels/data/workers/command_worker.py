@@ -1,3 +1,5 @@
+"""Contains methods used by workers that use Command objects for Mole software."""
+
 import multiprocessing as mp
 import os
 import shutil
@@ -15,6 +17,8 @@ from app.channels.data.types import MoleClass
 def _load_config_file(file_name: str) -> ElementTree:
     """Loads xml configuration file, parses it and returns it.
 
+    Args:
+        file_name: name of file as string.
     Returns:
         Parsed XML ElementTree.
     """
@@ -154,6 +158,8 @@ def create_mole_workers(
         mole_class: subclass to use for Mole execution.
         data_queue: Queue to retrieve tasks from.
         result_queue: used to send results back to manager.
+    Returns:
+        list of process objects.
     """
 
     log.debug(f"MANAGER {manager_id} -- Creating workers.")

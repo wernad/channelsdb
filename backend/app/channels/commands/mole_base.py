@@ -1,3 +1,5 @@
+"""Template class for subclasses that run Mole software."""
+
 import json
 import os
 import shutil
@@ -12,10 +14,23 @@ from app.log import log
 
 
 class MoleTemplate(ABC):
+    """Class that is a template for other Mole command classes.
+
+    Attributes:
+        TUNNEL_TYPE: type of tunnel to be calculated.
+        METHOD_ID: method id for database and logging.
+    """
+
     TUNNEL_TYPE: str = ""
     METHOD_ID: Methods = None
 
     def __init__(self, worker_id: str, config_file: ElementTree) -> None:
+        """Initializes a new mole command object.
+
+        Args:
+            worker_id: id of process.
+            config_file: configuration for Mole software.
+        """
         self.worker_id = worker_id
 
         self.config_dir = "./config"

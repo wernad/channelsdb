@@ -1,9 +1,13 @@
+"""Contains class for cofactor configuration of Mole software."""
+
 from app.database.models import Methods
 from app.log import log
 from app.channels.commands.mole_base import MoleTemplate
 
 
 class MoleCofactor(MoleTemplate):
+    """Mole command class for running Mole with cofactor configuration."""
+
     TUNNEL_TYPE = "cofactor"
     METHOD_ID = Methods.COFACTOR_TUNNELS_MOLE
 

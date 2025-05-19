@@ -1,3 +1,5 @@
+"""Contains methods for creating and running manager processes."""
+
 import multiprocessing as mp
 import time
 from queue import Empty
@@ -56,7 +58,10 @@ def worker_manager(
 
 
 def create_managers(data_queue: mp.Queue, result_queue: mp.Queue) -> list[mp.Process]:
-    """Creates managers and main queue."""
+    """Creates manager processes and starts them.
+
+    Returns:
+        list of process objects."""
     managers: list[mp.Process] = []
 
     for i in range(MANAGER_LIMIT):

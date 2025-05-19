@@ -1,3 +1,5 @@
+"""Script for loading JSON data from previous version of ChannelsDB into database."""
+
 import json
 import sys
 from pathlib import Path

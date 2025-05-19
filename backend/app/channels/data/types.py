@@ -1,3 +1,5 @@
+"""Types used by other modules for better formatting."""
+
 from app.database.models import (
     ChannelInsert,
     HetResidueInsert,

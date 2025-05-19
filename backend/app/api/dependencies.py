@@ -1,3 +1,7 @@
+"""Dependencies used by endpoints and services,
+like service objects, database object, etc.
+"""
+
 from collections.abc import Generator
 from typing import Annotated
 
@@ -7,8 +11,13 @@ from sqlmodel import Session
 from app.api.common import NEW_PDB_ID_REGEX, OLD_PDB_ID_REGEX, UNIPROT_ID_REGEX
 from app.database.database import engine
 from app.database.repositories import ChannelRepository
-from app.services import (AnnotationService, ChannelService, ExportService,
-                          StatisticsService, StructureService)
+from app.services import (
+    AnnotationService,
+    ChannelService,
+    ExportService,
+    StatisticsService,
+    StructureService,
+)
 
 __all__ = [
     "AnnotationServiceDep",

@@ -1,3 +1,5 @@
+"""Endpoints for downloading files with channel data for proteins."""
+
 import gzip
 from enum import StrEnum
 
@@ -6,7 +8,6 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import PlainTextResponse, RedirectResponse, Response
 
 from app.api.dependencies import (
-    AnnotationServiceDep,
     ExportServiceDep,
     IDCheckDep,
     StructureServiceDep,
@@ -35,13 +36,25 @@ class DownloadType(StrEnum):
     cif = "cif"
 
 
-def get_full_pdb_id(id: str):
-    """Returns 12-character id of given 4-character id."""
+def get_full_pdb_id(id: str) -> str:
+    """Returns 12-character id of given 4-character id.
+
+    Args:
+        id: identifier of protein.
+    Returns:
+        12-character PDB id.
+    """
     return f"pdb_0000{id.lower()}"
 
 
 def is_pdb(id: str) -> bool:
-    """Checks if id is in PDB format or not."""
+    """Checks if id is in PDB format or not.
+
+    Args:
+        id: id to check.
+    Returns:
+        True if it is pdb id.
+    """
     if len(id) == 4 or len(id) == 12:
         return True
     return False
@@ -52,9 +65,9 @@ def get_file_url(id: str, version: str = None) -> str:
 
     Parameters:
         id: structure id
-        version: version to fetch
+        version: version to fetch, if any.
     Returns:
-        tuple of bytes and error code
+        url as string.
     """
     log.debug(f"Creating url for file - {id=} {version=}.")
 
@@ -74,7 +87,13 @@ def get_file_url(id: str, version: str = None) -> str:
 
 
 async def get_assembly_id(pdb_id: str) -> str | None:
-    """Helper method to retrieve assembly id corresponding to given PDB id."""
+    """Helper method to retrieve assembly id corresponding to given PDB id.
+
+    Args:
+        pdb_id: protein identifier.
+    Returns:
+        Assembly id as string.
+    """
     log.debug(f"Fetching assembly for PDB id {pdb_id}.")
     url = f"{PDB_HTTP_ASSEMBLY_URL}{pdb_id}"
 
@@ -103,9 +122,9 @@ async def fetch_from_url(url: str) -> bytes:
     """Fetches file from given url.
 
     Args:
-        url: resource URL
+        url: resource URL.
     Returns:
-        file in bytes format
+        File in bytes format.
     """
 
     log.debug(f"Fetching file from url: {url}")
@@ -127,6 +146,16 @@ async def download(
     file_format: DownloadType,
     structure_id: IDCheckDep,
 ):
+    """Returns channel data in required format.
+
+    Args:
+        structure_service: service object for working with structure data.
+        export_service: service object for working with export data.
+        file_format: required format of file.
+        structure_id: id of protein.
+    Returns:
+        File in required format (png, zip, json, etc)
+    """
     headers = {
         "Content-Disposition": f'attachment; filename="channelsdb_{structure_id}.{file_format.value}"'
     }

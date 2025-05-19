@@ -1,3 +1,5 @@
+"""Endpoints for checking status of API."""
+
 from fastapi import APIRouter
 
 router = APIRouter()

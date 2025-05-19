@@ -14,7 +14,6 @@ RUN npm run build
 
 RUN npx tsc -p tsconfig.json
 
-
 FROM node:20-slim AS results
 
 WORKDIR /build
