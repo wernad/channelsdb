@@ -254,10 +254,11 @@ class SearchResults extends React.Component<GlobalProps, {}> {
     render() {
         try {
             const data = (this.props.state.viewState as ViewState.Seached).data;
-            console.log(data);
+            console.log("@", data);
             if (data === undefined || data.length === 0 || !data.grouped.category.groups.length) return this.empty();
             return <div>
-                <div style={{ padding: '0 0 15px 0', marginTop: '-15px', fontStyle: 'italic', textAlign: 'right' }}><small>Press 'Enter' for full-text search.</small></div>
+                {/* TODO Changes to backend caused this to not function properly. Fix endpoint call.*/}
+                {/* <div style={{ padding: '0 0 15px 0', marginTop: '-15px', fontStyle: 'italic', textAlign: 'right' }}><small>Press 'Enter' for full-text search.</small></div> */}
                 <div>{this.groups()}</div>
             </div>;
         } catch (e) {
