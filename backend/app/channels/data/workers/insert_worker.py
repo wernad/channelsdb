@@ -31,7 +31,7 @@ def insert_worker(result_queue: mp.Queue) -> None:
                 break
 
             full_id, version, method_id, channels = data
-            log.debug(f"INSERTER -- Received data for: {full_id=}, {method_id.value=}")
+            log.debug(f"INSERTER -- Received data for: {full_id=}, {method_id=}")
 
             has_channels = True if channels else False
             structure_id = insert_structure_if_missing(
