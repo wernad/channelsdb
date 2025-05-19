@@ -4,6 +4,7 @@ from time import sleep
 from zoneinfo import ZoneInfo
 import multiprocessing as mp
 from os import environ
+
 from apscheduler.events import (
     EVENT_JOB_ERROR,
     EVENT_JOB_EXECUTED,
@@ -126,6 +127,7 @@ def process_valid():
         log.debug("SCHEDULER - Shutting down managers.")
         for _ in managers:
             data_queue.put(None)
+            data_queue.put(None)  # Intended doubling of 'shutdown' messages.
 
         result_queue.put(None)
 
@@ -181,12 +183,10 @@ def get_scheduler():
 
     CET = ZoneInfo("Europe/Prague")
     trigger = CronTrigger(day_of_week=CRON_JOB_DAY, hour=0, minute=0, timezone=CET)
-    # next_date = dt.now() + td(seconds=5)
 
     scheduler.add_job(
         func=process_valid,
         trigger=trigger,
-        # next_run_time=next_date,
         replace_existing=True,
         id="fetch_added_and_modified",
         coalesce=True,

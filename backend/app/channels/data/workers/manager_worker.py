@@ -46,7 +46,7 @@ def worker_manager(
 
     finally:
         log.debug(f"MANAGER {manager_id} -- Shutting down workers.")
-        for worker, worker_queue in workers:
+        for _, worker_queue in workers:
             worker_queue.put(None)
 
         for worker, _ in workers:

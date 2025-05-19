@@ -14,10 +14,10 @@ class MoleCofactor(MoleTemplate):
             protein: name of protein
         """
         log.debug(
-            f"Worker {self.worker_id} {self.TUNNEL_TYPE.upper()}-- Creating XML configuration file for {protein}."
+            f"WORKER {self.worker_id} {self.TUNNEL_TYPE.upper()}-- Creating XML configuration file for {protein}."
         )
         self._finalize_configuration(protein)
 
         log.debug(
-            f"Worker {self.worker_id} {self.TUNNEL_TYPE.upper()} -- Configuration file created."
+            f"WORKER {self.worker_id} {self.TUNNEL_TYPE.upper()} -- Configuration file created."
         )
