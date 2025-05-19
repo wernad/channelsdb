@@ -36,7 +36,7 @@ class Action(StrEnum):
 def get_changes(from_date: str, change_type: Action) -> list[str]:
     """Fetches changes of new, updated or removed entries."""
     log.debug(f"Trying to fetch changes for '{change_type.value}' entries.")
-    api = environ.get("MIRROR_API_URL", MIRROR_API_URL)
+    api = environ.get("PDB_MIRROR_API_URL", MIRROR_API_URL)
     url = f"{api}proteins/changes/{change_type.value}/{from_date}"
     response = get(url)
 
