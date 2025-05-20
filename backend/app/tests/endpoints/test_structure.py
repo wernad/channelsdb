@@ -6,9 +6,6 @@ from unittest.mock import Mock, patch
 from app.api.dependencies import get_structure_service
 from app.main import app
 
-from app.api.exceptions import NoStructuresWithFilter
-from app.database.models import ChannelFilter
-
 client = TestClient(app, base_url="http://testserver/api/v1")
 
 
