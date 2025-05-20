@@ -1,5 +1,4 @@
 .idea
-docker/kubernetes/
 *.cif*
 */calhost
 *.sql

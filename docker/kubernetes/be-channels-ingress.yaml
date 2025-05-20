@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: be-channels-ingress
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "channels-api.dyn.cloud.e-infra.cz"
+      secretName: channels-api-dyn-cloud-e-infra-cz-tls
+  rules:
+  - host: "channels-api.dyn.cloud.e-infra.cz"
+    http:
+      paths:
+      - backend:
+          service:
+            name: be-channels
+            port:
+              number: 8000
+        pathType: ImplementationSpecific
