@@ -200,7 +200,8 @@ class SearchBox extends React.Component<GlobalProps, { isAvailable: boolean }> {
                 <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for experimental structures using name or IDs (e.g. cytochrome P450, 5ebl, KcsA, P08686)'
                     onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
                     onKeyPress={(e) => {
-                        if (e.key !== 'Enter') return;
+                        return; // Deactive full search for now.
+                        // if (e.key !== 'Enter') return;
                         this.props.state.fullSearch.onNext(void 0);
                         updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
                     }} />
