@@ -9,6 +9,7 @@ from time import sleep
 from zoneinfo import ZoneInfo
 import multiprocessing as mp
 from os import environ
+from datetime import date
 
 from apscheduler.events import (
     EVENT_JOB_ERROR,
@@ -88,6 +89,23 @@ def send_to_process(data_queue: mp.Queue, files_to_process: list[tuple]) -> int:
             sleep(2)
 
 
+def write_failed_file(data: list, file_name: str):
+    """Writes file with failed entries.
+
+    Args:
+        data: list of entries.
+        file_name: name of created file.
+    """
+
+    log.debug(f"Number of failed ids to write: {len(data)}")
+    try:
+        current_date = date.today().isoformat()
+        with open(f"{current_date}_{file_name}.txt", "a+") as file:
+            file.write("\n".join([x for x in data]))
+    except Exception as e:
+        log.error(f"Failed to write failed {file_name} files. Error: {e}")
+
+
 def process_valid():
     """Processes added or updated entries based on flag."""
     log.debug("Processing added and modified entries.")
@@ -117,6 +135,8 @@ def process_valid():
         if added:
             log.debug("SCHEDULER - Finished processing 'added' entries.")
 
+        if failed_batch:
+            write_failed_file(failed_batch, "added")
         total_failed = len(failed_batch)
         total_processed = len(added)
 
@@ -135,6 +155,9 @@ def process_valid():
 
         if modified:
             log.debug("SCHEDULER - Finished processing 'modified' entries.")
+
+        if failed_batch:
+            write_failed_file(failed_batch, "modified")
 
         total_processed = len(modified)
         total_failed = len(failed_batch)

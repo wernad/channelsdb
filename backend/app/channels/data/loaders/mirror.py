@@ -123,9 +123,15 @@ def fetch_all(start: int, total: int, data_queue: mp.Queue) -> None:
             total_processed += len(ids)
             total_failed += len(failed_batch)
             if failed_batch:
-                log.debug(f"Number of failed ids: {len(failed_batch)}")
-                with open("failed.txt", "a+") as file:
-                    file.write("\n".join([x for x in failed_batch]))
+                log.debug(f"Number of failed ids to write: {len(failed_batch)}")
+                try:
+                    with open("failed.txt", "a+") as file:
+                        file.write("\n".join([x for x in failed_batch]))
+                except Exception as e:
+                    log.error(
+                        f"Failed to write failed file ids with start {start}. Error: {e}"
+                    )
+
         log.debug(
             f"Total processed: {total_processed} -- Total failed: {total_failed}."
         )
