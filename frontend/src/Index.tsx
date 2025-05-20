@@ -200,8 +200,7 @@ class SearchBox extends React.Component<GlobalProps, { isAvailable: boolean }> {
                 <input key={'fullsearch'} type='text' className='form-control' style={{ fontWeight: 'bold', borderColor: 'darkgreen' }} placeholder='Search ChannelsDB 2.0 for experimental structures using name or IDs (e.g. cytochrome P450, 5ebl, KcsA, P08686)'
                     onChange={(e) => this.props.state.searchTerm.onNext(e.target.value)}
                     onKeyPress={(e) => {
-                        return; // Deactive full search for now.
-                        // if (e.key !== 'Enter') return;
+                        if (e.key !== 'Enter') return;
                         this.props.state.fullSearch.onNext(void 0);
                         updateViewState(this.props.state, { kind: 'Entries', term: (e.target as any).value });
                     }} />
@@ -255,11 +254,9 @@ class SearchResults extends React.Component<GlobalProps, {}> {
     render() {
         try {
             const data = (this.props.state.viewState as ViewState.Seached).data;
-            console.log("@", data);
             if (data === undefined || data.length === 0 || !data.grouped.category.groups.length) return this.empty();
             return <div>
-                {/* TODO Changes to backend caused this to not function properly. Fix endpoint call.*/}
-                {/* <div style={{ padding: '0 0 15px 0', marginTop: '-15px', fontStyle: 'italic', textAlign: 'right' }}><small>Press 'Enter' for full-text search.</small></div> */}
+                <div style={{ padding: '0 0 15px 0', marginTop: '-15px', fontStyle: 'italic', textAlign: 'right' }}><small>Press 'Enter' for full-text search.</small></div>
                 <div>{this.groups()}</div>
             </div>;
         } catch (e) {
