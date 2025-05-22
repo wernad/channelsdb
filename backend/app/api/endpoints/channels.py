@@ -36,7 +36,7 @@ async def get_channels(
         structure_id: Id of structure in PDB or UniProt format.
     """
     internal_id = structure_service.get_newest_structure_with_channels_by_external_id(
-        structure_id=structure_id
+        external_id=structure_id
     )
 
     if internal_id:

@@ -72,7 +72,7 @@ class ChannelService:
                     profile=[ProfileOutput(**dict(p)) for p in channel.profiles],
                     layers=Layers(
                         residue_flow=[
-                            f"{lr.residue.name.upper()} {lr.sequence_number} {lr.chain_id}{' Backbone' if lr.backbone else ''}"
+                            f"{lr.residue.name.upper() if lr.residue else 'unknown'} {lr.sequence_number} {lr.chain_id}{' Backbone' if lr.backbone else ''}"
                             for layer in channel.layers
                             for lr in sorted(
                                 layer.layer_residues, key=lambda x: x.flow_id
@@ -105,43 +105,54 @@ class ChannelService:
                                 ),
                                 properties=LayerProperties(
                                     charge=sum(
-                                        lr.residue.charge for lr in layer.layer_residues
+                                        lr.residue.charge if lr.residue else 0
+                                        for lr in layer.layer_residues
                                     ),
                                     num_positives=len(
                                         [
-                                            lr.residue.charge
+                                            (
+                                                lr.residue.charge
+                                                if lr.residue and lr.residue.charge > 0
+                                                else 0
+                                            )
                                             for lr in layer.layer_residues
-                                            if lr.residue.charge > 0
                                         ]
                                     ),
                                     num_negatives=len(
                                         [
-                                            lr.residue.charge
+                                            (
+                                                lr.residue.charge
+                                                if lr.residue and lr.residue.charge < 0
+                                                else 0
+                                            )
                                             for lr in layer.layer_residues
-                                            if lr.residue.charge < 0
                                         ]
                                     ),
                                     hydrophobicity=mean(
                                         [
-                                            lr.residue.hydrophobicity
+                                            (
+                                                lr.residue.hydrophobicity
+                                                if lr.residue
+                                                else 0
+                                            )
                                             for lr in layer.layer_residues
                                         ]
                                     ),
                                     hydropathy=mean(
                                         [
-                                            lr.residue.hydropathy
+                                            lr.residue.hydropathy if lr.residue else 0
                                             for lr in layer.layer_residues
                                         ]
                                     ),
                                     polarity=mean(
                                         [
-                                            lr.residue.polarity
+                                            lr.residue.polarity if lr.residue else 0
                                             for lr in layer.layer_residues
                                         ]
                                     ),
                                     mutability=mean(
                                         [
-                                            lr.residue.mutability
+                                            lr.residue.mutability if lr.residue else 0
                                             for lr in layer.layer_residues
                                         ]
                                     ),
