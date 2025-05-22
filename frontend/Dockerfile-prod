@@ -34,7 +34,7 @@ COPY --from=frontend /build/assets/js/search.js /var/www/assets/js/search.js
 
 COPY --from=frontend /build/*.html /var/www/
 
-COPY ../docker/nginx.devel.conf etc/nginx/nginx.conf
+COPY ../docker/nginx.prod.conf etc/nginx/nginx.conf
 
 COPY --from=results /build/dist/ChannelsDB /var/www/detail
 
