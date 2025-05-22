@@ -76,7 +76,7 @@ spec:
                 secretKeyRef:
                   name: channelsdb-creds
                   key: pdb-mirror-api-url
-          image: cerit.io/wernad/be-channels:3.0.4
+          image: cerit.io/wernad/be-channels:3.0.5
           imagePullPolicy: Always
           livenessProbe:
             exec:
