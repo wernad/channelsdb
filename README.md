@@ -1,29 +1,160 @@
-# ChannelsDB 2
+# ChannelsDB 3
 
-The project consinsts of three parts: Python API (`/api`), main page (`/frontpage`) and the results page (`/results`).
+Web app for storing and visualizing channels in proteins. Allows to search for proteins on web and show them in detail with additional information about tunnels and their residues. App contains script for initial loading of all proteins from [PDB archive](https://www.wwpdb.org/ftp/pdb-ftp-sites). 
 
-## Running
+## Running locally
 
-Two setups are available, a local development version and a production version meant to be run in Openstack cloud. 
+**`Ubuntu` or similar Linux distribution is assumed.**
 
-### Development
+### Requirements:
 
-To run the development version of ChannelsDB 2, use the following commands:
+- Docker installed (guide [here](https://docs.docker.com/engine/install/ubuntu/)).
+- `docker compose` utility installed (guide [here](https://docs.docker.com/desktop/setup/install/linux/ubuntu/)).
 
-```bash
-$ docker compose -f docker/docker-compose.yaml build
-$ docker compose -f docker/docker-compose.yaml up
+
+Docker compose uses configurations in `backend/Dockerfile` and `frontend/Dockerfile`, with frontend also using `frontend/nginx.prod.conf` to setup NGINX server properly and forward API calls through frontend's URL to backend.
+
+App as a whole can be run using `docker-compose.yaml` file for development enviroment. 
+Use following commands to build and run the app:
+
+```
+docker compose -f docker/docker-compose.yaml build --no-cache
+docker compose -f docker/docker-compose.yaml up
+```
+Backend uses `--reload` option, meaning code changes in FastAPI's code are propagated to docker container. For frontend changes, `fe-channels` container needs to be rebuild:
+
+```
+docker compose -f docker/docker-compose.yaml build fe-channels --no-cache
 ```
 
-By default, the application runs on port `80` and uses `/data` as the data directory. To change this behaviour,
-set the following environment variables before running `docker compose up`. For example:
+### Accessing database via `psql`
 
-```bash
-export CHANNELSDB_PORT=8080
-export CHANNELSDB_DATA=/home/channelsdb/data
+#### Requirements:
+- `psql` utility (install using `sudo apt install postgresql-client`)
+
+Assuming `docker compose up` command running, use following command and when prompted for password use `admin` or the password you have set in `docker-compose` file:
+
+```
+psql -h 172.20.0.4 -U channelsdb -d channelsdb 
 ```
 
-### Production
+## Deployment on Kubernetes
 
-The production version has to use `docker/docker-compose.production.yaml` together with the main `docker/docker-compose.yaml` file.
-No further setup is allowed.
+### Requirements:
+- `kubectl` utility installed (guide [here](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)).
+- Available Kubernetes enviroment.
+- Images available on image registry of your choice for backend and frontend images.
+
+#### Optional
+- `kompose` utility installed (guide [here](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)).
+
+### Building production images
+
+**Don't forget to update image urls in corresponding `kubernetes/*-deployment.yaml` files.**
+Build images:
+
+- Backend:
+```
+docker build -t REGISTRY_URL/USERNAME/IMAGE_NAME:TAG -f backend/Dockerfile-prod ./backend/ --no-cache
+
+docker push REGISTRY_URL/USERNAME/IMAGE_NAME:TAG
+```
+
+- Frontend:
+
+```
+docker build -t REGISTRY_URL/USERNAME/IMAGE_NAME:TAG -f frontend/Dockerfile-prod . --no-cache
+
+docker push REGISTRY_URL/USERNAME/IMAGE_NAME:TAG
+```
+
+**Frontend needs to use project's root folder as working directory because it copies files from `results/` folder.**
+
+
+
+### Secrets
+
+For this project `Rancher` management platform was used to create secrets. 
+
+
+#### Creating secrets
+Step by step:
+
+1. Login to Rancher.
+2. Navigate to your cluster.
+3. Navigate to `Storage` on left sidebar.
+4. Navigate to `Secrets` option under `Storage` in left sidebar.
+5. Click `Create` in the right top corner under your profile icon.
+6. Choose `Opaque` secret type.
+7. Fill in the `Name` with name you plan to use in configuration files (default: `channelsdb-creds`).
+8. Add necessary variables under `Data` (click on `Add` to add more):
+    - db-host
+    - db-name
+    - db-user
+    - db-pass
+    - db-port
+    - pdb-mirror-api-url (value for this variable is `http://MIRROR_CONTAINER_NAME:MIRROR_CONTAINER_PORT/`)
+9. Click `Create` in the right bottom corner.
+
+
+#### Editing secrets
+1. Follow steps 1-4 from [Creating secrets](#creating-secrets).
+2. Click on an existing name of a secret you want to edit.
+3. Click on 3 dots icon in top right corner under your profile icon.
+4. Click `Edit Config` in dropdown menu.
+5. Add/Edit/Remove your secrets.
+6. Click `Save` in bottom right corner.
+
+### Creating/updating pods
+
+
+```
+kubectl apply -f docker/kubernetes/ -n YOUR_NAMESPACE
+```
+
+
+### Interacting with pods remotely.
+
+If your Kubernetes solution doesn't support web terminal or you simply want to use your terminal, you first need to get pod identifiers:
+
+```
+kubectl get pods -n YOUR_NAMESPACE
+```
+
+Then you can connect to your pods using:
+- Backend (bash):
+
+```
+kubectl exec -it -n YOUR_NAMESPACE POD_ID -- bash
+```
+
+- Frontend (shell):
+
+```
+kubectl exec -it -n YOUR_NAMESPACE POD_ID -- sh
+```
+
+
+### (Optional) Generating new configuration files.
+In `docker/kubernetes` you can find configuration files for deployment on Kubernetes platform. These files were manually adjusted after using `Kompose` utility to generate initial version from existing `docker/docker-compose.yaml` files. 
+
+
+### Caution
+There are a few caveats to consider when generating your own configuration file. Firstly, keep in mind that produced configuration files are not complete and require adding additional files (ingress, service) and tweaking security options and secrets (use existing files in `docker/kubernetes/` for reference). 
+
+Step by step:
+
+1. Update image paths in `docker/docker-compose.yaml` file to use repository URLs to your built images.
+
+2. Create and move to folder where you want your configuration files to be stored:
+
+```
+mkdir FOLDER_NAME
+
+cd FOLDER_NAME
+```
+3. Run `kompose`:
+
+```
+kompose -f PATH_TO_DOCKER_COMPOSE_FILE convert
+```
