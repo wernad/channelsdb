@@ -42,6 +42,7 @@ psql -h 172.20.0.4 -U channelsdb -d channelsdb
 
 ### Requirements:
 - `kubectl` utility installed (guide [here](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)).
+- Create local config for `kubectl` (guide [here](https://ranchermanager.docs.rancher.com/how-to-guides/new-user-guides/manage-clusters/access-clusters/use-kubectl-and-kubeconfig) 
 - Available Kubernetes enviroment.
 - Images available on image registry of your choice for backend and frontend images.
 
