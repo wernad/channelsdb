@@ -30,7 +30,6 @@ class HetResidueRepository(RepositoryBase):
         statement = insert(HetResidue).values(values).returning(HetResidue.id)
 
         result = self.db.exec(statement)
-        self.db.commit()
 
         ids = [id[0] for id in result.all()]
 

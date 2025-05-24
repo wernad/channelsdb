@@ -1,5 +1,6 @@
 """Methods for inserting values used by inserter worker."""
 
+from sqlmodel import Session
 from app.log import log
 from app.services import (
     ChannelService,
@@ -244,7 +245,7 @@ def get_het_residue_values(
 
 
 def insert_structure_if_missing(
-    full_id: str, version: int, has_channels: bool
+    session: Session, full_id: str, version: int, has_channels: bool
 ) -> int | None:
     """Inserts a new structure row if it's not in the database.
 
@@ -256,31 +257,32 @@ def insert_structure_if_missing(
         Integer id of structure entry or None if structure exists.
     """
 
-    with db_context() as session:
-        structure_service = StructureService(session)
-        log.debug(f"INSERTER -- Checking if structure {full_id} exists.")
-        structure = structure_service.check_if_exists_by_external_id_and_version(
-            full_id, version
+    structure_service = StructureService(session)
+    log.debug(f"INSERTER -- Checking if structure {full_id} exists.")
+    structure = structure_service.check_if_exists_by_external_id_and_version(
+        full_id, version
+    )
+
+    if structure is not None:
+        raise Exception(f"Structure {full_id} already exists.")
+
+    else:
+        new_structure = StructureInsert(
+            has_channels=has_channels,
+            version=version,
+            external_id=full_id,
+            source_id=Sources.PDB.value,
         )
 
-        if structure is not None:
-            return None
-
-        else:
-            new_structure = StructureInsert(
-                has_channels=has_channels,
-                version=version,
-                external_id=full_id,
-                source_id=Sources.PDB.value,
-            )
-
-            structure_id = structure_service.insert_entry(new_structure)
+        structure_id = structure_service.insert_entry(new_structure)
 
     log.debug(f"INSERTER -- Returning structure id: {structure_id}")
     return structure_id
 
 
-def insert_profiles(channels_ids: list[int], data: list[dict]) -> None:
+def insert_profiles(
+    session: Session, channels_ids: list[int], data: list[dict]
+) -> None:
     """Inserts new profile entries for each new channel.
 
     Args:
@@ -295,17 +297,18 @@ def insert_profiles(channels_ids: list[int], data: list[dict]) -> None:
     values = get_profile_values(channels_ids=channels_ids, data=profiles)
 
     if values:
-        with db_context() as session:
-            profile_service = ProfileService(session)
+        profile_service = ProfileService(session)
 
-            profile_service.insert_bulk(values)
+        profile_service.insert_bulk(values)
 
         log.debug(f"INSERTER -- Profiles inserted for channels: {channels_ids}")
     else:
         log.debug(f"INSERTER -- No profile values for channels: {channels_ids}")
 
 
-def insert_channels(structure_id: int, method_id: int, data: dict) -> list[int] | None:
+def insert_channels(
+    session: Session, structure_id: int, method_id: int, data: dict
+) -> list[int] | None:
     """Inserts new channels into database.
 
     If protein entry doesn't exist, insert it as well.
@@ -324,10 +327,9 @@ def insert_channels(structure_id: int, method_id: int, data: dict) -> list[int] 
 
     values = get_channel_values(structure_id, method_id, data)
     if values:
-        with db_context() as session:
-            channel_service = ChannelService(session)
+        channel_service = ChannelService(session)
 
-            channels_ids = channel_service.insert_in_bulk(values)
+        channels_ids = channel_service.insert_in_bulk(values)
 
         log.debug(
             f"INSERTER -- Channels inserted for: structure {structure_id}, method: {method_id}"
@@ -340,7 +342,9 @@ def insert_channels(structure_id: int, method_id: int, data: dict) -> list[int] 
     return None
 
 
-def insert_annotations(channel_id: int, annotation_data: dict) -> None:
+def insert_annotations(
+    session: Session, channel_id: int, annotation_data: dict
+) -> None:
     """Inserts annotation data for given channel.
 
     Args:
@@ -350,20 +354,21 @@ def insert_annotations(channel_id: int, annotation_data: dict) -> None:
 
     log.debug(f"INSERTER -- Inserting annotations for channel: {channel_id}")
 
-    values = get_annotation_values(annotation_data)
+    values = get_annotation_values(channel_id, annotation_data)
 
     if values:
-        with db_context() as session:
-            annotation_service = AnnotationService(session)
+        annotation_service = AnnotationService(session)
 
-            annotation_service.insert_bulk(values)
+        annotation_service.insert_bulk(values)
 
         log.debug(f"INSERTER -- Annotations isnerted for channel: {channel_id}")
     else:
         log.debug(f"INSERTER -- No annotation values for channel: {channel_id}")
 
 
-def insert_layers(channels_ids: list[int], data: list[dict]) -> list[int] | None:
+def insert_layers(
+    session: Session, channels_ids: list[int], data: list[dict]
+) -> list[int] | None:
     """Inserts new layers for new channels.
 
     Args:
@@ -379,10 +384,9 @@ def insert_layers(channels_ids: list[int], data: list[dict]) -> list[int] | None
     values = get_layer_values(channels_ids, layers)
 
     if values:
-        with db_context() as session:
-            layers_service = LayerService(session)
+        layers_service = LayerService(session)
 
-            layers_ids = layers_service.insert_bulk(values)
+        layers_ids = layers_service.insert_bulk(values)
 
         log.debug(f"INSERTER -- Layers inserted for channels: {channels_ids}")
         return layers_ids
@@ -391,7 +395,9 @@ def insert_layers(channels_ids: list[int], data: list[dict]) -> list[int] | None
     return None
 
 
-def insert_layer_residues(layers_ids: list[int], data: list[dict]) -> None:
+def insert_layer_residues(
+    session: Session, layers_ids: list[int], data: list[dict]
+) -> None:
     """Inserts new layer residue entries for each layer.
 
     Args:
@@ -412,17 +418,18 @@ def insert_layer_residues(layers_ids: list[int], data: list[dict]) -> None:
     )
 
     if values:
-        with db_context() as session:
-            layer_residue_service = LayerResidueService(session)
+        layer_residue_service = LayerResidueService(session)
 
-            layer_residue_service.insert_bulk(values)
+        layer_residue_service.insert_bulk(values)
 
         log.debug(f"INSERTER -- Layer residues inserted for layers: {layers_ids}")
     else:
         log.debug(f"INSERTER -- No layer residue values for layers: {layers_ids}")
 
 
-def insert_het_residues(channels_ids: list[int], data: list[dict]) -> None:
+def insert_het_residues(
+    session: Session, channels_ids: list[int], data: list[dict]
+) -> None:
     """Inserts new het residue entries for each layer.
 
     Args:
@@ -437,10 +444,9 @@ def insert_het_residues(channels_ids: list[int], data: list[dict]) -> None:
         channels_ids=channels_ids, het_residues=het_residues
     )
     if values:
-        with db_context() as session:
-            het_residue_service = HetResidueService(session)
+        het_residue_service = HetResidueService(session)
 
-            het_residue_service.insert_bulk(values)
+        het_residue_service.insert_bulk(values)
 
         log.debug(f"INSERTER -- Het residues inserted for channels: {channels_ids}")
     else:

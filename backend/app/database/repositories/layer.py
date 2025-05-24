@@ -82,7 +82,6 @@ class LayerRepository(RepositoryBase):
         values = [value.model_dump() for value in values]
         statement = insert(Layer).values(values).returning(Layer.id)
         result = self.db.exec(statement)
-        self.db.commit()
 
         ids = [id[0] for id in result.all()]
 

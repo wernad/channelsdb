@@ -218,7 +218,6 @@ class StructureRepository(RepositoryBase):
             insert(Structure).values(values.model_dump()).returning(Structure.id)
         )
         result = self.db.exec(statement)
-        self.db.commit()
 
         id = result.first()
 

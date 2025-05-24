@@ -30,7 +30,6 @@ class LayerResidueRepository(RepositoryBase):
         statement = insert(LayerResidue).values(values).returning(LayerResidue.id)
 
         result = self.db.exec(statement)
-        self.db.commit()
 
         ids = [id[0] for id in result.all()]
 

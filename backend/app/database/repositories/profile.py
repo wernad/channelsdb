@@ -30,7 +30,6 @@ class ProfileRepository(RepositoryBase):
         statement = insert(Profile).values(values).returning(Profile.id)
 
         result = self.db.exec(statement)
-        self.db.commit()
 
         ids = [id[0] for id in result.all()]
 

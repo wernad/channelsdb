@@ -43,7 +43,6 @@ class AnnotationRepository(RepositoryBase):
         values = [value.model_dump() for value in values]
         statement = insert(Annotation).values(values).returning(Annotation.id)
         result = self.db.exec(statement)
-        self.db.commit()
 
         ids = [id[0] for id in result.all()]
 

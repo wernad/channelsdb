@@ -16,6 +16,8 @@ from app.channels.data.workers.insert_utils import (
     insert_layer_residues,
     insert_het_residues,
 )
+from app.database.database import db_context
+from app.log import log
 
 
 def load_json_file(file_path) -> dict:
@@ -75,32 +77,56 @@ def run(file_path: str) -> None:
     json_file = load_json_file(file_path)
 
     annotations_indices = get_annotations_ids(json_file["Annotations"])
-    structure_id = insert_structure_if_missing(
-        full_id=full_id, version=1, has_channels=True
-    )
+    with db_context() as session:
+        try:
+            session.begin()
 
-    for method, channels in json_file["Channels"].items():
-        if channels:
-            method_id = METHODS_NAMES_TO_IDS[method]
-
-            channels_ids = insert_channels(
-                structure_id=structure_id, method_id=method_id, data=channels
+            structure_id = insert_structure_if_missing(
+                session, full_id=full_id, version=1, has_channels=True
             )
 
-            for channel_idx, channel in enumerate(channels):
-                ann_indices = annotations_indices.get(channel["Id"], None)
+            for method, channels in json_file["Channels"].items():
+                if channels:
+                    method_id = METHODS_NAMES_TO_IDS[method]
 
-                if ann_indices:
-                    selected_annotations = []
-                    for idx in ann_indices:
-                        selected_annotations.append(json_file["Annotations"][idx])
-
-                    insert_annotations(
-                        channel_id=channel_idx, annotation_data=selected_annotations
+                    channels_ids = insert_channels(
+                        session=session,
+                        structure_id=structure_id,
+                        method_id=method_id,
+                        data=channels,
                     )
 
-            insert_profiles(channels_ids=channels_ids, data=channels)
-            layers_ids = insert_layers(channels_ids=channels_ids, data=channels)
+                    for channel_idx, channel in zip(channels_ids, channels):
+                        ann_indices = annotations_indices.get(channel["Id"], None)
 
-            insert_layer_residues(layers_ids=layers_ids, data=channels)
-            insert_het_residues(channels_ids=channels_ids, data=channels)
+                        if ann_indices:
+                            selected_annotations = []
+                            for idx in ann_indices:
+                                selected_annotations.append(
+                                    json_file["Annotations"][idx]
+                                )
+
+                            insert_annotations(
+                                session=session,
+                                channel_id=channel_idx,
+                                annotation_data=selected_annotations,
+                            )
+
+                    insert_profiles(
+                        session=session, channels_ids=channels_ids, data=channels
+                    )
+                    layers_ids = insert_layers(
+                        session=session, channels_ids=channels_ids, data=channels
+                    )
+
+                    insert_layer_residues(
+                        session=session, layers_ids=layers_ids, data=channels
+                    )
+                    insert_het_residues(
+                        session=session, channels_ids=channels_ids, data=channels
+                    )
+
+            session.commit()
+        except Exception as e:
+            log.error(f"Error occured when loading file {file_path}. Error: {e}")
+            session.rollback()
