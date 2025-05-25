@@ -70,7 +70,7 @@ class MoleTemplate(ABC):
         Returns:
             String path.
         """
-        return f"./{protein}.cif"
+        return os.path.join(os.getcwd(), f"{protein}.cif")
 
     def create_source_file(self, protein: str, file: bytes) -> None:
         """Creates a source file for calculation.
@@ -138,9 +138,9 @@ class MoleTemplate(ABC):
         Args:
             include_workdir: Flag to indicate if working directory should be deleted.
         """
-
-        for item in os.listdir("./"):
-            item_path = os.path.join("./", item)
+        current_dir = os.getcwd()
+        for item in os.listdir(current_dir):
+            item_path = os.path.join(current_dir, item)
             try:
                 if os.path.isfile(item_path):
                     os.unlink(item_path)

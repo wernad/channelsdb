@@ -76,7 +76,10 @@ spec:
                 secretKeyRef:
                   name: channelsdb-creds
                   key: pdb-mirror-api-url
-          image: cerit.io/wernad/be-channels:3.0.7
+          volumeMounts:
+          - name: output-volume
+            mountPath: /opt/channelsdb/app/channels/output
+          image: cerit.io/wernad/be-channels:3.0.13
           imagePullPolicy: Always
           livenessProbe:
             exec:
@@ -90,5 +93,15 @@ spec:
           ports:
             - containerPort: 8000
               protocol: TCP
+          resources:
+            requests:
+              cpu: "1"
+              memory: "512M"
+            limits:
+              cpu: "1"
+              memory: "2048M"
+      volumes:
+        - name: output-volume
+          emptyDir: {}
       restartPolicy: Always
 

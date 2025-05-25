@@ -25,7 +25,7 @@ export class UI extends React.Component<{ plugin: Context }, { isLoading?: boole
         this.load();
         $(window).on("contentResize", this.onContentResize.bind(this));
         let globalRouter = GlobalRouter;
-        const url = `${globalRouter.getChannelsURL()}/statistics`;
+        const url = `${globalRouter.getChannelsURL()}/statistics/methods`;
         fetch(url).then(resp => this.setState({ apiStatus: resp.status }));
     }
 
@@ -50,7 +50,7 @@ export class UI extends React.Component<{ plugin: Context }, { isLoading?: boole
         else {
             this.currentProteinId = GlobalRouter.getCurrentPid().toLowerCase();
         }
-        
+
         const channelsURL = GlobalRouter.getChannelsURL();
 
         this.setState({ isLoading: true, error: void 0 });

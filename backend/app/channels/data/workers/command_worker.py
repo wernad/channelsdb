@@ -2,6 +2,7 @@
 
 import multiprocessing as mp
 import os
+from pathlib import Path
 import shutil
 import time
 from queue import Empty
@@ -40,12 +41,26 @@ def _prepare_work_dir(worker_id: str) -> None:
 
     log.debug(f"WORKER {worker_id} - Preparing working directory: {work_dir}.")
     try:
-        os.mkdir(f"{work_dir}")
+        dir_path = Path(work_dir)
+        dir_path.mkdir(mode=0o777, exist_ok=True)
+
+        # os.chmod(dir_path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+        os.chmod(dir_path, 0o777)
+        # os.mkdir(f"{work_dir}")
         os.chdir(work_dir)
         log.debug(
             f"WORKER {worker_id} - Working directory created and set successfully."
         )
     except FileExistsError:
+        for root, dirs, files in os.walk(dir_path):
+            for d in dirs:
+                os.chmod(os.path.join(root, d), 0o755)
+            for f in files:
+                os.chmod(os.path.join(root, f), 0o644)
+        shutil.rmtree(dir_path)
+        log.debug(f"Directory '{dir_path}' already exists, cleaning up.")
+
+        os.mkdir(dir_path)
         log.error(f"WORKER {worker_id} - Directory '{work_dir}' already exists.")
     except PermissionError:
         log.error(

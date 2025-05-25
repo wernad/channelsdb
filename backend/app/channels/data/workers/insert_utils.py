@@ -264,7 +264,8 @@ def insert_structure_if_missing(
     )
 
     if structure is not None:
-        raise Exception(f"Structure {full_id} already exists.")
+        log.debug(f"Structure {full_id} at version {version} already exists.")
+        return structure.id
 
     else:
         new_structure = StructureInsert(

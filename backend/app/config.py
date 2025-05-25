@@ -4,7 +4,7 @@ This module defines configuration values for:
 - Database connection
 - API endpoints and paths
 - PDB mirror and remote API settings
-- AlphaFill integration
+- AlphaFill file link
 - Multiprocessing parameters
 - Directory paths and file locations
 """
@@ -50,6 +50,6 @@ WORKER_LIMIT = 100
 CRON_JOB_DAY = 3  # 0-6 (Mon - Sun).
 
 # DIRECTORIES
-CONFIG_PATH = "./app/channels/commands/config"
-OUTPUT_PATH = "./app/channels/output"
+CONFIG_PATH = "/opt/channelsdb/app/channels/commands/config"
+OUTPUT_PATH = "/opt/channelsdb/app/channels/output"
 RELATIVE_MOLE_PATH = "../../commands/mole2/mole2.exe"

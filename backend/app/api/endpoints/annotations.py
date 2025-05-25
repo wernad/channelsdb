@@ -262,7 +262,8 @@ async def get_annotations_pdb(structure_id: IDCheckDep):
     annotations = AnnotationsOutput().model_dump()
 
     if is_pdb_id(structure_id):
-        sifts = process_pdb_file(pdb_id=structure_id)
+        short_id = structure_id[-4:]
+        sifts = process_pdb_file(pdb_id=short_id)
 
         try:
             for uniprot_id, mapping in sifts.items():
@@ -272,7 +273,7 @@ async def get_annotations_pdb(structure_id: IDCheckDep):
             log.error(e)
             raise HTTPException(
                 status_code=400,
-                detail=f"Cannot load annotations for PDB ID '{structure_id}'",
+                detail=f"Cannot load annotations for PDB ID '{short_id}'",
             )
     else:
         fill_annotations_by_uniprot_id(annotations, None, structure_id)

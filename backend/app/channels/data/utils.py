@@ -3,6 +3,9 @@
 import json
 import os
 import shutil
+from pathlib import Path
+import stat
+
 from urllib.parse import quote_plus
 import multiprocessing as mp
 
@@ -47,13 +50,15 @@ def create_output_directory() -> None:
     log.debug("Creating output folder structure.")
 
     try:
-        os.mkdir(OUTPUT_PATH)
+        dir_path = Path(OUTPUT_PATH)
+
+        if dir_path.exists():
+            shutil.rmtree(dir_path)
+            log.debug(f"Removed existing directory '{OUTPUT_PATH}'")
+
+        dir_path.mkdir(mode=0o777, exist_ok=True)
+        os.chmod(dir_path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
         log.debug("Directory created successfully.")
-    except FileExistsError:
-        shutil.rmtree(OUTPUT_PATH)
-        log.debug(f"Directory '{OUTPUT_PATH}' already exists, cleaning up.")
-        os.mkdir(OUTPUT_PATH)
-        log.debug("Directory re-created successfully.")
     except PermissionError:
         log.error(f"Permission denied: Unable to create '{OUTPUT_PATH}'.")
     except Exception as e:
