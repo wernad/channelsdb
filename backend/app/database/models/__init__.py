@@ -37,7 +37,12 @@ from app.database.models.residue import (
     Residues,
 )
 from app.database.models.source import Source, Sources
-from app.database.models.structure import Structure, StructureData, StructureInsert
+from app.database.models.structure import (
+    Structure,
+    StructureData,
+    StructureInsert,
+    StructurePagination,
+)
 
 ChannelOutput.model_rebuild()
 ChannelsResponse.model_rebuild()

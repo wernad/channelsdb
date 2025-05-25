@@ -14,6 +14,7 @@ from app.channels.data.workers.insert_utils import (
     insert_layer_residues,
     insert_het_residues,
 )
+from app.database.database import db_context
 
 
 def insert_worker(result_queue: mp.Queue) -> None:
@@ -36,25 +37,47 @@ def insert_worker(result_queue: mp.Queue) -> None:
             log.debug(f"INSERTER -- Received data for: {full_id=}, {method_id=}")
 
             has_channels = True if channels else False
-            structure_id = insert_structure_if_missing(
-                full_id=full_id, version=version, has_channels=has_channels
-            )
+            with db_context() as session:
+                try:
+                    structure_id = insert_structure_if_missing(
+                        session=session,
+                        full_id=full_id,
+                        version=version,
+                        has_channels=has_channels,
+                    )
 
-            if structure_id:
-                channels_ids = insert_channels(
-                    structure_id=structure_id, method_id=method_id, data=channels
-                )
+                    if structure_id:
+                        channels_ids = insert_channels(
+                            session=session,
+                            structure_id=structure_id,
+                            method_id=method_id,
+                            data=channels,
+                        )
 
-                insert_profiles(channels_ids=channels_ids, data=channels)
-                layers_ids = insert_layers(channels_ids=channels_ids, data=channels)
+                        insert_profiles(
+                            session=session, channels_ids=channels_ids, data=channels
+                        )
+                        layers_ids = insert_layers(
+                            session=session, channels_ids=channels_ids, data=channels
+                        )
 
-                insert_layer_residues(layers_ids=layers_ids, data=channels)
-                insert_het_residues(channels_ids=channels_ids, data=channels)
-                log.debug(
-                    f"INSERTER -- Finished inserting channel data for: {full_id=}, {method_id=}"
-                )
-            else:
-                continue
+                        insert_layer_residues(
+                            session=session, layers_ids=layers_ids, data=channels
+                        )
+                        insert_het_residues(
+                            session=session, channels_ids=channels_ids, data=channels
+                        )
+                        log.debug(
+                            f"INSERTER -- Finished inserting channel data for: {full_id=}, {method_id=}"
+                        )
+                        session.commit()
+
+                    else:
+                        continue
+                except Exception as e:
+                    log.error(
+                        f"INSERTER -- Expection occured during insertion, proceeding... Error: {e}"
+                    )
         except Empty:
             log.debug("INSERTER -- Result queue is empty, waiting...")
             time.sleep(QUEUE_TIMEOUT)

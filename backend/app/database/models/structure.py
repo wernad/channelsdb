@@ -63,3 +63,17 @@ class StructureData(SQLModel):
 
     source_id: int
     version: int
+
+
+class StructurePagination(SQLModel):
+    """Model for pagination limit and offset.
+
+    Attributes:
+        limit: number of entries to fetch.
+        offset: number of entries to skip.
+    """
+
+    model_config = {"extra": "forbid"}
+
+    limit: int = Field(100, gt=0, le=1000000)
+    offset: int = Field(0, ge=0)

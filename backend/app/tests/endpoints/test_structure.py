@@ -90,3 +90,50 @@ def test_get_structures_filtered_extra_params():
     )
 
     assert response.status_code == 422
+
+
+def test_get_all_structures_success(mock_structure_service):
+    """Test fetching all active structures."""
+    expected_ids = ["1ABC", "2DEF"]
+    mock_structure_service.get_all_active_structures_with_pagination.return_value = (
+        expected_ids
+    )
+
+    app.dependency_overrides[get_structure_service] = lambda: mock_structure_service
+
+    limit = 100
+    offset = 0
+
+    response = client.get(f"/structures/all?limit={limit}&offset={offset}")
+
+    assert response.status_code == 200
+    assert response.json() == expected_ids
+
+
+def test_get_all_structures_no_structures(mock_structure_service):
+    """Test fetching all active structures."""
+    mock_structure_service.get_all_active_structures_with_pagination.return_value = []
+
+    app.dependency_overrides[get_structure_service] = lambda: mock_structure_service
+
+    limit = 100
+    offset = 0
+
+    response = client.get(f"/structures/all?limit={limit}&offset={offset}")
+
+    assert response.status_code == 404
+
+
+def test_get_all_structures_extra_param(mock_structure_service):
+    """Test fetching all active structures."""
+    mock_structure_service.get_all_active_structures_with_pagination.return_value = []
+
+    app.dependency_overrides[get_structure_service] = lambda: mock_structure_service
+
+    limit = 100
+    offset = 0
+    extra = "test"
+    response = client.get(
+        f"/structures/all?limit={limit}&offset={offset}&extra={extra}"
+    )
+    assert response.status_code == 422

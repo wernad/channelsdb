@@ -77,6 +77,28 @@ class StructureService:
 
         return result
 
+    def get_all_active_structures_with_pagination(
+        self, limit: int, offset: int
+    ) -> list[str]:
+        """Retrieves list of external ids that have channels.
+
+        Args:
+              Args:
+            limit: Number of entries to fetch.
+            offset: Number of entries to skip.
+        Returns:
+            List of strings.
+        """
+
+        result = self.repository.get_all_structures_with_pagination(
+            limit=limit, offset=offset
+        )
+
+        if result:
+            return result
+
+        return []
+
     def get_source_and_version_by_external_id(self, external_id: str) -> StructureData:
         """Retrieves source and version information for a structure.
 

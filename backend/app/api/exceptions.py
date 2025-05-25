@@ -37,3 +37,9 @@ class NoStatistics(HTTPException):
     def __init__(self):
         self.status_code = 404
         self.detail = "Not enough data to calculate statistics."
+
+
+class NoStructuresWithActiveChannels(HTTPException):
+    def __init__(self):
+        self.status_code = 404
+        self.detail = "No structures found with active channels."

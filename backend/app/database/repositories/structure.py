@@ -61,6 +61,27 @@ class StructureRepository(RepositoryBase):
 
         return result
 
+    def get_all_structures_with_pagination(self, limit: int, offset: int) -> list[str]:
+        """Returns list of external protein ids with channels.
+
+        Args:
+            limit: Number of entries to fetch.
+            offset: Number of entries to skip.
+        Returns:
+            List of strings.
+        """
+
+        statement = (
+            select(Structure.external_id)
+            .where(Structure.has_channels)
+            .limit(limit)
+            .offset(offset)
+        )
+
+        result = self.db.exec(statement).all()
+
+        return result
+
     def get_source_and_version_by_external_id(self, external_id: str) -> dict:
         """Returns source and version information for a structure.
 
