@@ -6,7 +6,7 @@
     "scss_to_css": "node-sass -w node_modules/molstar/lib/mol-plugin-ui/skin",
     "merge-js": "gulp merge-js",
     "merge-css": "gulp merge-css",
-    "build-webpack": "npx webpack --mode production",
+    "build-webpack": "npx webpack",
     "build": "npm run merge-js && npm run merge-css && npm run build-webpack",
     "start": "cd ./dist/ChannelsDB && http-server"
   },

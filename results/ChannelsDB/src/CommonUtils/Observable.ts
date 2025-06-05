@@ -19,12 +19,13 @@ export class SimpleObservable {
             clearInterval(intervalId);
             this.onChange(newValue);
           }
-		  if (this.counter >= 20) {
-			clearInterval(intervalId);
-			this.onChange(this.defaultValue)
-		  }
+		      if (this.counter >= 60) {
+			      clearInterval(intervalId);
+			      this.onChange(this.defaultValue)
+		      }
+        
           this.counter++;
-        }, 100);
+        }, 500);
       }
     }
 }

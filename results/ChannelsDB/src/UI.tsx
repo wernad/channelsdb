@@ -159,20 +159,22 @@ export class Data extends React.Component<State, { hideAll: boolean }> {
                     <button className="btn btn-primary btn-sm bt-none" style={{ marginTop: '0.5em', marginBottom: '0.5em' }} onClick={e => this.toggle(e)}>Hide all</button>
                 </div>
             </div>
-            <div>
-                {this.props.data.Channels.ReviewedChannels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.ReviewedChannels_MOLE} state={this.props} header='Reviewed Channels MOLE' hide={this.state.hideAll} /> : null}
-                {this.props.data.Channels.ReviewedChannels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.ReviewedChannels_Caver} state={this.props} header='Reviewed Channels CAVER' hide={this.state.hideAll} /> : null}
-                {this.props.data.Channels.CSATunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.CSATunnels_MOLE} state={this.props} header='CSA Tunnels MOLE' hide={this.state.hideAll} /> : null}
-                {this.props.data.Channels.CSATunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.CSATunnels_Caver} state={this.props} header='CSA Tunnels CAVER' hide={this.state.hideAll} /> : null}
-                {this.props.data.Channels.TransmembranePores_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.TransmembranePores_MOLE} state={this.props} header='Transmembrane Pores MOLE' hide={this.state.hideAll} /> : null}
-                {this.props.data.Channels.TransmembranePores_Caver.length > 0 ? <Channels channels={this.props.data.Channels.TransmembranePores_Caver} state={this.props} header='Transmembrane Pores CAVER' hide={this.state.hideAll} /> : null}
-                {this.props.data.Channels.CofactorTunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.CofactorTunnels_MOLE} state={this.props} header='Cofactor Tunnels MOLE' hide={this.state.hideAll} /> : null}
-                {this.props.data.Channels.CofactorTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.CofactorTunnels_Caver} state={this.props} header='Cofactor Tunnels CAVER' hide={this.state.hideAll} /> : null}
-                {this.props.data.Channels.ProcognateTunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.ProcognateTunnels_MOLE} state={this.props} header='COGNATE Tunnels MOLE' hide={this.state.hideAll} /> : null}
-                {this.props.data.Channels.ProcognateTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.ProcognateTunnels_Caver} state={this.props} header='COGNATE Tunnels CAVER' hide={this.state.hideAll} /> : null}
-                {this.props.data.Channels.AlphaFillTunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.AlphaFillTunnels_MOLE} state={this.props} header='AlphaFill Tunnels MOLE' hide={this.state.hideAll} /> : null}
-                {this.props.data.Channels.AlphaFillTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.AlphaFillTunnels_Caver} state={this.props} header='AlphaFill Tunnels CAVER' hide={this.state.hideAll} /> : null}
-            </div>
+            {this.props.data !== undefined &&
+                <div>
+                    {this.props.data.Channels.ReviewedChannels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.ReviewedChannels_MOLE} state={this.props} header='Reviewed Channels MOLE' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.ReviewedChannels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.ReviewedChannels_Caver} state={this.props} header='Reviewed Channels CAVER' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.CSATunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.CSATunnels_MOLE} state={this.props} header='CSA Tunnels MOLE' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.CSATunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.CSATunnels_Caver} state={this.props} header='CSA Tunnels CAVER' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.TransmembranePores_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.TransmembranePores_MOLE} state={this.props} header='Transmembrane Pores MOLE' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.TransmembranePores_Caver.length > 0 ? <Channels channels={this.props.data.Channels.TransmembranePores_Caver} state={this.props} header='Transmembrane Pores CAVER' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.CofactorTunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.CofactorTunnels_MOLE} state={this.props} header='Cofactor Tunnels MOLE' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.CofactorTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.CofactorTunnels_Caver} state={this.props} header='Cofactor Tunnels CAVER' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.ProcognateTunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.ProcognateTunnels_MOLE} state={this.props} header='COGNATE Tunnels MOLE' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.ProcognateTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.ProcognateTunnels_Caver} state={this.props} header='COGNATE Tunnels CAVER' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.AlphaFillTunnels_MOLE.length > 0 ? <Channels channels={this.props.data.Channels.AlphaFillTunnels_MOLE} state={this.props} header='AlphaFill Tunnels MOLE' hide={this.state.hideAll} /> : null}
+                    {this.props.data.Channels.AlphaFillTunnels_Caver.length > 0 ? <Channels channels={this.props.data.Channels.AlphaFillTunnels_Caver} state={this.props} header='AlphaFill Tunnels CAVER' hide={this.state.hideAll} /> : null}
+                </div>
+            }
         </div>;
         /*
         <h2>Empty Space</h2>

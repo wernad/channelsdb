@@ -29,11 +29,15 @@ export class AglomeredParameters extends React.Component<{ controller: Context }
 
     componentDidMount() {
         const checkDataAvailability = () => {
-            return this.props.controller.data as ChannelsDBData;
+            const data = this.props.controller.data as ChannelsDBData;
+            if (data === undefined || data.Channels === undefined) {
+                return void 0;
+            }
+            return data;
         };
 
         const onDataLoaded = (data: ChannelsDBData) => {
-            if (data) {
+            if (data !== undefined && data.Channels !== undefined) {
                 let toShow: Tunnel[] = [];
                 toShow = toShow.concat(data.Channels.CSATunnels_MOLE);
                 toShow = toShow.concat(data.Channels.CSATunnels_Caver);
