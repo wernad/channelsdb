@@ -61,25 +61,25 @@ class DownloadResultsMenu extends React.Component<{ disabled: boolean }, {}> {
         let items: JSX.Element[] = [];
 
         items.push(
-            <BootstrapDropDownMenuItem linkText=".zip" link={`${linkBase}/zip`} targetBlank={true} />
+            <BootstrapDropDownMenuItem linkText=".zip" link={`${linkBase}?file_format=zip`} targetBlank={true} />
         );
         items.push(
-            <BootstrapDropDownMenuItem linkText=".pdb" link={`${linkBase}/pdb`} targetBlank={true} />
+            <BootstrapDropDownMenuItem linkText=".pdb" link={`${linkBase}?file_format=pdb`} targetBlank={true} />
         );
         items.push(
-            <BootstrapDropDownMenuItem linkText=".json" link={`${linkBase}/json`} targetBlank={true} />
+            <BootstrapDropDownMenuItem linkText=".json" link={`${linkBase}?file_format=json`} targetBlank={true} />
         );
         items.push(
-            <BootstrapDropDownMenuItem linkText=".py" link={`${linkBase}/pymol`} targetBlank={true} />
+            <BootstrapDropDownMenuItem linkText=".py" link={`${linkBase}?file_format=pymol`} targetBlank={true} />
         );
         items.push(
-            <BootstrapDropDownMenuItem linkText=".vmd" link={`${linkBase}/vmd`} targetBlank={true} />
+            <BootstrapDropDownMenuItem linkText=".vmd" link={`${linkBase}?file_format=vmd`} targetBlank={true} />
         );
         items.push(
-            <BootstrapDropDownMenuItem linkText=".png" link={`${linkBase}/png`} targetBlank={true} />
+            <BootstrapDropDownMenuItem linkText=".png" link={`${linkBase}?file_format=png`} targetBlank={true} />
         );
         items.push(
-            <BootstrapDropDownMenuItem linkText="chimera" link={`${linkBase}/chimera`} targetBlank={true} />
+            <BootstrapDropDownMenuItem linkText="chimera" link={`${linkBase}?file_format=chimera`} targetBlank={true} />
         );
 
         return <BootstrapDropDownMenuButton label="Download report" items={items} disabled={this.props.disabled} />
