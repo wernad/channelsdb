@@ -10,10 +10,11 @@ export interface DBContent {
 }
 
 export type GenericStatistics = { [key: string]: number };
+export type ExtendedStatistics = { [key: string]: number | string };
 
 export type StatisticsData = {
     "methods": GenericStatistics,
-    "length": GenericStatistics,
+    "length": ExtendedStatistics,
     "bottleneck": GenericStatistics,
     "top_types": GenericStatistics,
     "top_proteins": GenericStatistics,

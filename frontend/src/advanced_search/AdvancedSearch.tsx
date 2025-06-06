@@ -30,7 +30,7 @@ export class AdvancedSearch extends React.Component<{ state: State }, FilterData
             }
 
             if (values.maxDistance !== "" && values.minDistance > values.maxDistance) {
-              errors.minRadius = "Min distance must be less than max distance.";
+              errors.minRadius = "Min Length must be less than max Length.";
             }
 
             return errors;
@@ -71,14 +71,14 @@ export class AdvancedSearch extends React.Component<{ state: State }, FilterData
                   <ErrorMessage name="maxRadius" component="div" className="text-danger small" />
                 </div>
 
-                {/* Distance */}
+                {/* Length */}
                 <div className="col-md-3">
-                  <label className="form-label">Distance</label>
+                  <label className="form-label">Length</label>
                   <Field
                     type="number"
                     min={0}
                     name="minDistance"
-                    placeholder="Minimum Distance"
+                    placeholder="Minimum Length"
                     className="form-control"
                   />
                   <ErrorMessage name="minDistance" component="div" className="text-danger small" />
@@ -86,7 +86,7 @@ export class AdvancedSearch extends React.Component<{ state: State }, FilterData
                     type="number"
                     min={0}
                     name="maxDistance"
-                    placeholder="Maximum Distance"
+                    placeholder="Maximum Length"
                     className="form-control mt-2"
                   />
                   <ErrorMessage name="maxDistance" component="div" className="text-danger small" />

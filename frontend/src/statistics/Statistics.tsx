@@ -12,7 +12,7 @@ export class Statistics extends React.Component<StatisticsProps, {}> {
 
     render() {
         const { statistics } = this.props;
-        const total = Object.keys(statistics.methods ?? {}).reduce((acc, key) => acc + statistics.methods[key], 0)
+        const total = Object.keys(statistics.methods ?? {}).reduce((acc, key) => acc + (statistics.methods[key] as number), 0)
 
         return (
             <div className="container">

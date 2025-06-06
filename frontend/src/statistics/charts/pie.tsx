@@ -2,22 +2,22 @@ import React = require("react");
 import Chart from "react-apexcharts";
 import { GenericStatistics } from "../../State";
 
-type GenericWithTotal = GenericStatistics | {total: number};
+type GenericWithTotal = GenericStatistics | { total: number };
 
 type PieChartProps = {
-    title: string, 
+    title: string,
     data: GenericWithTotal,
     subtractTotal: boolean
-    pieSize: number, 
+    pieSize: number,
 } & React.HTMLAttributes<HTMLDivElement>;
 
 type PieChartState = {
     options: any,
     series: any,
-  }
+}
 
 type ChartData = {
-    labels: string[], 
+    labels: string[],
     data: number[]
 }
 
@@ -32,7 +32,7 @@ const COLORS: string[] = [
     '#ff9da7',  // Pink
     '#9c755f',  // Brown
     '#bab0ab'   // Gray
-  ];
+];
 
 export class PieChart extends React.Component<PieChartProps, PieChartState> {
     constructor(props: PieChartProps) {
@@ -53,7 +53,7 @@ export class PieChart extends React.Component<PieChartProps, PieChartState> {
                         chart: {
                             width: 300
                         },
-                            legend: {
+                        legend: {
                             position: 'bottom'
                         }
                     }
@@ -77,8 +77,8 @@ export class PieChart extends React.Component<PieChartProps, PieChartState> {
                 colors: COLORS
             },
             series: statistics.data
-          };
-    
+        };
+
     }
 
     private extract_pie_data: any = (): ChartData => {
@@ -96,7 +96,7 @@ export class PieChart extends React.Component<PieChartProps, PieChartState> {
         const series: number[] = Object.keys(data).map(key => {
             if (key === 'total' && this.props.subtractTotal === true) {
                 return data[key] - top_sum;
-            } 
+            }
             return data[key];
         });
 
@@ -105,13 +105,13 @@ export class PieChart extends React.Component<PieChartProps, PieChartState> {
             data: series
 
         }
-        
+
         return formatted;
     };
 
     render() {
         const className = `${this.props.className !== undefined ? this.props.className : ""}`;
-        
+
         return (
             <div className={className}>
                 <Chart
