@@ -160,11 +160,12 @@ def fetch_all(start: int, total: int, data_queue: mp.Queue) -> None:
     logging.getLogger("urllib3").setLevel(logging.DEBUG)
 
 
-def run(start: int | None):
+def run(start: int | None, skip_existing: bool):
     """Creates and starts child processes for fetching file data.
 
     Args:
         start: Starting id for fetching.
+        skip_existing: Wether to skip already present structures.
     """
     log.info("Beggining fetch of all PDB entries.")
     response = fetch_ids(start=0, limit=0)
@@ -182,7 +183,9 @@ def run(start: int | None):
             data_queue, result_queue = create_queues()
 
             managers = create_managers(data_queue=data_queue, result_queue=result_queue)
-            inserter = create_inserter(result_queue=result_queue)
+            inserter = create_inserter(
+                result_queue=result_queue, skip_existing=skip_existing
+            )
 
             log.debug("Workers created, starting main function...")
             fetch_all(start=actual_start, total=total, data_queue=data_queue)

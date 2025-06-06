@@ -52,16 +52,14 @@ db_context = contextmanager(get_session)
 REQUIRED_TABLES = [
     "annotation",
     "channel",
-    "configfile",
     "hetresidue",
-    "layerresidue",
     "layer",
     "layerresidue",
     "method",
-    "structure",
-    "source",
     "profile",
     "residue",
+    "source",
+    "structure",
 ]
 
 
@@ -87,11 +85,11 @@ def create_db_and_tables():
     while others wait for completion. Implements waiting mechanism for
     concurrent initialization scenarios.
     """
-    with engine.begin() as conn:
+    with db_context() as db:
         log.debug(f"Create DB -- WORKER {getpid()} -- Attempting to acquire lock...")
         try:
             lock_id = "12345"
-            lock_acquired = conn.execute(
+            lock_acquired = db.exec(
                 text(f"SELECT pg_try_advisory_lock({lock_id})")
             ).scalar()
 
@@ -104,7 +102,7 @@ def create_db_and_tables():
                 SQLModel.metadata.create_all(bind=engine)
 
                 # Release the lock when done
-                conn.execute(text(f"SELECT pg_advisory_unlock({lock_id})"))
+                db.exec(text(f"SELECT pg_advisory_unlock({lock_id})"))
                 log.debug(f"Create DB -- WORKER {getpid()} -- Tables created.")
             else:
                 # Another worker is already creating tables, wait for completion.
@@ -146,7 +144,7 @@ def init_flag_data():
                 method_repo.init_table()
                 source_repo.init_table()
                 residue_repo.init_table()
-
+                db.exec(text(f"SELECT pg_advisory_unlock({lock_id})"))
             else:
                 # Another worker is already inseting data, wait for completion.
                 log.debug(

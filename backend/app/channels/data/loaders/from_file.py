@@ -64,15 +64,16 @@ def get_annotations_ids(annotations: list[dict]) -> dict:
     return result
 
 
-def run(file_path: str) -> None:
+def run(file_path: str, skip_existing: bool) -> None:
     """Loads JSON file from given path and starts loading channels into database.
 
     Args:
         file_path: Path to JSON file.
+        skip_existing: Should already present structures be skipped.
     """
 
     external_id = Path(file_path).name.split(".")[0]
-    full_id = get_full_id(external_id)
+    full_id = get_full_id(external_id) if len(external_id) == 4 else external_id.upper()
 
     json_file = load_json_file(file_path)
 
@@ -82,49 +83,55 @@ def run(file_path: str) -> None:
             session.begin()
 
             structure_id = insert_structure_if_missing(
-                session, full_id=full_id, version=1, has_channels=True
+                session=session,
+                full_id=full_id,
+                version=1,
+                has_channels=True,
+                skip_existing=skip_existing,
+                is_pdb=len(full_id) == 12,
             )
 
-            for method, channels in json_file["Channels"].items():
-                if channels:
-                    method_id = METHODS_NAMES_TO_IDS[method]
+            if structure_id:
+                for method, channels in json_file["Channels"].items():
+                    if channels:
+                        method_id = METHODS_NAMES_TO_IDS[method]
 
-                    channels_ids = insert_channels(
-                        session=session,
-                        structure_id=structure_id,
-                        method_id=method_id,
-                        data=channels,
-                    )
+                        channels_ids = insert_channels(
+                            session=session,
+                            structure_id=structure_id,
+                            method_id=method_id,
+                            data=channels,
+                        )
 
-                    for channel_idx, channel in zip(channels_ids, channels):
-                        ann_indices = annotations_indices.get(channel["Id"], None)
+                        for channel_idx, channel in zip(channels_ids, channels):
+                            ann_indices = annotations_indices.get(channel["Id"], None)
 
-                        if ann_indices:
-                            selected_annotations = []
-                            for idx in ann_indices:
-                                selected_annotations.append(
-                                    json_file["Annotations"][idx]
+                            if ann_indices:
+                                selected_annotations = []
+                                for idx in ann_indices:
+                                    selected_annotations.append(
+                                        json_file["Annotations"][idx]
+                                    )
+
+                                insert_annotations(
+                                    session=session,
+                                    channel_id=channel_idx,
+                                    annotation_data=selected_annotations,
                                 )
 
-                            insert_annotations(
-                                session=session,
-                                channel_id=channel_idx,
-                                annotation_data=selected_annotations,
-                            )
+                        insert_profiles(
+                            session=session, channels_ids=channels_ids, data=channels
+                        )
+                        layers_ids = insert_layers(
+                            session=session, channels_ids=channels_ids, data=channels
+                        )
 
-                    insert_profiles(
-                        session=session, channels_ids=channels_ids, data=channels
-                    )
-                    layers_ids = insert_layers(
-                        session=session, channels_ids=channels_ids, data=channels
-                    )
-
-                    insert_layer_residues(
-                        session=session, layers_ids=layers_ids, data=channels
-                    )
-                    insert_het_residues(
-                        session=session, channels_ids=channels_ids, data=channels
-                    )
+                        insert_layer_residues(
+                            session=session, layers_ids=layers_ids, data=channels
+                        )
+                        insert_het_residues(
+                            session=session, channels_ids=channels_ids, data=channels
+                        )
 
             session.commit()
         except Exception as e:

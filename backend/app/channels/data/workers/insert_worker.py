@@ -17,13 +17,13 @@ from app.channels.data.workers.insert_utils import (
 from app.database.database import db_context
 
 
-def insert_worker(result_queue: mp.Queue) -> None:
+def insert_worker(result_queue: mp.Queue, skip_existing: bool) -> None:
     """Worker process for inserting processed data by Mole workers.
 
     Transforms processed data into insert SQLModel models.
     Args:
         result_queue: Queue with results from other workers.
-        timeout: How long to wait for queue.
+        skip_existing: If already present structures should be skipped.
     """
     log.debug("INSERTER -- Starting main process.")
     while True:
@@ -44,6 +44,7 @@ def insert_worker(result_queue: mp.Queue) -> None:
                         full_id=full_id,
                         version=version,
                         has_channels=has_channels,
+                        skip_existing=skip_existing,
                     )
 
                     if structure_id:
@@ -85,17 +86,24 @@ def insert_worker(result_queue: mp.Queue) -> None:
     log.debug("INSERTER -- Successfully stopped.")
 
 
-def create_inserter(result_queue: mp.Queue) -> mp.Process:
+def create_inserter(result_queue: mp.Queue, skip_existing: bool) -> mp.Process:
     """Creates a worker responsible for inserting processed data into database.
 
     Args:
         result_queue: Queue used by workers to push processed data into.
+        skip_existing: If already present structures should be skipped.
     Returns:
         Process instance.
     """
 
     log.debug("INSERTER -- Creating new inserter worker.")
-    inserter = mp.Process(target=insert_worker, args=(result_queue,))
+    inserter = mp.Process(
+        target=insert_worker,
+        args=(
+            result_queue,
+            skip_existing,
+        ),
+    )
     inserter.start()
     log.debug("INSERTER -- Inserter worker created.")
     return inserter

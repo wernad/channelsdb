@@ -245,7 +245,12 @@ def get_het_residue_values(
 
 
 def insert_structure_if_missing(
-    session: Session, full_id: str, version: int, has_channels: bool
+    session: Session,
+    full_id: str,
+    version: int,
+    has_channels: bool,
+    skip_existing: bool,
+    is_pdb: bool = True,
 ) -> int | None:
     """Inserts a new structure row if it's not in the database.
 
@@ -253,6 +258,8 @@ def insert_structure_if_missing(
         full_id: Full identifier of structure.
         version: Version of structure.
         has_channels: If protein has channels.
+        skip_existing: If already present structures should be returned or skipped.
+        is_pdb: type of id.
     Returns:
         Integer id of structure entry or None if structure exists.
     """
@@ -264,15 +271,17 @@ def insert_structure_if_missing(
     )
 
     if structure is not None:
-        log.debug(f"Structure {full_id} at version {version} already exists.")
-        return structure.id
+        log.debug(
+            f"Structure {full_id} at version {version} already exists. Skip: {skip_existing}"
+        )
+        return None if skip_existing else structure.id
 
     else:
         new_structure = StructureInsert(
             has_channels=has_channels,
             version=version,
             external_id=full_id,
-            source_id=Sources.PDB.value,
+            source_id=Sources.PDB.value if is_pdb else Sources.ALPHAFILL.value,
         )
 
         structure_id = structure_service.insert_entry(new_structure)

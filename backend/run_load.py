@@ -27,6 +27,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Run the load function with a start value", usage=usage_msg()
     )
+
     file_group = parser.add_argument_group("File input options")
     pdb_group = parser.add_argument_group("PDB fetch options")
 
@@ -50,6 +51,14 @@ if __name__ == "__main__":
         "-f", "--file", help="Loads channels from JSON file passed as a path."
     )
 
+    parser.add_argument(
+        "-e",
+        "--skip_existing",
+        action="store_true",
+        default=False,
+        help="Should loading script ignore existing structures or add channels to them too.",
+    )
+
     args = parser.parse_args()
 
     if all(x is None for x in [args.file, args.pdb, args.start]):
@@ -59,6 +68,8 @@ if __name__ == "__main__":
         parser.error("Can not combine file path argument with fetch related arguments.")
 
     if args.file:
-        load.load_from_file(args.file)
+        load.load_from_file(args.file, skip_existing=args.skip_existing)
     else:
-        load.load_from_pdb(start=args.start, fetch_source=args.pdb)
+        load.load_from_pdb(
+            start=args.start, fetch_source=args.pdb, skip_existing=args.skip_existing
+        )
