@@ -5,9 +5,9 @@ channel layers, including retrieving layer statistics and inserting new layers
 in bulk or individually.
 """
 
-from sqlmodel import insert, select, func
+from sqlmodel import insert, select, func, case
 
-from app.database.models import Layer, LayerInsert
+from app.database.models import Layer, LayerInsert, Channel, Structure
 from app.database.repositories.base import RepositoryBase
 from app.log import log
 
@@ -30,10 +30,16 @@ class LayerRepository(RepositoryBase):
         """
         log.debug("Building length statistics result.")
         cte_statement = (
-            select(Layer.channel_id, func.max(Layer.end_distance).label("length"))
-            .group_by(Layer.channel_id)
+            select(Structure.external_id, func.max(Layer.end_distance).label("length"))
+            .select_from(Layer)
+            .join(Channel, Channel.id == Layer.channel_id)
+            .join(Structure, Structure.id == Channel.structure_id)
+            .group_by(Structure.external_id)
             .cte("channel_lengths")
         )
+
+        min_length_subq = select(func.min(cte_statement.c.length)).scalar_subquery()
+        max_length_subq = select(func.max(cte_statement.c.length)).scalar_subquery()
 
         statement = select(
             func.avg(cte_statement.c.length).label("avg"),
@@ -43,7 +49,25 @@ class LayerRepository(RepositoryBase):
             .within_group(cte_statement.c.length)
             .label("median"),
             func.stddev(cte_statement.c.length).label("stdev"),
-        )
+            func.max(
+                case(
+                    (
+                        cte_statement.c.length == min_length_subq,
+                        cte_statement.c.external_id,
+                    ),
+                    else_=None,
+                )
+            ).label("min_structure_id"),
+            func.max(
+                case(
+                    (
+                        cte_statement.c.length == max_length_subq,
+                        cte_statement.c.external_id,
+                    ),
+                    else_=None,
+                )
+            ).label("max_structure_id"),
+        ).select_from(cte_statement)
 
         result = self.db.exec(statement).mappings().first()
 
