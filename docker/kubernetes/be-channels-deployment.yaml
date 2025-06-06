@@ -79,7 +79,7 @@ spec:
           volumeMounts:
           - name: output-volume
             mountPath: /opt/channelsdb/app/channels/output
-          image: cerit.io/wernad/be-channels:3.0.13
+          image: cerit.io/wernad/be-channels:3.0.14
           imagePullPolicy: Always
           livenessProbe:
             exec:
@@ -95,10 +95,10 @@ spec:
               protocol: TCP
           resources:
             requests:
-              cpu: "1"
+              cpu: "2"
               memory: "512M"
             limits:
-              cpu: "1"
+              cpu: "4"
               memory: "2048M"
       volumes:
         - name: output-volume

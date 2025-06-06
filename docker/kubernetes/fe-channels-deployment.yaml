@@ -38,6 +38,6 @@ spec:
           ports:
             - containerPort: 8080
               protocol: TCP
-          image: cerit.io/wernad/fe-channels:1.0.18
+          image: cerit.io/wernad/fe-channels:1.0.19
           imagePullPolicy: Always
       restartPolicy: Always
