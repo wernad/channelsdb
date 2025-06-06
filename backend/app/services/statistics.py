@@ -173,11 +173,17 @@ class StatisticsService:
             - max: Maximum channel length
             - median: Median channel length
             - stdev: Standard deviation of channel lengths
+            - min_structure: Structure that contains shortest channel.
+            - max_structure: Structure that contains longest channel.
         """
         result = self.layer_repository.get_length_statistics()
 
         result = {
-            key: (round(value, 3) if value is not None else value)
+            key: (
+                round(value, 3)
+                if value is not None and not isinstance(value, str)
+                else value
+            )
             for key, value in result.items()
         }
 
