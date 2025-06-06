@@ -13,7 +13,7 @@ class AnnotationRepository(RepositoryBase):
     with support for bulk operations.
     """
 
-    def get_annotations_by_structure_id(self, internal_id: str) -> list:
+    def get_annotations_by_internal_id(self, internal_id: str) -> list:
         """Retrieves all annotations for channels in a given structure.
 
         Args:
