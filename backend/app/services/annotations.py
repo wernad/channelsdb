@@ -29,7 +29,9 @@ class AnnotationService:
         """
         self.repository = AnnotationRepository(db)
 
-    def get_annotations_by_structure(self, internal_id: str) -> list[AnnotationOutput]:
+    def get_annotations_by_structure_internal_id(
+        self, internal_id: str
+    ) -> list[AnnotationOutput]:
         """Retrieves all annotations for channels in a given structure.
 
         Args:
@@ -38,7 +40,7 @@ class AnnotationService:
         Returns:
             List of AnnotationOutput objects containing channel annotations.
         """
-        annotations = self.repository.get_annotations_by_structure_id(internal_id)
+        annotations = self.repository.get_annotations_by_internal_id(internal_id)
 
         result = []
 

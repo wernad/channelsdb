@@ -1,7 +1,12 @@
 """Annotation endpoint for retrieving annotations for proteins."""
 
+import logging
+import asyncio
+import concurrent.futures as cf
 import gzip
 import xml.etree.ElementTree as ET
+from typing import Optional
+from time import time
 
 import requests
 from fastapi import APIRouter, HTTPException
@@ -11,6 +16,8 @@ from app.database.models.annotation import AnnotationsOutput
 from app.log import log
 
 router = APIRouter()
+
+executor = cf.ThreadPoolExecutor(max_workers=10)
 
 
 def parse_sifts_data(xml_data: str) -> dict[str, tuple[str, dict[str, str]]]:
@@ -176,19 +183,11 @@ def get_channelsdb_residue_annotations(
     return data
 
 
-def fill_annotations_by_uniprot_id(
-    annotations: dict, mapping: tuple[str, dict[str, str]] | None, uniprot_id: str
-):
-    """Fetches XMML data and fills annotations dict with them.
-
-    Args:
-        annotations: Container for annotations.
-        mapping: Data with annotations.
-        uniprot_id: Identifier of protein.
-    """
+def fetch_uniprot_data_sync(uniprot_id: str) -> str:
     req = requests.get(
         f"https://www.ebi.ac.uk/proteins/api/proteins/{uniprot_id}",
         headers={"accept": "application/xml"},
+        timeout=30,
     )
     if req.status_code > 500:
         raise HTTPException(
@@ -200,17 +199,61 @@ def fill_annotations_by_uniprot_id(
             status_code=404,
             detail=f"Cannot load annotations for Uniprot ID '{uniprot_id}'",
         )
-    xml_data = req.content.decode("utf-8")
-    tree = ET.fromstring(xml_data)
-    annotations["entry_annotations"].append(
-        get_uniprot_entry_annotations(uniprot_id, tree)
+    return req.content.decode("utf-8")
+
+
+def fetch_sifts_data_sync(pdb_id: str) -> bytes:
+    req = requests.get(
+        f"https://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/{pdb_id}.xml.gz", timeout=30
     )
+    if req.status_code > 500:
+        raise HTTPException(
+            status_code=503,
+            detail=f"PDBe server returned an error when accessing: {req.url}",
+        )
+    if req.status_code == 404:
+        raise HTTPException(
+            status_code=404, detail=f"Cannot find annotations for PDB ID '{pdb_id}'"
+        )
+    return req.content
+
+
+def process_uniprot_annotations(
+    uniprot_id: str, mapping: Optional[tuple[str, dict[str, str]]], xml_data: str
+) -> dict:
+    tree = ET.fromstring(xml_data)
+    return {
+        "entry_annotation": get_uniprot_entry_annotations(uniprot_id, tree),
+        "residue_annotations_uniprot": get_uniprot_residue_annotations(mapping, tree),
+        "residue_annotations_channels": get_channelsdb_residue_annotations(mapping),
+    }
+
+
+async def fill_annotations_by_uniprot_id(
+    annotations: dict, mapping: tuple[str, dict[str, str]] | None, uniprot_id: str
+):
+    """Fetches XMML data and fills annotations dict with them.
+
+    Args:
+        annotations: Container for annotations.
+        mapping: Data with annotations.
+        uniprot_id: Identifier of protein.
+    """
+    log.debug(f"Fetching data for uniprot_id: {uniprot_id}")
+    loop = asyncio.get_event_loop()
+    xml_data = await loop.run_in_executor(executor, fetch_uniprot_data_sync, uniprot_id)
+
+    processed_data = process_uniprot_annotations(uniprot_id, mapping, xml_data)
+
+    annotations["entry_annotations"].append(processed_data["entry_annotation"])
     annotations["residue_annotations"]["uni_prot"].extend(
-        get_uniprot_residue_annotations(mapping, tree)
+        processed_data["residue_annotations_uniprot"]
     )
     annotations["residue_annotations"]["channels_db"].extend(
-        get_channelsdb_residue_annotations(mapping)
+        processed_data["residue_annotations_channels"]
     )
+
+    # print(uniprot_id, round(end1, 3))
 
 
 def is_pdb_id(pdb_id: str) -> bool:
@@ -225,23 +268,13 @@ def is_pdb_id(pdb_id: str) -> bool:
     return length == 4 or length == 12
 
 
-def process_pdb_file(pdb_id: str) -> dict:
-    req = requests.get(
-        f"https://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/{pdb_id}.xml.gz"
+async def process_pdb_file(pdb_id: str) -> dict:
+    loop = asyncio.get_event_loop()
+    compressed_data = await loop.run_in_executor(
+        executor, fetch_sifts_data_sync, pdb_id
     )
-    if req.status_code > 500:
-        raise HTTPException(
-            status_code=503,
-            detail=f"PDBe server returned an error when accessing: {req.url}",
-        )
-    if req.status_code == 404:
-        raise HTTPException(
-            status_code=404, detail=f"Cannot find annotations for PDB ID '{pdb_id}'"
-        )
-
-    xml_data = gzip.decompress(req.content).decode("utf-8")
+    xml_data = gzip.decompress(compressed_data).decode("utf-8")
     sifts = parse_sifts_data(xml_data)
-
     return sifts
 
 
@@ -262,12 +295,17 @@ async def get_annotations_pdb(structure_id: IDCheckDep):
     annotations = AnnotationsOutput().model_dump()
 
     if is_pdb_id(structure_id):
+        logging.getLogger("urllib3").setLevel(logging.WARNING)
+
         short_id = structure_id[-4:]
-        sifts = process_pdb_file(pdb_id=short_id)
+        sifts = await process_pdb_file(pdb_id=short_id)
 
         try:
-            for uniprot_id, mapping in sifts.items():
+            tasks = [
                 fill_annotations_by_uniprot_id(annotations, mapping, uniprot_id)
+                for uniprot_id, mapping in sifts.items()
+            ]
+            await asyncio.gather(*tasks)
         except HTTPException as e:
             # We should never get here, this would mean incorrect SIFTS data
             log.error(e)
@@ -275,7 +313,9 @@ async def get_annotations_pdb(structure_id: IDCheckDep):
                 status_code=400,
                 detail=f"Cannot load annotations for PDB ID '{short_id}'",
             )
+
+        logging.getLogger("urllib3").setLevel(logging.DEBUG)
     else:
-        fill_annotations_by_uniprot_id(annotations, None, structure_id)
+        await fill_annotations_by_uniprot_id(annotations, None, structure_id)
 
     return annotations
