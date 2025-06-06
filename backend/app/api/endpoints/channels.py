@@ -48,6 +48,8 @@ async def get_channels(
     else:
         raise NoChannelsInProtein(protein_id=structure_id)
 
-    annotations = ann_service.get_annotations_by_structure(internal_id=internal_id)
+    annotations = ann_service.get_annotations_by_structure_internal_id(
+        internal_id=internal_id
+    )
 
     return ChannelsResponse(annotations=annotations, channels=channels)

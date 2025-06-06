@@ -12,7 +12,7 @@ router = APIRouter()
 
 
 class StatisticsRaw(SQLModel):
-    statistics: dict[str, int | float | None]
+    statistics: dict[str, int | float | str | None]
 
 
 class StatisticsModel(StatisticsRaw):
